@@ -1,0 +1,17 @@
+# 训练产物与中间文件，只保留 results/runs/ 里的 .jsonl
+/hrm/
+/scratch/
+**/reward_steps_logs/
+**/reward_steps_greedy_logs/
+**/checkpoint-*.pickle
+stats.json
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv*/
+*.egg-info/
+
+# 系统
+.DS_Store

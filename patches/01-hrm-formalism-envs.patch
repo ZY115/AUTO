@@ -1,0 +1,50 @@
+diff --git a/gym_hierarchical_subgoal_automata/envs/craftworld/craftworld_env.py b/gym_hierarchical_subgoal_automata/envs/craftworld/craftworld_env.py
+index acab574..101402d 100644
+--- a/gym_hierarchical_subgoal_automata/envs/craftworld/craftworld_env.py
++++ b/gym_hierarchical_subgoal_automata/envs/craftworld/craftworld_env.py
+@@ -84,6 +84,23 @@ OBJ_TO_OBSERVABLE = {
+ }
+ 
+ 
++def _neutralize_reject_state(automaton):
++    """Drop the rejecting state and every edge into it, leaving the rest intact.
++
++    A transition with no matching edge leaves the hierarchy state unchanged, so
++    the hazard label becomes a self-loop rather than a terminal.
++    """
++    reject = automaton.get_reject_state() if automaton.has_reject_state() else None
++    if reject is None:
++        return
++    for from_state in list(automaton._edges.keys()):
++        automaton._edges[from_state].pop(reject, None)
++    automaton._edges.pop(reject, None)
++    if reject in automaton._states:
++        automaton._states.remove(reject)
++    automaton._reject_state = None
++
++
+ class CraftWorldEnv(BaseEnv, ABC):
+     STATE_FORMAT = "state_format"
+     STATE_FORMAT_TABULAR = "tabular"
+@@ -231,8 +248,20 @@ class CraftWorldEnv(BaseEnv, ABC):
+         observations.sort(key=lambda x: tuple(x))
+         return observations
+ 
++    # Build the hierarchy as usual, then optionally make the hazard inert. This is
++    # how a paired safe/lava instance is made: flipping `use_lava` changes the
++    # grid, because the hazard displaces objects and consumes random draws, so the
++    # whole object layout moves. This keeps one grid, one observable set and one
++    # set of possible observations, and changes only whether stepping on the
++    # hazard ends the episode. The label is still emitted; nothing consumes it.
++    NEUTRALIZE_DEADENDS = "neutralize_deadends"
++
+     def get_hierarchy(self):
+-        return self._get_hierarchy_for_task(self.task_name)
++        hierarchy = self._get_hierarchy_for_task(self.task_name)
++        if get_param(self.params, CraftWorldEnv.NEUTRALIZE_DEADENDS, False):
++            for name in hierarchy.get_automata_names():
++                _neutralize_reject_state(hierarchy.get_automaton(name))
++        return hierarchy
+ 
+     def _get_hierarchy_for_task(self, task_name):
+         if task_name.startswith("get-"):
