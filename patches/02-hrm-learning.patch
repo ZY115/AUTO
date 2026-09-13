@@ -32,19 +32,20 @@ index 880fb73..47d9ad1 100644
          self.training_enable = get_param(params, LearningAlgorithm.TRAINING_ENABLE, True)
          self.num_episodes = get_param(params, LearningAlgorithm.NUM_EPISODES, 20000)
 diff --git a/src/run_algorithm.py b/src/run_algorithm.py
-index 72739e4..4f473e6 100755
+index 72739e4..f7b6223 100755
 --- a/src/run_algorithm.py
 +++ b/src/run_algorithm.py
-@@ -9,6 +9,8 @@ from reinforcement_learning.drqn_algorithm import DRQNAlgorithm
+@@ -9,6 +9,9 @@ from reinforcement_learning.drqn_algorithm import DRQNAlgorithm
  from reinforcement_learning.ihsa_crm_algorithm import IHSAAlgorithmCRM
  from reinforcement_learning.ihsa_dqrm_algorithm import IHSAAlgorithmDQRM
  from reinforcement_learning.ihsa_hrl_tabular_algorithm import IHSAAlgorithmHRLTabular
 +from reinforcement_learning.ihsa_hrl_tabular_perstate_algorithm import IHSAAlgorithmHRLTabularPerState
 +from reinforcement_learning.ihsa_hrl_dqn_perstate_algorithm import IHSAAlgorithmHRLDQNPerState
++from reinforcement_learning.ihsa_hrl_tabular_crossstate_algorithm import IHSAAlgorithmHRLTabularCrossState
  from reinforcement_learning.ihsa_hrl_dqn_algorithm import IHSAAlgorithmHRLDQN
  from reinforcement_learning.learning_algorithm import LearningAlgorithm
  import sys
-@@ -72,6 +74,14 @@ if __name__ == "__main__":
+@@ -72,6 +75,25 @@ if __name__ == "__main__":
                  algorithm = IHSAAlgorithmHRLDQN(config)
              else:
                  raise RuntimeError(f"Error: Unrecognized observation format '{state_format}'.")
@@ -56,6 +57,17 @@ index 72739e4..4f473e6 100755
 +                algorithm = IHSAAlgorithmHRLDQNPerState(config)
 +            else:
 +                raise RuntimeError(f"Error: Unrecognized observation format '{state_format}'.")
++        elif algorithm_name == "ihsa-hrl-crossstate":
++            # C-full: per-state parameters like ihsa-hrl-perstate, but every
++            # experience is broadcast to every legal state's bank. Tabular only —
++            # the neural variant would also need the replay-buffer decision
++            # settled, and that is a separate question.
++            state_format = get_param(config, LearningAlgorithm.STATE_FORMAT)
++            if state_format == LearningAlgorithm.STATE_FORMAT_TABULAR:
++                algorithm = IHSAAlgorithmHRLTabularCrossState(config)
++            else:
++                raise RuntimeError(
++                    f"Error: 'ihsa-hrl-crossstate' is tabular only, got '{state_format}'.")
          elif algorithm_name == "ihsa-crm":
              algorithm = IHSAAlgorithmCRM(config)
          elif algorithm_name == "ihsa-dqrm":

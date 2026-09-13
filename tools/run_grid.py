@@ -7,6 +7,11 @@ Two arms, and they differ in exactly one thing:
     Y11  ihsa-hrl            one goal policy per subgoal, shared by every
                              automaton state that asks for it (the authors' own
                              implementation, unmodified)
+    Cfull ihsa-hrl-crossstate  parameters per state as in Y10, but every experience
+                            is broadcast to every legal state's bank. Tabular only.
+                            It costs one TD update per legal state per step — 20x
+                            on the frl-bq hierarchy — so budget for it separately.
+
     Y10  ihsa-hrl-perstate   one goal policy per (automaton state, subgoal); the
                              same reading of the same hierarchy with cross-state
                              sharing removed
@@ -34,7 +39,8 @@ HRM = Path(os.environ.get('HRM_LEARNING', '')).expanduser()
 PY = os.environ.get('HRM_PYTHON', sys.executable)
 BASE_CFG = 'src/config/examples/ihsa/07-cw-frl-bq-exploit-flat/config.json'
 
-ARMS = {'Y11': 'ihsa-hrl', 'Y10': 'ihsa-hrl-perstate'}
+ARMS = {'Y11': 'ihsa-hrl', 'Y10': 'ihsa-hrl-perstate',
+        'Cfull': 'ihsa-hrl-crossstate'}
 PROTOCOLS = {'author': 0.0, 'stepcost': -0.01}
 TASKS = ['book', 'book-and-quill', 'cake']
 
@@ -51,6 +57,7 @@ def hashes():
     return {
         'perstate_tabular': sha(r / 'ihsa_hrl_tabular_perstate_algorithm.py'),
         'perstate_dqn': sha(r / 'ihsa_hrl_dqn_perstate_algorithm.py'),
+        'crossstate_tabular': sha(r / 'ihsa_hrl_tabular_crossstate_algorithm.py'),
         'hrl_algorithm': sha(r / 'ihsa_hrl_algorithm.py'),
     }
 
@@ -70,6 +77,10 @@ def make_config(a, tag, task, arm, risk, proto, seed):
     d['environments'] = [dict(d['environments'][0], name=task)]
     d['grid_params'] = dict(d['grid_params'], use_lava=True)
     d['neutralize_deadends'] = (risk == 'safe')
+    if a.update_sel_num is not None:
+        # 0 表示不采样、全目标更新。这是等价性检查用的设置，正式实验不要用，
+        # 因为它同时改变了所有臂的每步更新预算。
+        d['formula_update_sel_num'] = None if a.update_sel_num == 0 else a.update_sel_num
     for k in ('pseudoreward_after_step', 'meta_pseudoreward_after_step'):
         d[k] = PROTOCOLS[proto]
     if a.er_start_size:
@@ -123,6 +134,9 @@ def main():
     p.add_argument('--risks', default='safe,lava')
     p.add_argument('--protocols', default='author')
     p.add_argument('--arms', default='Y11,Y10')
+    p.add_argument('--update-sel-num', type=int, default=None,
+                   help='覆盖 formula_update_sel_num。传 0 表示全目标更新（不采样），'
+                        '那是 C-full 与 Y11 的等价性成立的设置，不是实验设置。')
     p.add_argument('--er-start-size', type=int, default=0,
                    help='override; leave 0 to keep the published 100000')
     p.add_argument('--work', default='/tmp/hrm_grid')

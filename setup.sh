@@ -38,11 +38,9 @@ git -C hrm-learning apply --check "$HERE/patches/02-hrm-learning.patch" \
   && git -C hrm-learning apply "$HERE/patches/02-hrm-learning.patch" \
   && echo "    02 已应用" || echo "    02 已是最新，跳过"
 
-echo "==> 3/6 放入新增的两个算法文件"
-cp "$HERE/src/ihsa_hrl_tabular_perstate_algorithm.py" \
-   "$HERE/src/ihsa_hrl_dqn_perstate_algorithm.py" \
-   hrm-learning/src/reinforcement_learning/
-echo "    已复制 2 个文件"
+echo "==> 3/6 放入新增的算法文件"
+cp "$HERE"/src/*.py hrm-learning/src/reinforcement_learning/
+echo "    已复制 $(ls "$HERE"/src/*.py | wc -l | tr -d ' ') 个文件"
 
 echo "==> 4/6 建虚拟环境（Python 3.10）"
 PYBIN="${PYBIN:-python3.10}"
