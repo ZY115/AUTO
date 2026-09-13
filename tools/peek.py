@@ -23,7 +23,7 @@ TAG = re.compile(r'^(?P<task>.+?)_(?P<fmt>tabular|full_obs)_(?P<risk>safe|lava)_
 
 
 def read_curves(run_dir):
-    """每个任务实例一条 (幕数, 奖励) 曲线。"""
+    """每个任务实例一条 (幕数, 奖励, 步数) 曲线。"""
     out = []
     for d in Path(run_dir).rglob('reward_steps_greedy_logs'):
         for f in sorted(d.glob('reward_steps-*.txt')):
@@ -32,7 +32,7 @@ def read_curves(run_dir):
                 p = line.split(';')
                 if len(p) == 3:
                     try:
-                        rows.append((int(p[0]), float(p[1])))
+                        rows.append((int(p[0]), float(p[1]), float(p[2])))
                     except ValueError:
                         pass
             if rows:
@@ -77,6 +77,19 @@ def main():
     print(f'{"run":<48} {"已评估到第几幕":>14}')
     for name in sorted(prog, key=lambda k: -prog[k]):
         print(f'  {name:<46} {prog[name]:>14,}')
+
+    # 幕长是重新估算总时长的关键：随机策略每幕都撞满 max_episode_length，
+    # 学会之后一幕可能只要几十步。拿开头测速外推会高估数倍到十倍。
+    print('\n每幕步数的变化（决定剩余时间，越小越快）')
+    print(f'{"任务":<16} {"风险":<6} {"臂":<5} {"最早 1/4":>10} {"最近 1/4":>10} {"已缩短":>9}')
+    for (task, risk, arm) in sorted(data):
+        pts = sorted((x for c in data[(task, risk, arm)] for x in c), key=lambda x: x[0])
+        if len(pts) < 8:
+            continue
+        early = mean(x[2] for x in pts[:len(pts) // 4])
+        late = mean(x[2] for x in pts[-len(pts) // 4:])
+        print(f'{task:<16} {risk:<6} {arm:<5} {early:>10.0f} {late:>10.0f} '
+              f'{(early / late if late else 1):>8.1f}x')
 
     print('\n按四分段看趋势（所有种子与实例合并，到目前为止）')
     print(f'{"任务":<16} {"风险":<6} {"臂":<5} ' + ' '.join(f'{f"第{i+1}/4段":>9}' for i in range(4)))
