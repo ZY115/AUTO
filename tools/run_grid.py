@@ -77,6 +77,9 @@ def make_config(a, tag, task, arm, risk, proto, seed):
     d['environments'] = [dict(d['environments'][0], name=task)]
     d['grid_params'] = dict(d['grid_params'], use_lava=True)
     d['neutralize_deadends'] = (risk == 'safe')
+    if a.dense_eval:
+        d['dense_eval_frequency'] = a.dense_eval
+        d['dense_eval_until'] = a.dense_eval_until
     if a.update_sel_num is not None:
         # 0 表示不采样、全目标更新。这是等价性检查用的设置，正式实验不要用，
         # 因为它同时改变了所有臂的每步更新预算。
@@ -134,6 +137,10 @@ def main():
     p.add_argument('--risks', default='safe,lava')
     p.add_argument('--protocols', default='author')
     p.add_argument('--arms', default='Y11,Y10')
+    p.add_argument('--dense-eval', type=int, default=None,
+                   help='只记录、不反馈训练的密集评估间隔（幕）。原作者每 100 幕的'
+                        '评估保持不变；写入独立的 reward_steps_dense_logs。')
+    p.add_argument('--dense-eval-until', type=int, default=4000)
     p.add_argument('--update-sel-num', type=int, default=None,
                    help='覆盖 formula_update_sel_num。传 0 表示全目标更新（不采样），'
                         '那是 C-full 与 Y11 的等价性成立的设置，不是实验设置。')

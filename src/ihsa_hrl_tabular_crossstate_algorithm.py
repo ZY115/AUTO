@@ -45,12 +45,30 @@ does not inflate skill-execution counts or accelerate epsilon decay. Only
 `_q_function_update_counter` moves, which is what should move. The two counts are
 reported separately.
 
-On the equivalence check: with `formula_update_sel_num: null` every bank updates
-the same full set of subgoals with no sampling, so N identical tables receiving
-identical updates stay identical to one shared table. C-full should then equal
-Y11 bit for bit on a fixed experience stream. With sampling on, each bank draws
-its own subset and consumes its own RNG, so the streams diverge by design — the
-equivalence check only holds in the all-goal setting, and that is its whole point.
+**Equivalence holds for the Q tables, not for the run.** With every bank updating
+the same subgoal set from the same experience, N identical tables stay identical
+to one shared table; that is provable and the check confirms it. It does **not**
+follow that C-full and Y11 produce the same trajectory, because at least three
+things still differ:
+
+  1. *Independent sampling.* With `formula_update_sel_num` set, each bank draws
+     its own subset. `SHARED_SAMPLING_KEY` turns this off for the controlled check.
+  2. *The global RNG stream.* Those draws come from NumPy's global stream, so
+     extra sampling shifts every later exploration draw too.
+  3. *The exploration schedule.* `_get_formula_exploration_rate` anneals on
+     `_get_formula_q_function_step_count`, which goes through `_get_policy_bank`
+     — the **current state's** bank. Y11 accumulates one execution count per
+     subgoal across all states; C-full counts per state. Measured on a 60-episode
+     run: the two arms' counts already differ on 46% of exploration queries, first
+     diverging at query 36 (Y11 36, C-full 0).
+
+Keeping (3) is deliberate — inflating execution counts by broadcasting would be
+wrong — but it means a whole-run equality can only be demanded after the
+exploration schedule and both RNG streams are aligned as well. A short run whose
+episode summaries match is weaker evidence than it looks: at 150 episodes the
+exploration rate is still ~0.9997 and the per-arm difference sits in the fifth
+decimal, so it rarely changes a drawn action. That is an artifact of the run
+length, not equivalence.
 """
 from reinforcement_learning.ihsa_hrl_tabular_perstate_algorithm import (
     IHSAAlgorithmHRLTabularPerState,
@@ -63,13 +81,24 @@ class IHSAAlgorithmHRLTabularCrossState(IHSAAlgorithmHRLTabularPerState):
     # class behaving exactly as Y10, which is how the arms are kept comparable.
     BROADCAST_KEY = "crossstate_broadcast"
 
+    # Controlled-acceptance only: force every bank to update the *same* sampled
+    # subgoal set, chosen once per step from the acting state's bank. This removes
+    # difference (1) above and the extra RNG draws of (2). It is not an experiment
+    # setting — the real C-full keeps each bank's own sampling, as agreed.
+    SHARED_SAMPLING_KEY = "crossstate_shared_sampling"
+
     def __init__(self, params):
         self._broadcast = get_param(
             params, IHSAAlgorithmHRLTabularCrossState.BROADCAST_KEY, True)
+        self._shared_sampling = get_param(
+            params, IHSAAlgorithmHRLTabularCrossState.SHARED_SAMPLING_KEY, False)
         # Set before the parent constructor: it reaches _get_policy_bank.
         self._legal_keys = None
-        self._update_calls = 0          # TD-update calls issued, summed over banks
+        self._update_calls = 0          # bank-level update calls, summed over banks
+        self._scalar_updates = 0        # individual (subgoal, s, a) Q-value writes
         self._broadcast_steps = 0       # environment steps that triggered a broadcast
+        self._last_broadcast_banks = [] # which bank keys the last step reached
+        self._last_broadcast_goals = [] # which subgoals each of them updated
         super().__init__(params)
 
     def _legal_state_keys(self, domain_id):
@@ -110,13 +139,40 @@ class IHSAAlgorithmHRLTabularCrossState(IHSAAlgorithmHRLTabularPerState):
         task = self._get_task(domain_id, task_id)
         is_goal_achieved = task.is_goal_achieved()
         self._broadcast_steps += 1
+        banks = self._perstate_banks[task_id]
 
+        fixed = None
+        if self._shared_sampling:
+            # Draw once, from the bank the behaviour policy is acting through, and
+            # make every bank use that same set. Asserted rather than assumed: a
+            # bank missing one of these subgoals would silently skip it.
+            acting = banks.get(self._perstate_key) or next(iter(banks.values()))
+            fixed = list(acting._get_subgoals_to_update())
+            for b in banks.values():
+                missing = [g for g in fixed if not b._has_q_function(b.get_root(g).get_formula_condition())]
+                if missing:
+                    raise AssertionError(
+                        f"shared sampling picked {len(missing)} subgoal(s) a bank "
+                        "does not hold; the banks' active sets have diverged")
+
+        self._last_broadcast_banks, self._last_broadcast_goals = [], []
         # Iterate the banks directly rather than moving _perstate_key, so the key
         # the behaviour policy set in _choose_action is never disturbed.
-        for bank in self._perstate_banks[task_id].values():
-            bank.update_q_functions(task, state, action, next_state, is_terminal,
-                                    is_goal_achieved, observation)
+        for key, bank in banks.items():
+            if fixed is not None:
+                bank._get_subgoals_to_update = lambda _f=fixed: _f
+            try:
+                before = sum(bank._q_function_update_counter.values())
+                bank.update_q_functions(task, state, action, next_state, is_terminal,
+                                        is_goal_achieved, observation)
+                written = sum(bank._q_function_update_counter.values()) - before
+            finally:
+                if fixed is not None:
+                    del bank._get_subgoals_to_update
             self._update_calls += 1
+            self._scalar_updates += written
+            self._last_broadcast_banks.append(key)
+            self._last_broadcast_goals.append(written)
 
     def _on_initial_observation(self, observation):
         # The parent already forwards to every bank that exists; with
@@ -128,11 +184,20 @@ class IHSAAlgorithmHRLTabularCrossState(IHSAAlgorithmHRLTabularPerState):
         produced them. Skill-execution counts live in the banks and are untouched
         by broadcasting."""
         return {
-            "td_update_calls": self._update_calls,
+            "bank_update_calls": self._update_calls,
+            "scalar_td_updates": self._scalar_updates,
             "broadcast_steps": self._broadcast_steps,
             "banks": self.num_perstate_banks(),
             "legal_state_keys": len(self._legal_keys or []),
         }
+
+    def execution_counts_by_bank(self, task_id=0):
+        """Per-bank skill-execution counts. These are what the exploration rate
+        anneals on, and they are *supposed* to differ from Y11's single shared
+        count — that difference is a live channel, not a bug, and it has to be
+        reported rather than left implicit."""
+        return {key: dict(bank._q_function_step_counter)
+                for key, bank in (self._perstate_banks or {}).get(task_id, {}).items()}
 
 
 def check_pseudoreward_is_state_independent():

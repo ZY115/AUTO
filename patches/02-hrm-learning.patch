@@ -12,10 +12,20 @@ index f98dad6..e60634b 100644
 +    # call intended; putenv alone never updated os.environ anyway.
 +    os.environ[env_var] = final_path + os.pathsep + os.environ.get(env_var, "")
 diff --git a/src/reinforcement_learning/learning_algorithm.py b/src/reinforcement_learning/learning_algorithm.py
-index 880fb73..47d9ad1 100644
+index 880fb73..bd544d9 100644
 --- a/src/reinforcement_learning/learning_algorithm.py
 +++ b/src/reinforcement_learning/learning_algorithm.py
-@@ -100,7 +100,14 @@ class LearningAlgorithm(ABC):
+@@ -71,6 +71,9 @@ class LearningAlgorithm(ABC):
+ 
+     REWARD_STEPS_FOLDER = "reward_steps_logs"                # folder where the reward-steps are saved
+     REWARD_STEPS_GREEDY_FOLDER = "reward_steps_greedy_logs"  # folder where the reward-steps for the greedy evaluation are saved
++    REWARD_STEPS_DENSE_FOLDER = "reward_steps_dense_logs"    # record-only dense evaluation; never feeds back into training
++    DENSE_EVAL_FREQUENCY = "dense_eval_frequency"            # episodes between record-only evaluations (None = off)
++    DENSE_EVAL_UNTIL = "dense_eval_until"                    # stop the dense evaluation after this many episodes
+     REWARD_STEPS_FILENAME = "reward_steps-%d.txt"            # reward-steps log file pattern
+ 
+     STATS_SUMMARY_FILENAME = "stats.json"          # name of the file registering the curriculum history
+@@ -100,7 +103,14 @@ class LearningAlgorithm(ABC):
  
          # General reinforcement learning parameters
          use_gpu = get_param(params, LearningAlgorithm.USE_GPU, False)
@@ -31,6 +41,111 @@ index 880fb73..47d9ad1 100644
          self.debug = get_param(params, LearningAlgorithm.DEBUG, False)
          self.training_enable = get_param(params, LearningAlgorithm.TRAINING_ENABLE, True)
          self.num_episodes = get_param(params, LearningAlgorithm.NUM_EPISODES, 20000)
+@@ -110,6 +120,16 @@ class LearningAlgorithm(ABC):
+         # Greedy evaluation parameters
+         self.greedy_evaluation_enable = get_param(params, LearningAlgorithm.GREEDY_EVALUATION_ENABLE, False)
+         self.greedy_evaluation_frequency = get_param(params, LearningAlgorithm.GREEDY_EVALUATION_FREQUENCY, 1)
++
++        # Record-only dense evaluation. Added for the C-full probe, where the two
++        # fast arms both sit on the floor of what a 100-episode grid can resolve.
++        # It must not change training, so: the curriculum is never updated from it
++        # (use_curriculum=False), it writes to its own log folder, and the RNG
++        # state is saved and restored around it. Raising the *existing* evaluation
++        # frequency instead would silently change the run, because those results
++        # feed the curriculum sampling distribution.
++        self.dense_eval_frequency = get_param(params, LearningAlgorithm.DENSE_EVAL_FREQUENCY, None)
++        self.dense_eval_until = get_param(params, LearningAlgorithm.DENSE_EVAL_UNTIL, 4000)
+         self.greedy_evaluation_episodes = get_param(params, LearningAlgorithm.GREEDY_EVALUATION_EPISODES, 1)
+ 
+         # Trace compression parameters (just copy them from any task)
+@@ -138,6 +158,7 @@ class LearningAlgorithm(ABC):
+         # Logs for the different tasks
+         self.reward_steps_loggers = []
+         self.reward_steps_greedy_loggers = []
++        self.reward_steps_dense_loggers = []
+ 
+         # Folder from where the models are loaded/stored
+         self.models_folder = os.path.join(
+@@ -248,6 +269,8 @@ class LearningAlgorithm(ABC):
+         if self.training_enable and self.greedy_evaluation_enable and self._curriculum.get_current_episode() % self.greedy_evaluation_frequency == 0:
+             self._evaluate_greedy_policies()
+ 
++        self._maybe_dense_evaluate()
++
+         # Update domain, task and episode to work with
+         if self._curriculum_return_src == "exploratory":
+             self._curriculum.update(self._curriculum.get_current_domain(), self._curriculum.get_current_task(), total_reward)
+@@ -310,6 +333,40 @@ class LearningAlgorithm(ABC):
+     '''
+     Greedy Policy Evaluation
+     '''
++    def _maybe_dense_evaluate(self):
++        """Record-only evaluation at a finer grain than the authors' schedule.
++
++        Three isolations, each of which would otherwise make this change training:
++          * `use_curriculum=False` so `_curriculum.update` is never called from here;
++          * its own loggers, so the authors' greedy log is untouched;
++          * NumPy and Python RNG state saved and restored, so the extra episodes do
++            not shift the exploration draws of the run that follows.
++
++        If you change the ten-point window used to define attainment, that is a new
++        definition of the attainment time and must not be mixed with the old numbers.
++        """
++        if not self.dense_eval_frequency or not self.training_enable:
++            return
++        episode = self._curriculum.get_current_episode()
++        if episode > self.dense_eval_until or episode % self.dense_eval_frequency != 0:
++            return
++        if episode % self.greedy_evaluation_frequency == 0:
++            return          # the authors' evaluation already covered this episode
++
++        import random as _random
++        np_state, py_state = np.random.get_state(), _random.getstate()
++        training_enable = self.training_enable
++        self.training_enable = False
++        try:
++            for domain_id in range(self.num_domains):
++                for task_id in range(self.num_tasks):
++                    self._evaluate_greedy_policies_helper(
++                        domain_id, task_id, False, True, dense=True)
++        finally:
++            self.training_enable = training_enable
++            np.random.set_state(np_state)
++            _random.setstate(py_state)
++
+     def _evaluate_greedy_policies(self):
+         # We need this because self.training_enable might be either true or false (it's not always true)
+         training_enable = self.training_enable
+@@ -323,7 +380,7 @@ class LearningAlgorithm(ABC):
+                 self._evaluate_greedy_policies_helper(domain_id, task_id, training_enable, is_domain_active[domain_id])
+         self.training_enable = training_enable
+ 
+-    def _evaluate_greedy_policies_helper(self, domain_id, task_id, use_curriculum, is_domain_active):
++    def _evaluate_greedy_policies_helper(self, domain_id, task_id, use_curriculum, is_domain_active, dense=False):
+         sum_total_reward, sum_episode_length = 0, 0
+         for evaluation_episode in range(self.greedy_evaluation_episodes):
+             # If the current domain is available for selection in the curriculum
+@@ -349,7 +406,9 @@ class LearningAlgorithm(ABC):
+             self._curriculum.update(domain_id, task_id, avg_total_reward)
+ 
+         # TODO: maybe we could also log the std dev for the rewards and steps
+-        self._log_reward_and_steps(self.reward_steps_greedy_loggers, domain_id, task_id, avg_total_reward, avg_episode_length)
++        self._log_reward_and_steps(
++            self.reward_steps_dense_loggers if dense else self.reward_steps_greedy_loggers,
++            domain_id, task_id, avg_total_reward, avg_episode_length)
+ 
+     '''
+     Logging
+@@ -366,6 +425,9 @@ class LearningAlgorithm(ABC):
+             if self.greedy_evaluation_enable:
+                 self.reward_steps_greedy_loggers = self._init_reward_steps_loggers_helper(LearningAlgorithm.REWARD_STEPS_GREEDY_FOLDER,
+                                                                                           LearningAlgorithm.REWARD_STEPS_FILENAME)
++            if self.dense_eval_frequency:
++                self.reward_steps_dense_loggers = self._init_reward_steps_loggers_helper(LearningAlgorithm.REWARD_STEPS_DENSE_FOLDER,
++                                                                                         LearningAlgorithm.REWARD_STEPS_FILENAME)
+         else:
+             self.reward_steps_greedy_loggers = self._init_reward_steps_loggers_helper(LearningAlgorithm.REWARD_STEPS_GREEDY_FOLDER,
+                                                                                       LearningAlgorithm.REWARD_STEPS_FILENAME)
 diff --git a/src/run_algorithm.py b/src/run_algorithm.py
 index 72739e4..f7b6223 100755
 --- a/src/run_algorithm.py
