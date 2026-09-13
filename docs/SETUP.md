@@ -53,6 +53,26 @@ Python 用 **3.10**。上游的 conda 环境是 3.7，但 3.10 只需要两处�
 PYBIN=/usr/bin/python3.10 bash setup.sh /opt/hrm
 ```
 
+CUDA 版本不是 12.1 的话：
+
+```bash
+TORCH_INDEX=https://download.pytorch.org/whl/cu118 bash setup.sh /opt/hrm
+```
+
+### 安装过程中的红色报错可以忽略
+
+pip 会打印几行：
+
+```
+ERROR: pip's dependency resolver ...
+gym-hierarchical-subgoal-automata 0.0.1 requires numpy==1.21.3,
+but you have numpy 1.23.5 which is incompatible.
+```
+
+**这是预期的。** 上游包的 `setup.py` 写死了 2021 年的版本号，而那些版本在 Python 3.10 上
+装不了或者不能用。我们是故意装新版的，理由见上面那张表。
+只要脚本最后的自检打印出 `numpy 1.23.5` / `gym 0.15.3` / 两个环境包导入正常，就没问题。
+
 ---
 
 ## 两个补丁改了什么

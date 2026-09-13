@@ -2,7 +2,9 @@
 # 在一台带 CUDA 的 Linux 机器上从零把环境建好。
 #
 # 用法：
-#   bash setup.sh /opt/hrm          # 第一个参数是安装根目录，默认 ./hrm
+#   bash setup.sh /opt/hrm                      # 第一个参数是安装根目录，默认 ./hrm
+#   TORCH_INDEX=default bash setup.sh /opt/hrm   # 没有 CUDA 的机器
+#   PYBIN=/usr/bin/python3.10 bash setup.sh ...  # python3.10 不在 PATH 时
 #
 # 装完之后：
 #   export HRM_LEARNING=<根目录>/hrm-learning
@@ -37,8 +39,8 @@ git -C hrm-learning apply --check "$HERE/patches/02-hrm-learning.patch" \
   && echo "    02 已应用" || echo "    02 已是最新，跳过"
 
 echo "==> 3/6 放入新增的两个算法文件"
-cp "$HERE/newfiles/ihsa_hrl_tabular_perstate_algorithm.py" \
-   "$HERE/newfiles/ihsa_hrl_dqn_perstate_algorithm.py" \
+cp "$HERE/src/ihsa_hrl_tabular_perstate_algorithm.py" \
+   "$HERE/src/ihsa_hrl_dqn_perstate_algorithm.py" \
    hrm-learning/src/reinforcement_learning/
 echo "    已复制 2 个文件"
 
@@ -53,8 +55,14 @@ echo "==> 5/6 装依赖（顺序重要，见下）"
 venv/bin/python -m pip install -q "gym==0.15.3"
 venv/bin/python -m pip install -q -e hrm-minigrid
 venv/bin/python -m pip install -q --no-deps -e hrm-formalism-envs
-# CUDA 版 torch。把 cu121 换成与驱动匹配的版本。
-venv/bin/python -m pip install -q torch --index-url https://download.pytorch.org/whl/cu121
+# CUDA 版 torch。TORCH_INDEX 换成与你驱动匹配的版本；
+# 设成 default 则用 PyPI 默认源（没有 CUDA 的机器上这样装）。
+TORCH_INDEX="${TORCH_INDEX:-https://download.pytorch.org/whl/cu121}"
+if [ "$TORCH_INDEX" = "default" ]; then
+  venv/bin/python -m pip install -q torch
+else
+  venv/bin/python -m pip install -q torch --index-url "$TORCH_INDEX"
+fi
 venv/bin/python -m pip install -q matplotlib pygame pandas tqdm xlsxwriter requests
 # numpy 必须放最后，而且必须 < 1.24：源码有 5 处用 np.int / np.bool，
 # numpy 1.24 移除了这些别名；装 torch 会把 numpy 顶到 2.x。
@@ -78,7 +86,7 @@ cat <<EOF
 
     export HRM_LEARNING=$ROOT/hrm-learning
     export HRM_PYTHON=$ROOT/venv/bin/python
-    \$HRM_PYTHON $HERE/runner/verify.py
+    \$HRM_PYTHON "$HERE/tools/verify.py"
 
 verify.py 全部通过之后再跑网格，别跳过。
 EOF
