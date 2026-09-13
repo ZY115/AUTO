@@ -103,7 +103,9 @@ def make_config(a, tag, task, arm, risk, proto, seed):
         d[k] = PROTOCOLS[proto]
     if a.er_start_size:
         d['er_start_size'] = a.er_start_size
-    out = Path(a.work).expanduser() / tag
+    # 目录名带上配置指纹：同一个 tag 在不同预算下是不同的运行，共用目录会让
+    # 后一次的日志覆盖前一次的，而 harvest 又是从目录里读的。
+    out = Path(a.work).expanduser() / f'{tag}__{budget_id(a)}'
     out.mkdir(parents=True, exist_ok=True)
     d['folder_name'] = str(out)
     d['checkpoint_folder'] = str(out)
@@ -111,20 +113,43 @@ def make_config(a, tag, task, arm, risk, proto, seed):
     return out / 'config.json', d
 
 
-def harvest(folder, task):
-    """Per task instance: the greedy-evaluation curve, `episode;reward;steps`."""
+def harvest(folder, task, kind='reward_steps_greedy_logs'):
+    """Per task instance: an evaluation curve.
+
+    Each row is `episode, reward, steps[, cumulative training env steps]`. Logs
+    written before the fourth field existed have three, so both are accepted; the
+    fourth is what lets a curve be read against *resource* rather than episodes."""
     curves = {}
-    d = Path(folder) / task / 'reward_steps_greedy_logs'
+    d = Path(folder) / task / kind
     if not d.exists():
         return curves
     for f in sorted(d.glob('reward_steps-*.txt')):
         rows = []
         for line in f.read_text().splitlines():
             p = line.split(';')
-            if len(p) == 3:
-                rows.append((int(p[0]), float(p[1]), float(p[2])))
+            if len(p) in (3, 4):
+                row = [int(p[0]), float(p[1]), float(p[2])]
+                if len(p) == 4:
+                    row.append(int(p[3]))
+                rows.append(tuple(row))
         curves[f.stem.split('-')[-1]] = rows
     return curves
+
+
+def harvest_stats(folder, task=None):
+    """The run's own record of what it actually spent: training environment steps
+    (total and per map), update counts, and whether the budget cut it short. Without
+    this the JSONL cannot say what a curve cost, only how many episodes it took."""
+    for f in sorted(Path(folder).rglob('*.json')):
+        try:
+            j = json.loads(f.read_text())
+        except Exception:
+            continue
+        if isinstance(j, dict) and 'train_env_steps' in j:
+            return {k: j[k] for k in (
+                'train_env_steps', 'train_env_steps_by_task', 'env_step_budget',
+                'budget_exhausted', 'interrupted') if k in j}
+    return {}
 
 
 def one(job):
@@ -135,14 +160,18 @@ def one(job):
     cmd = [PY, 'src/run_algorithm.py', str(cfg)]
     t0 = time.time()
     r = subprocess.run(cmd, cwd=str(HRM), env=env, capture_output=True, text=True)
+    folder = conf['folder_name']
     return dict(tag=tag, budget_id=budget_id(a),
+                dense_curves=(harvest(folder, task, 'reward_steps_dense_logs')
+                              if a.dense_eval else {}),
+                stats=harvest_stats(folder, task),
                 env_step_budget=a.env_steps, dense_eval=a.dense_eval,
                 update_sel_num=a.update_sel_num,
                 task=task, arm=arm, risk=risk, protocol=proto, seed=seed,
                 state_format=a.state_format, episodes=a.episodes,
                 seconds=round(time.time() - t0, 1), ok=(r.returncode == 0),
                 cmd=cmd, stderr='' if r.returncode == 0 else r.stderr[-800:],
-                hashes=hashes(), curves=harvest(conf['folder_name'], task))
+                hashes=hashes(), curves=harvest(folder, task))
 
 
 def main():
@@ -175,15 +204,19 @@ def main():
         sys.exit('set HRM_LEARNING to the hrm-learning checkout')
 
     out = Path(a.out)
-    done = set()
+    done, stale = set(), 0
     if out.exists():
         for line in out.read_text().splitlines():
             try:
                 rec = json.loads(line)
-                # 同名但配置不同的旧记录不算已完成：预算、幕数上限、采样设置与
-                # 密集评估配置都参与标识，否则改了预算重跑会静默跳过旧协议的运行。
-                if rec.get('ok') and rec.get('budget_id', budget_id(a)) == budget_id(a):
+                # 指纹必须**明确存在且相等**。早先写成
+                # rec.get('budget_id', budget_id(a)) == budget_id(a) 是错的：
+                # 缺指纹的旧记录会被默认成当前配置，于是旧协议的运行被当作已完成
+                # 静默跳过。旧记录就让它留作旧协议，不自动补成新协议。
+                if rec.get('ok') and rec.get('budget_id') == budget_id(a):
                     done.add(rec['tag'])
+                elif rec.get('ok'):
+                    stale += 1
             except Exception:
                 pass
 
@@ -195,6 +228,9 @@ def main():
             for s in range(a.seeds)
             if tag_of(t, arm, rk, pr, s, a.state_format) not in done]
 
+    if stale:
+        print(f'注意：{stale} 条已完成记录的配置指纹与本次不同（或缺失），'
+              f'按旧协议保留，本轮会重跑。')
     print(f'{len(done)} 已完成并跳过；本轮 {len(jobs)} 次，每次 {a.episodes} 幕，'
           f'{a.workers} 个进程，格式 {a.state_format}', flush=True)
     n = 0

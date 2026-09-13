@@ -58,7 +58,7 @@ index 264efe7..9198e6c 100644
          return completed_episode, total_reward, episode_length, task.is_terminal(), observation_history
  
 diff --git a/src/reinforcement_learning/learning_algorithm.py b/src/reinforcement_learning/learning_algorithm.py
-index 880fb73..e1a321a 100644
+index 880fb73..897693b 100644
 --- a/src/reinforcement_learning/learning_algorithm.py
 +++ b/src/reinforcement_learning/learning_algorithm.py
 @@ -71,6 +71,10 @@ class LearningAlgorithm(ABC):
@@ -261,7 +261,26 @@ index 880fb73..e1a321a 100644
          else:
              self.reward_steps_greedy_loggers = self._init_reward_steps_loggers_helper(LearningAlgorithm.REWARD_STEPS_GREEDY_FOLDER,
                                                                                        LearningAlgorithm.REWARD_STEPS_FILENAME)
-@@ -462,7 +571,11 @@ class LearningAlgorithm(ABC):
+@@ -393,8 +502,16 @@ class LearningAlgorithm(ABC):
+         return reward_steps_loggers
+ 
+     def _log_reward_and_steps(self, reward_steps_loggers, domain_id, task_id, episode_reward, episode_length):
+-        reward_steps_loggers[domain_id][task_id].info(";".join([str(self._curriculum.get_current_episode()),
+-                                                                str(float(episode_reward)), str(episode_length)]))
++        # Fourth field: cumulative *training* environment steps at this evaluation.
++        # Without it a curve can only be read against episode count, and episodes are
++        # not a resource: an episode that dies early and a long successful one cost
++        # very different amounts, so arms that differ in how fast they die cannot be
++        # compared on episodes at all. Readers must accept both 3 and 4 fields, since
++        # every log written before this change has three.
++        reward_steps_loggers[domain_id][task_id].info(";".join([
++            str(self._curriculum.get_current_episode()),
++            str(float(episode_reward)), str(episode_length),
++            str(self.train_env_steps)]))
+ 
+     '''
+     Checkpoint Management
+@@ -462,7 +579,11 @@ class LearningAlgorithm(ABC):
          self._update_running_time()
          stats = {
              "total_running_time": self.running_time,

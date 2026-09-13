@@ -30,7 +30,8 @@ def read_curves(run_dir):
             rows = []
             for line in f.read_text().splitlines():
                 p = line.split(';')
-                if len(p) == 3:
+                # 3 字段是加入环境步数之前写的旧日志，4 字段是之后的，两种都要能读
+                if len(p) in (3, 4):
                     try:
                         rows.append((int(p[0]), float(p[1]), float(p[2])))
                     except ValueError:
