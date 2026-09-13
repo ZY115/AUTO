@@ -62,6 +62,19 @@ def hashes():
     }
 
 
+def budget_id(a):
+    """Fingerprint of everything that changes what a run *is*, beyond its tag.
+
+    Resume works by skipping tags already recorded as ok. Without this, changing
+    the step budget, the episode cap, the sampling rule or the dense-evaluation
+    schedule and re-running the same command would silently skip runs done under
+    the *old* settings and quietly mix two protocols in one file."""
+    parts = (f"ep{a.episodes}", f"env{a.env_steps or 0}",
+             f"sel{'d' if a.update_sel_num is None else a.update_sel_num}",
+             f"dense{a.dense_eval or 0}x{a.dense_eval_until if a.dense_eval else 0}")
+    return hashlib.md5('|'.join(parts).encode()).hexdigest()[:8]
+
+
 def tag_of(task, arm, risk, proto, seed, fmt):
     return f"{task.replace('-', '')}_{fmt}_{risk}_{proto}_{arm}_s{seed}"
 
@@ -77,6 +90,8 @@ def make_config(a, tag, task, arm, risk, proto, seed):
     d['environments'] = [dict(d['environments'][0], name=task)]
     d['grid_params'] = dict(d['grid_params'], use_lava=True)
     d['neutralize_deadends'] = (risk == 'safe')
+    if a.env_steps:
+        d['env_step_budget'] = a.env_steps
     if a.dense_eval:
         d['dense_eval_frequency'] = a.dense_eval
         d['dense_eval_until'] = a.dense_eval_until
@@ -120,7 +135,10 @@ def one(job):
     cmd = [PY, 'src/run_algorithm.py', str(cfg)]
     t0 = time.time()
     r = subprocess.run(cmd, cwd=str(HRM), env=env, capture_output=True, text=True)
-    return dict(tag=tag, task=task, arm=arm, risk=risk, protocol=proto, seed=seed,
+    return dict(tag=tag, budget_id=budget_id(a),
+                env_step_budget=a.env_steps, dense_eval=a.dense_eval,
+                update_sel_num=a.update_sel_num,
+                task=task, arm=arm, risk=risk, protocol=proto, seed=seed,
                 state_format=a.state_format, episodes=a.episodes,
                 seconds=round(time.time() - t0, 1), ok=(r.returncode == 0),
                 cmd=cmd, stderr='' if r.returncode == 0 else r.stderr[-800:],
@@ -137,6 +155,9 @@ def main():
     p.add_argument('--risks', default='safe,lava')
     p.add_argument('--protocols', default='author')
     p.add_argument('--arms', default='Y11,Y10')
+    p.add_argument('--env-steps', type=int, default=None,
+                   help='训练环境步数预算。到预算立即停止并保留未完成回合；'
+                        '评估步与广播更新不计入。同幕数不等于同环境经验量。')
     p.add_argument('--dense-eval', type=int, default=None,
                    help='只记录、不反馈训练的密集评估间隔（幕）。原作者每 100 幕的'
                         '评估保持不变；写入独立的 reward_steps_dense_logs。')
@@ -159,7 +180,9 @@ def main():
         for line in out.read_text().splitlines():
             try:
                 rec = json.loads(line)
-                if rec.get('ok'):
+                # 同名但配置不同的旧记录不算已完成：预算、幕数上限、采样设置与
+                # 密集评估配置都参与标识，否则改了预算重跑会静默跳过旧协议的运行。
+                if rec.get('ok') and rec.get('budget_id', budget_id(a)) == budget_id(a):
                     done.add(rec['tag'])
             except Exception:
                 pass

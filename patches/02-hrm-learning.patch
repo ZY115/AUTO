@@ -11,21 +11,68 @@ index f98dad6..e60634b 100644
 +    # the variable for this process and its children, which is what the original
 +    # call intended; putenv alone never updated os.environ anyway.
 +    os.environ[env_var] = final_path + os.pathsep + os.environ.get(env_var, "")
+diff --git a/src/reinforcement_learning/ihsa_base_algorithm.py b/src/reinforcement_learning/ihsa_base_algorithm.py
+index 264efe7..9198e6c 100644
+--- a/src/reinforcement_learning/ihsa_base_algorithm.py
++++ b/src/reinforcement_learning/ihsa_base_algorithm.py
+@@ -184,9 +184,16 @@ class IHSAAlgorithmBase(LearningAlgorithm):
+         interrupt_episode = False
+         hierarchy = self._get_hierarchy(domain_id)
+ 
+-        while not task.is_terminal() and episode_length < self.max_episode_length and not interrupt_episode:
++        while not task.is_terminal() and episode_length < self.max_episode_length \
++                and not interrupt_episode and not self.budget_exhausted:
+             action = self._choose_action(domain_id, task_id, current_state, hierarchy, current_hierarchy_state)
+             next_state, reward, is_terminal, _ = task.step(action)
++
++            # Environment-step budget. Only real *training* actions count: evaluation
++            # (both the authors' and the dense one) runs with training_enable False,
++            # and broadcast updates are not environment actions at all.
++            if self.training_enable:
++                self._count_train_env_step(domain_id, task_id)
+             observation = self._get_task_observation(task)
+ 
+             # update the observation history and get update hierarchy state
+@@ -197,6 +204,11 @@ class IHSAAlgorithmBase(LearningAlgorithm):
+ 
+             if self.training_enable:
+                 self._update_q_functions(domain_id, task_id, current_state, action, next_state, is_terminal, observation)
++                # Check *after* the update returns, so a broadcasting arm is never
++                # cut off half way through one transition. The loop condition then
++                # ends the episode at the next iteration, which leaves this episode
++                # genuinely incomplete rather than faking a terminal state.
++                self._check_env_step_budget()
+ 
+             # The episode has to be interrupted if an automaton is learnt
+             if self._is_counterexample(task, domain_id, next_hierarchy_state):
+@@ -222,7 +234,10 @@ class IHSAAlgorithmBase(LearningAlgorithm):
+             current_state = next_state
+             current_hierarchy_state = next_hierarchy_state
+ 
+-        completed_episode = not interrupt_episode
++        # A budget cut leaves the episode incomplete. `task.is_terminal()` is
++        # reported as it actually is, so an exhausted budget never masquerades as an
++        # environment failure and no terminal flag reaches the last TD update.
++        completed_episode = not interrupt_episode and not self.budget_exhausted
+ 
+         return completed_episode, total_reward, episode_length, task.is_terminal(), observation_history
+ 
 diff --git a/src/reinforcement_learning/learning_algorithm.py b/src/reinforcement_learning/learning_algorithm.py
-index 880fb73..bd544d9 100644
+index 880fb73..e1a321a 100644
 --- a/src/reinforcement_learning/learning_algorithm.py
 +++ b/src/reinforcement_learning/learning_algorithm.py
-@@ -71,6 +71,9 @@ class LearningAlgorithm(ABC):
+@@ -71,6 +71,10 @@ class LearningAlgorithm(ABC):
  
      REWARD_STEPS_FOLDER = "reward_steps_logs"                # folder where the reward-steps are saved
      REWARD_STEPS_GREEDY_FOLDER = "reward_steps_greedy_logs"  # folder where the reward-steps for the greedy evaluation are saved
 +    REWARD_STEPS_DENSE_FOLDER = "reward_steps_dense_logs"    # record-only dense evaluation; never feeds back into training
 +    DENSE_EVAL_FREQUENCY = "dense_eval_frequency"            # episodes between record-only evaluations (None = off)
 +    DENSE_EVAL_UNTIL = "dense_eval_until"                    # stop the dense evaluation after this many episodes
++    ENV_STEP_BUDGET = "env_step_budget"                      # training environment actions allowed (None = unlimited)
      REWARD_STEPS_FILENAME = "reward_steps-%d.txt"            # reward-steps log file pattern
  
      STATS_SUMMARY_FILENAME = "stats.json"          # name of the file registering the curriculum history
-@@ -100,7 +103,14 @@ class LearningAlgorithm(ABC):
+@@ -100,7 +104,14 @@ class LearningAlgorithm(ABC):
  
          # General reinforcement learning parameters
          use_gpu = get_param(params, LearningAlgorithm.USE_GPU, False)
@@ -41,7 +88,7 @@ index 880fb73..bd544d9 100644
          self.debug = get_param(params, LearningAlgorithm.DEBUG, False)
          self.training_enable = get_param(params, LearningAlgorithm.TRAINING_ENABLE, True)
          self.num_episodes = get_param(params, LearningAlgorithm.NUM_EPISODES, 20000)
-@@ -110,6 +120,16 @@ class LearningAlgorithm(ABC):
+@@ -110,6 +121,25 @@ class LearningAlgorithm(ABC):
          # Greedy evaluation parameters
          self.greedy_evaluation_enable = get_param(params, LearningAlgorithm.GREEDY_EVALUATION_ENABLE, False)
          self.greedy_evaluation_frequency = get_param(params, LearningAlgorithm.GREEDY_EVALUATION_FREQUENCY, 1)
@@ -55,10 +102,19 @@ index 880fb73..bd544d9 100644
 +        # feed the curriculum sampling distribution.
 +        self.dense_eval_frequency = get_param(params, LearningAlgorithm.DENSE_EVAL_FREQUENCY, None)
 +        self.dense_eval_until = get_param(params, LearningAlgorithm.DENSE_EVAL_UNTIL, 4000)
++
++        # Environment-step budget. "Same number of episodes" is not "same amount of
++        # environment experience": an episode that dies early and a long successful
++        # one cost very different amounts. Arms that differ in how fast they die
++        # cannot be compared on episode count alone.
++        self.env_step_budget = get_param(params, LearningAlgorithm.ENV_STEP_BUDGET, None)
++        self.budget_exhausted = False
++        self.train_env_steps = 0
++        self.train_env_steps_by_task = {}
          self.greedy_evaluation_episodes = get_param(params, LearningAlgorithm.GREEDY_EVALUATION_EPISODES, 1)
  
          # Trace compression parameters (just copy them from any task)
-@@ -138,6 +158,7 @@ class LearningAlgorithm(ABC):
+@@ -138,6 +168,7 @@ class LearningAlgorithm(ABC):
          # Logs for the different tasks
          self.reward_steps_loggers = []
          self.reward_steps_greedy_loggers = []
@@ -66,7 +122,36 @@ index 880fb73..bd544d9 100644
  
          # Folder from where the models are loaded/stored
          self.models_folder = os.path.join(
-@@ -248,6 +269,8 @@ class LearningAlgorithm(ABC):
+@@ -203,6 +234,9 @@ class LearningAlgorithm(ABC):
+         else:
+             self._evaluate_greedy_policies()
+ 
++        if self.training_enable and self.env_step_budget:
++            self._final_frozen_evaluation()
++
+         self._write_stats_summary()
+ 
+         if self.training_enable:
+@@ -225,6 +259,8 @@ class LearningAlgorithm(ABC):
+ 
+             # Make a checkpoint (the name of the file has the last completed episode)
+             current_episode = self._curriculum.get_current_episode()
++            if self.budget_exhausted:
++                self.interrupted_learning = True
+             if self.checkpoint_enable and (not completed_episode or (current_episode % self.checkpoint_frequency == 0)):
+                 self._make_checkpoint(current_episode)
+ 
+@@ -241,13 +277,17 @@ class LearningAlgorithm(ABC):
+                                    self._curriculum.get_current_task(), total_reward, episode_length)
+ 
+         # Needed to log when an automaton is learned (see subclasses)
+-        if not completed_episode:
++        # A budget cut is not an automaton-learning interruption: routing it through
++        # _on_incomplete_episode would record a learning event that never happened.
++        if not completed_episode and not self.budget_exhausted:
+             self._on_incomplete_episode(self._curriculum.get_current_domain())
+ 
+         # Perform evaluation of the greedy policies
          if self.training_enable and self.greedy_evaluation_enable and self._curriculum.get_current_episode() % self.greedy_evaluation_frequency == 0:
              self._evaluate_greedy_policies()
  
@@ -75,10 +160,40 @@ index 880fb73..bd544d9 100644
          # Update domain, task and episode to work with
          if self._curriculum_return_src == "exploratory":
              self._curriculum.update(self._curriculum.get_current_domain(), self._curriculum.get_current_task(), total_reward)
-@@ -310,6 +333,40 @@ class LearningAlgorithm(ABC):
+@@ -310,6 +350,70 @@ class LearningAlgorithm(ABC):
      '''
      Greedy Policy Evaluation
      '''
++    def _count_train_env_step(self, domain_id, task_id):
++        self.train_env_steps += 1
++        key = f"{domain_id}:{task_id}"
++        self.train_env_steps_by_task[key] = self.train_env_steps_by_task.get(key, 0) + 1
++
++    def _check_env_step_budget(self):
++        if self.env_step_budget and self.train_env_steps >= self.env_step_budget:
++            self.budget_exhausted = True
++
++    def _final_frozen_evaluation(self):
++        """One last evaluation of the frozen policy, isolated the same way the dense
++        one is: no curriculum update, no training, RNG saved and restored. Written to
++        the authors' greedy log so the curve simply ends with a final point.
++
++        It does not decide attainment. If the ten-point confirmation window is not
++        complete, the analysis reports the run as not having attained, rather than
++        inventing a verdict from a partial window."""
++        import random as _random
++        np_state, py_state = np.random.get_state(), _random.getstate()
++        training_enable = self.training_enable
++        self.training_enable = False
++        try:
++            for domain_id in range(self.num_domains):
++                for task_id in range(self.num_tasks):
++                    self._evaluate_greedy_policies_helper(domain_id, task_id, False, True)
++        finally:
++            self.training_enable = training_enable
++            np.random.set_state(np_state)
++            _random.setstate(py_state)
++
 +    def _maybe_dense_evaluate(self):
 +        """Record-only evaluation at a finer grain than the authors' schedule.
 +
@@ -116,7 +231,7 @@ index 880fb73..bd544d9 100644
      def _evaluate_greedy_policies(self):
          # We need this because self.training_enable might be either true or false (it's not always true)
          training_enable = self.training_enable
-@@ -323,7 +380,7 @@ class LearningAlgorithm(ABC):
+@@ -323,7 +427,7 @@ class LearningAlgorithm(ABC):
                  self._evaluate_greedy_policies_helper(domain_id, task_id, training_enable, is_domain_active[domain_id])
          self.training_enable = training_enable
  
@@ -125,7 +240,7 @@ index 880fb73..bd544d9 100644
          sum_total_reward, sum_episode_length = 0, 0
          for evaluation_episode in range(self.greedy_evaluation_episodes):
              # If the current domain is available for selection in the curriculum
-@@ -349,7 +406,9 @@ class LearningAlgorithm(ABC):
+@@ -349,7 +453,9 @@ class LearningAlgorithm(ABC):
              self._curriculum.update(domain_id, task_id, avg_total_reward)
  
          # TODO: maybe we could also log the std dev for the rewards and steps
@@ -136,7 +251,7 @@ index 880fb73..bd544d9 100644
  
      '''
      Logging
-@@ -366,6 +425,9 @@ class LearningAlgorithm(ABC):
+@@ -366,6 +472,9 @@ class LearningAlgorithm(ABC):
              if self.greedy_evaluation_enable:
                  self.reward_steps_greedy_loggers = self._init_reward_steps_loggers_helper(LearningAlgorithm.REWARD_STEPS_GREEDY_FOLDER,
                                                                                            LearningAlgorithm.REWARD_STEPS_FILENAME)
@@ -146,6 +261,19 @@ index 880fb73..bd544d9 100644
          else:
              self.reward_steps_greedy_loggers = self._init_reward_steps_loggers_helper(LearningAlgorithm.REWARD_STEPS_GREEDY_FOLDER,
                                                                                        LearningAlgorithm.REWARD_STEPS_FILENAME)
+@@ -462,7 +571,11 @@ class LearningAlgorithm(ABC):
+         self._update_running_time()
+         stats = {
+             "total_running_time": self.running_time,
+-            "interrupted": self.interrupted_learning
++            "interrupted": self.interrupted_learning,
++            "budget_exhausted": self.budget_exhausted,
++            "env_step_budget": self.env_step_budget,
++            "train_env_steps": self.train_env_steps,
++            "train_env_steps_by_task": self.train_env_steps_by_task
+         }
+ 
+         if self.training_enable:
 diff --git a/src/run_algorithm.py b/src/run_algorithm.py
 index 72739e4..f7b6223 100755
 --- a/src/run_algorithm.py
