@@ -40,7 +40,13 @@ PY = os.environ.get('HRM_PYTHON', sys.executable)
 BASE_CFG = 'src/config/examples/ihsa/07-cw-frl-bq-exploit-flat/config.json'
 
 ARMS = {'Y11': 'ihsa-hrl', 'Y10': 'ihsa-hrl-perstate',
-        'Cfull': 'ihsa-hrl-crossstate'}
+        'Cfull': 'ihsa-hrl-crossstate',
+        # 机制干预用的两个 C-full 变体：只差「各库独立采样」还是「各库共用采样」。
+        # 探索规则两边都用原来的分状态计数，不固定 ε —— 固定 ε 只适合软件等价性
+        # 验收，原实验里 ε 多数时候高得多，拿它当主协议会换掉待解释的对象。
+        'CfullInd': 'ihsa-hrl-crossstate',
+        'CfullShared': 'ihsa-hrl-crossstate'}
+SHARED_SAMPLING_ARMS = {'CfullShared'}
 PROTOCOLS = {'author': 0.0, 'stepcost': -0.01}
 TASKS = ['book', 'book-and-quill', 'cake']
 
@@ -70,6 +76,7 @@ def budget_id(a):
     schedule and re-running the same command would silently skip runs done under
     the *old* settings and quietly mix two protocols in one file."""
     parts = (f"ep{a.episodes}", f"env{a.env_steps or 0}",
+             f"seprng{int(bool(a.separate_update_rng))}",
              f"sel{'d' if a.update_sel_num is None else a.update_sel_num}",
              f"dense{a.dense_eval or 0}x{a.dense_eval_until if a.dense_eval else 0}")
     return hashlib.md5('|'.join(parts).encode()).hexdigest()[:8]
@@ -82,6 +89,10 @@ def tag_of(task, arm, risk, proto, seed, fmt):
 def make_config(a, tag, task, arm, risk, proto, seed):
     d = json.loads((HRM / BASE_CFG).read_text())
     d['algorithm'] = ARMS[arm]
+    if arm in SHARED_SAMPLING_ARMS:
+        d['crossstate_shared_sampling'] = True
+    if a.separate_update_rng:
+        d['separate_update_rng'] = True
     d['state_format'] = a.state_format
     d['num_episodes'] = a.episodes
     d['debug'] = False
@@ -184,6 +195,10 @@ def main():
     p.add_argument('--risks', default='safe,lava')
     p.add_argument('--protocols', default='author')
     p.add_argument('--arms', default='Y11,Y10')
+    p.add_argument('--separate-update-rng', action='store_true',
+                   help='更新采样用每个库自己的生成器，全局流留给行为策略。'
+                        '要把采样当单因素改动，这个必须开——否则改采样会平移'
+                        '之后每一次探索的随机数。参与配置指纹。')
     p.add_argument('--env-steps', type=int, default=None,
                    help='训练环境步数预算。到预算立即停止并保留未完成回合；'
                         '评估步与广播更新不计入。同幕数不等于同环境经验量。')
