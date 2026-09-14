@@ -73,6 +73,8 @@ length, not equivalence.
 from reinforcement_learning.ihsa_hrl_tabular_perstate_algorithm import (
     IHSAAlgorithmHRLTabularPerState,
 )
+import numpy as np
+
 from utils.container_utils import get_param
 
 
@@ -99,6 +101,7 @@ class IHSAAlgorithmHRLTabularCrossState(IHSAAlgorithmHRLTabularPerState):
         self._broadcast_steps = 0       # environment steps that triggered a broadcast
         self._last_broadcast_banks = [] # which bank keys the last step reached
         self._last_broadcast_goals = [] # which subgoals each of them updated
+        self._shared_rngs = {}          # per task, seeded exactly as Y11's bank
         super().__init__(params)
 
     def _legal_state_keys(self, domain_id):
@@ -143,11 +146,29 @@ class IHSAAlgorithmHRLTabularCrossState(IHSAAlgorithmHRLTabularPerState):
 
         fixed = None
         if self._shared_sampling:
-            # Draw once, from the bank the behaviour policy is acting through, and
-            # make every bank use that same set. Asserted rather than assumed: a
-            # bank missing one of these subgoals would silently skip it.
+            # Draw once and make every bank use that same set.
+            #
+            # The draw must come from a stream seeded **exactly as Y11's single bank
+            # is**, not from whichever bank happens to be acting. Each per-state bank
+            # carries its own seed (it has to, or independent sampling would not be
+            # independent), so drawing from the acting bank would make C-full's
+            # subset sequence differ from Y11's from the first step — and then the
+            # two arms are not comparable even though every C-full bank agrees with
+            # every other. That mistake cost one failed equivalence check.
+            #
+            # The draw still needs a bank to read _active_root_sat_subgoals and the
+            # update counters from; all banks agree on those under shared sampling,
+            # so the acting one is as good as any. Only the *stream* is replaced.
             acting = banks.get(self._perstate_key) or next(iter(banks.values()))
-            fixed = list(acting._get_subgoals_to_update())
+            if task_id not in self._shared_rngs:
+                self._shared_rngs[task_id] = np.random.default_rng(
+                    self.seed_value + 7919 * task_id)
+            saved = acting._update_rng
+            acting._update_rng = self._shared_rngs[task_id]
+            try:
+                fixed = list(acting._get_subgoals_to_update())
+            finally:
+                acting._update_rng = saved
             for b in banks.values():
                 missing = [g for g in fixed if not b._has_q_function(b.get_root(g).get_formula_condition())]
                 if missing:

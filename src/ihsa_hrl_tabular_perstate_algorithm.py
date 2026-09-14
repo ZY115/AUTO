@@ -29,6 +29,7 @@ is in scope. It is called immediately before `_update_q_functions` in the same
 loop iteration, so the stored key is the state the action was actually taken in.
 """
 import copy
+import zlib
 from reinforcement_learning.ihsa_hrl_tabular_algorithm import IHSAAlgorithmHRLTabular
 from utils.container_utils import get_param
 
@@ -59,7 +60,18 @@ class IHSAAlgorithmHRLTabularPerState(IHSAAlgorithmHRLTabular):
             return self._formula_banks[task_id]
         banks = self._perstate_banks[task_id]
         if self._perstate_key not in banks:
-            banks[self._perstate_key] = copy.deepcopy(self._perstate_templates[task_id])
+            bank = copy.deepcopy(self._perstate_templates[task_id])
+            # Each copy needs its own update-sampling stream. A deepcopy carries the
+            # template's generator state, so without this every bank would draw the
+            # same subsets — shared sampling by accident, which is precisely the
+            # thing crossstate_shared_sampling is meant to switch on deliberately.
+            # zlib.crc32 rather than hash(): Python randomises str hashing per
+            # process unless PYTHONHASHSEED is set, so hash() here would make the
+            # seeding differ between runs of the same config.
+            bank.seed_update_rng(
+                self.seed_value + 7919 * task_id
+                + zlib.crc32(str(self._perstate_key).encode()) % 100003)
+            banks[self._perstate_key] = bank
         return banks[self._perstate_key]
 
     def _get_policy_banks(self):

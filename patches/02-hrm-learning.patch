@@ -57,6 +57,94 @@ index 264efe7..9198e6c 100644
  
          return completed_episode, total_reward, episode_length, task.is_terminal(), observation_history
  
+diff --git a/src/reinforcement_learning/ihsa_hrl_algorithm.py b/src/reinforcement_learning/ihsa_hrl_algorithm.py
+index 964f47f..97b749a 100644
+--- a/src/reinforcement_learning/ihsa_hrl_algorithm.py
++++ b/src/reinforcement_learning/ihsa_hrl_algorithm.py
+@@ -22,6 +22,7 @@ class FormulaBank(FormulaTree):
+     PSEUDOREWARD_AFTER_STEP = "pseudoreward_after_step"                    # reward given after every step for a formula
+ 
+     FORMULA_UPDATE_SEL_NUM = "formula_update_sel_num"    # number of formula Q-functions to be updated after each step
++    SEPARATE_UPDATE_RNG = "separate_update_rng"          # draw update subsets from a per-bank stream, not the global one
+ 
+     def __init__(self, params, ignore_empty_observations):
+         super(FormulaBank, self).__init__()
+@@ -38,6 +39,18 @@ class FormulaBank(FormulaTree):
+ 
+         self._formula_update_sel_num = get_param(params, FormulaBank.FORMULA_UPDATE_SEL_NUM, 6)
+         self._num_update_calls = 0
++
++        # Which subgoals to update is drawn from NumPy's *global* stream by default,
++        # the same stream the behaviour policy explores from. That makes any change
++        # to update sampling also shift every later exploration draw, so an
++        # experiment that changes the sampling rule is never a single-factor
++        # intervention. Turning this on gives each bank its own generator, leaving
++        # the global stream to the behaviour policy alone.
++        #
++        # Off by default: every result recorded before this existed was produced
++        # with the shared stream, and switching silently would invalidate them.
++        self._separate_update_rng = get_param(params, FormulaBank.SEPARATE_UPDATE_RNG, False)
++        self._update_rng = None
+         assert self._formula_update_sel_num is None or self._formula_update_sel_num >= 1
+ 
+         # Keeps track the number of steps for which a subgoal has run, and how many times it has been updated.
+@@ -147,7 +160,19 @@ class FormulaBank(FormulaTree):
+         update_counters = np.array([self._q_function_update_counter[condition] for condition in base_conditions], dtype=np.float32)
+         score = self._num_update_calls + 1 - update_counters  # Use +1 to avoid nullifying probabilities in the following step
+         probs = score / np.sum(score)
+-        return np.random.choice(base_conditions, self._formula_update_sel_num, replace=False, p=probs)
++        rng = self._update_rng if self._update_rng is not None else np.random
++        return rng.choice(base_conditions, self._formula_update_sel_num, replace=False, p=probs)
++
++    def seed_update_rng(self, seed):
++        """Give this bank its own update-sampling stream.
++
++        Each bank needs a *distinct* seed. The per-state arms build their banks by
++        deep-copying one template, so without re-seeding every copy would carry the
++        same generator state and draw identical subsets — which is shared sampling
++        by accident, exactly the thing the shared-sampling switch is supposed to
++        turn on deliberately."""
++        if self._separate_update_rng:
++            self._update_rng = np.random.default_rng(seed)
+ 
+     @abstractmethod
+     def get_q_function(self, formula_condition: FormulaCondition):
+@@ -268,6 +293,8 @@ class IHSAAlgorithmHRL(IHSAAlgorithmBase):
+ 
+         # Exploration rates for each subgoal. The step counters for each subgoal are kept in the subclasses.
+         self._exploration_rate_subgoal_init = get_param(params, IHSAAlgorithmHRL.EXPLORATION_RATE_PER_SUBGOAL_INIT, 1.0)
++        # None = anneal as published. A number pins epsilon, for controlled checks only.
++        self._subgoal_exploration_rate_const = get_param(params, "subgoal_exploration_rate_const", None)
+         self._exploration_rate_subgoal_end = get_param(params, IHSAAlgorithmHRL.EXPLORATION_RATE_PER_SUBGOAL_END, 0.1)
+         self._exploration_rate_subgoal_steps = get_param(params, IHSAAlgorithmHRL.EXPLORATION_RATE_PER_SUBGOAL_STEPS, 300000)
+ 
+@@ -542,6 +569,12 @@ class IHSAAlgorithmHRL(IHSAAlgorithmBase):
+         return self._option_exploration_base_condition is not None
+ 
+     def _get_formula_exploration_rate(self, task_id, formula_condition: FormulaCondition):
++        # Controlled-acceptance only. The annealing reads the *current bank's*
++        # execution count, so the arms anneal on different counts and their epsilon
++        # schedules drift apart. Pinning it removes that channel, which is what a
++        # stepwise-equivalence check needs; it is never an experiment setting.
++        if self._subgoal_exploration_rate_const is not None:
++            return self._subgoal_exploration_rate_const
+         return self._get_annealed_exploration_rate(
+             self._get_formula_q_function_step_count(task_id, formula_condition),
+             self._exploration_rate_subgoal_init,
+diff --git a/src/reinforcement_learning/ihsa_hrl_tabular_algorithm.py b/src/reinforcement_learning/ihsa_hrl_tabular_algorithm.py
+index 70467b3..eb70366 100644
+--- a/src/reinforcement_learning/ihsa_hrl_tabular_algorithm.py
++++ b/src/reinforcement_learning/ihsa_hrl_tabular_algorithm.py
+@@ -92,6 +92,9 @@ class IHSAAlgorithmHRLTabular(IHSAAlgorithmHRL):
+             for _ in range(self.num_tasks)
+         ]
+ 
++        for task_id, bank in enumerate(self._formula_banks):
++            bank.seed_update_rng(self.seed_value + 7919 * task_id)
++
+         self._automaton_step_counter: Dict[int, Dict[str, Dict[Tuple[str, FormulaCondition], int]]] = {task_id: {} for task_id in range(self.num_tasks)}
+         self._init_formula_q_functions()
+ 
 diff --git a/src/reinforcement_learning/learning_algorithm.py b/src/reinforcement_learning/learning_algorithm.py
 index 880fb73..897693b 100644
 --- a/src/reinforcement_learning/learning_algorithm.py
