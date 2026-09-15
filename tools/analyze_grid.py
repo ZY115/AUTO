@@ -28,6 +28,19 @@ narrow. Measured on the 200k tabular grid, book/lava went from [+0.315, +0.613]
 to [+0.220, +0.715] once the seeds were averaged within each map first. The tool
 now prints the clustered interval and marks the flat one as diagnostic only.
 
+**Two different quantities both get called "the ratio", and they are not equal.**
+This tool prints both because mixing them has already produced two wrong numbers
+in this project:
+
+    A  ratio of RMSTs          mean(Y10) / mean(Y11)
+    B  geometric mean of the per-instance ratios   exp(mean(log(Y10_i / Y11_i)))
+
+They differ whenever the per-instance ratios are skewed. On the neural book grid,
+lava: A = 3.64x but B = 4.28x, an 18% gap; the interactions are 1.85x and 2.19x.
+Both are legitimate summaries. **Neither may be reported without saying which it
+is**, and an argument about one (for example a ceiling argument about how large
+mean(Y10) can get under truncation) does not transfer to the other.
+
 **The risk x sharing interaction has a sign only once you name the measure and the
 scale.** On book, all three of these are true of the same data at once, and they do
 not contradict each other — additive and multiplicative interactions are simply
@@ -165,6 +178,20 @@ def rmst_pair(a, b, tau):
             sum(b[k] is None for k in ks), len(ks))
 
 
+def geo_ratio(a, b, tau):
+    """统计量 B：逐实例比值的几何均值。**和 A（两个 RMST 均值之比）不是一回事。**
+
+    A 先在实例上取平均再相除，B 先相除再取（对数）平均。逐实例比值一偏斜两者就分开：
+    神经版 book 的 lava 格上 A=3.64x、B=4.28x。关于 A 的论证（比如「截断把
+    mean(Y10) 压在 tau 以下，所以倍数有上限」）**对 B 不成立**。"""
+    ks = sorted(set(a) & set(b))
+    if not ks:
+        return 0.0
+    r = [math.log((tau if b[k] is None else b[k]) / (tau if a[k] is None else a[k]))
+         for k in ks]
+    return math.exp(mean(r))
+
+
 def rmst(speeds, tau):
     """E[min(T, tau)] over a dict of instance -> episodes-to-90% (None = never).
 
@@ -247,8 +274,8 @@ def main():
             print(f'\n速度口径  达到 90% 所需幕数（RMST，删失按 {TAU:,} 幕计入）')
             print(f'  达标时刻记在窗口{"末端（首次确认）" if ANCHOR == "end" else "起点（回溯标记）"}'
                   f'；另一种定义的数字附在括号里，供判断敏感度')
-            print(f'{"任务":<16} {"风险":<6} {"Y11":>11} {"Y10":>11} {"倍数":>8} '
-                  f'{"节省幕数":>11}  {"删失":>9}')
+            print(f'{"任务":<16} {"风险":<6} {"Y11":>11} {"Y10":>11} '
+                  f'{"A·均值之比":>11} {"B·逐实例几何均值":>16} {"节省幕数":>11}  {"删失":>9}')
             for t_ in tasks:
                 for risk in ('safe', 'lava'):
                     pr = rmst_pair(S[(fmt, proto, t_, risk, 'Y11')],
@@ -259,8 +286,11 @@ def main():
                         continue
                     ra, rb, ca, cb, n = pr
                     alt = f'({pr2[1]/pr2[0]:.2f}x)' if pr2 and pr2[0] else ''
-                    print(f'{t_:<16} {risk:<6} {ra:>11,.0f} {rb:>11,.0f} {rb/ra:>7.2f}x '
-                          f'{rb-ra:>11,.0f}  Y11 {ca}/{n} Y10 {cb}/{n}   另一定义 {alt}')
+                    gm = geo_ratio(S[(fmt, proto, t_, risk, 'Y11')],
+                                   S[(fmt, proto, t_, risk, 'Y10')], TAU)
+                    print(f'{t_:<16} {risk:<6} {ra:>11,.0f} {rb:>11,.0f} {rb/ra:>10.2f}x '
+                          f'{gm:>15.2f}x {rb-ra:>11,.0f}  Y11 {ca}/{n} Y10 {cb}/{n}   '
+                          f'A 的另一时刻定义 {alt}')
 
             print('\nH2  岩浆是否放大共享的收益')
             print('  三个统计量，三种尺度。它们可以给出不同方向而彼此不矛盾，')
@@ -279,7 +309,12 @@ def main():
                 add = mul = '—'
                 if all(cells):
                     add = f'{(cells[1][1]-cells[1][0])-(cells[0][1]-cells[0][0]):+,.0f} 幕'
-                    mul = f'{(cells[1][1]/cells[1][0])/(cells[0][1]/cells[0][0]):.3f}x'
+                    a_ = (cells[1][1]/cells[1][0])/(cells[0][1]/cells[0][0])
+                    gs = geo_ratio(S[(fmt, proto, t_, 'safe', 'Y11')],
+                                   S[(fmt, proto, t_, 'safe', 'Y10')], TAU)
+                    gl = geo_ratio(S[(fmt, proto, t_, 'lava', 'Y11')],
+                                   S[(fmt, proto, t_, 'lava', 'Y10')], TAU)
+                    mul = f'A {a_:.2f}x / B {gl/gs:.2f}x' if gs else f'A {a_:.2f}x'
                 floor = '  ← 两臂都在地板上，下列数字照报，但不要当效应量' \
                         if max(ya_l, yb_l) < FLOOR else ''
                 print(f'{t_:<16} {f"lava {dl:+.3f} − safe {ds:+.3f} = {dl-ds:+.3f}":>22} '
