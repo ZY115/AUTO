@@ -20,9 +20,16 @@
 | 来源 | 在本仓库吗 |
 |---|---|
 | 记忆压缩 pilot | **在**，`results/runs/memory_compression_pilot_5k.*` |
-| 第 23–35 步的取证与归属实验 | **不在**，在 `progressive_task_discovery/stage8_compression/` |
+| 第 23–35 步的取证与归属实验 | **在**，`discovery/`（原始树在本机 `progressive_task_discovery/`） |
 
-下面凡是引用第二类的数字，都标了出处文件名，但**本仓库无法据此复现**。
+**下面每一个数都可以现场重算：**
+
+```bash
+python3 discovery/src/reproduce.py
+```
+
+它把重算值和本文档写的并排打出来，当前 **18 项全部对上**。见
+[`discovery/README.md`](../discovery/README.md)，里面记了三处会让人算错的口径陷阱。
 
 ---
 

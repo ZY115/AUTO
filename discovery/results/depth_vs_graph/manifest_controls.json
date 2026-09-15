@@ -1,0 +1,18 @@
+{
+  "runs": 3072,
+  "tasks": 12,
+  "seeds": "1500-1531",
+  "scales": {
+    "none": 0.05,
+    "frontier": 0.07,
+    "oracle": 0.07,
+    "taskstep": 0.02,
+    "mapdist": 0.01,
+    "shuffled": 0.005,
+    "wrongproduct": 0.02,
+    "product": 0.02
+  },
+  "budget": 200000,
+  "source_sha256": "0721017fbe958ef32d15003a34b77672260f5e08dfe2be32d9ead7ecc338c9bf",
+  "binary_sha256": "9a400fcc6a80aab4ad1f01944a740eddca39bef5b4fd74d1a22485808bc2d060"
+}
