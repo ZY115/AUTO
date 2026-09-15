@@ -6,6 +6,9 @@
 **/checkpoint-*.pickle
 stats.json
 
+# 正式 memory-compression 原始数据以无损 .jsonl.gz 归档，避免单文件接近 GitHub 100 MB 上限
+/results/runs/memory_compression_pilot_5k.jsonl
+
 # Python
 __pycache__/
 *.py[cod]

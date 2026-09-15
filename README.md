@@ -33,6 +33,7 @@
 | 想先了解背景 | [`docs/BACKGROUND.md`](docs/BACKGROUND.md) |
 | 卡住了 | [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) |
 | 要交回结果 | [`results/README.md`](results/README.md) |
+| 看「完整历史 vs 任务状态抽象」pilot | [`docs/MEMORY_COMPRESSION_PILOT.md`](docs/MEMORY_COMPRESSION_PILOT.md) |
 
 最短路径，三条命令：
 

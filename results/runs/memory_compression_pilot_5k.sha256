@@ -1,0 +1,4 @@
+# Uncompressed JSONL (verify with: gzip -dc *.jsonl.gz | sha256sum)
+1b6b88ace392d022099ee6a17fb56a720b2eb772f3965e479f5c0afdc44bec8b  memory_compression_pilot_5k.jsonl
+# Archived gzip blob
+f701dc69e2c24c5626957f2524ef7c0b40ca8adbfcd1b912b8f3e4cac25d283a  memory_compression_pilot_5k.jsonl.gz

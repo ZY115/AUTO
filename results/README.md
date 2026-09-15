@@ -27,6 +27,9 @@ results/runs/a100_neural_pilot_200k.jsonl
 
 **交原始的 `.jsonl`，不要只交汇总表或图。**
 
+若原始 JSONL 接近 GitHub 的 100 MB 单文件上限，可以提交无损的 `.jsonl.gz`，
+同时附解压后内容的 SHA-256；对应分析脚本必须能直接读取该压缩文件。
+
 `run_grid.py` 每完成一次运行就追加一行，里面已经包含：
 
 - 完整命令行

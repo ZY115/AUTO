@@ -24,6 +24,10 @@
 | `tools/analyze_grid.py` | 配对自助分析，带地板保护 |
 | `tools/y10_equivalence_checks.py` | 表格版深度等价性检查 |
 | `tools/y10_equivalence_checks_dqn.py` | 神经版深度等价性检查 |
+| `docs/MEMORY_COMPRESSION_PILOT.md` | 完整历史与任务状态抽象的独立受控实验协议 |
+| `tools/memory_compression_pilot.py` | 两轮、八种方法的表格实验 runner |
+| `tools/memory_compression_checks.py` | 枚举等价性、安全共享与更新预算验收 |
+| `tools/analyze_memory_compression.py` | 配对种子分析，直接读取 `.jsonl`/`.jsonl.gz` |
 | `results/reference/macos_tabular_10k.jsonl` | 48 次已有运行，供对照 |
 
 ## 交付前验证过的项
