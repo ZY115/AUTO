@@ -1,0 +1,67 @@
+diff --git a/tools/run_grid.py b/tools/run_grid.py
+index 6f3ded3..19e0529 100755
+--- a/tools/run_grid.py
++++ b/tools/run_grid.py
+@@ -27,7 +27,7 @@ interruption and can be rescoped without losing work.
+     python3 run_grid.py --state-format full_obs --episodes 200000 --workers 8
+ """
+ import argparse, hashlib, json, os, subprocess, sys, time
+-from concurrent.futures import ProcessPoolExecutor
++from concurrent.futures import ProcessPoolExecutor, as_completed
+ from pathlib import Path
+ 
+ HRM = Path(os.environ.get('HRM_LEARNING', '')).expanduser()
+@@ -66,6 +66,8 @@ def make_config(a, tag, task, arm, risk, proto, seed):
+     d['num_episodes'] = a.episodes
+     d['debug'] = False
+     d['use_gpu'] = a.state_format != 'tabular'      # tabular has no network
++    if a.device != 'auto':
++        d['use_gpu'] = a.device == 'gpu'
+     d['seed'] = 25101993 + seed
+     d['environments'] = [dict(d['environments'][0], name=task)]
+     d['grid_params'] = dict(d['grid_params'], use_lava=True)
+@@ -108,6 +110,7 @@ def one(job):
+     r = subprocess.run(cmd, cwd=str(HRM), env=env, capture_output=True, text=True)
+     return dict(tag=tag, task=task, arm=arm, risk=risk, protocol=proto, seed=seed,
+                 state_format=a.state_format, episodes=a.episodes,
++                device='cuda' if conf['use_gpu'] else 'cpu',
+                 seconds=round(time.time() - t0, 1), ok=(r.returncode == 0),
+                 cmd=cmd, stderr='' if r.returncode == 0 else r.stderr[-800:],
+                 hashes=hashes(), curves=harvest(conf['folder_name'], task))
+@@ -116,6 +119,8 @@ def one(job):
+ def main():
+     p = argparse.ArgumentParser()
+     p.add_argument('--state-format', default='full_obs', choices=['tabular', 'full_obs'])
++    p.add_argument('--device', default='auto', choices=['auto', 'cpu', 'gpu'],
++                   help='override compute device; auto uses GPU for full_obs and CPU for tabular')
+     p.add_argument('--episodes', type=int, default=200000)
+     p.add_argument('--seeds', type=int, default=3)
+     p.add_argument('--workers', type=int, default=8)
+@@ -151,11 +156,26 @@ def main():
+             for s in range(a.seeds)
+             if tag_of(t, arm, rk, pr, s, a.state_format) not in done]
+ 
++    # Start the long safe/deep-task runs first.  This does not change any run's
++    # configuration or seed; it only prevents short lava runs from delaying the
++    # critical path when the grid has more jobs than workers.
++    task_priority = {'cake': 0, 'book-and-quill': 1, 'book': 2}
++    jobs.sort(key=lambda job: (
++        0 if job[1][2] == 'safe' else 1,
++        task_priority.get(job[1][0], len(task_priority)),
++        job[1][1], job[1][3], job[1][4],
++    ))
++
+     print(f'{len(done)} 已完成并跳过；本轮 {len(jobs)} 次，每次 {a.episodes} 幕，'
+           f'{a.workers} 个进程，格式 {a.state_format}', flush=True)
+     n = 0
+     with out.open('a') as f, ProcessPoolExecutor(max_workers=a.workers) as ex:
+-        for rec in ex.map(one, jobs):
++        # Persist each result as soon as it finishes.  ProcessPoolExecutor.map
++        # yields in submission order, so one slow early job could previously
++        # keep many completed runs out of the resumable JSONL for hours.
++        futures = [ex.submit(one, job) for job in jobs]
++        for future in as_completed(futures):
++            rec = future.result()
+             f.write(json.dumps(rec) + '\n'); f.flush()
+             n += 1
+             status = 'ok' if rec['ok'] else 'FAILED ' + rec['stderr'][-200:]
