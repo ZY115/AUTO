@@ -30,6 +30,7 @@
 | 你是 | 看这里 |
 |---|---|
 | 要跑实验的工程师 | [`docs/SETUP.md`](docs/SETUP.md) → [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) |
+| **想知道立项那个问题答到哪一步** | [**`docs/ORIGINAL_QUESTION.md`**](docs/ORIGINAL_QUESTION.md) |
 | 想先了解背景 | [`docs/BACKGROUND.md`](docs/BACKGROUND.md) |
 | 卡住了 | [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) |
 | 要交回结果 | [`results/README.md`](results/README.md) |
