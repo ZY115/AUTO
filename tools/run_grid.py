@@ -32,7 +32,7 @@ interruption and can be rescoped without losing work.
     python3 run_grid.py --state-format full_obs --episodes 200000 --workers 8
 """
 import argparse, hashlib, json, os, subprocess, sys, time
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 HRM = Path(os.environ.get('HRM_LEARNING', '')).expanduser()
@@ -97,6 +97,8 @@ def make_config(a, tag, task, arm, risk, proto, seed):
     d['num_episodes'] = a.episodes
     d['debug'] = False
     d['use_gpu'] = a.state_format != 'tabular'      # tabular has no network
+    if a.device != 'auto':
+        d['use_gpu'] = a.device == 'gpu'
     d['seed'] = 25101993 + seed
     d['environments'] = [dict(d['environments'][0], name=task)]
     d['grid_params'] = dict(d['grid_params'], use_lava=True)
@@ -180,6 +182,7 @@ def one(job):
                 update_sel_num=a.update_sel_num,
                 task=task, arm=arm, risk=risk, protocol=proto, seed=seed,
                 state_format=a.state_format, episodes=a.episodes,
+                device='cuda' if conf['use_gpu'] else 'cpu',
                 seconds=round(time.time() - t0, 1), ok=(r.returncode == 0),
                 cmd=cmd, stderr='' if r.returncode == 0 else r.stderr[-800:],
                 hashes=hashes(), curves=harvest(folder, task))
@@ -188,6 +191,8 @@ def one(job):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--state-format', default='full_obs', choices=['tabular', 'full_obs'])
+    p.add_argument('--device', default='auto', choices=['auto', 'cpu', 'gpu'],
+                   help='覆盖计算设备；auto 表示 full_obs 用 GPU、tabular 用 CPU')
     p.add_argument('--episodes', type=int, default=200000)
     p.add_argument('--seeds', type=int, default=3)
     p.add_argument('--workers', type=int, default=8)
@@ -243,6 +248,15 @@ def main():
             for s in range(a.seeds)
             if tag_of(t, arm, rk, pr, s, a.state_format) not in done]
 
+    # 先发长的（safe、深任务）。这不改变任何一次运行的配置或种子，只是避免作业数
+    # 多于进程数时，短的 lava 运行把关键路径挤到后面。
+    task_priority = {'cake': 0, 'book-and-quill': 1, 'book': 2}
+    jobs.sort(key=lambda job: (
+        0 if job[1][2] == 'safe' else 1,
+        task_priority.get(job[1][0], len(task_priority)),
+        job[1][1], job[1][3], job[1][4],
+    ))
+
     if stale:
         print(f'注意：{stale} 条已完成记录的配置指纹与本次不同（或缺失），'
               f'按旧协议保留，本轮会重跑。')
@@ -250,7 +264,11 @@ def main():
           f'{a.workers} 个进程，格式 {a.state_format}', flush=True)
     n = 0
     with out.open('a') as f, ProcessPoolExecutor(max_workers=a.workers) as ex:
-        for rec in ex.map(one, jobs):
+        # 一完成就落盘。ProcessPoolExecutor.map 是按**提交顺序**产出的，所以一个
+        # 慢的早期作业会把许多已经跑完的运行挡在可续跑的 JSONL 之外好几个小时。
+        futures = [ex.submit(one, job) for job in jobs]
+        for future in as_completed(futures):
+            rec = future.result()
             f.write(json.dumps(rec) + '\n'); f.flush()
             n += 1
             status = 'ok' if rec['ok'] else 'FAILED ' + rec['stderr'][-200:]
