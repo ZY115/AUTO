@@ -211,14 +211,15 @@ automaton = e.unwrapped.get_automaton()   # 自带真实自动机，可直接当
 
 | 仓库 | 路径 | commit | 提交日期 | 大小 |
 | --- | --- | --- | --- | --- |
-| `RodrigoToroIcarte/reward_machines` | `external/reward_machines` | `3116c2fb6db130a3865332afa760f6ab3c3575d8` | 2021-04-05 | **2.8 GB** |
+| `RodrigoToroIcarte/reward_machines` | `external/reward_machines` | `3116c2fb6db130a3865332afa760f6ab3c3575d8` | 2021-04-05 | **500 KB**（已裁剪，原 2.8 GB） |
 | `ertsiger/induction-subgoal-automata-rl` | `external/induction-subgoal-automata-rl` | `dc498724bb1b46cad91f8240973367bd7f326341` | 2023-08-15 | 8.2 MB |
 | `braraki/logical-options-framework` | `external/logical-options-framework` | `5c0dac21491e9e68c8726ad6c24eea7e20830c8c` | 2021-06-07 | 352 KB |
 
 均为 `--depth 1` 浅克隆。
 
-**reward_machines 的 2.8 GB 里有 1.8 GB 是仓库自带的历史结果**（`external/reward_machines/results`），
-不需要的话可以直接删除，不影响其中的 CRM/QRM 实现。它的 `requirements.txt` 是一份完整的
+**封存时已裁剪。** 2026-09-17 删掉了 `results/`（1.8 GB，作者自己发布的实验输出，我们从未读过）
+与 `.git/`（1.0 GB），只保留 460 KB 的 CRM/QRM 实现。删除前核对过本地 HEAD 与上表 commit 逐位一致。
+恢复方法见 `external/reward_machines/RESTORE.md`。它的 `requirements.txt` 是一份完整的
 anaconda 环境导出（含 `anaconda-navigator` 等），不可直接使用，**我没有按它安装任何东西**。
 
 **ISA 仓库**的 `requirements.txt` 钉在 torch 1.5.0 / numpy 1.18.1 / scipy 1.4.1（2020 年），
@@ -236,7 +237,7 @@ anaconda 环境导出（含 `anaconda-navigator` 等），不可直接使用，*
 ├── .venv-rm/                     976 MB   奖励机公开域
 ├── external/
 │   ├── bin/ILASP                 6.2 MB   ILASP 4.4.1 M1
-│   ├── reward_machines/          2.8 GB   （1.8 GB 是可删的历史结果）
+│   ├── reward_machines/          500 KB   （已裁剪，见其中 RESTORE.md）
 │   └── induction-subgoal-automata-rl/  8.2 MB  （含 src/bin/ILASP 副本）
 ├── docs/environment/
 │   ├── venv-rl-freeze.txt
