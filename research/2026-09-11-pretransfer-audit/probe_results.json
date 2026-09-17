@@ -5,9 +5,9 @@
     "seed": 0,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -24,7 +24,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 0,
@@ -2632,9 +2632,9 @@
     "seed": 0,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -2652,7 +2652,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 0,
@@ -5260,9 +5260,9 @@
     "seed": 1,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -5279,7 +5279,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 1,
@@ -7887,9 +7887,9 @@
     "seed": 1,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -7907,7 +7907,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 1,
@@ -10515,9 +10515,9 @@
     "seed": 2,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -10534,7 +10534,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 2,
@@ -13142,9 +13142,9 @@
     "seed": 2,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -13162,7 +13162,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 2,
@@ -15770,9 +15770,9 @@
     "seed": 0,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -15789,7 +15789,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -18397,9 +18397,9 @@
     "seed": 0,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -18417,7 +18417,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -21025,9 +21025,9 @@
     "seed": 1,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -21044,7 +21044,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -23652,9 +23652,9 @@
     "seed": 1,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -23672,7 +23672,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -26280,9 +26280,9 @@
     "seed": 2,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -26299,7 +26299,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -28907,9 +28907,9 @@
     "seed": 2,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -28927,7 +28927,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -31535,9 +31535,9 @@
     "seed": 0,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -31552,7 +31552,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -34160,9 +34160,9 @@
     "seed": 0,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -34178,7 +34178,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -36786,9 +36786,9 @@
     "seed": 1,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -36803,7 +36803,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -39411,9 +39411,9 @@
     "seed": 1,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -39429,7 +39429,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -42037,9 +42037,9 @@
     "seed": 2,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -42054,7 +42054,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -44662,9 +44662,9 @@
     "seed": 2,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -44680,7 +44680,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -47288,9 +47288,9 @@
     "seed": 0,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -47307,7 +47307,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 0,
@@ -49919,9 +49919,9 @@
     "seed": 0,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -49939,7 +49939,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 0,
@@ -52551,9 +52551,9 @@
     "seed": 1,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -52570,7 +52570,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 1,
@@ -55182,9 +55182,9 @@
     "seed": 1,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -55202,7 +55202,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 1,
@@ -57814,9 +57814,9 @@
     "seed": 2,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -57833,7 +57833,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 2,
@@ -60445,9 +60445,9 @@
     "seed": 2,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -60465,7 +60465,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "automaton",
       "window": 1,
       "seed": 2,
@@ -63077,9 +63077,9 @@
     "seed": 0,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -63096,7 +63096,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -65708,9 +65708,9 @@
     "seed": 0,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -65728,7 +65728,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -68340,9 +68340,9 @@
     "seed": 1,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -68359,7 +68359,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -70971,9 +70971,9 @@
     "seed": 1,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -70991,7 +70991,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -73603,9 +73603,9 @@
     "seed": 2,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -73622,7 +73622,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -76234,9 +76234,9 @@
     "seed": 2,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -76254,7 +76254,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -78866,9 +78866,9 @@
     "seed": 0,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -78883,7 +78883,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -81495,9 +81495,9 @@
     "seed": 0,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "0",
       "--budget",
@@ -81513,7 +81513,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 0,
@@ -84125,9 +84125,9 @@
     "seed": 1,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -84142,7 +84142,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -86754,9 +86754,9 @@
     "seed": 1,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "1",
       "--budget",
@@ -86772,7 +86772,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 1,
@@ -89384,9 +89384,9 @@
     "seed": 2,
     "protocol": "original",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -89401,7 +89401,7 @@
       "current_binary_full_output_match": true
     },
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,
@@ -92013,9 +92013,9 @@
     "seed": 2,
     "protocol": "sparse",
     "command": [
-      "/Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/compress-rebuilt",
+      "/Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/compress-rebuilt",
       "--task",
-      "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "--seed",
       "2",
       "--budget",
@@ -92031,7 +92031,7 @@
     ],
     "checks": {},
     "result": {
-      "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+      "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
       "method": "goal",
       "window": 1,
       "seed": 2,

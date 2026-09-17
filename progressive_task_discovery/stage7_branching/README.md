@@ -1,6 +1,6 @@
 # Stage 7: branching task discovery
 
-本阶段已完成：6,096组主运行、6个批次、560,640,000次训练交互；额外128次诊断回放不算独立实验。先读 [中文结果报告](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/REPORT.md>)。
+本阶段已完成：6,096组主运行、6个批次、560,640,000次训练交互；额外128次诊断回放不算独立实验。先读 [中文结果报告](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/REPORT.md>)。
 
 分支汇合后的相同位置、进度计数、最后成功事件仍可能对应不同下一目标。完整历史能消除歧义，立即技能复用在长任务中有效；当前前缀树与等价历史字典完全一致，不能据此主张一般自动机推断优势。Stage 8目前只有设计，没有执行。
 

@@ -29,7 +29,7 @@
 | stage5_heldout | 4608 | 32 个未参与调参的种子，长度延伸到16 |
 | stage6_early_use | 1152 | 另32个新种子；立即/延迟利用的因果对照 |
 
-每轮观察与下一轮的预先设计见 [decision_log.md](</Users/yuhang/Downloads/why TL/progressive_task_discovery/docs/decision_log.md>)。正式测试前的选择记录见 [frozen_selection.json](</Users/yuhang/Downloads/why TL/progressive_task_discovery/docs/frozen_selection.json>)。没有在正式种子上继续挑选超参数。
+每轮观察与下一轮的预先设计见 [decision_log.md](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/docs/decision_log.md>)。正式测试前的选择记录见 [frozen_selection.json](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/docs/frozen_selection.json>)。没有在正式种子上继续挑选超参数。
 
 第一轮表明：`count`、被动记录结构的 `discovered`、提供真实任务状态的 `oracle_state` 的动作轨迹和Q表完全相同；`progressive` 与不读取事件转换标签的 `count_frontier` 也完全相同。全套初始实验共验证 **96对**哈希一致性。这不是“automaton没用”，而是说明在本假设下，**状态记忆已由反馈提供，额外价值必须来自如何使用转换/目标信息**。
 
@@ -63,7 +63,7 @@
 
 正式噪声 k=16 中，立即技能复用32/32达到门槛，最终平均成功率约99.985%；普通回放也32/32达到门槛，但最终平均成功率约98.169%。因此收益不只是一次偶然越过90%门槛。成功率AUC和连续两次达标的结果见CSV。
 
-![正式确认：任务长度与环境步数](</Users/yuhang/Downloads/why TL/progressive_task_discovery/figures/heldout_scaling.png>)
+![正式确认：任务长度与环境步数](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/figures/heldout_scaling.png>)
 
 ### 一个不能省略的负结果：短任务未必值得复用技能
 
@@ -103,7 +103,7 @@
 
 `known_goal` 只为已经在任务前缀中确认的标签训练技能，噪声 k=16仍约9,719步，优于普通回放18,594步。它说明收益不全依赖提前训练所有潜在未来目标；但它的更新数较少，不能把它与全目标技能库的差异完全归因于预训练时机。
 
-![立即利用与延迟利用的对照](</Users/yuhang/Downloads/why TL/progressive_task_discovery/figures/early_use_ablation.png>)
+![立即利用与延迟利用的对照](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/figures/early_use_ablation.png>)
 
 ## 5. 现在能说什么，不能说什么
 
@@ -132,14 +132,14 @@
 
 ## 7. 验证、审计与文件
 
-7项自动化测试通过，覆盖环境语义、穷举短事件轨迹接受判定、终止/截断更新、反事实更新范围、局部技能与延迟调用、计算预算、可复现性和旧版本行为一致性；另外独立Python反向动态规划复核了48个正式结果策略。初始对照96对轨迹/Q表哈希一致；全部10,008组的训练步数账目一致。详见 [validation.txt](</Users/yuhang/Downloads/why TL/progressive_task_discovery/results/validation.txt>) 与 [validation_audit.json](</Users/yuhang/Downloads/why TL/progressive_task_discovery/results/validation_audit.json>)。
+7项自动化测试通过，覆盖环境语义、穷举短事件轨迹接受判定、终止/截断更新、反事实更新范围、局部技能与延迟调用、计算预算、可复现性和旧版本行为一致性；另外独立Python反向动态规划复核了48个正式结果策略。初始对照96对轨迹/Q表哈希一致；全部10,008组的训练步数账目一致。详见 [validation.txt](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/results/validation.txt>) 与 [validation_audit.json](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/results/validation_audit.json>)。
 
 早期敏感性/技能开发条件中，每套72个任务实例有5个理论上达不到90%，原数据保留且在各自feasibility.csv标注。正式确认576个实例及第二批消融288个实例均通过理论可行性检查；正式确认最小最优成功率上界约98.864%。最优DP允许依赖剩余时间的策略，作为可行性上界，而学习器使用平稳策略。
 
 图为PNG与SVG，可直接用于后续讨论。所有运行的种子、任务顺序、参数命令、训练曲线、最终策略、转换发现时间、更新数、哈希与阶段统计均保留在各阶段raw.jsonl；每阶段同时保存配置、源码快照和源码/可执行文件哈希。
 
-- [项目入口和复现说明](</Users/yuhang/Downloads/why TL/progressive_task_discovery/README.md>)
-- [主实验汇总](</Users/yuhang/Downloads/why TL/progressive_task_discovery/results/stage5_heldout/summary.csv>)
-- [与普通回放的配对比较](</Users/yuhang/Downloads/why TL/progressive_task_discovery/results/stage5_heldout/paired_vs_count_replay.csv>)
-- [立即/延迟利用的配对比较](</Users/yuhang/Downloads/why TL/progressive_task_discovery/results/stage6_early_use/paired_vs_delayed_goal.csv>)
-- [噪声下的完整学习曲线](</Users/yuhang/Downloads/why TL/progressive_task_discovery/figures/noisy_learning_curves.png>)
+- [项目入口和复现说明](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/README.md>)
+- [主实验汇总](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/results/stage5_heldout/summary.csv>)
+- [与普通回放的配对比较](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/results/stage5_heldout/paired_vs_count_replay.csv>)
+- [立即/延迟利用的配对比较](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/results/stage6_early_use/paired_vs_delayed_goal.csv>)
+- [噪声下的完整学习曲线](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/figures/noisy_learning_curves.png>)

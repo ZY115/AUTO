@@ -4,7 +4,7 @@
   "selected": [
     {
       "target": 1.2,
-      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_1.2.json",
+      "path": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/map_search/layout_1.2.json",
       "n": 3,
       "instances": 1,
       "m": 1,
@@ -42,7 +42,7 @@
     },
     {
       "target": 2,
-      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_2.json",
+      "path": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/map_search/layout_2.json",
       "n": 4,
       "instances": 6,
       "m": 1,
@@ -100,7 +100,7 @@
     },
     {
       "target": 3,
-      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_3.json",
+      "path": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/map_search/layout_3.json",
       "n": 4,
       "instances": 8,
       "m": 4,
@@ -209,7 +209,7 @@
     },
     {
       "target": 4,
-      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_4.json",
+      "path": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/map_search/layout_4.json",
       "n": 4,
       "instances": 6,
       "m": 4,

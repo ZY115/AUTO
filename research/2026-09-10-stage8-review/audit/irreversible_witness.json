@@ -1,7 +1,7 @@
 {
   "command_args": [
     "--task",
-    "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_fatal.task",
+    "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_fatal.task",
     "--seed",
     "5000",
     "--budget",
@@ -24,7 +24,7 @@
     "contradictions_with_prior_progress": 738
   },
   "original_result": {
-    "task": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_fatal.task",
+    "task": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_fatal.task",
     "method": "goal",
     "window": 1,
     "seed": 5000,

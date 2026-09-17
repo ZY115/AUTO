@@ -375,7 +375,7 @@ Icarte 等人的 QRM 工作研究暴露奖励结构，并据此分解、同时�
 6. 重新运行 3.0 的 12 项现有测试和 3.1 的 12 项现有测试，全部通过。测试包含小规模内核执行和更新审计，不作为新增科研训练结果。
 7. 汇总 0.x 保存语义 CSV；没有重跑前期作者实验或整个历史实验套件。
 
-可重复复核脚本：[audit_saved_results.py](</Users/yuhang/Downloads/why TL/research/advisor_summary_2026_09_07/audit_saved_results.py>)。机器可读输出：[audit_evidence.json](</Users/yuhang/Downloads/why TL/research/advisor_summary_2026_09_07/audit_evidence.json>)。测试记录：[verification.txt](</Users/yuhang/Downloads/why TL/research/advisor_summary_2026_09_07/verification.txt>)。
+可重复复核脚本：[audit_saved_results.py](</Users/yuhang/Downloads/why TL/AUTO/research/advisor_summary_2026_09_07/audit_saved_results.py>)。机器可读输出：[audit_evidence.json](</Users/yuhang/Downloads/why TL/AUTO/research/advisor_summary_2026_09_07/audit_evidence.json>)。测试记录：[verification.txt](</Users/yuhang/Downloads/why TL/AUTO/research/advisor_summary_2026_09_07/verification.txt>)。
 
 ## 10. 建议的汇报收尾表述
 

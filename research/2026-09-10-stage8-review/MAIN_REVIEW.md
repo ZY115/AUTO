@@ -12,7 +12,7 @@
 
 ## 2. 哪些数据值得保留
 
-本轮重新聚合了 8 份结果文件的 **11,180 条记录**，核对了最新 5 份 manifest 的源码/数据 SHA256，全部匹配。它们并非 11,180 个独立任务，也不能跨不同条件直接合并。详细聚合见 [data_summary.json](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/audit/data_summary.json>)。源代码快照 SHA256：
+本轮重新聚合了 8 份结果文件的 **11,180 条记录**，核对了最新 5 份 manifest 的源码/数据 SHA256，全部匹配。它们并非 11,180 个独立任务，也不能跨不同条件直接合并。详细聚合见 [data_summary.json](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/audit/data_summary.json>)。源代码快照 SHA256：
 
 `a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e`
 
@@ -59,7 +59,7 @@ STEP15 fatal 数据中的 AUC、达标速度和最终成功率是该程序的实
 
 ### A. 失败后历史不充分，且计数有误（已独立复现）
 
-[compress.cpp](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/audit/snapshot/src/compress.cpp:1298>) 约 1298–1365 行：进入失败状态不算 progress，`hist` 与 `node` 保留失败前的值；但失败后每一步仍更新 `ignored`、任务 Q 和 danger。`Encoder` 由进展历史重建状态，所以连普通 oracle 索引臂也会把失败后的训练更新映射到健康任务状态。纯物理导航技能与任务索引 Q 因而受到不同影响。
+[compress.cpp](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/audit/snapshot/src/compress.cpp:1298>) 约 1298–1365 行：进入失败状态不算 progress，`hist` 与 `node` 保留失败前的值；但失败后每一步仍更新 `ignored`、任务 Q 和 danger。`Encoder` 由进展历史重建状态，所以连普通 oracle 索引臂也会把失败后的训练更新映射到健康任务状态。纯物理导航技能与任务索引 Q 因而受到不同影响。
 
 已有条件 `taskR_00_fatal / seed 5000 / goal_learned / budget 200000` 的复现：
 
@@ -72,7 +72,7 @@ STEP15 fatal 数据中的 AUC、达标速度和最终成功率是该程序的实
 | 失败后写入健康历史的事件 | 1,766 |
 | 与此前进展记录冲突的事件 | 738 |
 
-原 `doomed_steps` 在失败状态的每一步都加剩余时长，重复累计；不是实际耗费步数。诊断副本仅增加计数，**全部输出字段与原程序逐项相同**，并复现保存的 AUC、final、failures、doomed、nodes。见 [irreversible_witness.json](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/audit/irreversible_witness.json>)。
+原 `doomed_steps` 在失败状态的每一步都加剩余时长，重复累计；不是实际耗费步数。诊断副本仅增加计数，**全部输出字段与原程序逐项相同**，并复现保存的 AUC、final、failures、doomed、nodes。见 [irreversible_witness.json](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/audit/irreversible_witness.json>)。
 
 应先明确失败信号是否对学习器可见：若可见，历史必须区分失败状态；若不可见，就不能一边把真实 dead 用于 Bellman 终止，一边把这段经验当健康历史证据。两种设定都可以研究，但不能混在一起。
 
@@ -80,11 +80,11 @@ STEP15 fatal 数据中的 AUC、达标速度和最终成功率是该程序的实
 
 约 829–884 行用三轮签名传播近似未来等价，重复旧签名还会导致不迁移；旧、新分区的签名都根据当前树证据构造。原文 Definition 4 和 Algorithm 4 要求新旧假设状态对所有未来串输出相同。[JIRP 扩展稿](https://arxiv.org/abs/1909.05912)
 
-三轮方法无法看到长度 4 以后才出现的区别，见 [signature_witness.json](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/audit/signature_witness.json>)。所以“member transfer 比 JIRP 快 1.68 倍”应改成“比当前三轮签名迁移器快”；精确等价需要保存旧假设并独立验证。
+三轮方法无法看到长度 4 以后才出现的区别，见 [signature_witness.json](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/audit/signature_witness.json>)。所以“member transfer 比 JIRP 快 1.68 倍”应改成“比当前三轮签名迁移器快”；精确等价需要保存旧假设并独立验证。
 
 ### C. `relabel=0` 没有保存当时的目标（已构造执行见证）
 
-`Raw` 没有 `active_goal`。约 578–586 行回放时重新调用 `select_goal`，使用更新后的技能值；因此同一条经验可能训练另一个目标。诊断直接调用原始类：采集时目标 0，改变技能值后，同一 Raw 在 `relabel=false` 下更新目标 1。见 [goal_replay_witness.json](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/audit/goal_replay_witness.json>)。
+`Raw` 没有 `active_goal`。约 578–586 行回放时重新调用 `select_goal`，使用更新后的技能值；因此同一条经验可能训练另一个目标。诊断直接调用原始类：采集时目标 0，改变技能值后，同一 Raw 在 `relabel=false` 下更新目标 1。见 [goal_replay_witness.json](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/audit/goal_replay_witness.json>)。
 
 这不否定 1,653 步是当前实现的表现，但它不支持严格的 no-relabel 消融。对 learned 选择器，回放调用还传入 `node=-1`，也不能恢复当时的证据状态。
 
@@ -102,7 +102,7 @@ STEP15 fatal 数据中的 AUC、达标速度和最终成功率是该程序的实
 
 ### F. 区间与跨步骤推断应调整
 
-`run_goal_irreversible.py` 的 bootstrap 用 `map in sampled_maps` 聚合，丢掉了重复抽中的地图次数。本轮保留重复次数重算：learned 目标相对 merged 的速度比 2.01，区间约 **[1.46, 2.64]**，原报告为 [1.57, 2.55]。点估计不变；这没有修复失败态语义，见 [corrected_fatal_bootstrap.json](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/audit/corrected_fatal_bootstrap.json>)。
+`run_goal_irreversible.py` 的 bootstrap 用 `map in sampled_maps` 聚合，丢掉了重复抽中的地图次数。本轮保留重复次数重算：learned 目标相对 merged 的速度比 2.01，区间约 **[1.46, 2.64]**，原报告为 [1.57, 2.55]。点估计不变；这没有修复失败态语义，见 [corrected_fatal_bootstrap.json](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/audit/corrected_fatal_bootstrap.json>)。
 
 STEP11 按训练结束 precision 是否等于 1 分组，再做替换，不能构成“任何置信度方法至多收益 1.16”的因果上界。最终 precision 是训练和行为的结果，分组混合了任务难度、覆盖和算法效果。
 
@@ -124,7 +124,7 @@ STEP12 的状态数/长度幂律拟合可作局部经验描述，不能据此精
 | 不确定条件下使用符号结构 | Noisy RM、Partial Semantics | 标签/状态不确定不等于结构不确定 |
 | 不可逆风险下保证安全 | Shielding | 正确模型上界可用，未知结构不能免费继承保证 |
 
-来源与逐篇假设见 [文献索引](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/LITERATURE_INDEX.md>)。其中 [ISA](https://arxiv.org/abs/2009.03855)、[HRM](https://proceedings.mlr.press/v202/furelos-blanco23a.html) 已明确把结构、子目标策略和共享经验连接起来。因此，**“让自动机告诉 RL 下一步目标”不宜成为核心新颖性主张。**
+来源与逐篇假设见 [文献索引](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/LITERATURE_INDEX.md>)。其中 [ISA](https://arxiv.org/abs/2009.03855)、[HRM](https://proceedings.mlr.press/v202/furelos-blanco23a.html) 已明确把结构、子目标策略和共享经验连接起来。因此，**“让自动机告诉 RL 下一步目标”不宜成为核心新颖性主张。**
 
 更有机会的三个问题，按与当前证据接近程度排列：
 
@@ -143,7 +143,7 @@ STEP12 的状态数/长度幂律拟合可作局部经验描述，不能据此精
 - **PyCRM：环境接口与反事实经验的工程参考。** 新工具将 ground environment、labeler 和 RM 分开，适合降低自实现语义漂移。本轮已下载并阅读软件论文，核对官方仓库；未跑训练。[PyCRM](https://github.com/TristanBester/pycrm)
 - **LOF / SF-FSA-VI：规划参考。** 要吸收的是选项成本、终止位置与长期任务价值，而不一定立刻迁移到大型神经环境。
 
-具体安装状态、输入输出和限制见 [工具评估](</Users/yuhang/Downloads/why TL/research/2026-09-10-stage8-review/TOOLS.md>)。没有必要为了使用现成库而扩大当前科学问题。
+具体安装状态、输入输出和限制见 [工具评估](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-10-stage8-review/TOOLS.md>)。没有必要为了使用现成库而扩大当前科学问题。
 
 ## 6. 讨论下一步之前应共同接受的结论
 

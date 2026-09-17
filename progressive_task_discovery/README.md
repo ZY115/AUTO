@@ -1,8 +1,8 @@
 # Progressive task discovery: mechanism pilot
 
-新增的分支任务 Stage 7 已完成，见 [Stage 7 报告](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/REPORT.md>)及[复现说明](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/README.md>)。下面保留原六阶段项目说明。
+新增的分支任务 Stage 7 已完成，见 [Stage 7 报告](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/REPORT.md>)及[复现说明](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/README.md>)。下面保留原六阶段项目说明。
 
-已完成六轮实验。先读 [REPORT.md](</Users/yuhang/Downloads/why TL/progressive_task_discovery/REPORT.md>)；主结论是长任务中“部分顺序发现后立即复用导航技能”有效，单独 frontier epsilon 调度没有稳定优势，短任务中普通回放经常更快。
+已完成六轮实验。先读 [REPORT.md](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/REPORT.md>)；主结论是长任务中“部分顺序发现后立即复用导航技能”有效，单独 frontier epsilon 调度没有稳定优势，短任务中普通回放经常更快。
 
 CPU-only C++17 tabular simulator, Python analysis, no GPU dependency. The project is independent of the older `tl_sequence_pilot` directory. No robot, PPO, learned perception, arbitrary automaton inference, or claimed literature novelty is included.
 

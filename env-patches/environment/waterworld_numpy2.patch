@@ -1,0 +1,10 @@
+46,47c46,47
+<         self.pos = np.array(pos, dtype=np.float)
+<         self.vel = np.array(vel, dtype=np.float)
+---
+>         self.pos = np.array(pos, dtype=float)
+>         self.vel = np.array(vel, dtype=float)
+334c334
+<             features = np.zeros(n_features, dtype=np.float)
+---
+>             features = np.zeros(n_features, dtype=float)

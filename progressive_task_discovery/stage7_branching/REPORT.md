@@ -19,7 +19,7 @@ B → E → C → E → C → D → C → D
 
 地图为13×13墙格中的28个可行走格，四方向确定性动作，五种准确事件。所有局部目标通过同一个交叉点连接。任务每条分支包含k次进度事件；错误事件忽略，正确进展奖励1，每步成本0.01。技能、任务Q表都从零开始。每条可行路线的最短长度都是 `12k−11`，不同分支、同地图控制与不同共享路径长度保持这一长度关系。
 
-![真实歧义见证](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/figures/ambiguity_witness.png>)
+![真实歧义见证](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/figures/ambiguity_witness.png>)
 
 同一个交叉点、同一个计数下，确定性平稳的count策略只能选择同一种外出方向。对下一目标不同的两条历史，它最多完成其中一条。这里的50%上限针对**此地图、此任务和确定性平稳策略类**，不是对所有随机策略、历史策略或一般RL的上限。我们还用精确动态规划评价了已训练count/last-event策略保留epsilon=.05/.2时的成功率，结果保留在CSV；它们在本预算下也没有解决任务。这并不证明任意随机count策略都不可能解决。
 
@@ -76,7 +76,7 @@ B → E → C → E → C → D → C → D
 
 k=12时，立即复用约减少12%–24%的样本；k=4、较紧时限时却慢约33%，k=8、较紧时限时没有清楚优势。**短任务收益不稳定这一边界仍然存在。** 95%区间按配对种子bootstrap计算，未对全部条件做多重比较校正；它们是本任务族中的经验结果。
 
-![正式与长共享路径的结果](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/figures/branching_results.png>)
+![正式与长共享路径的结果](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/figures/branching_results.png>)
 
 ## 5. 立即利用的效果是否仍主要来自前缀
 
@@ -89,7 +89,7 @@ k=12时，立即复用约减少12%–24%的样本；k=4、较紧时限时却慢�
 
 以主实验H=24k、k=12为例，直到两种开局都至少完整成功一次：延迟方法花在已知前缀上约23,653步、未知frontier约5,594步；立即方法分别约2,041步和4,826步。这里“已知前缀”指已确认下一转换标签，并不意味着该段技能已完全可靠。减少的是反复执行这些已知段的成本，未知探索成本变化较小。严格同epsilon消融的分解也已画在下图。
 
-![同地图和时机控制](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/figures/causal_controls.png>)
+![同地图和时机控制](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/figures/causal_controls.png>)
 
 另用种子500–531，把cue与关键决策之间拉开三个共享事件，保留冻结参数。k=12时，立即复用8,375步，手写监控器11,500步、完整历史回放17,656步、延迟复用31,531步。立即/手写的成本比0.728，区间约[0.697,0.761]。收益没有因为最初cue变得更久远而消失。
 
@@ -103,7 +103,7 @@ k=12时，立即复用约减少12%–24%的样本；k=4、较紧时限时却慢�
 
 记录包括：成功率AUC、first/stable90、两分支成功、已知/未知交互、语义对齐准确率、下一目标覆盖、错误绑定、转换首次发现时间、技能尝试/目标成功/其他进度打断/超时，以及结构修订数。回放策略不直接输出g，故其next-goal与wrong-binding指标在汇总表留空。原始JSON中的被动转换缓存诊断不能当成其动作策略的目标预测。
 
-为避免把其他正确进度造成的技能中断算成技能失败，`skill_other_progress`单列。例如根状态调用A技能时，先经过B并产生合法进展，就应切换任务阶段。在128次主实验诊断复跑中，按 `(已观察前缀, g)` 保存了尝试、命中、其他进度、超时和错误绑定次数，并确认行为哈希与原运行一致。见 [skill_context_diagnostics.jsonl](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/skill_context_diagnostics.jsonl>)。这些只覆盖静态动力学，不能作为Stage10中context-safe复用的证据。
+为避免把其他正确进度造成的技能中断算成技能失败，`skill_other_progress`单列。例如根状态调用A技能时，先经过B并产生合法进展，就应切换任务阶段。在128次主实验诊断复跑中，按 `(已观察前缀, g)` 保存了尝试、命中、其他进度、超时和错误绑定次数，并确认行为哈希与原运行一致。见 [skill_context_diagnostics.jsonl](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/skill_context_diagnostics.jsonl>)。这些只覆盖静态动力学，不能作为Stage10中context-safe复用的证据。
 
 ## 7. 对H1、H2、H3的判断
 
@@ -115,7 +115,7 @@ k=12时，立即复用约减少12%–24%的样本；k=4、较紧时限时却慢�
 
 **Stage7通过了继续进入Stage8的机制门槛。** 它没有满足“结构推断创新已被证明”的门槛，也尚未到Stage9的Go/Weak Go判断。当前证据最接近“历史条件下的任务进度识别 + 立即调用共享技能”。
 
-下一步的具体设计已写入 [NEXT_STAGE8.md](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/docs/NEXT_STAGE8.md>)：先固定所有方法使用的技能库，区分直接调用收益与策略改变采样后技能变强的间接收益。随后才在Stage9引入噪声，同时处理任务状态信念和转换置信度，不能直接把带噪progress计数当成真状态。
+下一步的具体设计已写入 [NEXT_STAGE8.md](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/docs/NEXT_STAGE8.md>)：先固定所有方法使用的技能库，区分直接调用收益与策略改变采样后技能变强的间接收益。随后才在Stage9引入噪声，同时处理任务状态信念和转换置信度，不能直接把带噪progress计数当成真状态。
 
 本轮仍使用固定五种事件，长任务有大量技能重复，没有回答horizon与重复率的独立作用。这个因素分解、ISA/JIRP复现、噪声、context-dependent skills、PPO和机器人均未在本轮执行，不应从当前结果外推。
 
@@ -134,10 +134,10 @@ k=12时，立即复用约减少12%–24%的样本；k=4、较紧时限时却慢�
 
 每批目录保存原始JSONL、汇总CSV、配对比较、配置、源码快照和哈希。初始版与后续版的table容量不同，复现初始整张Q表哈希应使用该批源码快照，不能混用最终可执行文件。前六阶段的源码和报告保持原样。
 
-- [项目说明与复现](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/README.md>)
-- [冻结参数](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/docs/frozen_selection.json>)
-- [正式汇总](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/heldout/summary.csv>)
-- [与强手写监控器的配对比较](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/heldout/paired_vs_hand_replay.csv>)
-- [同epsilon立即/延迟比较](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/matched_epsilon/paired_vs_delayed_e005.csv>)
-- [同地图控制](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/same_map_control/summary.csv>)
-- [验证日志](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/validation.txt>) / [完整审计](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/results/audit.json>)
+- [项目说明与复现](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/README.md>)
+- [冻结参数](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/docs/frozen_selection.json>)
+- [正式汇总](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/heldout/summary.csv>)
+- [与强手写监控器的配对比较](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/heldout/paired_vs_hand_replay.csv>)
+- [同epsilon立即/延迟比较](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/matched_epsilon/paired_vs_delayed_e005.csv>)
+- [同地图控制](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/same_map_control/summary.csv>)
+- [验证日志](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/validation.txt>) / [完整审计](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage7_branching/results/audit.json>)

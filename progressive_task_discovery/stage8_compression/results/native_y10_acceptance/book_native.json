@@ -3,7 +3,7 @@
   "use_gpu": false,
   "use_seed": true,
   "use_environment_seed": true,
-  "folder_name": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/native_y10_acceptance/book/native",
+  "folder_name": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/native_y10_acceptance/book/native",
   "environment_name": "craftworld",
   "environments": [
     {
@@ -46,7 +46,7 @@
   },
   "checkpoint_enable": false,
   "checkpoint_frequency": 500,
-  "checkpoint_folder": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/native_y10_acceptance/book/native",
+  "checkpoint_folder": "/Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/results/native_y10_acceptance/book/native",
   "training_mode": "handcrafted",
   "algorithm": "ihsa-hrl",
   "learning_rate": 0.1,

@@ -27,7 +27,7 @@
 
 **1. Aksaray 等，2016：把特定的 STL 满足目标转成 Q-learning 能处理的近似问题**
 
-论文：*Q-Learning for Robust Satisfaction of Signal Temporal Logic Specifications*。[作者预印本](https://arxiv.org/abs/1609.07409)；[本地 PDF](</Users/yuhang/Downloads/why TL/research/tl_rl_contributions_2026_09_08/papers/aksaray2016.pdf>)。主要依据：摘要、引言、问题构造与近似分析、仿真部分。
+论文：*Q-Learning for Robust Satisfaction of Signal Temporal Logic Specifications*。[作者预印本](https://arxiv.org/abs/1609.07409)；[本地 PDF](</Users/yuhang/Downloads/why TL/AUTO/research/tl_rl_contributions_2026_09_08/papers/aksaray2016.pdf>)。主要依据：摘要、引言、问题构造与近似分析、仿真部分。
 
 - **原问题是什么？** 机器人动力学存在随机性，而且转移概率未知；任务还包含时间要求。任务好坏依赖一段历史，不能只看当前位置。
 - **具体贡献是什么？** 对论文选取的 STL 片段，用最近一段历史扩充状态；分别考虑提高满足概率和提高平均满足程度；再构造适合 Q-learning 的近似目标，并分析近似带来的性能偏差。
@@ -39,7 +39,7 @@
 
 **2. Li、Vasile、Belta，2017：用有明确任务含义的轨迹评分指导连续控制学习**
 
-论文：*Reinforcement Learning With Temporal Logic Rewards*。[本地 IROS 正式版](</Users/yuhang/Downloads/why TL/IROS_RL_2017.pdf>)。主要依据：摘要、第二节的回合式策略搜索、第三节语义、实验部分。
+论文：*Reinforcement Learning With Temporal Logic Rewards*。[本地 IROS 正式版](</Users/yuhang/Downloads/why TL/papers/01-时序逻辑作为任务规范/IROS_RL_2017.pdf>)。主要依据：摘要、第二节的回合式策略搜索、第三节语义、实验部分。
 
 - **原问题是什么？** 多个启发式奖励相加后，分数变高不一定代表更忠实地完成原任务。
 - **具体贡献是什么？** 提出适用于有限轨迹的 TLTL 及其定量语义，把完整轨迹对要求的满足程度作为奖励，接入连续状态、连续动作的策略搜索。
@@ -53,7 +53,7 @@
 
 **3. Reward Machine，2018：公开奖励内部结构，并设计能够利用它的学习算法**
 
-论文：*Using Reward Machines for High-Level Task Specification and Decomposition in Reinforcement Learning*。[本地 PDF](</Users/yuhang/Downloads/why TL/icarte18a.pdf>)。主要依据：引言、QRM 算法、第五节实验及基线设置。
+论文：*Using Reward Machines for High-Level Task Specification and Decomposition in Reinforcement Learning*。[本地 PDF](</Users/yuhang/Downloads/why TL/papers/02-奖励机/icarte18a.pdf>)。主要依据：引言、QRM 算法、第五节实验及基线设置。
 
 - **原问题是什么？** 通常学习器只收到一个奖励数字，看不到奖励程序其实包含“先拿咖啡，再送到办公室”这样的结构。
 - **具体贡献是什么？** 用 Reward Machine 显式表示奖励随任务事件如何变化；提出 QRM，利用同一次环境经验同时学习不同奖励机状态对应的子策略。论文还给出表格情形下的最优收敛结果。
@@ -69,7 +69,7 @@
 
 **4. Camacho 等，2019：让多种任务语言共享奖励机后端，并自动构造奖励塑形**
 
-论文：*LTL and Beyond: Formal Languages for Reward Function Specification in Reinforcement Learning*。[IJCAI 正式页面](https://www.ijcai.org/Proceedings/2019/0840)；[本地 PDF](</Users/yuhang/Downloads/why TL/research/tl_rl_contributions_2026_09_08/papers/camacho2019.pdf>)。主要依据：摘要、语言到奖励机的构造、第五至第七节。
+论文：*LTL and Beyond: Formal Languages for Reward Function Specification in Reinforcement Learning*。[IJCAI 正式页面](https://www.ijcai.org/Proceedings/2019/0840)；[本地 PDF](</Users/yuhang/Downloads/why TL/AUTO/research/tl_rl_contributions_2026_09_08/papers/camacho2019.pdf>)。主要依据：摘要、语言到奖励机的构造、第五至第七节。
 
 - **原问题是什么？** 不同应用适合不同任务语言。如果每种语言都配套重新开发学习算法，复用困难；奖励机生成后，结构还可以进一步用于改善训练。
 - **具体贡献是什么？** 将奖励机作为共同的标准表示，说明所研究的多种形式语言如何转换到它，并给出构造正确性与规模分析；再根据奖励机结构自动生成塑形函数，结合已有 QRM 学习。
@@ -83,7 +83,7 @@
 
 **5. SPECTRL，2019：从可组合任务描述自动生成完整的学习接口**
 
-论文：*A Composable Specification Language for Reinforcement Learning Tasks*。[作者预印本](https://arxiv.org/abs/2008.09293)；[本地 PDF](</Users/yuhang/Downloads/why TL/A Composable Specification Language_8.31.pdf>)。主要依据：引言、第三节编译与塑形、第四节实验。
+论文：*A Composable Specification Language for Reinforcement Learning Tasks*。[作者预印本](https://arxiv.org/abs/2008.09293)；[本地 PDF](</Users/yuhang/Downloads/why TL/papers/01-时序逻辑作为任务规范/A Composable Specification Language_8.31.pdf>)。主要依据：引言、第三节编译与塑形、第四节实验。
 
 - **原问题是什么？** 复杂任务需要设计奖励、保存进度、处理选择，还要提供有用的中间反馈；这些工作通常分别手写。
 - **具体贡献是什么？** 设计任务语言及编译器，自动产生任务监控器、必要的辅助记忆和奖励塑形。监控器中的选择还会进入扩展动作接口，使策略能够选择何时推进任务。它不只是文本替换成一张进度表。
@@ -95,7 +95,7 @@
 
 **6. Hasanbeig 等，2019 版本：研究怎样让学习目标对应 LTL 满足概率**
 
-论文：*Reinforcement Learning for Temporal Logic Control Synthesis with Probabilistic Satisfaction Guarantees*。[本地 PDF](</Users/yuhang/Downloads/why TL/1909.05304v1.pdf>)。主要依据：摘要、第三节构造、第四节定理陈述、第五节实验。
+论文：*Reinforcement Learning for Temporal Logic Control Synthesis with Probabilistic Satisfaction Guarantees*。[本地 PDF](</Users/yuhang/Downloads/why TL/papers/01-时序逻辑作为任务规范/1909.05304v1.pdf>)。主要依据：摘要、第三节构造、第四节定理陈述、第五节实验。
 
 - **原问题是什么？** 任务具有持续安全、反复访问等要求，环境行为及标签又存在不确定性；需要明确学习出的策略究竟在优化什么。
 - **具体贡献是什么？** 将 LTL 转为能够表达无限执行接受条件的自动机，在线结合环境状态与自动机状态，据接受条件生成奖励，并分析回报优化与满足概率的关系。该版本报告了渐近最大化满足概率的理论结果。
@@ -109,7 +109,7 @@
 
 **7. Jiang 等，2021：给持续任务自动生成辅助反馈，同时保留原始优化目标**
 
-论文：*Temporal-Logic-Based Reward Shaping for Continuing Reinforcement Learning Tasks*。[本地 PDF](</Users/yuhang/Downloads/why TL/08619-AAAI21.JiangY-ML.pdf>)。主要依据：摘要、平均奖励塑形理论、规范到塑形函数的构造，以及第 8001 页图 4 与结论；图 4 所在完整页面已做视觉核对。
+论文：*Temporal-Logic-Based Reward Shaping for Continuing Reinforcement Learning Tasks*。[本地 PDF](</Users/yuhang/Downloads/why TL/papers/01-时序逻辑作为任务规范/08619-AAAI21.JiangY-ML.pdf>)。主要依据：摘要、平均奖励塑形理论、规范到塑形函数的构造，以及第 8001 页图 4 与结论；图 4 所在完整页面已做视觉核对。
 
 - **原问题是什么？** 对一直运行的任务，关心的可能是长期平均收益。额外的训练提示可以加快学习，但不能随意把原任务的最优行为改掉。
 - **具体贡献是什么？** 提出平均奖励情形的塑形框架及恢复原任务最优策略的理论条件；进一步利用 TL 表达的领域知识自动构造塑形函数。具体构造使用环境转移图方面的知识，论文中的适用范围也有限制。
@@ -123,7 +123,7 @@
 
 **8. LTL2Action，2021：根据尚未完成的任务结构执行没见过的新指令**
 
-论文：*LTL2Action: Generalizing LTL Instructions for Multi-Task RL*。[本地 PDF](</Users/yuhang/Downloads/why TL/vaezipoor21a.pdf>)。主要依据：引言、第三至第四节方法、第五节实验。
+论文：*LTL2Action: Generalizing LTL Instructions for Multi-Task RL*。[本地 PDF](</Users/yuhang/Downloads/why TL/papers/04-分层与技能复用/vaezipoor21a.pdf>)。主要依据：引言、第三至第四节方法、第五节实验。
 
 - **原问题是什么？** 为每个完整任务独立训练一个策略，难以应对大量新组合；只追求眼前子目标，又可能让后面的目标很难完成。
 - **具体贡献是什么？** 根据已发生的事件更新“剩余任务”，将其编码给策略；学习任务条件策略，并研究环境无关的逻辑预训练。保留后续要求，使策略有机会考虑整个剩余任务。
@@ -135,7 +135,7 @@
 
 **9. DIRL，2021：把高层路线选择与低层技能学习交替进行**
 
-论文：*Compositional Reinforcement Learning from Logical Specifications*。[作者预印本](https://arxiv.org/abs/2106.13906)；[本地 PDF](</Users/yuhang/Downloads/why TL/research/tl_rl_contributions_2026_09_08/papers/dirl2021.pdf>)。主要依据：引言、算法、第五节基线、局限部分。
+论文：*Compositional Reinforcement Learning from Logical Specifications*。[作者预印本](https://arxiv.org/abs/2106.13906)；[本地 PDF](</Users/yuhang/Downloads/why TL/AUTO/research/tl_rl_contributions_2026_09_08/papers/dirl2021.pdf>)。主要依据：引言、算法、第五节基线、局限部分。
 
 - **原问题是什么？** 任务较长且含多种完成路径时，把整项任务交给一个学习器效率低；即使任务已经拆开，也还需要决定哪些技能值得先学、应该走哪条路线。
 - **具体贡献是什么？** 将 SPECTRL 规范变成抽象任务图；图边表示带安全要求的短任务；在类似 Dijkstra 的高层搜索过程中按需学习低层策略，再用学到的成功表现指导路线选择。同时关注前一技能结束状态与后一技能训练起点的衔接。
@@ -149,7 +149,7 @@
 
 **10. DeepLTL，2025：用到达与规避序列表示任务，改善复杂任务的零样本执行**
 
-论文：*DeepLTL: Learning to Efficiently Satisfy Complex LTL Specifications for Multi-Task RL*。[作者预印本](https://arxiv.org/abs/2410.04631)；[本地 PDF](</Users/yuhang/Downloads/why TL/research/tl_rl_contributions_2026_09_08/papers/deepltl2025.pdf>)。主要依据：引言、第四节方法、第五节评估及附录。
+论文：*DeepLTL: Learning to Efficiently Satisfy Complex LTL Specifications for Multi-Task RL*。[作者预印本](https://arxiv.org/abs/2410.04631)；[本地 PDF](</Users/yuhang/Downloads/why TL/AUTO/research/tl_rl_contributions_2026_09_08/papers/deepltl2025.pdf>)。主要依据：引言、第四节方法、第五节评估及附录。
 
 - **原问题是什么？** 已有多任务方法在持续与反复执行、考虑完整后续任务、处理不同路线上的安全要求方面仍有限制。
 - **具体贡献是什么？** 利用 Büchi 自动机提取包含到达和规避要求的任务序列；学习根据序列行动的策略，并结合价值估计选择执行方案。表示、网络设计和规划共同服务于新规范的零样本执行。
@@ -193,7 +193,7 @@ TL 比较有辨识度的价值是：**用一套已有语义和工具，把这些
 
 **怎样把你的实验接到文献上，才不会过度解释？**
 
-本地已有的[实验汇报](</Users/yuhang/Downloads/why TL/research/advisor_summary_2026_09_07/REPORT_zh.md>)记录了有限时域 LTLf 任务中的监控器对齐及相同学习接口下的来源对照。本轮读取该报告用于确认实验范围，没有重新训练，也没有重审全部实验数据。
+本地已有的[实验汇报](</Users/yuhang/Downloads/why TL/AUTO/research/advisor_summary_2026_09_07/REPORT_zh.md>)记录了有限时域 LTLf 任务中的监控器对齐及相同学习接口下的来源对照。本轮读取该报告用于确认实验范围，没有重新训练，也没有重审全部实验数据。
 
 它与 Reward Machine 和 Camacho 这条研究线最直接相关：当两种来源已经提供相同结构，学习器确实没有额外的“来自 TL”信息。它还帮助解释为什么结构化经验更新可以同时用于 TL 和手写监控器。
 

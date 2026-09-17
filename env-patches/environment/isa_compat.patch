@@ -1,0 +1,76 @@
+diff --git a/src/reinforcement_learning/isa_base_algorithm.py b/src/reinforcement_learning/isa_base_algorithm.py
+index 4d87769..be43f17 100644
+--- a/src/reinforcement_learning/isa_base_algorithm.py
++++ b/src/reinforcement_learning/isa_base_algorithm.py
+@@ -72,7 +72,7 @@ class ISAAlgorithmBase(LearningAlgorithm):
+         self.ilasp_version = utils.get_param(params, ISAAlgorithmBase.ILASP_VERSION_FIELD, "2")
+         self.ilasp_compute_minimal = utils.get_param(params, ISAAlgorithmBase.ILASP_COMPUTE_MINIMAL, False)
+         self.num_starting_states = utils.get_param(params, ISAAlgorithmBase.STARTING_NUM_STATES_FIELD, 3)
+-        self.num_automaton_states = self.num_starting_states * np.ones(self.num_domains, dtype=np.int)
++        self.num_automaton_states = self.num_starting_states * np.ones(self.num_domains, dtype=int)
+         self.use_restricted_observables = utils.get_param(params, ISAAlgorithmBase.USE_RESTRICTED_OBSERVABLES, False)
+         self.max_disjunction_size = utils.get_param(params, ISAAlgorithmBase.MAX_DISJUNCTION_SIZE, 1)
+         self.max_body_literals = utils.get_param(params, ISAAlgorithmBase.MAX_BODY_LITERALS, 1)
+@@ -81,7 +81,7 @@ class ISAAlgorithmBase(LearningAlgorithm):
+         self.avoid_learning_only_negative = utils.get_param(params, ISAAlgorithmBase.AVOID_LEARNING_ONLY_NEGATIVE, False)
+         self.prioritize_optimal_solutions = utils.get_param(params, ISAAlgorithmBase.PRIORITIZE_OPTIMAL_SOLUTIONS, False)
+         self.wait_for_goal_example = utils.get_param(params, ISAAlgorithmBase.WAIT_FOR_GOAL_EXAMPLE, True)
+-        self.has_observed_goal_example = np.zeros(self.num_domains, dtype=np.bool)
++        self.has_observed_goal_example = np.zeros(self.num_domains, dtype=bool)
+ 
+         # maximum episode annealing parameters
+         self.use_max_episode_length_annealing = utils.get_param(params, ISAAlgorithmBase.USE_MAX_EPISODE_LENGTH_ANNEALING, False)
+@@ -114,7 +114,7 @@ class ISAAlgorithmBase(LearningAlgorithm):
+         self._reset_examples()
+ 
+         # keep track of the number of learnt automata per domain
+-        self.automaton_counters = np.zeros(self.num_domains, dtype=np.int)
++        self.automaton_counters = np.zeros(self.num_domains, dtype=int)
+         self.automaton_learning_episodes = [[] for _ in range(self.num_domains)]
+ 
+         if self.train_model:  # if the tasks are learnt, remove previous folders if they exist
+diff --git a/src/run_isa.py b/src/run_isa.py
+index 0464249..3a0eb48 100755
+--- a/src/run_isa.py
++++ b/src/run_isa.py
+@@ -128,7 +128,7 @@ def get_argparser():
+ 
+ 
+ def get_target_automata(environment_classes):
+-    return [gym.make(ENV_SUBGOAL_AUTOMATA_PREFIX + env_class, params={**env_params, "generation": "random"}).get_automaton()
++    return [gym.make(ENV_SUBGOAL_AUTOMATA_PREFIX + env_class, params={**env_params, "generation": "random"}, disable_env_checker=True).get_automaton()
+             for env_class, env_params in environment_classes]
+ 
+ 
+@@ -143,7 +143,7 @@ def get_random_tasks(environment_classes, config):
+         for task_id in range(num_tasks):
+             seed = task_id + get_param(config, "starting_environment_seed") if use_seed else None
+             task_params = {**env_params, "generation": "random", BaseEnv.RANDOM_SEED_FIELD: seed, **config}
+-            domain_tasks.append(gym.make(ENV_SUBGOAL_AUTOMATA_PREFIX + env_class, params=task_params))
++            domain_tasks.append(gym.make(ENV_SUBGOAL_AUTOMATA_PREFIX + env_class, params=task_params, disable_env_checker=True))
+         tasks.append(domain_tasks)
+     return tasks
+ 
+@@ -179,7 +179,7 @@ def get_predefined_tasks(environment_classes, config):
+ 
+     tasks = []
+     for m in maps:
+-        tasks.append(gym.make(environment_classes[0], params={"generation": "params", "map": m, **config}))
++        tasks.append(gym.make(environment_classes[0], params={"generation": "params", "map": m, **config}, disable_env_checker=True))
+ 
+     return [tasks], len(tasks)
+ 
+@@ -199,8 +199,12 @@ def get_algorithm(algorithm_name, config):
+     args.extend([get_param(config, "folder_names"), config])
+ 
+     if algorithm_name == "qrm" or algorithm_name == "hrl":
++        # ILASP 4.4.1 removed the --clingo flag and bundles its own solver, so
++        # passing a binary folder makes it treat the clingo path as an ASP file
++        # to load and every induction call fails. None means "use ILASP from
++        # PATH with its bundled clingo"; the induction algorithm is unchanged.
+         args.extend([get_target_automata(environment_classes),
+-                     os.path.join(os.path.dirname(sys.argv[0]), "bin")])
++                     os.environ.get("ISA_BINARY_FOLDER") or None])
+         algorithm_class = ISAAlgorithmQRM if algorithm_name == "qrm" else ISAAlgorithmHRL
+     elif algorithm_name == "qlearning":
+         algorithm_class = TabularQLearning

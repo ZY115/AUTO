@@ -20,7 +20,7 @@
 
 **P0：先处理奖励协议敏感性，暂缓把 QRM 崩溃解释成结构方法的普遍缺陷**
 
-位置：[默认步费](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/compress.cpp:131>)、[任务奖励](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/compress.cpp:1038>)、[CRM 更新](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/compress.cpp:1583>)。
+位置：[默认步费](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/compress.cpp:131>)、[任务奖励](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/compress.cpp:1038>)、[CRM 更新](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/compress.cpp:1583>)。
 
 选定 `book` 和 `book-and-quill` 的昂贵导航地图 seed=0，各跑训练 seed=0,1,2，预算、危险格、算法和探索参数均保持。逐因素结果：
 
@@ -43,11 +43,11 @@
 
 还需更正机制文字：CRM 本来就在每一步对多个任务状态做反事实更新，本仓库也如此；它缺少共享的目标策略参数，**不是没有跨状态经验利用机制**。这与 [Reward Machines 论文第 4.2 节](https://www.cs.toronto.edu/~toryn/docs/ToroIcarteJAIR2022machines.pdf)一致。
 
-复现入口：[probes.py](</Users/yuhang/Downloads/why TL/research/2026-09-11-pretransfer-audit/probes.py>)；完整结果 `probe_results.json`、`qrm_reward_isolation.json`、`safe_sparse_probe.json`。
+复现入口：[probes.py](</Users/yuhang/Downloads/why TL/AUTO/research/2026-09-11-pretransfer-audit/probes.py>)；完整结果 `probe_results.json`、`qrm_reward_isolation.json`、`safe_sparse_probe.json`。
 
 **P0：RMST 定义和方向错误，但重算后核心交互仍在**
 
-[run_craftworld_lava.py](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/run_craftworld_lava.py:16>)明确把成功率曲线面积称为 RMST，后续直接使用 `auc`。[run_dose.py](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/run_dose.py:61>)同样把 `auc` 写入 `rmst`。这与 time-to-event 的 RMST 不同。
+[run_craftworld_lava.py](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/run_craftworld_lava.py:16>)明确把成功率曲线面积称为 RMST，后续直接使用 `auc`。[run_dose.py](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/run_dose.py:61>)同样把 `auc` 写入 `rmst`。这与 time-to-event 的 RMST 不同。
 
 设 T 为首次检查到成功率 ≥90% 的训练步数，τ=1,000,000：
 
@@ -72,7 +72,7 @@
 
 **P1：关于几何和剂量的表述超过了控制实际保证的范围**
 
-[导出器](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/export_craftworld_lava.py:117>)确实让 safe/lava 的物理邻接、事件位置、起点、时域完全相同，这个配对通过了验证。
+[导出器](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/export_craftworld_lava.py:117>)确实让 safe/lava 的物理邻接、事件位置、起点、时域完全相同，这个配对通过了验证。
 但安全完成任务的最短路不同：**11/36 对地图、63/270 个起点变长，最大增加 40 步**。safe 文件的 `lengths` 字段直接复制 lava 长度，在这 63 个起点不是 safe 自身最优长度。
 
 这不推翻“只切换终止语义”的处理效应；它推翻的是更强的“每条任务最短路都不变、只测失败代价”的解释。物理邻接不变与成功路径不变要分开。
@@ -120,7 +120,7 @@ QRM 与目标技能臂有不同伪奖励和更新组织；相同环境步数可�
 
 **P2：距离代理变量有明确差一错误，相关性不能变成定律**
 
-[event_cost](</Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/export_craftworld.py:162>)把“一步就能触发目标”的状态距离置 0，应为 1；作图脚本复制了同一逻辑。204 个公开地图 goal 项的独立 BFS 核验均证实少 1 步。
+[event_cost](</Users/yuhang/Downloads/why TL/AUTO/progressive_task_discovery/stage8_compression/src/export_craftworld.py:162>)把“一步就能触发目标”的状态距离置 0，应为 1；作图脚本复制了同一逻辑。204 个公开地图 goal 项的独立 BFS 核验均证实少 1 步。
 全组 C_g 都加同一个常数不会改变其 Pearson 相关，但绝对值和含 N_g 权重的 C_reuse 要改算。
 
 C_g 是从回合起点出发的最短路代理，不是实际技能启动位置分布下的学习样本数。cheap/expensive 同时改变面积、拓扑、探索和距离；N_g 也没有被独立操纵。允许的结论是“当前简单重复度指标无法解释跨组结果，导航难度值得继续关注”，不应说“重复次数几乎不贡献”。
