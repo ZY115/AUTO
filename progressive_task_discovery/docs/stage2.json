@@ -1,0 +1,168 @@
+{
+  "name": "stage2_sensitivity",
+  "defaults": {
+    "budget": 60000,
+    "every": 1000
+  },
+  "conditions": [
+    {
+      "name": "benign",
+      "args": {
+        "slip": 0,
+        "hfactor": 24
+      }
+    },
+    {
+      "name": "tight",
+      "args": {
+        "slip": 0,
+        "hfactor": 12
+      }
+    },
+    {
+      "name": "noisy_tight",
+      "args": {
+        "slip": 0.15,
+        "hfactor": 12
+      }
+    }
+  ],
+  "lengths": [
+    4,
+    8
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "variants": [
+    {
+      "name": "count_e0.05",
+      "args": {
+        "method": "count",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "count_e0.2",
+      "args": {
+        "method": "count",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "count_e0.5",
+      "args": {
+        "method": "count",
+        "epsilon": 0.5
+      }
+    },
+    {
+      "name": "learned_qrm_e0.05",
+      "args": {
+        "method": "learned_qrm",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "learned_qrm_e0.2",
+      "args": {
+        "method": "learned_qrm",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "learned_qrm_e0.5",
+      "args": {
+        "method": "learned_qrm",
+        "epsilon": 0.5
+      }
+    },
+    {
+      "name": "progressive_h0.2",
+      "args": {
+        "method": "progressive",
+        "high": 0.2
+      }
+    },
+    {
+      "name": "progressive_h0.5",
+      "args": {
+        "method": "progressive",
+        "high": 0.5
+      }
+    },
+    {
+      "name": "progressive_h0.8",
+      "args": {
+        "method": "progressive",
+        "high": 0.8
+      }
+    },
+    {
+      "name": "progressive_low0",
+      "args": {
+        "method": "progressive",
+        "low": 0
+      }
+    },
+    {
+      "name": "progressive_fastgate",
+      "args": {
+        "method": "progressive",
+        "master_n": 1
+      }
+    },
+    {
+      "name": "progressive_qrm_h0.2",
+      "args": {
+        "method": "progressive_qrm",
+        "high": 0.2
+      }
+    },
+    {
+      "name": "progressive_qrm_h0.5",
+      "args": {
+        "method": "progressive_qrm",
+        "high": 0.5
+      }
+    },
+    {
+      "name": "progressive_qrm_h0.8",
+      "args": {
+        "method": "progressive_qrm",
+        "high": 0.8
+      }
+    },
+    {
+      "name": "progressive_qrm_low0",
+      "args": {
+        "method": "progressive_qrm",
+        "low": 0
+      }
+    },
+    {
+      "name": "progressive_qrm_fastgate",
+      "args": {
+        "method": "progressive_qrm",
+        "master_n": 1
+      }
+    },
+    {
+      "name": "oracle_qrm",
+      "args": {
+        "method": "oracle_qrm"
+      }
+    }
+  ]
+}

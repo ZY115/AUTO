@@ -1,0 +1,94 @@
+{
+  "name": "sparse_confirmation_raw",
+  "defaults": {
+    "budget": 200000,
+    "every": 1000,
+    "bridge": 1,
+    "hfactor": 24,
+    "epsilon": 0.02,
+    "gamma": 0.99,
+    "reward_ratio": 8
+  },
+  "conditions": [
+    {
+      "name": "h24",
+      "args": {}
+    }
+  ],
+  "variants": [
+    {
+      "name": "history_replay",
+      "args": {
+        "method": "history_replay"
+      }
+    },
+    {
+      "name": "learned_replay",
+      "args": {
+        "method": "learned_replay"
+      }
+    },
+    {
+      "name": "hand_replay",
+      "args": {
+        "method": "hand_replay"
+      }
+    },
+    {
+      "name": "immediate_skill",
+      "args": {
+        "method": "immediate_skill"
+      }
+    },
+    {
+      "name": "hand_skill",
+      "args": {
+        "method": "hand_skill"
+      }
+    },
+    {
+      "name": "delayed_skill",
+      "args": {
+        "method": "delayed_skill"
+      }
+    }
+  ],
+  "lengths": [
+    4,
+    12
+  ],
+  "seeds": [
+    600,
+    601,
+    602,
+    603,
+    604,
+    605,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614,
+    615,
+    616,
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628,
+    629,
+    630,
+    631
+  ]
+}

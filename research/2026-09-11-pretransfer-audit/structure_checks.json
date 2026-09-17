@@ -1,0 +1,1374 @@
+{
+  "automaton_checks": [
+    {
+      "tag": "cw_book_cheap_0",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_cheap_1",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_cheap_2",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_cheap_3",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_cheap_4",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_cheap_5",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_expensive_0",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_expensive_1",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_expensive_2",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_expensive_3",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_expensive_4",
+      "checked": 35
+    },
+    {
+      "tag": "cw_book_expensive_5",
+      "checked": 35
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "checked": 140
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "checked": 140
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "checked": 112
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "checked": 112
+    }
+  ],
+  "cost_checks": [
+    {
+      "tag": "cw_book_cheap_0",
+      "label": "h",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_book_cheap_0",
+      "label": "s",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_book_cheap_0",
+      "label": "t",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_book_cheap_0",
+      "label": "y",
+      "stored_C": 2.71,
+      "correct_C": 3.7142857142857144
+    },
+    {
+      "tag": "cw_book_cheap_1",
+      "label": "h",
+      "stored_C": 1.43,
+      "correct_C": 2.4285714285714284
+    },
+    {
+      "tag": "cw_book_cheap_1",
+      "label": "s",
+      "stored_C": 2.86,
+      "correct_C": 3.857142857142857
+    },
+    {
+      "tag": "cw_book_cheap_1",
+      "label": "t",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_book_cheap_1",
+      "label": "y",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_book_cheap_2",
+      "label": "h",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_book_cheap_2",
+      "label": "s",
+      "stored_C": 3.43,
+      "correct_C": 4.428571428571429
+    },
+    {
+      "tag": "cw_book_cheap_2",
+      "label": "t",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_book_cheap_2",
+      "label": "y",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_book_cheap_3",
+      "label": "h",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_book_cheap_3",
+      "label": "s",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_book_cheap_3",
+      "label": "t",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_book_cheap_3",
+      "label": "y",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_book_cheap_4",
+      "label": "h",
+      "stored_C": 2.57,
+      "correct_C": 3.5714285714285716
+    },
+    {
+      "tag": "cw_book_cheap_4",
+      "label": "s",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_book_cheap_4",
+      "label": "t",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_book_cheap_4",
+      "label": "y",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_book_cheap_5",
+      "label": "h",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_book_cheap_5",
+      "label": "s",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_book_cheap_5",
+      "label": "t",
+      "stored_C": 2.57,
+      "correct_C": 3.5714285714285716
+    },
+    {
+      "tag": "cw_book_cheap_5",
+      "label": "y",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_book_expensive_0",
+      "label": "h",
+      "stored_C": 6.14,
+      "correct_C": 7.142857142857143
+    },
+    {
+      "tag": "cw_book_expensive_0",
+      "label": "s",
+      "stored_C": 4.29,
+      "correct_C": 5.285714285714286
+    },
+    {
+      "tag": "cw_book_expensive_0",
+      "label": "t",
+      "stored_C": 4.43,
+      "correct_C": 5.428571428571429
+    },
+    {
+      "tag": "cw_book_expensive_0",
+      "label": "y",
+      "stored_C": 8.71,
+      "correct_C": 9.714285714285714
+    },
+    {
+      "tag": "cw_book_expensive_1",
+      "label": "h",
+      "stored_C": 8.43,
+      "correct_C": 9.428571428571429
+    },
+    {
+      "tag": "cw_book_expensive_1",
+      "label": "s",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_book_expensive_1",
+      "label": "t",
+      "stored_C": 6.71,
+      "correct_C": 7.714285714285714
+    },
+    {
+      "tag": "cw_book_expensive_1",
+      "label": "y",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_book_expensive_2",
+      "label": "h",
+      "stored_C": 6.0,
+      "correct_C": 7.0
+    },
+    {
+      "tag": "cw_book_expensive_2",
+      "label": "s",
+      "stored_C": 10.71,
+      "correct_C": 11.714285714285714
+    },
+    {
+      "tag": "cw_book_expensive_2",
+      "label": "t",
+      "stored_C": 7.57,
+      "correct_C": 8.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_2",
+      "label": "y",
+      "stored_C": 5.57,
+      "correct_C": 6.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_3",
+      "label": "h",
+      "stored_C": 9.29,
+      "correct_C": 10.285714285714286
+    },
+    {
+      "tag": "cw_book_expensive_3",
+      "label": "s",
+      "stored_C": 7.57,
+      "correct_C": 8.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_3",
+      "label": "t",
+      "stored_C": 5.71,
+      "correct_C": 6.714285714285714
+    },
+    {
+      "tag": "cw_book_expensive_3",
+      "label": "y",
+      "stored_C": 7.57,
+      "correct_C": 8.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_4",
+      "label": "h",
+      "stored_C": 5.57,
+      "correct_C": 6.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_4",
+      "label": "s",
+      "stored_C": 6.57,
+      "correct_C": 7.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_4",
+      "label": "t",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_book_expensive_4",
+      "label": "y",
+      "stored_C": 8.57,
+      "correct_C": 9.571428571428571
+    },
+    {
+      "tag": "cw_book_expensive_5",
+      "label": "h",
+      "stored_C": 6.29,
+      "correct_C": 7.285714285714286
+    },
+    {
+      "tag": "cw_book_expensive_5",
+      "label": "s",
+      "stored_C": 5.14,
+      "correct_C": 6.142857142857143
+    },
+    {
+      "tag": "cw_book_expensive_5",
+      "label": "t",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_book_expensive_5",
+      "label": "y",
+      "stored_C": 8.29,
+      "correct_C": 9.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "label": "h",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "label": "s",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "label": "t",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "label": "x",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "label": "y",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_bookandquill_cheap_0",
+      "label": "z",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "label": "h",
+      "stored_C": 1.57,
+      "correct_C": 2.5714285714285716
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "label": "s",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "label": "t",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "label": "x",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "label": "y",
+      "stored_C": 3.14,
+      "correct_C": 4.142857142857143
+    },
+    {
+      "tag": "cw_bookandquill_cheap_1",
+      "label": "z",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "label": "h",
+      "stored_C": 1.57,
+      "correct_C": 2.5714285714285716
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "label": "s",
+      "stored_C": 1.14,
+      "correct_C": 2.142857142857143
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "label": "t",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "label": "x",
+      "stored_C": 3.43,
+      "correct_C": 4.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "label": "y",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_2",
+      "label": "z",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "label": "h",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "label": "s",
+      "stored_C": 3.0,
+      "correct_C": 4.0
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "label": "t",
+      "stored_C": 2.57,
+      "correct_C": 3.5714285714285716
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "label": "x",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "label": "y",
+      "stored_C": 2.86,
+      "correct_C": 3.857142857142857
+    },
+    {
+      "tag": "cw_bookandquill_cheap_3",
+      "label": "z",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "label": "h",
+      "stored_C": 1.57,
+      "correct_C": 2.5714285714285716
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "label": "s",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "label": "t",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "label": "x",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "label": "y",
+      "stored_C": 3.57,
+      "correct_C": 4.571428571428571
+    },
+    {
+      "tag": "cw_bookandquill_cheap_4",
+      "label": "z",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "label": "h",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "label": "s",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "label": "t",
+      "stored_C": 2.71,
+      "correct_C": 3.7142857142857144
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "label": "x",
+      "stored_C": 3.29,
+      "correct_C": 4.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "label": "y",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_bookandquill_cheap_5",
+      "label": "z",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "label": "h",
+      "stored_C": 8.29,
+      "correct_C": 9.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "label": "s",
+      "stored_C": 9.71,
+      "correct_C": 10.714285714285714
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "label": "t",
+      "stored_C": 8.43,
+      "correct_C": 9.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "label": "x",
+      "stored_C": 7.71,
+      "correct_C": 8.714285714285714
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "label": "y",
+      "stored_C": 8.71,
+      "correct_C": 9.714285714285714
+    },
+    {
+      "tag": "cw_bookandquill_expensive_0",
+      "label": "z",
+      "stored_C": 6.14,
+      "correct_C": 7.142857142857143
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "label": "h",
+      "stored_C": 7.43,
+      "correct_C": 8.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "label": "s",
+      "stored_C": 8.29,
+      "correct_C": 9.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "label": "t",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "label": "x",
+      "stored_C": 7.0,
+      "correct_C": 8.0
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "label": "y",
+      "stored_C": 9.86,
+      "correct_C": 10.857142857142858
+    },
+    {
+      "tag": "cw_bookandquill_expensive_1",
+      "label": "z",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "label": "h",
+      "stored_C": 7.57,
+      "correct_C": 8.571428571428571
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "label": "s",
+      "stored_C": 9.57,
+      "correct_C": 10.571428571428571
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "label": "t",
+      "stored_C": 11.29,
+      "correct_C": 12.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "label": "x",
+      "stored_C": 8.43,
+      "correct_C": 9.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "label": "y",
+      "stored_C": 9.14,
+      "correct_C": 10.142857142857142
+    },
+    {
+      "tag": "cw_bookandquill_expensive_2",
+      "label": "z",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "label": "h",
+      "stored_C": 7.43,
+      "correct_C": 8.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "label": "s",
+      "stored_C": 9.57,
+      "correct_C": 10.571428571428571
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "label": "t",
+      "stored_C": 6.0,
+      "correct_C": 7.0
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "label": "x",
+      "stored_C": 7.0,
+      "correct_C": 8.0
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "label": "y",
+      "stored_C": 9.29,
+      "correct_C": 10.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_3",
+      "label": "z",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "label": "h",
+      "stored_C": 5.57,
+      "correct_C": 6.571428571428571
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "label": "s",
+      "stored_C": 6.43,
+      "correct_C": 7.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "label": "t",
+      "stored_C": 12.71,
+      "correct_C": 13.714285714285714
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "label": "x",
+      "stored_C": 6.71,
+      "correct_C": 7.714285714285714
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "label": "y",
+      "stored_C": 3.0,
+      "correct_C": 4.0
+    },
+    {
+      "tag": "cw_bookandquill_expensive_4",
+      "label": "z",
+      "stored_C": 11.71,
+      "correct_C": 12.714285714285714
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "label": "h",
+      "stored_C": 6.57,
+      "correct_C": 7.571428571428571
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "label": "s",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "label": "t",
+      "stored_C": 6.43,
+      "correct_C": 7.428571428571429
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "label": "x",
+      "stored_C": 7.14,
+      "correct_C": 8.142857142857142
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "label": "y",
+      "stored_C": 8.86,
+      "correct_C": 9.857142857142858
+    },
+    {
+      "tag": "cw_bookandquill_expensive_5",
+      "label": "z",
+      "stored_C": 8.71,
+      "correct_C": 9.714285714285714
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "c",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "h",
+      "stored_C": 2.86,
+      "correct_C": 3.857142857142857
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "i",
+      "stored_C": 1.43,
+      "correct_C": 2.4285714285714284
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "s",
+      "stored_C": 3.14,
+      "correct_C": 4.142857142857143
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "t",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "w",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_0",
+      "label": "z",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "c",
+      "stored_C": 2.57,
+      "correct_C": 3.5714285714285716
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "h",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "i",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "s",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "t",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "w",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_cake_cheap_1",
+      "label": "z",
+      "stored_C": 1.43,
+      "correct_C": 2.4285714285714284
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "c",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "h",
+      "stored_C": 2.71,
+      "correct_C": 3.7142857142857144
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "i",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "s",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "t",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "w",
+      "stored_C": 1.57,
+      "correct_C": 2.5714285714285716
+    },
+    {
+      "tag": "cw_cake_cheap_2",
+      "label": "z",
+      "stored_C": 2.71,
+      "correct_C": 3.7142857142857144
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "c",
+      "stored_C": 2.43,
+      "correct_C": 3.4285714285714284
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "h",
+      "stored_C": 1.57,
+      "correct_C": 2.5714285714285716
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "i",
+      "stored_C": 1.43,
+      "correct_C": 2.4285714285714284
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "s",
+      "stored_C": 2.0,
+      "correct_C": 3.0
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "t",
+      "stored_C": 2.57,
+      "correct_C": 3.5714285714285716
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "w",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_cake_cheap_3",
+      "label": "z",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "c",
+      "stored_C": 2.29,
+      "correct_C": 3.2857142857142856
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "h",
+      "stored_C": 2.14,
+      "correct_C": 3.142857142857143
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "i",
+      "stored_C": 3.57,
+      "correct_C": 4.571428571428571
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "s",
+      "stored_C": 3.0,
+      "correct_C": 4.0
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "t",
+      "stored_C": 1.29,
+      "correct_C": 2.2857142857142856
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "w",
+      "stored_C": 2.57,
+      "correct_C": 3.5714285714285716
+    },
+    {
+      "tag": "cw_cake_cheap_4",
+      "label": "z",
+      "stored_C": 1.71,
+      "correct_C": 2.7142857142857144
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "c",
+      "stored_C": 3.29,
+      "correct_C": 4.285714285714286
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "h",
+      "stored_C": 1.14,
+      "correct_C": 2.142857142857143
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "i",
+      "stored_C": 1.86,
+      "correct_C": 2.857142857142857
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "s",
+      "stored_C": 2.71,
+      "correct_C": 3.7142857142857144
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "t",
+      "stored_C": 1.57,
+      "correct_C": 2.5714285714285716
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "w",
+      "stored_C": 2.86,
+      "correct_C": 3.857142857142857
+    },
+    {
+      "tag": "cw_cake_cheap_5",
+      "label": "z",
+      "stored_C": 1.0,
+      "correct_C": 2.0
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "c",
+      "stored_C": 9.0,
+      "correct_C": 10.0
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "h",
+      "stored_C": 7.71,
+      "correct_C": 8.714285714285714
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "i",
+      "stored_C": 7.86,
+      "correct_C": 8.857142857142858
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "s",
+      "stored_C": 8.71,
+      "correct_C": 9.714285714285714
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "t",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "w",
+      "stored_C": 8.29,
+      "correct_C": 9.285714285714286
+    },
+    {
+      "tag": "cw_cake_expensive_0",
+      "label": "z",
+      "stored_C": 7.43,
+      "correct_C": 8.428571428571429
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "c",
+      "stored_C": 7.57,
+      "correct_C": 8.571428571428571
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "h",
+      "stored_C": 8.0,
+      "correct_C": 9.0
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "i",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "s",
+      "stored_C": 6.43,
+      "correct_C": 7.428571428571429
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "t",
+      "stored_C": 6.71,
+      "correct_C": 7.714285714285714
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "w",
+      "stored_C": 10.71,
+      "correct_C": 11.714285714285714
+    },
+    {
+      "tag": "cw_cake_expensive_1",
+      "label": "z",
+      "stored_C": 6.29,
+      "correct_C": 7.285714285714286
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "c",
+      "stored_C": 5.86,
+      "correct_C": 6.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "h",
+      "stored_C": 7.71,
+      "correct_C": 8.714285714285714
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "i",
+      "stored_C": 9.14,
+      "correct_C": 10.142857142857142
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "s",
+      "stored_C": 8.14,
+      "correct_C": 9.142857142857142
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "t",
+      "stored_C": 8.29,
+      "correct_C": 9.285714285714286
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "w",
+      "stored_C": 8.14,
+      "correct_C": 9.142857142857142
+    },
+    {
+      "tag": "cw_cake_expensive_2",
+      "label": "z",
+      "stored_C": 6.57,
+      "correct_C": 7.571428571428571
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "c",
+      "stored_C": 8.86,
+      "correct_C": 9.857142857142858
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "h",
+      "stored_C": 7.0,
+      "correct_C": 8.0
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "i",
+      "stored_C": 7.14,
+      "correct_C": 8.142857142857142
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "s",
+      "stored_C": 7.0,
+      "correct_C": 8.0
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "t",
+      "stored_C": 8.86,
+      "correct_C": 9.857142857142858
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "w",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_3",
+      "label": "z",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "c",
+      "stored_C": 5.14,
+      "correct_C": 6.142857142857143
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "h",
+      "stored_C": 5.43,
+      "correct_C": 6.428571428571429
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "i",
+      "stored_C": 5.86,
+      "correct_C": 6.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "s",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "t",
+      "stored_C": 6.0,
+      "correct_C": 7.0
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "w",
+      "stored_C": 7.29,
+      "correct_C": 8.285714285714286
+    },
+    {
+      "tag": "cw_cake_expensive_4",
+      "label": "z",
+      "stored_C": 7.86,
+      "correct_C": 8.857142857142858
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "c",
+      "stored_C": 5.0,
+      "correct_C": 6.0
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "h",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "i",
+      "stored_C": 8.0,
+      "correct_C": 9.0
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "s",
+      "stored_C": 7.0,
+      "correct_C": 8.0
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "t",
+      "stored_C": 5.29,
+      "correct_C": 6.285714285714286
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "w",
+      "stored_C": 6.86,
+      "correct_C": 7.857142857142857
+    },
+    {
+      "tag": "cw_cake_expensive_5",
+      "label": "z",
+      "stored_C": 4.71,
+      "correct_C": 5.714285714285714
+    }
+  ]
+}

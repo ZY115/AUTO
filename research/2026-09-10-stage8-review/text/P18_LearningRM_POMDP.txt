@@ -1,0 +1,1496 @@
+                                                   Learning Reward Machines: A Study in Partially
+                                                         Observable Reinforcement Learning?
+
+                                            Rodrigo Toro Icartea,c , Ethan Waldieb , Toryn Q. Klassenb,c , Richard Valenzanod ,
+                                                              Margarita P. Castroa , Sheila A. McIlraithb,c
+                                                a Pontificia Universidad Católica de Chile, Vicuña Mackenna 4860, Macul, RM, Chile
+                                                            b University of Toronto, 214 College St, Toronto, ON, Canada
+                                                               c Vector Institute, 661 University, Toronto, ON, Canada
+                                                             d Ryerson University, 350 Victoria St, Toronto, ON, Canada
+
+
+
+
+arXiv:2112.09477v1 [cs.LG] 17 Dec 2021
+                                         Abstract
+                                         Reinforcement learning (RL) is a central problem in artificial intelligence. This prob-
+                                         lem consists of defining artificial agents that can learn optimal behaviour by interacting
+                                         with an environment – where the optimal behaviour is defined with respect to a reward
+                                         signal that the agent seeks to maximize. Reward machines (RMs) provide a structured,
+                                         automata-based representation of a reward function that enables an RL agent to de-
+                                         compose an RL problem into structured subproblems that can be efficiently learned via
+                                         off-policy learning. Here we show that RMs can be learned from experience, instead of
+                                         being specified by the user, and that the resulting problem decomposition can be used to
+                                         effectively solve partially observable RL problems. We pose the task of learning RMs as a
+                                         discrete optimization problem where the objective is to find an RM that decomposes the
+                                         problem into a set of subproblems such that the combination of their optimal memoryless
+                                         policies is an optimal policy for the original problem. We show the effectiveness of this
+                                         approach on three partially observable domains, where it significantly outperforms A3C,
+                                         PPO, and ACER, and discuss its advantages, limitations, and broader potential.1
+                                         Keywords: reinforcement learning, reward machines, partial observability, automata
+                                         learning, abstractions, non-Markovian environments
+
+
+
+                                         1. Introduction
+
+                                             A fundamental component of human intelligence is our ability to make decisions – to
+                                         decide how to act. Indeed, decision making is essential not only to individuals, but to
+                                         companies, to governments, and to computer-controlled systems that ensure the safe and
+                                         effective operation of much of our modern infrastructure. Unfortunately, making good
+                                         decisions can be hard. It can depend on complex inter-relationships between diverse
+                                         factors, not all of them observable, or well understood. Reinforcement learning (RL)
+
+
+                                           1 Our code is available at https://bitbucket.org/RToroIcarte/lrm.
+                                           ? This work is an extended version of our previous NeurIPS19 publication (Toro Icarte et al., 2019).
+
+                                             Email address: rntoro@uc.cl (Rodrigo Toro Icarte)
+                                         Preprint submitted to Elsevier                                                     December 20, 2021
+endeavours to solve sequential decision-making problems using minimal supervision and
+minimal prior knowledge. Its goal is to define artificial agents that learn optimal be-
+haviour by interacting with an environment, which may take the form of a simulator or
+the real world (Sutton and Barto, 2018). Every interaction with the environment delivers
+a reward signal. An RL agent seeks to learn a policy (a mapping from observations to
+actions) that maximizes its expected cumulative reward, improving its policy over time
+by learning from its past experiences.
+    The use of neural networks for function approximation has led to many recent ad-
+vances in RL. Such deep RL methods have allowed agents to learn effective policies in
+many complex environment including board games (Silver et al., 2017), video games
+(Mnih et al., 2015), and robotic systems (Andrychowicz et al., 2018). However, RL
+methods (including deep RL methods) often struggle when the environment is partially
+observable. Indeed, partial observability is one of the main challenges towards applying
+RL in real-world problems (Dulac-Arnold et al., 2019, 2021). This is because agents
+in such environments usually require some form of memory to learn optimal behaviour
+(Singh et al., 1994). Recent approaches for giving memory to an RL agent either rely on
+recurrent neural networks (e.g., Hausknecht and Stone, 2015; Mnih et al., 2016; Jader-
+berg et al., 2016; Wang et al., 2016; Schulman et al., 2017), memory-augmented neural
+networks (e.g., Oh et al., 2016; Khan et al., 2017; Hung et al., 2018), or external memories
+that the agent can control using primitive actions (e.g., Littman, 1993; Peshkin et al.,
+1999; Zhang et al., 2016; Toro Icarte et al., 2020b).
+    In this work, we show that reward machines (RMs) are another useful tool for pro-
+viding memory in a partially observable environment. RMs were originally conceived to
+provide a structured, automata-based representation of a reward function (Toro Icarte
+et al., 2018, 2020a; Camacho et al., 2019; De Giacomo et al., 2020). Exposed structure
+can be exploited by the Q-learning for reward machines (QRM) algorithm (Toro Icarte
+et al., 2018), which simultaneously learns a separate policy for each state in the RM.
+QRM has been shown to outperform standard and hierarchical deep RL over a variety of
+discrete and continuous domains. However, QRM was only defined for fully observable
+environments. Furthermore, the RMs were handcrafted by a user and then given to the
+RL agent, thus allowing the agent to exploit the exposed problem substructure. Here, we
+propose a method for learning an RM directly from experience in a partially observable
+environment, in a manner that allows the RM to serve as memory for an RL algorithm.
+    There are three main contributions of this work. The first is to propose a discrete
+optimization problem for learning reward machines from experience in a partially ob-
+servable environment, where the objective is to find a reward machine that makes the
+problem as Markovian as possible. A requirement is that the RM learning method be
+given a finite set of detectors for properties that serve as the vocabulary for the RM.
+The model is also fed with traces collected by the agent while exploring the environ-
+ment. Then, the optimization problem’s objective function ranks the reward machines
+according to how well they predict future observations given the current RM state.
+    Our second contribution is to study different methodologies to solve the resulting
+optimization problem for learning reward machines. In particular, we propose a mixed
+integer linear programming (MILP) model, a constrained programming (CP) model, and
+two local search (LS) methods. In our experiments, the best performance was obtained
+by the local search methods.
+    Finally, we show how to integrate our models for learning reward machines into the
+                                               2
+agent-environment interaction loop and show the effectiveness of doing so. By simulta-
+neously learning an RM and a policy for the environment, we are able to significantly
+outperform several deep RL baselines that use recurrent neural networks as memory
+in three partially observable domains. We also extend the RM-tailored algorithm Q-
+learning for reward machines (QRM) to the case of partial observability where we see
+further gains when combined with our RM learning method.
+    This paper builds upon Toro Icarte et al. (2019) – where we originally proposed to
+formulate the problem of learning an RM as a discrete optimization problem and solved
+it using tabu search. In this work, we provide further details about this learning pipeline
+and propose three novel formulations to learn reward machines. These new formulations
+include a MILP, CP, and LS model. We compare the performance of these models relative
+to tabu search and found that a local search approach with restarts is consistently better
+at finding high-quality RMs than tabu search. As a result, the performance of our
+method improves considerably with respect to the performance reported in our previous
+publication.
+
+
+2. Preliminaries
+
+    RL agents learn policies from experience. When the problem is fully-observable,
+the underlying environment model is typically assumed to be a Markov decision process
+(MDP). An MDP is a tuple M = hS, A, r, p, γ, µi, where S is a finite set of states, A is
+a finite set of actions, r : S × A → R is the reward function, p(s, a, s0 ) is the transition
+probability distribution, γ is the discount factor, and µ is the initial state distribution
+where µ(s0 ) is the probability that the agent starts in state s0 ∈ S. In addition, a subset
+of the states might be labelled as terminal states.
+    At the beginning of an episode, the environment is set to an initial state s0 , sampled
+from µ. Then, at time step t, the agent observes the current state st ∈ S and executes an
+action at ∈ A. In response, the environment returns the next state st+1 ∼ p(·|st , at ) and
+the immediate reward rt+1 = r(st , at , st+1 ). The process then repeats from st+1 until
+potentially reaching a terminal state, when a new episode will begin.
+    The agent’s goal is to collect as much reward from the environment as possible. To
+do so, it learns a policy π(a|s), which is a probability distribution over the actions a ∈ A
+given a state s ∈ S. As the agent interacts with the environment, it also improves its
+policy until (ideally) finding an optimal policy π ∗ . An optimal policy is a policy that
+maximizes the expected return received by the agent, which is formally defined as follows:
+                                                  "∞                #
+                                       X            X
+                           ∗                              t
+                         π = arg max       µ(s)Eπ       γ rt s0 = s                       (1)
+                                    π
+                                         s∈S           t=0
+
+    Q-learning (Watkins and Dayan, 1992) is a well-known RL algorithm that uses sam-
+ples of experience of the form (st , at , rt , st+1 ) to estimate the optimal Q-function q ∗ (s, a).
+Here, q ∗ (s, a) is the expected return of selecting action a in state s and following an op-
+timal policy π ∗ thereafter. During execution, Q-learning maintains the current estimate
+of the optimal Q-function (i.e., Q-value) for each state s and action a, Q(s, a). Given
+a sampled experience (st , at , rt , st+1 ), where st+1 is the state reached after executing
+action at in state st and receiving a reward rt , Q-learning updates Q(st , at ) towards
+
+                                                 3
+rt + γ maxa0 ∈A Q(st+1 , a0 ). Given enough experience, the Q-value estimates will con-
+verge to the optimal Q-function, and so an optimal policy π ∗ can be computed by always
+selecting the action a with the highest value of Q(s, a) for each state s ∈ S.
+     Unfortunately, Q-learning is impractical when solving problems with large state spaces.
+In such cases, function approximation methods are often used. Instead of storing a Q-
+value for each state-action pair in a table, deep RL methods like DQN (Mnih et al., 2015)
+and DDQN (Van Hasselt et al., 2016) represent the Q-function as Qθ (s, a), where Qθ
+is a neural network whose inputs are features of the state and the outputs are the Q-
+value estimates for each action a ∈ A. To train the network, mini-batches of experiences
+(s, a, r, s0 ) are randomly sampled from an experience replay buffer and used to minimize
+the Bellman error. In the case of DQN, this is accomplished by minimizing the square
+error between Qθ (s, a) and the Bellman estimate r + γ maxa0 Qθ0 (s0 , a0 ). Note that the
+updates are made with respect to a target network with parameters θ0 . The parameters θ0
+are held fixed when minimizing the square error, but updated to θ after a certain number
+of training updates. The role of the target network is to stabilize learning. DDQN follows
+a similar approach, but the Bellman estimate is computed by selecting the next action
+a0 using Qθ instead of the target network. This is, r + γQθ0 (s0 , arg maxa0 Qθ (s0 , a0 )).
+     In partially observable problems, the underlying environment model is typically as-
+sumed to be a Partially Observable Markov Decision Process (POMDP). A POMDP is
+a tuple PO = hS, O, A, r, p, ω, γ, µi, where S, A, r, p, γ, and µ are defined as in an MDP,
+O is a finite set of observations, and ω(o|s) is the observation probability distribution. In-
+teracting with a POMDP is similar to interacting with an MDP. The environment starts
+from a sampled initial state s0 ∼ µ. At time step t, the agent is in state st ∈ S, executes
+an action at ∈ A, receives an immediate reward rt+1 = r(st , at , st+1 ), and moves to st+1
+according to p(st+1 |st , at ). However, the agent does not observe st directly. Instead, the
+agent observes ot ∈ O, which is linked to st via ω, where ω(ot |st ) is the probability of
+observing ot from state st (Cassandra et al., 1994).
+     RL methods cannot be immediately applied to POMDPs because the transition prob-
+abilities and reward function are not necessarily Markovian w.r.t. O (though by definition
+they are w.r.t. S). As such, optimal policies may need to consider the complete history
+(o0 , a0 , . . . , at−1 , ot ) of observations and actions when selecting the next action.2 Several
+partially observable RL methods use a recurrent neural network to compactly represent
+the history, and then use a policy gradient method to train it. However, when we do
+have access to a full POMDP model PO , then the history can be summarized into a belief
+state. A belief state is a probability distribution bt : S → [0, 1] over S, such that bt (s) is
+the probability that the agent is in state s ∈ S given the history up to time t. The initial
+belief state is computed using the initial observation o0 : b0 (s) ∝ ω(s, o0 ) for all s ∈ S.
+The belief state bt+1 is then determined from the previous belief state bt , the executed
+action at , and the resulting observation ot+1 as follows:
+                                                    X
+                         bt+1 (s0 ) ∝ ω(s0 , ot+1 )   p(s, at , s0 )bt (s) for all s0 ∈ S.      (2)
+                                                 s∈S
+
+
+
+   2 Technically, the history of interactions should also include the immediate rewards (Izadi and Precup,
+
+2005), this is ht = (o0 , a0 , r1 , . . . , at−1 , rt , ot ). However, we can remove the immediate rewards from the
+history without loss of generality because it is always possible to include the immediate reward rt as
+part of the observation ot .
+                                                        4
+                                                                           ?
+
+
+
+
+                                                            ?                            ?
+
+                (a) Cookie domain.                                 (b) Agent’s view.
+
+         Figure 1: In the cookie domain, the agent can only see what is in the current room.
+
+
+    Since the state transitions and reward function are Markovian w.r.t. bt , the set of all
+belief states B can be used to construct the belief MDP MB , where the states of MB
+are B, A are the actions, the transition probabilities are computed using equation (2),
+and the reward function rb is as follows:
+                                             X
+                                 rb (b, a) =   r(s, a)b(s).                             (3)
+                                               s∈S
+
+Any optimal policies for MB is also optimal for the POMDP (Cassandra et al., 1994).
+
+3. Reward Machines for Partially Observable Environments
+
+    In this section, we define RMs for the case of partial observability. We use the
+following problem as a running example to help explain various concepts.
+Example 1 (The cookie domain). The cookie domain, shown in Figure 1a, has three
+rooms connected by a hallway. The agent (purple triangle) can move in the four cardinal
+directions. There is a button in the orange room that, when pressed, causes a cookie to
+randomly appear in the green or blue room. The agent receives a reward of +1 for reaching
+(and thus eating) the cookie and may then go and press the button again. Pressing the
+button before reaching a cookie will remove the existing cookie and cause a new cookie
+to randomly appear. There is no cookie at the beginning of the episode. This domain is
+partially observable since the agent can only see what it is in the room that it currently
+occupies, as shown in Figure 1b.
+    RMs are finite state machines that are used to encode a reward function (Toro Icarte
+et al., 2018, 2020a). They are defined over a set of propositional symbols P that corre-
+spond to a set of high-level features that the agent can detect using a labelling function
+L : O∅ × A∅ × O → 2P where (for any set X) X∅ , X ∪ {∅}. L assigns truth values to
+symbols in P given an environment experience e = (o, a, o0 ) where o0 is the observation
+seen after executing action a when observing o. We use L(∅, ∅, o) to assign truth values
+to the initial observation. We call a truth value assignment of P a high-level observation
+because it provides a high-level view of the low-level environment observations via the
+labelling function L. A formal definition of an RM follows:
+Definition 2 (reward machine). Given a set of propositional symbols P, a reward ma-
+chine is a tuple RP = hU, u0 , δu , δr i where U is a finite set of states, u0 ∈ U is an initial
+                                               5
+state, δu is the state-transition function, δu : U ×2P → U , and δr is the reward-transition
+function, δr : U × 2P → R.
+    One way of thinking about RMs is that they decompose problems into a set of high-
+level states U and define transitions using if-like conditions defined by δu . These con-
+ditions are over a set of binary properties P that the agent can detect using L. For
+example, in the cookie domain, P = { , , , , , , }. These properties are true in
+the following situations: , , , or is true if the agent is in a room of that color;
+is true if the agent is in the same room as a cookie;       is true if the agent pushed the
+button with its last action; and is true if the agent ate a cookie with its last action.
+    Figure 2 shows three possible reward machines for the cookie domain. We note
+that these three machines define the same reward signal, 1 for eating a cookie and 0
+otherwise, but differ in their states and transitions. As a result, they differ with respect
+to the amount of information about the current POMDP state that can be inferred from
+the RM state, as we will see below.
+    Each RM starts in the initial state u0 . Edge labels in the figures provide a visual rep-
+resentation of the functions δu and δr . For example, label h      , 1i between state u2 and
+u0 in Figure 2b represents δu (u2 , { , }) = u0 and δr (u2 , { , }) = 1. Intuitively, this
+means that if the RM is in state u2 and the agent just ate a cookie in room , then the
+agent will receive a reward of 1 and the RM will transition to u0 . Notice that any prop-
+erties not listed in the label are false (e.g. must be false to take the transition labelled
+h     , 1i). We also use multiple labels separated by a semicolon (e.g., “h , 0i; h      , 0i”)
+to describe different conditions for transitioning between the RM states, each with their
+own associated reward. The label ho/w, ri (“o/w” for “otherwise”) on an edge from ui
+to uj means that transition will be made (and reward r received) if none of the other
+transitions from ui can be taken.
+    Let us illustrate the behaviour of an RM using the one shown in Figure 2c. The RM
+will stay in u0 until the agent presses the button (causing a cookie to appear), whereupon
+the RM moves to u1 . From u1 the RM may move to u2 or u3 depending on whether the
+agent finds a cookie when it enters another room. Finally, the RM moves back to u0 from
+u2 (or u3 ) when the agent eats a cookie. Note that it is possible to associate meaning
+with being in RM states. In the example, u0 means that there is no cookie available,
+u1 means that there is a cookie in some room (either blue or green), u2 means that the
+cookie is in the green room, and u3 means that the cookie is in the blue room.
+    When learning a policy for a given RM, one simple technique is to learn a policy
+π(a|o, u) that considers the current observation o ∈ O and the current RM state u ∈ U
+to select action a ∈ A. Interestingly, a partially observable problem might be non-
+Markovian over O, but Markovian over O × U for some RM RP . This is the case for the
+cookie domain with the RM from Figure 2c, for example.
+    Q-learning for RMs (QRM) is another way to learn a policy by exploiting a given
+RM (Toro Icarte et al., 2018). QRM learns one Q-function Qu (i.e., policy) per RM state
+u ∈ U . Then, given any sample experience, the RM can be used to emulate how much
+reward would have been received had the RM been in any one of its states. Formally,
+experience e = (o, a, o0 ) can be transformed into a valid experience (ho, ui, a, ho0 , u0 i, r)
+used for updating Qu for each u ∈ U , where u0 = δu (u, L(e)) and r = δr (u, L(e)). Hence,
+any off-policy learning method can take advantage of these “synthetically” generated
+experiences to update all subpolicies simultaneously.
+                                               6
+                    ho/w, 0i h , 0i; ho/w, 0i                  ho/w, 0i h , 0i; ho/w, 0i h , 0i; ho/w, 0i
+  h   , 1i;                  h       , 0i                                      h   , 0i           h          , 0i
+  h   , 1i;
+  ho/w, 0i             u1                      u2                  u3                     u1                            u2
+                                                                               h   , 0i           h          , 0i
+                                 h      , 0i
+                                                                                             h        , 0i
+                h     , 1i                     h    , 1i
+     u0                                                        h        , 1i                                        h    , 1i
+                                 u0                                                       u0
+
+                                      ho/w, 0i                                                 ho/w, 0i
+
+(a) Naive RM.            (b) “Optimal” RM.                                          (c) Perfect RM.
+
+                    Figure 2: Three possible Reward Machines for the Cookie domain.
+
+
+
+    When tabular Q-learning is used, QRM is guaranteed to converge to an optimal policy
+on fully-observable problems (Toro Icarte et al., 2018). However, in a partially observable
+environment, an experience e might be more or less likely depending on the RM state
+that the agent was in when the experience was collected. For example, experience e
+might be possible in one RM state ui but not in RM state uj . Thus, updating the policy
+for uj using e as QRM does, would introduce an unwanted bias to Quj . We will discuss
+how to (partially) address this problem in Section 6.
+
+
+4. Learning Reward Machines from Traces
+
+    To learn RMs, our overall idea is to search for an RM that can be used as external
+memory by an agent for solving a partially-observable problem. As input, our method
+will take a set of high-level propositional symbols P and a labelling function L that can
+detect them. Then, the key question is what properties should such an RM have.
+    Three proposals naturally emerge from the literature. The first comes from the work
+on learning finite state machines (FSMs) (Angluin and Smith, 1983; Zeng et al., 1993;
+Shvo et al., 2021), which suggests learning the smallest RM that correctly mimics the
+external reward signal given by the environment, as in Giantamidis and Tripakis’ method
+for learning Moore machines (Giantamidis and Tripakis, 2016). Unfortunately, such
+approaches would learn RMs of limited utility, like the one in Figure 2a. This naive
+RM correctly predicts reward in the cookie domain (i.e., +1 for eating a cookie , zero
+otherwise) but provides no memory in support of solving the task.
+    The second proposal comes from the literature on learning finite state controllers
+(FSC) (Meuleau et al., 1999) and on model-free RL methods (Sutton and Barto, 2018).
+This work suggests looking for the RM whose optimal policy receives the most reward.
+For instance, the RM from Figure 2b is “optimal” in this sense. It decomposes the
+problem into three states. The optimal policy for u0 goes directly to press the button,
+the optimal policy for u1 goes to the blue room and eats the cookie if present, and the
+optimal policy for u2 goes to the green room and eats the cookie. Together, these three
+policies give rise to an optimal policy for the complete problem. This is a desirable
+property for RMs, but requires computing optimal policies in order to compare the
+
+                                                           7
+relative quality of RMs, which seems prohibitively expensive. However, we believe that
+finding ways to efficiently learn “optimal” RMs is a promising future work direction.
+    Finally, the third proposal comes from the literature on predictive state representa-
+tions (PSRs) (Littman et al., 2002), deterministic Markov models (DMMs) (Mahmud,
+2010), and model-based RL (Kaelbling et al., 1996). This line of research suggests learn-
+ing the RM that remembers sufficient information about the history to make accurate
+Markovian predictions about the next observation. For instance, the cookie domain RM
+shown in Figure 2c is perfect w.r.t. this criterion. Intuitively, every transition in the
+cookie environment is already Markovian except for transitioning from one room to an-
+other. Depending on different factors, when entering into the green room there could
+be a cookie there (or not). The perfect RM is able to encode such information using 4
+states: when at u0 the agent knows that there is no cookie, at u1 the agent knows that
+there is a cookie in the blue or the green room, at u2 the agent knows that there is a
+cookie in the green room, and at u3 the agent knows that there is a cookie in the blue
+room. Since keeping track of more information will not result in better predictions, this
+RM is perfect. Below, we develop a theory about perfect RMs and describe an approach
+for learning them from experience.
+
+4.1. Perfect Reward Machines: Formal Definition and Properties
+    The key insight behind perfect RMs is to use their states U and transitions δu to
+keep track of relevant past information such that the partially observable environment
+PO becomes Markovian with respect to O×U . This is ensured by the following definition.
+Definition 3 (perfect reward machine). An RM RP = hU, u0 , δu , δr i is considered perfect
+for a POMDP PO = hS, O, A, r, p, ω, γ, µi w.r.t. a labelling function L iff for every trace
+(o0 , a0 , . . . , ot , at ) generated by any policy over PO , the following holds:
+
+                        Pr(ot+1 , rt |o0 , a0 , . . . , ot , at ) = Pr(ot+1 , rt |ot , xt , at ),
+
+where x0 = u0 and xt = δu (xt−1 , L(ot−1 , at−1 , ot )).3
+    Two important properties follow from Definition 3. First, if the set of reachable belief
+states B for the POMDP PO is finite, then there exists a perfect RM for PO . Recall that
+a belief state models the probability of being at any POMDP state given the previous
+interactions with the environment. When the model of PO is known, we can compute the
+current belief state using the Bayes rule, as discussed in Section 2. This first property
+states that if there is a finite set of belief states reachable from the initial state, then
+there exists a perfect RM for that environment.
+Theorem 4. For any POMDP PO with a finite reachable belief space, there exists a
+perfect RM for PO .
+Proof. If the reachable belief space B is finite, we can construct an RM that keeps
+track of the current belief state using one RM state per belief state and emulating their
+progression using δu , and one propositional symbol for every action-observation pair.
+Thus, the current belief state bt can be inferred from the last observation, last action,
+and the current RM state. Hence, the equality from Definition 3 holds.
+
+  3 Note that x
+                  t is the RM state that the agent is in at time t. We will make use of this notation below.
+                                                           8
+    The second property of perfect RMs is that their optimal policies are also optimal
+for the POMDP. This means that summarizing the history ht = (o0 , a0 , . . . , at−1 , ot ) as
+φ(ht ) = hut , ot i, where ut is the current RM state and ot is the current observation,
+results in globally optimal policies – i.e., π ∗ (at |ht ) = π ∗ (at |ut , ot ).
+Theorem 5. Let RP be a perfect RM for a POMDP PO , then any optimal policy for
+RP w.r.t. the environmental reward is also optimal for PO .
+Proof. As the next observation and immediate reward probabilities can be predicted
+from O × U × A, a perfect RM for PO also models the belief MDP MB for PO . As
+such, optimal policies over O × U are equivalent to optimal policies over MB , which are
+optimal over PO (Cassandra et al., 1994).
+
+4.2. Perfect Reward Machines: How to Learn Them
+    We now consider the problem of learning a perfect RM from traces, assuming one
+exists w.r.t. the given labelling function L. Recall that a perfect RM transforms the
+original problem into a Markovian problem over O × U . Hence, we should prefer RMs
+that accurately predict the next observation o0 and the immediate reward r from the
+current observation o, RM state u, and action a. This might be achieved by collecting a
+training set of traces from the environment, fitting a predictive model for Pr(o0 , r|o, u, a),
+and picking the RM that makes better predictions. However, this approach can be very
+expensive, especially considering that the observations might be images.
+    Instead, we propose an alternative that focuses on a necessary condition for a perfect
+RM: the RM must predict what is possible and impossible in the environment at the
+abstract level given by the labelling function. E.g., it is impossible to be at u3 in the
+RM from Figure 2c and make the high-level observation { , }, because the RM reaches
+u3 only if the cookie was seen in the blue room (or not to be in the green room) and it
+leaves u3 as soon as the agent eats the cookie (or presses the button).
+    This idea is formalized in the optimization model LRM. Let T = {T0 , . . . , Tn } be a set
+of traces, where each trace Ti is a sequence of observations, actions, and rewards:
+
+                               Ti = (oi,0 , ai,0 , ri,1 , . . . , ai,ti −1 , ri,ti , oi,ti ).   (4)
+
+We now look for an RM hU, u0 , δu , δr i that can be used to predict L(ei,t+1 ) from L(ei,t )
+and the current RM state xi,t , where ei,t+1 is the experience (oi,t , ai,t , oi,t+1 ) and we define
+ei,0 as (∅, ∅, oi,0 ). The model parameters are the set of traces T , the set of propositional
+symbols P, the labelling function L, and a maximum number of states in the RM umax .
+The model also uses the sets I = {0 . . . n}, Ti = {0 . . . ti −1}, and Σ, where I contains the
+indices of the traces, Ti their time steps, and Σ contains all the high-level observations
+that appear in T . The model has two auxiliary variables xi,t and Nu,σ . Variable xi,t ∈ U
+represents the state of the RM after observing trace Ti up to time t. Variable Nu,σ ⊆ 2Σ
+is the set of all the next high-level observations seen from the RM state u and the high-
+level observations σ in T . In other words, σ 0 ∈ Nu,σ iff u = xi,t , σ = L(ei,t ), and
+σ 0 = L(ei,t+1 ) for some trace Ti and time t.
+                          XX
+             minimize            log(|Nxi,t ,L(ei,t ) |)                                      (LRM)
+            hU,u0 ,δu ,δr i
+                              i∈I t∈Ti
+
+                      s.t. hU, u0 , δu , δr i ∈ RP                                              (5)
+                                                             9
+                       |U | ≤ umax                                                         (6)
+                       xi,t ∈ U                               ∀i ∈ I, t ∈ Ti ∪ {ti }       (7)
+                       xi,0 = u0                                             ∀i ∈ I        (8)
+                       xi,t+1 = δu (xi,t , L(ei,t+1 ))               ∀i ∈ I, t ∈ Ti        (9)
+                       Nu,σ ⊆ 2Σ                                    ∀u ∈ U, σ ∈ Σ         (10)
+                       L(ei,t+1 ) ∈ Nxi,t ,L(ei,t )                  ∀i ∈ I, t ∈ Ti       (11)
+
+Constraints (5) and (6) ensure that we find a well-formed RM over P with at most
+umax states. Constraints (7), (8), and (9) ensure that xi,t is equal to the current state
+of the RM, starting from u0 and following δu . Constraints (10) and (11) ensure that
+the sets Nu,σ contain every L(ei,t+1 ) that has been seen right after σ and u in T . The
+objective function comes from maximizing the log-likelihood for predicting L(ei,t+1 ) using
+a uniform distribution over all the possible options given by Nu,σ .
+    A key property of this formulation is that any perfect RM is optimal w.r.t. the
+objective function in LRM when the number of traces tends to infinity:
+Theorem 6. When the set of training traces (and their lengths) tends to infinity and is
+collected by a policy such that π(a|o) >  for all o ∈ O and a ∈ A, any perfect RM with
+respect to L and at most umax states will be an optimal solution to the formulation LRM.
+Proof. In the limit, σ 0 ∈ Nu,σ if and only if the probability of observing σ 0 after executing
+an action from the RM state u while observing σ is non-zero. In particular, for all i ∈ I
+and t ∈ T , the cardinality of Nxi,t ,L(ei,t ) will be minimal for a perfect RM. This property
+follows from the fact that perfect RMs make perfect predictions for the next observation
+o0 given o, u, and a. Therefore, as we minimize the sum over log(|Nxi,t ,L(ei,t ) |), the
+objective value for any perfect RM must be minimal.
+     Finally, note that the definition of a perfect RM does not impose conditions over the
+rewards associated with the RM (i.e., δr ). This is why δr is a free variable in the model
+LRM. However, in order to apply methods that exploit RM structure (such as QRM), we
+still need δr to model the external reward signals given by the environment. To do so,
+we estimate δr (u, σ) using its empirical expectation over T – as commonly done when
+constructing belief MDPs (Cassandra et al., 1994). Formally,
+                      P
+                         i∈I,t∈Ti ri,t+1 1u=xi,t ∧σ=L(et+1 )
+          δr (u, σ) = P                                      for all u ∈ U and l ∈ 2P , (12)
+                          i∈I,t∈Ti 1u=xi,t ∧σ=L(et+1 ) + 
+
+where 1c = 1 if condition c holds (zero otherwise) and  is a small constant.
+
+
+5. Searching for a Perfect Reward Machine
+
+    We now describe different approaches to solve LRM. These include a mixed integer
+linear programming (MILP) model, a constrained programming (CP) model, and two
+local search (LS) models. All our models are guaranteed to find optimal solutions given
+sufficient resources. But first, let us introduce two preprocessing steps over the training
+traces that our models use: trace compression and prefix trees (PTs).
+                                                 10
+5.1. Trace Compression
+    Recall that LRM works over the high-level observations σt given by the labelling func-
+tion L(et ), where et represents the experience (ot , at , ot+1 ) at time t. Thus, the first step
+is to transform each trace Ti from being a sequence of interactions with the environment
+into a sequence of truth value assignments of P via L:
+                                                                 σt =L(et )
+       Ti = (oi,0 , ai,0 , ri,1 , . . . , ai,ti −1 , ri,ti , oi,ti ) ======⇒ τi = (σi,0 , σi,1 , . . . , σi,ti ).
+
+   In the abstract space given by P and L, it is usually the case that the same high-level
+observation is seen many times in a row. For instance, a typical high-level trace in the
+cookie domain would look as follows:
+
+     τ =( , , , , , ,                  , , , , , , , , , , , , , , , , , , ,                                    ).
+
+This trace indicates that the agent was first at the hallway ( ), and then it moved to
+the orange room ( ) and pressed the button ( ). After that, it returned to the hallway
+( ), noticed that there was no cookie in the blue room ( ), came back to the hallway
+( ), and finally found a cookie in the green room ( ). Let us assume that the trace
+ended there for simplicity. As you can see, the most informative moments are when the
+high-level observations change. Indeed, knowing that the agent stayed at the hallway
+during 4, 7, or 8 steps is not particularly useful in this case. This suggests that we
+could potentially compress the training trace (without losing relevant information) by
+removing duplicated high-level observations that appear consecutively in the trace. For
+instance, the previous trace will look as follows after being compressed:
+
+                                      τc = ( , ,          , , , , ,            ).
+
+    Compressing the traces is an optional preprocessing step that has advantages and
+disadvantages. The advantage is that it considerably improves the quality of the RMs
+that the models find given a fixed computational budget. Intuitively, any model has to
+go over the traces to evaluate how good an RM is. Compressing the traces reduces the
+computational cost of doing so. The disadvantage is that, by compressing the traces, we
+are assuming that observing two or more times the same high-level observation consec-
+utively does not provide further information about the current POMDP state. If that is
+the case, then we can compress the traces and the model will still find optimal solutions
+for LRM. If that is not the case, then compressing the traces might help the models to
+find high-quality RMs faster but they will not find optimal solutions.
+    Two inconsistencies might arise if we compress the traces. First, note that we are
+learning RMs using compressed traces but then testing them over uncompressed traces.
+This is a problem because the optimal solution for LRM will exploit the fact that no
+training trace has the same high-level observation twice in a row. However, when the
+agent uses the learned RM in the environment (i.e., at test time), it might encounter the
+same high-level observation many times in a row and, thus, update the RM state in ways
+that were unintended by LRM. For that reason, if we do compress the traces, we have to
+include the following additional constraint to LRM:
+
+                [δu (u0 , σ) = u] ⇒ [δu (u, σ) = u]                             ∀u, u0 ∈ U, σ ∈ Σ                    (13)
+                                                          11
+                                                                 nab
+                                                           b
+                                                   na
+                                            a
+                                                           c
+                                    n                           nac
+
+                                            b        nb
+
+  Figure 3: A PT for {(b), (ab), (ac)}. We took this example from Giantamidis and Tripakis (2016).
+
+
+
+This constraint ensures that the learned reward machine will not enter and leave a state
+u using the same high-level observation σ.
+    The second inconsistency relates to constraint (9). According to that constraint,
+the second high-level observation of the trace is used to progress the initial state in
+the reward machine (and not the first one). Indeed, LRM dictates that x0 = u0 and
+x1 = δu (u0 , ) for τc . However, if we were processing the uncompressed version of
+τc (i.e., τ ), then the initial RM state would have been updated using x1 = δu (u0 , )
+instead of x1 = δu (u0 , ) because appears many times in a row at the beginning of
+τ . We can solve this inconsistency by not compressing the first high-level observation of
+the trace. This is, to always include the first high-level observation and only compress
+from the second high-level observation forward. In our example, the proper manner of
+compressing τ would be as follows:
+
+                              τc0 = ( , , ,       , , , , ,        ).
+
+5.2. Prefix Trees (PTs)
+    Regardless of whether we compress or not the training traces, from now on we will
+be working with a set of n + 1 traces T = {τ0 , . . . , τn }, where each trace is composed
+of a sequence of high-level observations: τi = (σi,0 , . . . , σi,ti ). Then, LRM defines an
+independent variable xi,t which models the current RM state at time step t given the
+trace τi for all i ∈ I and t ∈ Ti . However, doing so does not exploit the fact that there
+exist large sets of xi,t variables whose values are equivalent for any reward machine.
+These are cases where the prefix of two traces τi and τj are identical up to some time
+step t. Indeed, we know that variables xi,t = xj,t if σi,t0 = σj,t0 for all t0 < t because
+the transitions of a reward machine are deterministic. We can compactly capture this
+information using prefix trees (PTs) (De la Higuera, 2010).
+    PTs merge all the training traces into one large tree, where each trace becomes a
+branch in this tree. As an example, Figure 3 shows the PT for the following set of traces:
+τ1 = (b), τ2 = (a, a), and τ3 = (a, b). Each node in a PT represents a prefix that appears
+in one or more training traces. In the example, there are 5 nodes corresponding to the 5
+possible prefixes in {τ1 , τ2 , τ3 }: , (a), (b), (a, b), and (a, c), where  represents the empty
+trace. Thus, instead of assigning RM states to each variable xi,t , our models assign RM
+states to each node in the PT. That way, these models are forced to assign the same
+sequence of RM states to all traces as long as their prefixes are identical. For instance,
+                                                12
+Algorithm 1 Converting Training Data into Prefix Trees
+ 1: Input: {τ0 , . . . , τn }
+ 2: root node ← create root node()
+ 3: for i = 0 to n do
+ 4:   node ← root node
+ 5:   for t = 0 to |τi | − 1 do
+ 6:      node.increase trace counter by one()
+ 7:      if not node.has child(σi,t ) then
+ 8:         node.add child(σi,t )
+ 9:     node ← node.get child(σi,t )
+10: return root node
+
+
+
+assigning an RM state to node na in the PT will automatically assign the same RM state
+to x2,1 and x3,1 because na represents the current RM state after any trace observes a
+at the initial time step and, in this case, ‘a’ is the first observation of τ2 and τ3 .
+    Algorithm 1 shows the pseudo-code to constructing a PT from a given set of traces
+{τ0 , . . . , τn }. Starting at the root node, the code goes over all the training traces and
+adds them as branches of the tree (lines 7-8). We also count how many training traces
+pass through each node in the tree (line 6). This information helps us defining the right
+weights to penalize predictions in the objective function when reformulating LRM from
+assigning RM states to time steps to assigning RM states to nodes in the PT.
+
+5.3. Solving LRM via Mixed Integer Linear Programming (MILP)
+     In this section, we present a MILP model for LRM. MILP solvers are able to solve
+optimization problems with linear constraints and objective functions. They can also
+handle continuous and discrete variables. MILP solvers are the state of the art for
+solving a wide range of discrete optimization problems and they are guaranteed to find
+optimal solutions given sufficient resources (Jünger et al., 2009).
+     Our MILP model receives as input umax and the PT built using the training traces
+T = {τ0 , . . . , τn }. Note that the traces in T might or might not be compressed. We
+use the following notation to refer to the different elements in the PT: nroot is its root
+node, S is a set containing all the nodes in PT except for nroot , Sin ⊂ S is a subset of S
+that only contains the inner nodes of PT, wn is the number of training traces that pass
+through node n, p(n) is the parent of node n, o(n) is the high-level observation associated
+with the edge between nodes p(n) and n, and C(n) is the set of children of node n. Also,
+this model assumes that the set Σ contains all the high-level observations that appear in
+T , |U | = umax , and K = 2|Σ| .
+     The idea behind our MILP model is to assign RM states to each node in the PT.
+Then, we look for an assignment that (i) can be produced by a deterministic machine and
+(ii) optimizes the same objective as LRM. To achieve this, we use the following decision
+variables. Variable xn,u ∈ {0, 1} indicates if node n ∈ S ∪ {nroot } is assigned the RM
+state u ∈ U . Variable du,σ,u0 ∈ {0, 1} represents the possible transition from state u ∈ U
+to state u0 ∈ U given observation σ ∈ Σ in the RM. Formally, this means that du,σ,u0 = 1
+iff δu (u, σ) = u0 . Variable pu,σ,σ0 ∈ {0, 1} indicates if σ 0 ∈ Σ is a possible next observation
+at RM state u ∈ U when observing σ ∈ Σ, where pu,σ,σ0 = 1 iff σ 0 ∈ Nu,σ . Variable
+                                               13
+yu,σ,m ∈ {0, 1} represents the cardinality of Nu,σ , meaning that yu,σ,m = 1 iff |Nu,σ | = m.
+Lastly, variables zn represent the log-likelihood cost for the predictions associated with
+node n ∈ S. The full model is then as follows:
+         X
+   min       wn · zn                                                                  (MILP)
+        n∈S
+                 K
+                 X
+   s.t. zn ≥           yu,σ,m log (m) − (1 − xn,u ) log (K)      ∀n ∈ S, u ∈ U, σ = o(n)       (14)
+                 m=1
+        K
+        X
+                 yu,σ,m = 1                                                ∀u ∈ U, σ ∈ Σ       (15)
+        m=1
+         X                   K
+                             X
+                 pu,σ,σ0 =         yu,σ,m · m                              ∀u ∈ U, σ ∈ Σ       (16)
+        σ 0 ∈Σ               m=1
+
+        pu,o(n),o(n0 ) ≥ xn,u                                 ∀u ∈ U, n ∈ Sin , n0 ∈ C(n)      (17)
+         X
+              du,σ,u0 = 1                                                  ∀u ∈ U, σ ∈ Σ       (18)
+        u0 ∈U
+        X
+              xn,u = 1                                                     ∀n ∈ S, u ∈ U       (19)
+        u∈U
+        xn,u0 = 1                                                                n = nroot     (20)
+                                                                             0
+        xp(n),u + xn,u0 − 1 ≤ du,o(n),u0                                ∀u, u ∈ U, n ∈ S       (21)
+                                                                    0             0
+        du,σ,u0 ≤ du0 ,σ,u0                                    ∀u, u ∈ U, u 6= u , σ = Σ       (22)
+        xn,u ∈ {0, 1}                                           ∀n ∈ S ∪ {nroot }, u ∈ U       (23)
+        du,σ,u0 ∈ {0, 1}                                                ∀u, u0 ∈ U, σ ∈ Σ      (24)
+        pu,σ,σ0 ∈ {0, 1}                                                ∀u ∈ U, σ, σ 0 ∈ Σ     (25)
+        yu,σ,m ∈ {0, 1}                                       ∀u ∈ U, σ ∈ Σ, m ∈ {1..K}        (26)
+        zn ≥ 0                                                                        ∀n ∈ S   (27)
+
+ The objective function of MILP is a sum over the prediction costs at each node in the
+tree weighted by how many traces pass through that node. Constraint (14) models the
+log-likelihood cost for each node in the tree. Constraints (15) and (16) compute the
+cardinality of Nu,l . Constraint (17) defines the possible predictions given an RM state
+and high-level observation. Constraint (18) enforces that for each RM state a high-level
+observation can lead to exactly one other RM state. Constraint (19) enforces that exactly
+one RM state is assigned to each node in the tree. Constraint (20) assigns the initial
+RM state to the root node, and constraint (21) enforces that there exists a deterministic
+δu that can produce the assignment of RM states to tree nodes. Constraints (23)-(27)
+correspond to the variables’ domains. Finally, we note that constraint (22) is an optional
+constraint that should be included only if the training traces were compressed. This
+constraint enforces that the RM state does not change after observing the same high-
+level observation two times consecutively.
+
+
+
+                                                  14
+5.4. Solving LRM via Constrained Programming (CP)
+    CP is another technique for solving discrete optimization problems. CP is less restric-
+tive than MILP in the type of variables and constraints that it can handle. For instance,
+our MILP model had to include many auxiliary decision variables (e.g., xn,u , pu,σ,σ0 ,
+yu,σ,m , and zn ) in order to linearize different aspects of LRM. In contrast, our CP model
+only uses one set of decision variables du,σ to model δu (u, σ) and all other elements from
+LRM are defined w.r.t. those variables. In addition, CP solvers are also guaranteed to find
+optimal solutions given enough resources (Rossi et al., 2006).
+    Our CP model receives the same inputs as our MILP model, including the PT con-
+structed using the (potentially compressed) training traces T . Recall that the different
+elements in the PT are referred as follows: nroot is the root node, S is the set containing
+all nodes but nroot , wn is the number of training traces that pass through node n, p(n)
+is the parent of node n, o(n) is the high-level observation between p(n) and n, and C(n)
+is the set of children of node n. The model also uses the set U = {0...umax − 1}, the set
+Σ with all the high-level observations in T , and the set S(σ, σ 0 ) containing all the nodes
+where σ 0 is observed immediately after observing σ:
+
+                 S(σ, σ 0 ) = {n | n ∈ S, n0 ∈ C(n), σ = o(n), σ 0 = o(n0 )}.
+
+   As we previously mentioned, the only decision variables are du,σ ∈ U for all u ∈ U
+and σ ∈ Σ. Note that du,σ is an integer variable that goes from 0 to umax − 1 and it
+models the output of δu (u, σ) – i.e., if the RM state is u and the agent observes σ, then
+the next RM state will be du,σ . With that, the complete model is as follows:
+          X
+      min     wn · log(yxn ,o(n) )                                                    (CP)
+           n∈S
+                . X
+      s.t. yu,σ =   pu,σ,σ0                                          ∀u ∈ U, σ ∈ Σ      (28)
+                  σ 0 ∈Σ
+                  .
+          pu,σ,σ0 = logical or ({xn = u|n ∈ S(σ, σ 0 )})          ∀u ∈ U, σ, σ 0 ∈ Σ    (29)
+              .
+          xn = du,o(n)                                           ∀n ∈ S, u = xp(n)      (30)
+              .
+          xn = 0                                                         n = nroot      (31)
+          if then(du,σ = u0 , du0 ,σ = u0 )                       ∀u, u ∈ U, σ ∈ Σ      (32)
+          du,σ ∈ U                                                   ∀u ∈ U, σ ∈ Σ      (33)
+
+This model uses the formalism and global constraints available in IBM ILOG CP Opti-
+mizer (IBM, 2018). Its only decision variables are du,σ , defined in constraint (33). Note
+that the domain of du,σ ∈ U forces the RM to be deterministic, since there is exactly one
+possible transition for each u ∈ U and σ ∈ Σ. Using du,σ , the model defines three aux-
+iliary CP expressions in equations (28)-(31). Expression yu,σ represents the cardinality
+of the prediction set Nu,σ after observing σ ∈ Σ from the RM state u ∈ U . Expression
+pu,σ,σ0 is one if and only if it is possible to observe σ 0 ∈ Σ from the RM state u ∈ U
+after observing σ ∈ Σ (and zero otherwise). This expression uses a logical OR constraint,
+logical or(Z) which returns 1 iff at least one element z ∈ Z is true. Expression xn ∈ U
+indicates that the RM state assigned to the tree node n. Finally, the objective function
+is a weighted sum over the prediction errors and constraint (32) is an optional constraint
+
+                                              15
+                                                                   Space of all feasible RP
+
+Figure 4: Local search approaches start from some feasible solution and iteratively move to the best
+solution within its neighbourhood. This process repeats until reaching a locally optimal solution.
+
+
+used if the traces were compressed. This constraint enforces a self loop δu (u0 , σ) = u0 if
+δu (u, σ) = u0 for some u ∈ U .
+
+5.5. Solving LRM via Local Search (LS) and Tabu Search (TS)
+    Finally, here we present our local search methods. We note that MILP and CP are
+known as exact methods. They incrementally construct a search tree where each branch
+represents a feasible solution to the problem and use different relaxation and propagation
+rules to prune this tree as much as possible. This approach allows them to find optimal
+solutions and prove that those solutions are optimal for small to medium size problems.
+However, they struggle when facing large problems because the size of the tree grows
+exponentially with the number of variables and computing relaxations and propagation
+rules become more expensive with the number of constraints.
+    When solving large scale problems, the best results are often obtained by heuristic
+methods. Heuristic methods propose polynomial-time approximations to solve NP-hard
+problems. They favor finding good solutions over providing strong optimality guarantees.
+Here, we explore two local search methods (Aarts et al., 2003).
+    Figure 4 shows how local search works. In the figure, each point inside the rectangle
+represents a feasible solution to the problem. Local search starts from a feasible solution
+and evaluates its objective function. Then, it evaluates the objective function of all
+the solutions near the current solution and then moves to the best solution within that
+region. This step is represented by a violet arrow in the figure. The process then repeats
+until a locally optimal solution is reached, where no neighbouring solution is better than
+the current solution.
+    Unfortunately, local search can converge to locally optimal solutions that might be
+far from a globally optimal solution. To deal with this issue, one option is to restart
+local search when it finds a locally optimal solution and start over from a different initial
+solution. Another option is to use tabu search (Glover and Laguna, 1998). Tabu search
+is a local search approach that saves the last n solutions in a tabu list and always moves
+to the best neighbour that is not in the list. This allows tabu search to escape locally
+optimal solutions. Here, we explore these two options for solving LRM.
+    Algorithm 2 shows a local search approach with restarts to learn an RM. This algo-
+rithm receives the set of high-level observations Σ, the training traces T , the maximum
+number of RM state umax , and some termination criteria such as a time limit or a max-
+imum number of steps tmax . The algorithm starts from a randomly generated RM (line
+                                             16
+Algorithm 2 A local search approach with restarts to solve LRM
+ 1: Input: Σ, T , umax , tmax
+ 2: t ← 0, c∗ ← ∞, R∗ ← None
+ 3: while t ≤ tmax do
+ 4:   cp ← ∞
+ 5:   R ← sample a reward machine(T , Σ, umax )
+ 6:   c ← evaluate reward machine(R, T )
+ 7:   if c < c∗ then
+ 8:      c∗ ← c, R∗ ← R
+ 9:   while t ≤ tmax and c < cp do
+10:      t ← t + 1, cp ← c
+11:      N ← get neighbours(R, Σ, umax )
+12:      for Rn ∈ N do
+13:         cn ← evaluate reward machine(Rn , T )
+14:         if cn < c then
+15:            c ← cn , R ← Rn
+16:      if c < c∗ then
+17:         c∗ ← c, R∗ ← R
+18: return R∗
+
+
+5). The initial RM is sampled from a uniform distribution. That is, every RM with at
+most umax states can be selected with equal probability. On each iteration, the algorithm
+evaluates all neighbouring RMs (lines 9-17). We define the neighbourhood of an RM as
+the set of RMs that differ by exactly one transition (i.e., removing/adding a transition,
+or changing its value) and evaluate RMs using the objective function of LRM. When all
+neighbouring RMs are evaluated, the algorithm moves to the neighbouring RM with the
+lowest objective value (line 15), and the process repeats. If at any point a locally optimal
+solution is reached, then the algorithm starts over from another randomly generated RM
+(line 9). Finally, the best RM seen so far is returned when the terminal condition is met
+(line 18).
+    Algorithm 3 shows a tabu search approach to learn a reward machine. It has the
+same inputs as local search, but it also receives the size of the tabu list τsize . Our tabu
+search method is identical to Algorithm 2 except that tabu search initializes the tabu list
+in line 2, adds the current RM to the tabu list in line 11, and moves to the best solution
+that is not in the tabu list in lines 12-18.
+    We note that, technically, these two methods will eventually find an optimal solution.
+The reason is that both methods restart the search when they get stuck: Local search
+restarts when it reaches a locally optimal solution and tabu search restarts when it
+reaches a neighbourhood where all the RMs are in the tabu list. Thus, these methods
+either find an optimal solution during the search or restart the search.4 Since every RM
+can be sampled with equal probability when restarting, both methods will eventually
+sample an optimal solution (or find one). That said, the space of possible RMs is so vast
+that we cannot expect our implementations of local search and tabu search to necessarily
+find optimal solutions in practice.
+
+  4 In the case of tabu search, we are assuming that the tabu list is large enough.
+
+                                                  17
+Algorithm 3 A tabu search approach to solve LRM
+ 1: Input: Σ, T , umax , tmax , τsize
+ 2: τ ← initialize tabu list(τsize )
+ 3: t ← 0, c∗ ← ∞, R∗ ← None
+ 4: while t ≤ tmax do
+ 5:   R ← sample a reward machine(T , Σ, umax )
+ 6:   c ← evaluate reward machine(R, T )
+ 7:   if c < c∗ then
+ 8:      c∗ ← c, R∗ ← R
+ 9:   while t ≤ tmax and R 6∈ τ do
+10:      t ← t + 1, c ← ∞
+11:      τ ← add reward machine to tabu list(τ , R)
+12:      N ← get neighbours(R, Σ, umax )
+13:      for Rn ∈ N \ τ do
+14:         cn ← evaluate reward machine(Rn , T )
+15:         if cn < c then
+16:            c ← cn , R ← Rn
+17:      if c < c∗ then
+18:         c∗ ← c, R∗ ← R
+19: return R∗
+
+
+
+6. Simultaneously Learning a Reward Machine and a Policy
+
+    We now describe our overall approach to simultaneously finding an RM and exploiting
+that RM to learn a policy. Algorithm 4 shows the complete pseudo-code. Our approach
+starts by collecting a training set of traces T generated by following a random policy
+during tw “warmup” steps (line 2). This set of traces is used to find an initial RM R
+using one of our discrete optimization models (line 3). The algorithm then sets the RM
+state to u0 , sets the current high-level observation σ to L(∅, ∅, o), and initializes the
+policy π (lines 4-5). The standard RL loop is then followed (lines 6-19): an action a
+is selected according to π(a|o, u) and the agent receives the next observation o0 and the
+immediate reward r. The RM state is then updated to u0 = δu (u, L(o, a, o0 )) and the
+last experience (o, u, a, r, o0 , u0 ) is used to update π. Finally, the environment and RM
+are reset if a terminal state is reached (lines 17-18).
+    If on any step, there is evidence that the current RM might not be perfect, our
+approach will attempt to find a new one (lines 11-16). Recall that the RM R was
+selected using the cardinality of its prediction sets N , where Nu,σ is the set of high-level
+observations seen from the RM state u immediately after observing σ in the training
+data. If the current high-level observation σ 0 is not in Nu,σ , then adding the current
+trace to T will increase the size of Nu,σ for R and, in consequence, R may no longer be
+the best RM. Therefore, if σ 0 6∈ Nu,σ , we add the current trace to T and learn a new
+RM. Our method only uses the new RM if its cost is lower than R’s and, if the RM is
+updated, a new policy is learned from scratch (lines 14-16).
+    Given the current RM, we can use any RL algorithm to learn a policy π(a|o, u), by
+treating the combination of o and u as the current state. If the RM is perfect, then
+the optimal policy π ∗ (a|o, u) will also be optimal for the original POMDP (as stated in
+                                                  18
+Algorithm 4 Algorithm to simultaneously learn a reward machine and a policy
+ 1: Input: P, L, umax , tw
+ 2: T ← collect traces(tw )
+ 3: R, N ← learn rm(P, L, T , umax )
+ 4: o ← env get initial state(), u ← u0 , σ ← L(∅, ∅, o)
+ 5: π ← initialize policy()
+ 6: for t = 1 to ttrain do
+ 7:   a ← select action(π, o, u)
+ 8:   o0 , r, done ← env execute action(a)
+ 9:   u0 , σ 0 ← δu (u, L(o, a, o0 )), L(o, a, o0 )
+10:   π ← improve(π, o, u, σ, a, r, o0 , u0 , σ 0 , done, N )
+11:   if σ 0 6∈ Nu,σ then
+12:      T ← T ∪ get current trace()
+13:      R0 , N ← relearn rm(R, P, L, T , umax )
+14:      if R 6= R0 then
+15:         done ← true, R ← R0
+16:         π ← initialize policy()
+17:   if done then
+18:      o0 ← env get initial state(), u0 ← u0 , σ 0 ← L(∅, ∅, o)
+19:   o ← o0 , u ← u0 , σ ← σ 0
+20: return π
+
+
+
+Theorem 5). In this case, we can ignore the reward δr that comes from the RM and only
+consider the reward received directly from the environment. However, to further exploit
+the problem structure exposed by the RM (such as with QRM), we need to set δr . We
+do so using the empirical average, as described in Section 4.2.
+    Let us now explain how we incorporate QRM into this process. As explained in
+Section 3, standard QRM under partial observability can introduce a bias because an
+experience e = (o, a, o0 ) might be more or less likely depending on the RM state that
+the agent was in when the experience was collected. We partially address this issue
+by updating Qu using (o, a, o0 ) iff L(o, a, o0 ) ∈ Nu,σ , where σ was the current high-
+level observation that generated the experience (o, a, o0 ). Hence, we do not transfer
+experiences from ui to uj if the current RM does not believe that (o, a, o0 ) is possible
+in uj . For example, consider the cookie domain and the perfect RM from Figure 2c. If
+some experience consists of entering to the green room and seeing a cookie, then this
+experience will not be used by states u0 and u3 as it is impossible to observe a cookie at
+the green room from those states. While adding this rule works in many cases, it does
+not fully address the problem. We further discuss this issue in Section 8.
+
+
+7. Experimental Evaluation
+
+    In this section, we provide an empirical evaluation of our method in three partially
+observable environments. Our evaluation consists of two parts. First, we compare the
+effectiveness of our mixed integer linear programming model (MILP), our constrained
+programming model (CP), our local search with restart algorithm (LS), and our tabu
+                                               19
+search method (TS) to solve LRM. We then show how the combination of learning an
+RM and a policy using double DQN (LRM+DDQN) and deep QRM (LRM+DQRM)
+compares to different baselines. As a brief summary, our results show the following:
+  1. MILP and CP find optimal solutions for small instances of LRM.
+  2. LS and TS find better solutions than MILP and CP for large instances of LRM.
+  3. LS consistently finds better solutions than TS.
+  4. Our LRM-based methods can outperform A3C, ACER, PPO, and DDQN.
+  5. LRM+DQRM learns faster then LRM+DDQN, but it is less stable.
+
+7.1. Domains
+     We tested our approach on three partially observable domains, shown in Figure 5.
+These environments consist of three rooms connected by a hallway. The agent can move
+in the four cardinal directions but its actions fail with a 5% probability. The agent can
+only see what it is in the room that it currently occupies, as shown in Figure 5a. What
+makes these tasks difficult is the hallway. The hallway forces the agent to observe long
+sequences of identical observations multiple times to solve a task. However, depending
+on previous observations, the optimal actions and expected returns will be completely
+different when the agent is in the hallway.
+     The first environment is the cookie domain (Figure 5b) described in Section 3. Each
+episode is 5, 000 steps long, during which the agent should attempt to get as many cookies
+as possible. To do so, it has to press the button in the orange room and then look for
+the cookie that is delivered to the blue or green room.
+     The second environment is the symbol domain (Figure 5c). This domain has three
+symbols ♣, ♠, and  in the blue and green rooms. At the beginning of an episode,
+one symbol from {♣, ♠, } and possibly a right or left arrow are randomly placed at
+the orange room. Intuitively, that symbol and arrow will tell the agent where to go, for
+example, ♣ and → tell the agent to go to ♣ in the east room. If there is no arrow,
+the agent can go to the target symbol in either room. An episode ends when the agent
+reaches any symbol in the blue or green room, at which point it receives a reward of +1
+if it reached the correct symbol and −1 otherwise. All other steps in the environment
+provide no reward.
+     The third environment is the 2-keys domain (Figure 5d). The agent receives a reward
+of +1 when it reaches the coffee in the orange room. To do so, it must open the two
+doors, shown in brown. Each door requires a different key to open it, and the agent
+can only carry one key at a time. At the beginning of each episode, the two keys are
+randomly located in either the green room, the blue room, or split between them. To
+solve this problem, the agent must keep track of the locations of the keys.
+
+7.2. Comparisons Between the Discrete Optimization Models
+    We first compare the performance of our four models for solving different instances
+of LRM. The objective of this experiment is to compare how well each model scales as we
+increase the size of the training data and the size of the reward machine. To that end,
+we generated 20 training sets per domain, where each training set consists of 103 , 104 ,
+105 , or 106 experiences collected by following a uniformly random policy. We sampled
+five training sets per each possible size and learned reward machines with at most 5 or
+10 states. This gave a total of 120 problems instances of LRM.
+                                            20
+                        ?
+
+
+
+
+          ?                           ?
+
+                (a) Agent’s view.                                 (b) Cookie domain.
+
+                    ♣                                                        K
+
+
+
+
+                                         
+      ♠                                   ♠
+      ♣                                   ♣              ¤                                 ¤
+               (c) Symbol domain.                                 (d) 2-keys domain.
+
+  Figure 5: Partially observable domains where the agent can only see what is in the current room.
+
+
+
+    Each approach was run with a 10-minute time limit using 62 cores on a Threadripper
+2990WX processor with 124GB of RAM. We used Gurobi 9.1 (Gurobi Optimization,
+LLC, 2018) to solve the MILP model and IBM ILOG CP Optimizer 12.8 (IBM, 2018)
+for the CP model. These are sophisticated state-of-the-art solvers. In contrast, we used
+a simple Python implementation of local search and tabu search in our experiments. We
+set τsize = 100 for tabu search. We note that local search and tabu search are stochastic
+approaches that, in contrast to MILP and CP, might find a different solution on each
+run. For that reason, we ran local search and tabu search 5 times per problem instance
+and report the average cost across those runs.
+    Table 1 shows the final results. Each row shows the aggregated results over five
+problem instances that share the same domain (i.e., cookie, symbol, or 2-keys), maximum
+number of RM states (i.e., umax ∈ {5, 10}), and size of the training set (i.e., |T | ∈
+{103 , 104 , 105 , 106 }). Each row also shows the average size of the training set |Tc | after
+the traces are compressed (as described in Section 5). The table reports the average
+objective function of each model, where lower is better, and the number of instances
+where each model found the best solution among all others.
+    For training sets with less than 10, 000 experiences, our CP model tends to find the
+best solutions. However, for larger instance, local search methods dominate. Note that
+continuously restarting local search is a better strategy for learning RMs than using a
+tabu list in these domains. Still, the performance of TS is not too far from LS and,
+hence, we test both approaches for learning RMs in our next experiments.
+
+7.3. Reinforcement Learning Experiments
+   We tested two versions of our learned reward machine (LRM) method: LRM+DDQN
+and LRM+DQRM. Both learn RMs from experience but LRM+DDQN learns a policy
+using DDQN (Van Hasselt et al., 2016) while LRM+DQRM uses the modified version
+                                           21
+Table 1: Comparing different models for solving LRM in problem instances with training sets varying
+from 103 to 106 experiences and umax ∈ {5, 10}. Each row includes five problem instances.
+
+
+      Configuration                        Avg. objective                          No. best
+   Dataset      |T |    |Tc |    MILP         CP         LS          TS   MILP      CP    LS   TS
+                  3
+                10        59      12.6      12.6        14.2       13.8        5      5    1    1
+    Cookie      104      487      237.3    226.7       229.1      230.2        1      5    2    0
+  (umax = 5)    105     4943     3097.0    2700.4    2699.7      2719.7        0      3    2    0
+                106    48663    31075.1   28226.1   26462.6     26833.3        0      0    5    0
+                103       59        6.5       6.8        9.6       10.5        5      4    0    0
+   Cookie       104      487      233.3     204.6      206.0     204.5         0      1    0    4
+ (umax = 10)    105     4943     3197.0    2713.7    2658.9      2696.8        0      0    5    0
+                106    48663    30709.5   28366.8   26461.7     27092.0        0      0    5    0
+                103       41      21.0      21.0       21.0       21.0         5      5    5    5
+    Symbol      104      268     218.8     218.8      218.8       220.0        5      5    5    3
+  (umax = 5)    105     2597     3423.7    2897.9    2896.7      2902.3        0      3    5    2
+                106    25875    36705.4   29689.9   29687.7     29688.8        0      4    5    3
+                103       41      16.2      16.2        16.5       16.4        5      5    2    2
+   Symbol       104      268      185.8    181.2       181.5      185.0        1      5    3    0
+ (umax = 10)    105     2597     3416.1    2620.7    2583.5      2620.4        0      0    5    0
+                106    25875    36216.6   27992.9   27050.4    27050.4         0      0    5    5
+                103       42        6.9       6.9        7.6        7.5        5      5    2    2
+    2-Keys      104      378      196.5    176.7       176.9      180.7        1      5    3    1
+  (umax = 5)    105     3690     3713.2    2364.7    2349.6      2391.4        0      0    5    0
+                106    37923    38875.3   29379.9   24397.0     24762.1        0      0    5    0
+                103       42        3.5       3.5       5.4         5.1        5      5    0    0
+   2-Keys       104      378      184.4     151.6     145.4       157.2        0      0    5    0
+ (umax = 10)    105     3690     3746.1    2363.8    2210.6      2237.6        0      0    5    0
+                106    37923    38087.0   29065.0   23352.9     23558.8        0      0    5    0
+      Average/Total              9732.7    7900.3    7251.8      7325.2       38     60   85   28
+
+
+of QRM described in Section 6. To learn the reward machine, these approaches solve
+LRM using local search with restarts or tabu search. In all domains, we used umax = 10,
+tmax = 100, τsize = 100, tw = 200, 000, an epsilon greedy policy with  = 0.1, and a
+discount factor γ = 0.9. We compared against 4 baselines: DDQN (Van Hasselt et al.,
+2016), A3C (Mnih et al., 2016), ACER (Wang et al., 2016), and PPO (Schulman et al.,
+2017). DDQN uses the concatenation of the last 10 observations as input which gives
+DDQN a limited memory to better handle the domains. A3C, ACER, and PPO use an
+LSTM to summarize the history. Note that the output of the labelling function was also
+given to the baselines, as described below.
+
+7.3.1. Hyperparameters and Features
+    For LRM+DDQN and LRM+DQRM, the neural network used has 5 fully connected
+layers with 64 neurons per layer. On every step, we trained the network using 32 sampled
+experiences from a replay buffer of size 100,000 and a learning rate of 5 · 10−5 . The target
+                                             22
+                                         Local search                                                                  Tabu search
+
+                                                                       200                                                                          200
+
+
+
+
+ Reward per 10, 000 steps                                                         Reward per 10, 000 steps
+                                                                       100                                                                          100
+
+
+
+                                                                       0                                                                            0
+                            0             1            2           3                                         0          1          2            3
+                                 Training steps (in millions)                                                    Training steps (in millions)
+
+                                      Legend:                 DDQN                                  A3C                  LRM + DDQN
+                                          Optimal             ACER                                  PPO                  LRM + DQRM
+
+                                Figure 6: Results on the cookie domain. LRM is solved using local search or tabu search.
+
+
+
+networks were updated every 100 steps.
+    The DDQN baseline uses the same parameters and network architecture as our LRM
+methods, but its input is the concatenation of the last 10 observations, as commonly
+done by Atari playing agents (Mnih et al., 2015). This gives DDQN a limited memory
+to better handle partially observable domains. We note that since the optimal path from
+any one room to another is less than 10 steps, giving the agent the last 10 observations
+means that the agent has enough information to perfectly summarize its history if it can
+figure out how to do so. The rest of the baselines, namely A3C, ACER, and PPO, use
+an LSTM to summarize the history.
+    To select hyperparameters for A3C, ACER, and PPO, we followed the same method-
+ology that was used in their original publications. We ran each approach at least 30
+times per domain, and on every run, we randomly selected the number of hidden neu-
+rons for the LSTM from {64, 128, 256, 512} and a learning rate from (1e-3, 1e-5). We
+also sampled δ from {0, 1, 2} for ACER and the clip range from (0.1, 0.3) for PPO. Other
+parameters were fixed to their default values.
+    While interacting with the environment, the agents were given a “top-down” view of
+the world represented as a set of binary matrices. One matrix had a 1 in the current
+location of the agent, one had a 1 in only those locations that are currently observable,
+and the remaining matrices each corresponded to an object in the environment and had
+a 1 at only those locations that were both currently observable and contained that object
+(i.e., locations in other rooms are “blacked out”). The agent also had access to features
+indicating if they were carrying a key, which color room they were in, and the current
+status of the events detected by the labelling function.
+
+
+
+                                                                             23
+                                         Local search                                                                   Tabu search
+
+
+
+
+ Reward per 10, 000 steps                                                          Reward per 10, 000 steps
+                                                                        400                                                                          400
+
+
+                                                                        200                                                                          200
+
+
+                                                                        0                                                                            0
+
+
+                            0          0.5       1       1.5        2                                         0       0.5      1      1.5        2
+                                  Training steps (in millions)                                                    Training steps (in millions)
+
+                                      Legend:                  DDQN                               A3C                       LRM + DDQN
+                                          Optimal              ACER                               PPO                       LRM + DQRM
+
+                                Figure 7: Results on the symbol domain. LRM is solved using local search or tabu search.
+
+
+
+7.3.2. Results
+    Figures 6, 7, and 8 show the total cumulative rewards that each approach gets every
+10, 000 training steps and compares it to the optimal policy. For the LRM algorithms,
+the figures show the median performance over 30 runs per domain, and percentile 25 to
+75 in the shadowed area. For the DDQN baseline, we show the maximum performance
+seen for each time period over 5 runs per problem. Similarly, we also show the maximum
+performance over the 30 runs of A3C, ACER, and PPO per period. All the baselines
+outperformed a random policy, but none make much progress on any of the domains.
+Each figure shows two settings. In the left, it shows the performance when LRM is solved
+using local search with restarts. In the right, it shows the case where LRM is solved using
+tabu search. Note that this only affects the LRM methods. The baselines’ performance
+is identical in the left and right figures.
+    As the results show, LRM-based methods largely outperform all the baselines in
+these domains, reaching an optimal policy in the cookie domain (Figure 6) and a close-
+to-optimal policy in the symbol domain (Figure 7). We also note that LRM+DQRM
+learns faster than LRM+DDQN. In particular, LRM+DQRM converged to considerably
+better policies in the 2-keys domain (Figure 8). However, LRM+DQRM is more unstable
+than LRM+DDQN when solving LRM via tabu search. We believe this behaviour is due
+to two factors. First, tabu search is likely finding worse solutions than local search, as
+suggested by Table 1. Second, QRM exploits the structure of the learned RM. Thus, it
+is reasonable to expect that converging to a suboptimal RM would hurt the performance
+of DQRM more than the performance of DDQN.
+
+
+
+
+                                                                              24
+                                           Local search                                                                   Tabu search
+                                                                        150                                                                          150
+
+
+
+
+ Reward per 10, 000 steps                                                          Reward per 10, 000 steps
+                                                                        100                                                                          100
+
+
+                                                                        50                                                                           50
+
+
+                                                                        0                                                                            0
+                            0          1         2        3         4                                         0       1        2        3        4
+                                  Training steps (in millions)                                                    Training steps (in millions)
+
+                                      Legend:                 DDQN                                A3C                      LRM + DDQN
+                                          Optimal             ACER                                PPO                      LRM + DQRM
+
+                                Figure 8: Results on the 2-keys domain. LRM is solved using local search or tabu search.
+
+
+
+8. Discussion
+
+    Solving partially observable RL problems is challenging and LRM was able to solve
+three problems that were conceptually simple but presented a major challenge to A3C,
+ACER, and PPO with LSTM-based memories. A key idea behind these results was to
+optimize over a necessary condition for perfect RMs. This objective favors RMs that are
+able to predict possible and impossible future observations at the abstract level given by
+the labelling function L. In this section, we discuss the advantages and current limitations
+of such an approach.
+    We begin by considering the performance of local search methods in our domains.
+Given a training set composed of one million transitions, our simple Python implementa-
+tion of local search takes less than 2.5 minutes to learn an RM across all our environments,
+when using 62 workers on a Threadripper 2990WX processor and tmax = 100. Note that
+local search’s main bottleneck is evaluating the neighbourhood around the current RM
+solution. As the size of the neighbourhood depends on the size of the set of propositional
+symbols P, exhaustively evaluating the neighbourhood may sometimes become imprac-
+tical. To handle such problem, we might import ideas from the large neighborhood search
+literature (Pisinger and Ropke, 2010).
+    Regarding limitations, learning the RM at the abstract level is efficient but requires
+ignoring (possibly relevant) low-level information. For instance, Figure 9a shows an
+adversarial example for LRM. The agent receives reward for eating the cookie ( ). There
+is an external force pulling the agent down – i.e., the outcome of the “move-up” action
+is actually a downward movement with high probability. The agent can press a button
+( ) to turn off (or back on) the external force. Hence, the optimal policy is to press the
+button and then eat the cookie. Given P = { , }, a perfect RM for this environment
+is fairly simple (see Figure 9b) but LRM might not find it, even if the traces are not
+                                                                              25
+                                                                   h , 0i
+                                        h , 1i;                                               h , 1i;
+                                                         u0                      u1
+                                       ho/w, 0i                                              ho/w, 0i
+                                                                   h , 0i
+
+
+      (a) The gravity domain.                     (b) A perfect RM for the gravity domain.
+
+     Figure 9: A partially observable environment where the agent cannot see the external force.
+
+
+
+compressed. The reason is that pressing the button changes the low-level probabilities in
+the environment but does not change what is possible or impossible at the abstract level.
+In other words, while the LRM objective optimizes over necessary conditions for finding
+a perfect RM, those conditions are not sufficient to ensure that an optimal solution will
+be a perfect RM. In addition, if a perfect RM is found, our heuristic approach to share
+experiences in QRM would not work as intended because the experiences collected when
+the force is on (at u0 ) would be incorrectly used to update the policy for the case where
+the force is off (at u1 ).
+    Other current limitations include that it is unclear how to handle noise over the
+high-level detectors L and how to transfer learning from previously learned policies when
+a new RM is learned. Finally, defining a set of proper high-level detectors for a given
+environment might be a challenge to deploying LRM. Hence, looking for ways to automate
+that step is an important direction for future work.
+
+
+9. Related Work
+
+    State-of-the-art approaches to partially observable RL use Recurrent Neural Networks
+(RNNs) as memory in combination with policy gradient (e.g., Mnih et al., 2016; Wang
+et al., 2016; Schulman et al., 2017; Jaderberg et al., 2016) or use external neural-based
+memories (e.g., Oh et al., 2016; Khan et al., 2017; Hung et al., 2018). Other approaches
+include extensions to Model-Based Bayesian RL that work under partial observability
+(e.g., Poupart and Vlassis, 2008; Doshi-Velez et al., 2013; Ghavamzadeh et al., 2015) or
+provide a small binary memory to the agent and a special set of actions to modify it
+(Peshkin et al., 1999). While our experiments highlight the merits of our approach with
+respect to RNN-based approaches, we rely on ideas that are largely orthogonal. As such,
+there is significant potential in mixing these approaches to get the benefit of memory at
+both the high- and the low-level.
+    The effectiveness of automata-based memory has long been recognized in the POMDP
+literature (Cassandra et al., 1994), where the objective is to find policies given a complete
+specification of the environment. The idea is to encode policies using finite state con-
+trollers (FSCs) which are finite state machines (FSMs) where the transitions are defined
+in terms of low-level observations from the environment and each state in the FSM is
+associated with one primitive action. When interacting with the environment, the agent
+always selects the action associated with the current state in the controller. Meuleau
+et al. (1999) adapted this idea to work in the RL setting by exploiting policy gradient
+                                                  26
+to learn policies encoded as FSCs. RMs can be considered as a generalization of FSC as
+they allow for transitions using conditions over high-level events and associate complete
+policies (instead of just one primitive action) to each state. This property allows our
+approach to easily leverage existing deep RL methods to learn policies from low-level
+inputs, such as images – which is not achievable by Meuleau et al. (1999). That said,
+further investigating using ideas for learning FSMs (e.g., Angluin and Smith, 1983; Zeng
+et al., 1993; Giantamidis and Tripakis, 2016; Shvo et al., 2021) in learning RMs is a
+promising direction for future work.
+    Our approach to learn RMs is greatly influenced by predictive state representations
+(PSRs) (Littman et al., 2002). The idea behind PSRs is to find a set of core tests (i.e.,
+sequences of actions and observations) such that if the agent can predict the probabilities
+of these occurring, given any history H, then those probabilities can be used to compute
+the probability of any other test given H. The insight is that state representations that
+are good for predicting the next observation are good for solving partially observable
+environments. We adapted this idea to the context of RM learning.
+    Finally, we note that different approaches to learn RMs were proposed simultaneously,
+or shortly after, our original publication (e.g., Xu et al., 2020a,b; Furelos-Blanco et al.,
+2020; Rens et al., 2020; Gaon and Brafman, 2020; Memarian et al., 2020; Neider et al.,
+2021; Hasanbeig et al., 2021). They all learn reward machines in fully observable domains.
+Their goal is to learn the smallest RM that is consistent with the reward function – which
+makes sense for fully observable domains, but would have limited utility under partial
+observability (as discussed in Section 4).
+    Since they stay in the fully-observable setting, they can use off-the-shelf automata
+learning approaches to learn the RM. These include methods that learn reward machines
+using a SAT solver (Xu et al., 2020a; Neider et al., 2021), use inductive logic programming
+(Furelos-Blanco et al., 2020), and by using program synthesis (Hasanbeig et al., 2021).
+There has also been work on adapting the L∗ algorithm (Angluin, 1987) to learn RMs
+given the model of the MDP (Rens et al., 2020), expert demonstrations (Memarian et al.,
+2020), or in a pure RL setting (Gaon and Brafman, 2020; Xu et al., 2020b).
+    Besides proposing approaches to learn reward machines for fully-observable problems,
+these works also make additional contributions that may be useful in the context of partial
+observability. For instance, Furelos-Blanco et al. (2020) and Hasanbeig et al. (2021)
+add a reward shaping procedure to encourage exploration. Xu et al. (2020a) propose a
+simple mechanism to transfer some of the previously learned Q-value estimates when a
+new reward machine is learned. Neider et al. (2021) show how to incorporate domain
+knowledge when learning a reward machine. Finally, Gaon and Brafman (2020) and
+Xu et al. (2020b) allow, in some cases, driving the agent’s exploration towards finding
+bugs in the reward machine. Further study into how to use these in the case of partial
+observability is left as future work.
+
+10. Concluding Remarks
+   We have presented a method for learning reward machines in partially observable
+environments and demonstrated the effectiveness of doing so to tackle partially observable
+RL problems that are unsolvable by the state-of-the art deep RL methods A3C, ACER
+and PPO. Informed by criteria from the POMDP, FSC, and PSR literature, we proposed
+a set of RM properties that support tackling RL in partially observable environments.
+                                          27
+We used these properties to formulate RM learning as a discrete optimization problem.
+We experimented with several optimization methods, finding local search methods to be
+the most effective. We then combined this RM learning with policy learning for solving
+partially observable RL problems. Our combined approach outperformed a set of strong
+LSTM-based approaches on different domains.
+    We believe this work represents an important building block for creating RL agents
+that can solve cognitively challenging partially observable tasks. Not only did our ap-
+proach solve problems that were unsolvable by A3C, ACER and PPO, but it did so in a
+relatively small number of training steps. RM learning provided the agent with memory,
+but more importantly the combination of RM learning and policy learning provided it
+with discrete reasoning capabilities that operated at a higher level of abstraction, while
+leveraging deep RL’s ability to learn policies from low-level inputs. This work leaves open
+many interesting questions relating to abstraction, observability, and properties of the
+language over which RMs are constructed. We believe that addressing these questions
+will push the boundary of partially observable RL problems that can be solved.
+
+
+Acknowledgements
+
+    We gratefully acknowledge funding from the Natural Sciences and Engineering Re-
+search Council of Canada (NSERC), the Canada CIFAR AI Chairs Program, Microsoft
+Research. The first author also acknowledges funding from ANID (Becas Chile). Re-
+sources used in preparing this research were provided, in part, by the Province of Ontario,
+the Government of Canada through CIFAR, and companies sponsoring the Vector In-
+stitute for Artificial Intelligence (vectorinstitute.ai/partners/). Finally, we thank
+the Schwartz Reisman Institute for Technology and Society for providing a rich multi-
+disciplinary research environment.
+
+
+References
+Aarts, E., Aarts, E.H., Lenstra, J.K., 2003. Local search in combinatorial optimization. Princeton
+  University Press.
+Andrychowicz, M., Baker, B., Chociej, M., Jozefowicz, R., McGrew, B., Pachocki, J., Petron, A.,
+  Plappert, M., Powell, G., Ray, A., et al., 2018. Learning dexterous in-hand manipulation. CoRR
+  abs/1808.00177. URL: http://arxiv.org/abs/1808.00177.
+Angluin, D., 1987. Learning regular sets from queries and counterexamples. Information and computation
+  75, 87–106.
+Angluin, D., Smith, C.H., 1983. Inductive inference: Theory and methods. ACM Computing Surveys
+  (CSUR) 15, 237–269.
+Camacho, A., Toro Icarte, R., Klassen, T.Q., Valenzano, R., McIlraith, S.A., 2019. LTL and beyond:
+  Formal languages for reward function specification in reinforcement learning, in: Proceedings of the
+  28th International Joint Conference on Artificial Intelligence (IJCAI), pp. 6065–6073.
+Cassandra, A.R., Kaelbling, L.P., Littman, M.L., 1994. Acting optimally in partially observable stochas-
+  tic domains, in: Proceedings of the 12th National Conference on Artificial Intelligence (AAAI), pp.
+  1023–1028.
+De Giacomo, G., Favorito, M., Iocchi, L., Patrizi, F., Ronca, A., 2020. Temporal logic monitoring rewards
+  via transducers, in: Proceedings of the 17th International Conference on Knowledge Representation
+  and Reasoning (KR), pp. 860–870.
+Doshi-Velez, F., Pfau, D., Wood, F., Roy, N., 2013. Bayesian nonparametric methods for partially-
+  observable reinforcement learning. IEEE transactions on pattern analysis and machine intelligence
+  37, 394–407.
+
+                                                   28
+Dulac-Arnold, G., Levine, N., Mankowitz, D.J., Li, J., Paduraru, C., Gowal, S., Hester, T., 2021. Chal-
+   lenges of real-world reinforcement learning: definitions, benchmarks and analysis. Machine Learning
+   110, 1–50.
+Dulac-Arnold, G., Mankowitz, D., Hester, T., 2019. Challenges of real-world reinforcement learning.
+   CoRR abs/1904.12901. URL: http://arxiv.org/abs/1904.12901.
+Furelos-Blanco, D., Law, M., Russo, A., Broda, K., Jonsson, A., 2020. Induction of subgoal automata
+   for reinforcement learning., in: Proceedings of the 34th AAAI Conference on Artificial Intelligence
+   (AAAI), pp. 3890–3897.
+Gaon, M., Brafman, R., 2020. Reinforcement learning with non-Markovian rewards, in: Proceedings of
+   the 34th AAAI Conference on Artificial Intelligence (AAAI), pp. 3980–3987.
+Ghavamzadeh, M., Mannor, S., Pineau, J., Tamar, A., et al., 2015. Bayesian reinforcement learning: A
+   survey. Foundations and Trends in Machine Learning 8, 359–483.
+Giantamidis, G., Tripakis, S., 2016. Learning Moore machines from input-output traces, in: Proceedings
+   of the 21st International Symposium on Formal Methods (FM), pp. 291–309.
+Glover, F., Laguna, M., 1998. Tabu search, in: Handbook of combinatorial optimization. Springer, pp.
+   2093–2229.
+Gurobi Optimization, LLC, 2018. Gurobi Optimizer Reference Manual. URL: http://www.gurobi.com.
+Hasanbeig, M., Jeppu, N.Y., Abate, A., Melham, T., Kroening, D., 2021. Deepsynth: Automata syn-
+   thesis for automatic task segmentation in deep reinforcement learning. CoRR abs/1911.10244. URL:
+   http://arxiv.org/abs/1911.10244.
+Hausknecht, M., Stone, P., 2015. Deep recurrent q-learning for partially observable MDPs, in: AAAI
+   Fall Symposium on Sequential Decision Making for Intelligent Agents (AAAI-SDMIA15).
+De la Higuera, C., 2010. Grammatical inference: learning automata and grammars. Cambridge Univer-
+   sity Press.
+Hung, C.C., Lillicrap, T., Abramson, J., Wu, Y., Mirza, M., Carnevale, F., Ahuja, A., Wayne, G., 2018.
+   Optimizing agent behavior over long time scales by transporting value. CoRR abs/1810.06721. URL:
+   http://arxiv.org/abs/1810.06721.
+IBM, 2018. ILOG CP Optimizer 12.8 Manual.
+Izadi, M.T., Precup, D., 2005. Using rewards for belief state updates in partially observable Markov
+   decision processes, in: Proceedings of the 16th European Conference on Machine Learning (ECML),
+   pp. 593–600.
+Jaderberg, M., Mnih, V., Czarnecki, W.M., Schaul, T., Leibo, J.Z., Silver, D., Kavukcuoglu, K., 2016.
+   Reinforcement learning with unsupervised auxiliary tasks. CoRR abs/1611.05397. URL: http://
+   arxiv.org/abs/1611.05397.
+Jünger, M., Liebling, T.M., Naddef, D., Nemhauser, G.L., Pulleyblank, W.R., Reinelt, G., Rinaldi,
+   G., Wolsey, L.A., 2009. 50 Years of integer programming 1958-2008: From the early years to the
+   state-of-the-art. Springer Science & Business Media.
+Kaelbling, L.P., Littman, M.L., Moore, A.W., 1996. Reinforcement learning: A survey. Journal of
+   artificial intelligence research 4, 237–285.
+Khan, A., Zhang, C., Atanasov, N., Karydis, K., Kumar, V., Lee, D.D., 2017. Memory augmented
+   control networks. CoRR abs/1709.05706. URL: http://arxiv.org/abs/1709.05706.
+Littman, M.L., 1993. An optimization-based categorization of reinforcement learning environments, in:
+   From Animals to Animats 2: Proceedings of the Second International Conference on Simulation of
+   Adaptive Behavior, pp. 262–270.
+Littman, M.L., Sutton, R.S., Singh, S., 2002. Predictive representations of state, in: Proceedings of the
+   15th Conference on Advances in Neural Information Processing Systems (NIPS), pp. 1555–1561.
+Mahmud, M., 2010. Constructing states for reinforcement learning, in: Proceedings of the 27th Inter-
+   national Conference on Machine Learning (ICML), pp. 727–734.
+Memarian, F., Xu, Z., Wu, B., Wen, M., Topcu, U., 2020. Active task-inference-guided deep inverse
+   reinforcement learning, in: Proceedings of the 59th IEEE Conference on on Decision and Control
+   (CDC), pp. 1932–1938.
+Meuleau, N., Peshkin, L., Kim, K.E., Kaelbling, L.P., 1999. Learning finite-state controllers for par-
+   tially observable environments, in: Proceedings of the 15th Conference on Uncertainty in Artificial
+   Intelligence (UAI), pp. 427–436.
+Mnih, V., Badia, A.P., Mirza, M., Graves, A., Lillicrap, T., Harley, T., Silver, D., Kavukcuoglu, K., 2016.
+   Asynchronous methods for deep reinforcement learning, in: Proceedings of the 33rd International
+   Conference on Machine Learning (ICML), pp. 1928–1937.
+Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A.A., Veness, J., Bellemare, M.G., Graves, A., Riedmiller,
+   M., Fidjeland, A.K., Ostrovski, G., et al., 2015. Human-level control through deep reinforcement
+                                                    29
+   learning. Nature 518, 529–533.
+Neider, D., Gaglione, J.R., Gavran, I., Topcu, U., Wu, B., Xu, Z., 2021. Advice-guided reinforcement
+   learning in a non-Markovian environment, in: Proceedings of the 35th AAAI Conference on Artificial
+   Intelligence (AAAI), pp. 9073–9080.
+Oh, J., Chockalingam, V., Singh, S., Lee, H., 2016. Control of memory, active perception, and action
+   in minecraft, in: Proceedings of the 33rd International Conference on Machine Learning (ICML), pp.
+   2790–2799.
+Peshkin, L., Meuleau, N., Kaelbling, L.P., 1999. Learning policies with external memory, in: Proceedings
+   of the 16th International Conference on Machine Learning (ICML), pp. 307–314.
+Pisinger, D., Ropke, S., 2010. Large neighborhood search, in: Handbook of metaheuristics. Springer,
+   pp. 399–419.
+Poupart, P., Vlassis, N., 2008. Model-based Bayesian reinforcement learning in partially observable
+   domains, in: Proceedings of the 10th International Symposium on Artificial Intelligence and Mathe-
+   matics (ISAIM), pp. 1–2.
+Rens, G., Raskin, J.F., Reynouad, R., Marra, G., 2020. Online learning of non-Markovian reward models.
+   CoRR abs/2009.12600. URL: https://arxiv.org/abs/2009.12600.
+Rossi, F., Van Beek, P., Walsh, T., 2006. Handbook of constraint programming. Elsevier.
+Schulman, J., Wolski, F., Dhariwal, P., Radford, A., Klimov, O., 2017. Proximal policy optimization
+   algorithms. CoRR abs/1707.06347. URL: http://arxiv.org/abs/1707.06347.
+Shvo, M., Li, A.C., Toro Icarte, R., McIlraith, S.A., 2021. Interpretable sequence classification via
+   discrete optimization, in: Proceedings of the 35th AAAI Conference on Artificial Intelligence (AAAI),
+   pp. 9647–9656.
+Silver, D., Schrittwieser, J., Simonyan, K., Antonoglou, I., Huang, A., Guez, A., Hubert, T., Baker, L.,
+   Lai, M., Bolton, A., et al., 2017. Mastering the game of Go without human knowledge. Nature 550,
+   354.
+Singh, S.P., Jaakkola, T., Jordan, M.I., 1994. Learning without state-estimation in partially observable
+   Markovian decision processes, in: Machine Learning Proceedings 1994. Elsevier, pp. 284–292.
+Sutton, R.S., Barto, A.G., 2018. Reinforcement learning: An introduction. MIT press.
+Toro Icarte, R., Klassen, T.Q., Valenzano, R., McIlraith, S.A., 2018. Using reward machines for high-
+   level task specification and decomposition in reinforcement learning, in: Proceedings of the 35th
+   International Conference on Machine Learning (ICML), pp. 2112–2121.
+Toro Icarte, R., Klassen, T.Q., Valenzano, R., McIlraith, S.A., 2020a. Reward machines: Exploiting
+   reward function structure in reinforcement learning. CoRR abs/2010.03950. URL: https://arxiv.
+   org/abs/2010.03950.
+Toro Icarte, R., Valenzano, R., Klassen, T.Q., Christoffersen, P., massoud Farahmand, A., McIlraith,
+   S.A., 2020b. The act of remembering: a study in partially observable reinforcement learning. CoRR
+   abs/2010.01753. URL: http://arxiv.org/abs/2010.01753.
+Toro Icarte, R., Waldie, E., Klassen, T.Q., Valenzano, R., Castro, M.P., McIlraith, S.A., 2019. Learn-
+   ing reward machines for partially observable reinforcement learning, in: Proceedings of the 32nd
+   Conference on Advances in Neural Information Processing Systems (NeurIPS), pp. 15497–15508.
+Van Hasselt, H., Guez, A., Silver, D., 2016. Deep reinforcement learning with Double Q-learning, in:
+   Proceedings of the 30th AAAI Conference on Artificial Intelligence (AAAI), pp. 2094–2100.
+Wang, Z., Bapst, V., Heess, N., Mnih, V., Munos, R., Kavukcuoglu, K., de Freitas, N., 2016. Sample
+   efficient actor-critic with experience replay. CoRR abs/1611.01224. URL: http://arxiv.org/abs/
+   1611.01224.
+Watkins, C.J.C.H., Dayan, P., 1992. Q-learning. Machine learning 8, 279–292.
+Xu, Z., Gavran, I., Ahmad, Y., Majumdar, R., Neider, D., Topcu, U., Wu, B., 2020a. Joint inference
+   of reward machines and policies for reinforcement learning, in: Proceedings of the 30th International
+   Conference on Automated Planning and Scheduling (ICAPS), pp. 590–598.
+Xu, Z., Wu, B., Neider, D., Topcu, U., 2020b. Active finite reward automaton inference and reinforcement
+   learning using queries and counterexamples. CoRR abs/2006.15714. URL: https://arxiv.org/abs/
+   2006.15714.
+Zeng, Z., Goodman, R.M., Smyth, P., 1993. Learning finite state machines with self-clustering recurrent
+   networks. Neural Computation 5, 976–990.
+Zhang, M., McCarthy, Z., Finn, C., Levine, S., Abbeel, P., 2016. Learning deep neural network poli-
+   cies with continuous memory states, in: Proceedings of the 2016 IEEE International Conference on
+   Robotics and Automation (ICRA), pp. 520–527.
+
+
+                                                  30
+

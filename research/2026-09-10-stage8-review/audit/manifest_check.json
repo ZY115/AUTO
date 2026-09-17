@@ -1,0 +1,85 @@
+[
+  {
+    "dataset": "goal_vs_index",
+    "source_matches_manifest": true,
+    "data_matches_manifest": true,
+    "manifest": {
+      "runner": "src/run_goal.py",
+      "tasks": 12,
+      "seeds": 16,
+      "budget": 100000,
+      "every": 100,
+      "runs": 1728,
+      "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+      "data_sha256": "6ee8072ba703c497f9f203fa0c783af7fe4dede07f610464af5180436b4ef06d",
+      "written": "2026-09-10"
+    }
+  },
+  {
+    "dataset": "priorart",
+    "source_matches_manifest": true,
+    "data_matches_manifest": true,
+    "manifest": {
+      "runner": "src/run_priorart.py",
+      "tasks": 12,
+      "seeds": 16,
+      "budget": 100000,
+      "every": 100,
+      "runs": 1536,
+      "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+      "data_sha256": "daa3b86538504b8216e97dc80d7728c802e22ca6a2c9f57d0d2a095914566f7d",
+      "written": "2026-09-10"
+    }
+  },
+  {
+    "dataset": "mergerule",
+    "source_matches_manifest": true,
+    "data_matches_manifest": true,
+    "manifest": {
+      "runner": "src/run_mergerule.py",
+      "gap_tasks": 12,
+      "gap_seeds": 12,
+      "fatal_maps": 15,
+      "fatal_seeds": 8,
+      "budget": 100000,
+      "every": 250,
+      "runs": 1320,
+      "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+      "data_sha256": "d1aaad06c4dd57ca0c2bfe5e1f121e0db46b4ed77c031df73c5c7eddc53c58fb",
+      "written": "2026-09-10"
+    }
+  },
+  {
+    "dataset": "revision",
+    "source_matches_manifest": true,
+    "data_matches_manifest": true,
+    "manifest": {
+      "runner": "src/run_revision.py",
+      "tasks": 12,
+      "seeds": 12,
+      "budget": 100000,
+      "every": 250,
+      "runs": 576,
+      "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+      "data_sha256": "8dc00bc360be0d1cd82dfe230371512c0a9e706e10a45d23873e4825f4fc2a56",
+      "written": "2026-09-10"
+    }
+  },
+  {
+    "dataset": "irreversible/goal",
+    "source_matches_manifest": true,
+    "data_matches_manifest": true,
+    "manifest": {
+      "runner": "src/run_goal_irreversible.py",
+      "maps": 15,
+      "seeds": 12,
+      "budget": 200000,
+      "every": 500,
+      "dose": "fatal+doom-continues",
+      "runs": 900,
+      "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+      "data_sha256": "43c7415476a7949eb0613c16831d42be92f2864cb33b957dac0968d58c9abe01",
+      "written": "2026-09-10"
+    }
+  }
+]

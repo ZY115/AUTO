@@ -1,0 +1,13 @@
+{
+  "runner": "src/run_goal_irreversible.py",
+  "maps": 15,
+  "seeds": 12,
+  "budget": 200000,
+  "every": 500,
+  "dose": "fatal+doom-continues",
+  "note": "re-run after the failure-semantics fix and the fatal-verdict fix to the goal selector",
+  "runs": 900,
+  "source_sha256": "982737e762c5534da218fc5235e5d5839a418cc202c35ba2a322b8985aa182ce",
+  "data_sha256": "b9db7872c2d990233b4b32f935b58591a482987865e81b46f1c08baba1cda891",
+  "written": "2026-09-10"
+}

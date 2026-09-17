@@ -1,0 +1,32 @@
+{
+  "conversion": {
+    "questions": 19291,
+    "gold_ignore": 16372,
+    "gold_advance": 2919,
+    "added": 2314,
+    "added_gold_ignore": 2289,
+    "added_gold_advance": 25
+  },
+  "conversion_fatal": {
+    "questions": 32257,
+    "gold_ignore": 26424,
+    "added": 2390,
+    "added_gold_ignore": 2362,
+    "gold_advance": 4952,
+    "gold_fatal": 881,
+    "added_gold_advance": 23,
+    "added_gold_fatal": 5
+  },
+  "ceiling": {
+    "goal": {
+      "median": 1.1111111111111112,
+      "minimum": 0.7884615384615384,
+      "maximum": 1.5714285714285714
+    },
+    "index": {
+      "median": 1.8092852508281254,
+      "minimum": 1.2564102564102564,
+      "maximum": 5.085844748858447
+    }
+  }
+}

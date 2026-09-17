@@ -1,0 +1,53 @@
+
+development
+
+bridge_development
+
+heldout
+h16 count_replay 100000 0/32 0.0228 0.5
+h16 delayed_skill 35812 32/32 0.6469 1.0
+h16 hand_replay 11750 32/32 0.8875 1.0
+h16 history_replay 20062 32/32 0.8117 1.0
+h16 history_skill 10344 32/32 0.9084 1.0
+h16 immediate_skill 10344 32/32 0.9084 1.0
+h16 last_event_replay 100000 0/32 0.0204 0.5
+h16 learned_replay 20062 32/32 0.8117 1.0
+h16 oracle_skill 3000 32/32 0.9753 1.0
+h24 count_replay 100000 0/32 0.012 0.5
+h24 delayed_skill 29719 32/32 0.7078 1.0
+h24 hand_replay 9719 32/32 0.9078 1.0
+h24 history_replay 16281 32/32 0.847 1.0
+h24 history_skill 7375 32/32 0.9352 1.0
+h24 immediate_skill 7375 32/32 0.9352 1.0
+h24 last_event_replay 100000 0/32 0.0105 0.5
+h24 learned_replay 16281 32/32 0.847 1.0
+h24 oracle_skill 3000 32/32 0.9759 1.0
+
+long_bridge
+h20_bridge3 count_replay 100000 0/32 0.018 0.5
+h20_bridge3 delayed_skill 31531 32/32 0.6897 1.0
+h20_bridge3 hand_replay 11500 32/32 0.89 1.0
+h20_bridge3 history_replay 17656 32/32 0.835 1.0
+h20_bridge3 history_skill 8375 32/32 0.925 1.0
+h20_bridge3 immediate_skill 8375 32/32 0.925 1.0
+h20_bridge3 last_event_replay 100000 0/32 0.0178 0.5
+h20_bridge3 learned_replay 17656 32/32 0.835 1.0
+h20_bridge3 oracle_skill 3000 32/32 0.9758 1.0
+
+matched_epsilon
+h16 immediate_e005 10031 32/32 0.9117 1.0
+h16 delayed_e005 35812 32/32 0.6469 1.0
+h24 immediate_e005 7406 32/32 0.935 1.0
+h24 delayed_e005 29719 32/32 0.7078 1.0
+
+same_map_control
+h16 count_replay 10562 32/32 0.8994 1.0
+h16 hand_replay 10562 32/32 0.8994 1.0
+h16 history_replay 19906 32/32 0.8131 1.0
+h16 immediate_skill 10344 32/32 0.9092 1.0
+h16 last_event_replay 11188 32/32 0.8931 1.0
+h24 count_replay 8656 32/32 0.9184 1.0
+h24 hand_replay 8656 32/32 0.9184 1.0
+h24 history_replay 16312 32/32 0.847 1.0
+h24 immediate_skill 7250 32/32 0.9359 1.0
+h24 last_event_replay 9094 32/32 0.9141 1.0

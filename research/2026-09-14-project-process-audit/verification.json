@@ -1,0 +1,154 @@
+{
+  "scope": "Two archived pilot replays; summaries of existing runs, no new training grid.",
+  "early_online_loop": {
+    "goal_reuse": {
+      "n": 32,
+      "mean_first90": 6906.25,
+      "seed_200_replay": {
+        "trace_hash": true,
+        "q_hash": true,
+        "checkpoints": true
+      },
+      "seed_200_discovery_steps": [
+        19,
+        47,
+        268,
+        950,
+        956,
+        1713,
+        1722,
+        2484,
+        2559,
+        2793,
+        3739,
+        4657,
+        5064,
+        6597,
+        6903,
+        6908
+      ],
+      "seed_200_first_success": 6908
+    },
+    "delayed_goal": {
+      "n": 32,
+      "mean_first90": 37937.5,
+      "seed_200_replay": {
+        "trace_hash": true,
+        "q_hash": true,
+        "checkpoints": true
+      },
+      "seed_200_discovery_steps": [
+        19,
+        47,
+        268,
+        872,
+        877,
+        4774,
+        6384,
+        6684,
+        6713,
+        10829,
+        16248,
+        17878,
+        24499,
+        28705,
+        32630,
+        34201
+      ],
+      "seed_200_first_success": 34201
+    }
+  },
+  "run_files": {
+    "local_lava_10m.jsonl": {
+      "runs": 9,
+      "sha256": "b084cea974354f41b5b0f78e86412b986bc12e550a1b976a5737ce6cd39e278c"
+    },
+    "local_sampling_intervention.jsonl": {
+      "runs": 9,
+      "sha256": "7b68c850382115e7d69899fd39b6e3989b9fb5917e172125f73626400fd68e69"
+    }
+  },
+  "step_weighted_auc": {
+    "old_Y11_minus_Cfull": {
+      "mean": 0.06840066,
+      "map_block_bootstrap_ci": [
+        0.022561738666666664,
+        0.12141363516666669
+      ],
+      "positive_maps": 9,
+      "map_differences": [
+        0.013083,
+        0.0107088,
+        0.006152366666666666,
+        0.1839311,
+        0.19385666666666668,
+        0.005819333333333333,
+        0.008705366666666665,
+        -0.002861833333333333,
+        0.18682053333333334,
+        0.07779126666666665
+      ]
+    },
+    "shared_minus_independent": {
+      "mean": -0.02549250333333334,
+      "map_block_bootstrap_ci": [
+        -0.09422782416666667,
+        0.03145080425000001
+      ],
+      "positive_maps": 4,
+      "map_differences": [
+        0.005527299999999999,
+        -0.007272199999999997,
+        0.0021019333333333347,
+        -0.14332389999999998,
+        -0.2716122,
+        -0.002995633333333333,
+        -0.0037934999999999996,
+        -0.005269333333333333,
+        0.08686506666666664,
+        0.08484743333333333
+      ]
+    },
+    "new_Y11_minus_CfullInd": {
+      "mean": -0.0034426699999999992,
+      "map_block_bootstrap_ci": [
+        -0.08261515166666666,
+        0.06555629450000003
+      ],
+      "positive_maps": 5,
+      "map_differences": [
+        0.0049206666666666635,
+        -0.007985933333333332,
+        0.0010748333333333328,
+        -0.050567766666666646,
+        -0.2909911,
+        0.004088333333333334,
+        -0.005276900000000001,
+        -0.007728933333333333,
+        0.20265266666666668,
+        0.1153874333333333
+      ]
+    },
+    "new_minus_old_Y11": {
+      "mean": -0.03146117666666666,
+      "map_block_bootstrap_ci": [
+        -0.06609024999999999,
+        -0.0074409090833333314
+      ],
+      "positive_maps": 2,
+      "map_differences": [
+        -0.01217386666666667,
+        -0.012622833333333333,
+        -0.006005433333333334,
+        -0.0709807,
+        -0.16740066666666667,
+        0.0016809666666666677,
+        0.0003678666666666666,
+        -0.0028286333333333324,
+        -0.025141833333333308,
+        -0.019506633333333318
+      ]
+    }
+  },
+  "statistical_scope": "Descriptive exploratory reanalysis. Map-block bootstrap conditions on these three seeds; maps share a curriculum within a run. Not a new independent confirmation or a noise-floor estimate."
+}

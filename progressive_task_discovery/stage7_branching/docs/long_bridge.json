@@ -1,0 +1,119 @@
+{
+  "name": "long_bridge",
+  "defaults": {
+    "budget": 100000,
+    "every": 1000,
+    "bridge": 3
+  },
+  "conditions": [
+    {
+      "name": "h20_bridge3",
+      "args": {
+        "hfactor": 20
+      }
+    }
+  ],
+  "lengths": [
+    8,
+    12
+  ],
+  "seeds": [
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509,
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517,
+    518,
+    519,
+    520,
+    521,
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528,
+    529,
+    530,
+    531
+  ],
+  "variants": [
+    {
+      "name": "count_replay",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "delayed_skill",
+      "args": {
+        "method": "delayed_skill",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "hand_replay",
+      "args": {
+        "method": "hand_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "history_replay",
+      "args": {
+        "method": "history_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "history_skill",
+      "args": {
+        "method": "history_skill",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "immediate_skill",
+      "args": {
+        "method": "immediate_skill",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "last_event_replay",
+      "args": {
+        "method": "last_event_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "learned_replay",
+      "args": {
+        "method": "learned_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "oracle_skill",
+      "args": {
+        "method": "oracle_skill",
+        "epsilon": 0.005
+      }
+    }
+  ]
+}

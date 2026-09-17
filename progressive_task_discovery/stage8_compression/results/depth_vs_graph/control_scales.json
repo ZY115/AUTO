@@ -1,0 +1,8 @@
+{
+  "mapdist": 0.01,
+  "taskstep": 0.02,
+  "wrongproduct": 0.02,
+  "shuffled": 0.005,
+  "learnedproduct": 0.005,
+  "computedproduct": 0.005
+}

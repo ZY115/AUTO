@@ -1,0 +1,132 @@
+{
+  "name": "stage5_heldout",
+  "defaults": {
+    "budget": 100000,
+    "every": 1000
+  },
+  "conditions": [
+    {
+      "name": "benign",
+      "args": {
+        "slip": 0,
+        "hfactor": 24
+      }
+    },
+    {
+      "name": "deadline",
+      "args": {
+        "slip": 0,
+        "hfactor": 16
+      }
+    },
+    {
+      "name": "noisy",
+      "args": {
+        "slip": 0.2,
+        "hfactor": 20
+      }
+    }
+  ],
+  "lengths": [
+    2,
+    4,
+    6,
+    8,
+    12,
+    16
+  ],
+  "seeds": [
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131
+  ],
+  "variants": [
+    {
+      "name": "count",
+      "args": {
+        "method": "count",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "progressive",
+      "args": {
+        "method": "progressive",
+        "high": 0.05,
+        "low": 0
+      }
+    },
+    {
+      "name": "learned_qrm",
+      "args": {
+        "method": "learned_qrm",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "count_replay",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "goal_reuse",
+      "args": {
+        "method": "goal_reuse",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "progressive_goal",
+      "args": {
+        "method": "progressive_goal",
+        "high": 0.05,
+        "low": 0
+      }
+    },
+    {
+      "name": "oracle_goal",
+      "args": {
+        "method": "oracle_goal",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "oracle_qrm",
+      "args": {
+        "method": "oracle_qrm",
+        "epsilon": 0.02
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+cwl_book_expensive_0_lava QRM (CRM) 0 original 0.0005 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava QRM (CRM) 0 sparse 0.98775 22000 {}
+cwl_book_expensive_0_lava QRM (CRM) 1 original 0.0855 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava QRM (CRM) 1 sparse 0.98475 24000 {}
+cwl_book_expensive_0_lava QRM (CRM) 2 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava QRM (CRM) 2 sparse 0.98525 24000 {}
+cwl_book_expensive_0_lava Y10 no-reuse readout 0 original 0.971 174000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava Y10 no-reuse readout 0 sparse 0.98825 26000 {}
+cwl_book_expensive_0_lava Y10 no-reuse readout 1 original 0.993 18000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava Y10 no-reuse readout 1 sparse 0.99025 38000 {}
+cwl_book_expensive_0_lava Y10 no-reuse readout 2 original 0.9785 84000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava Y10 no-reuse readout 2 sparse 0.978 24000 {}
+cwl_book_expensive_0_lava Y11 goal readout 0 original 0.99925 6000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava Y11 goal readout 0 sparse 0.998 4000 {}
+cwl_book_expensive_0_lava Y11 goal readout 1 original 0.99775 6000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava Y11 goal readout 1 sparse 0.998 4000 {}
+cwl_book_expensive_0_lava Y11 goal readout 2 original 0.99775 6000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_book_expensive_0_lava Y11 goal readout 2 sparse 0.9975 6000 {}
+cwl_bookandquill_expensive_0_lava QRM (CRM) 0 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava QRM (CRM) 0 sparse 0.91275 92000 {}
+cwl_bookandquill_expensive_0_lava QRM (CRM) 1 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava QRM (CRM) 1 sparse 0.90975 94000 {}
+cwl_bookandquill_expensive_0_lava QRM (CRM) 2 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava QRM (CRM) 2 sparse 0.8815 126000 {}
+cwl_bookandquill_expensive_0_lava Y10 no-reuse readout 0 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava Y10 no-reuse readout 0 sparse 0 -1 {}
+cwl_bookandquill_expensive_0_lava Y10 no-reuse readout 1 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava Y10 no-reuse readout 1 sparse 0 -1 {}
+cwl_bookandquill_expensive_0_lava Y10 no-reuse readout 2 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava Y10 no-reuse readout 2 sparse 0 -1 {}
+cwl_bookandquill_expensive_0_lava Y11 goal readout 0 original 0.94 62000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava Y11 goal readout 0 sparse 0.986 16000 {}
+cwl_bookandquill_expensive_0_lava Y11 goal readout 1 original 0 -1 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava Y11 goal readout 1 sparse 0.986 16000 {}
+cwl_bookandquill_expensive_0_lava Y11 goal readout 2 original 0.966 36000 {'saved_summary_exact_match': True, 'current_binary_full_output_match': True}
+cwl_bookandquill_expensive_0_lava Y11 goal readout 2 sparse 0.986 16000 {}

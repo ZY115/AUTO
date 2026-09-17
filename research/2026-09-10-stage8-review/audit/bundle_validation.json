@@ -1,0 +1,31 @@
+{
+  "date": "2026-09-10",
+  "papers": 23,
+  "notes": 23,
+  "aggregated_rows": 11180,
+  "manifest_source_data_pairs_verified": 5,
+  "local_links_checked": true,
+  "pdf_hashes_verified": true,
+  "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+  "original_source_unchanged": true,
+  "existing_unit_tests": {
+    "passed": 35,
+    "scope": "Existing tests only; do not cover all audited semantics"
+  },
+  "independent_checks": [
+    "Existing fatal run reproduced; instrumentation output equals original",
+    "No-relabel goal identity witness",
+    "Finite-depth signature counterexample",
+    "Map-block bootstrap recomputation",
+    "AALpy GSM smoke passed; classic did not generalize in this smoke"
+  ],
+  "pdf_visual_qa": [
+    "ISA PDF page 25",
+    "LOF PDF page 4"
+  ],
+  "not_done": [
+    "No corrected full experiment sweep",
+    "No full prior-paper reproduction",
+    "No deployment or source experiment changes"
+  ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "m": 0,
+    "paid": 1652,
+    "saved": 2610,
+    "wrong": 1228,
+    "unsafe": 1325
+  },
+  {
+    "m": 1,
+    "paid": 1815,
+    "saved": 2447,
+    "wrong": 1008,
+    "unsafe": 1260
+  },
+  {
+    "m": 2,
+    "paid": 3087,
+    "saved": 1175,
+    "wrong": 428,
+    "unsafe": 932
+  },
+  {
+    "m": 3,
+    "paid": 3805,
+    "saved": 457,
+    "wrong": 129,
+    "unsafe": 566
+  },
+  {
+    "m": 4,
+    "paid": 4022,
+    "saved": 240,
+    "wrong": 29,
+    "unsafe": 131
+  },
+  {
+    "m": 6,
+    "paid": 4232,
+    "saved": 30,
+    "wrong": 6,
+    "unsafe": 41
+  }
+]

@@ -1,0 +1,417 @@
+{
+  "identity_pairs": 96,
+  "independent_policies_checked": 48,
+  "policy_checks": [
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 100,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 131,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 100,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 131,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 100,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 131,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 100,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 131,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 100,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 131,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 100,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 131,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 100,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 2,
+      "seed": 131,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 100,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "benign",
+      "k": 16,
+      "seed": 131,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 100,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 131,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 100,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 131,
+      "variant": "count",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 100,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 131,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 100,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 131,
+      "variant": "progressive",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 100,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 131,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 100,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 131,
+      "variant": "count_replay",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 100,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 2,
+      "seed": 131,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 100,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "deadline",
+      "k": 16,
+      "seed": 131,
+      "variant": "goal_reuse",
+      "success_error": 0.0,
+      "steps_error": 0.0
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 100,
+      "variant": "count",
+      "success_error": 4.631850458736153e-13,
+      "steps_error": 2.5124791136477143e-11
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 131,
+      "variant": "count",
+      "success_error": 1.7774670624248756e-13,
+      "steps_error": 8.476774837617995e-12
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 100,
+      "variant": "count",
+      "success_error": 1.3711254354120683e-13,
+      "steps_error": 3.4225422496092506e-10
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 131,
+      "variant": "count",
+      "success_error": 4.6851411639181606e-14,
+      "steps_error": 2.1384494175435975e-10
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 100,
+      "variant": "progressive",
+      "success_error": 2.76445533131664e-13,
+      "steps_error": 3.2510882874703384e-11
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 131,
+      "variant": "progressive",
+      "success_error": 3.381739333008227e-13,
+      "steps_error": 8.419931418757187e-12
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 100,
+      "variant": "progressive",
+      "success_error": 1.795230630818878e-13,
+      "steps_error": 2.248725650133565e-10
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 131,
+      "variant": "progressive",
+      "success_error": 1.255662240851052e-13,
+      "steps_error": 1.8047785488306545e-11
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 100,
+      "variant": "count_replay",
+      "success_error": 1.3222756223285614e-13,
+      "steps_error": 1.162803187071404e-11
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 131,
+      "variant": "count_replay",
+      "success_error": 1.6253665080512292e-13,
+      "steps_error": 4.3236525471002096e-11
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 100,
+      "variant": "count_replay",
+      "success_error": 4.567457523307894e-13,
+      "steps_error": 2.4724045033508446e-10
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 131,
+      "variant": "count_replay",
+      "success_error": 1.2390088954816747e-13,
+      "steps_error": 4.062314928887645e-10
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 100,
+      "variant": "goal_reuse",
+      "success_error": 7.349676423018536e-14,
+      "steps_error": 3.112177182629239e-11
+    },
+    {
+      "condition": "noisy",
+      "k": 2,
+      "seed": 131,
+      "variant": "goal_reuse",
+      "success_error": 1.3655743202889425e-13,
+      "steps_error": 7.172928917498211e-12
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 100,
+      "variant": "goal_reuse",
+      "success_error": 1.1024514634527804e-13,
+      "steps_error": 2.660840436874423e-10
+    },
+    {
+      "condition": "noisy",
+      "k": 16,
+      "seed": 131,
+      "variant": "goal_reuse",
+      "success_error": 4.1011638529653283e-13,
+      "steps_error": 4.3857539822056424e-10
+    }
+  ],
+  "all_budget_checks_passed": true,
+  "stages": {
+    "stage1_initial": {
+      "runs": 288,
+      "environment_steps": 57600000
+    },
+    "stage2_sensitivity": {
+      "runs": 1224,
+      "environment_steps": 73440000
+    },
+    "stage3_skill_reuse": {
+      "runs": 1224,
+      "environment_steps": 73440000
+    },
+    "stage4_calibration": {
+      "runs": 1512,
+      "environment_steps": 60480000
+    },
+    "stage5_heldout": {
+      "runs": 4608,
+      "environment_steps": 460800000
+    },
+    "stage6_early_use": {
+      "runs": 1152,
+      "environment_steps": 115200000
+    }
+  }
+}

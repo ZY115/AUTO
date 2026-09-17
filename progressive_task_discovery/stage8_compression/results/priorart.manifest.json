@@ -1,0 +1,12 @@
+{
+  "runner": "src/run_priorart.py",
+  "tasks": 12,
+  "seeds": 16,
+  "budget": 100000,
+  "every": 100,
+  "note": "re-run after the failure-semantics, learned-CRM and no-relabel fixes",
+  "runs": 1536,
+  "source_sha256": "982737e762c5534da218fc5235e5d5839a418cc202c35ba2a322b8985aa182ce",
+  "data_sha256": "29625921755227d8c3a6f096dfcef30ef725a3ecbaab22ced9e03b5cc7827073",
+  "written": "2026-09-10"
+}

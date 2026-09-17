@@ -1,0 +1,898 @@
+[
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 400,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 401,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 402,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 403,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 404,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 405,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 406,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 407,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 408,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 409,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 410,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 411,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 412,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 413,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 414,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 415,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 416,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 417,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 418,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 419,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 420,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 421,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 422,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 423,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 424,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 425,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 426,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 427,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 428,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 429,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 430,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "delayed_skill",
+    "seed": 431,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 400,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 401,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 402,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 403,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 404,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 405,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 406,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 407,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 408,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 409,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 410,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 411,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 412,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 413,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 414,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 415,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 416,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 417,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 418,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 419,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 420,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 421,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 422,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 423,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 424,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 425,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 426,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 427,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 428,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 429,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 430,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h16",
+    "method": "immediate_skill",
+    "seed": 431,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 400,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 401,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 402,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 403,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 404,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 405,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 406,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 407,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 408,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 409,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 410,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 411,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 412,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 413,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 414,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 415,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 416,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 417,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 418,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 419,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 420,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 421,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 422,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 423,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 424,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 425,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 426,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 427,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 428,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 429,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 430,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "delayed_skill",
+    "seed": 431,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 400,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 401,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 402,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 403,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 404,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 405,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 406,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 407,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 408,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 409,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 410,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 411,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 412,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 413,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 414,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 415,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 416,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 417,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 418,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 419,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 420,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 421,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 422,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 423,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 424,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 425,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 426,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 427,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 428,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 429,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 430,
+    "k": 12,
+    "matched": true
+  },
+  {
+    "condition": "h24",
+    "method": "immediate_skill",
+    "seed": 431,
+    "k": 12,
+    "matched": true
+  }
+]

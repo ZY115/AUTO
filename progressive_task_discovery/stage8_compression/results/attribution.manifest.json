@@ -1,0 +1,24 @@
+{
+  "runner": "src/run_attribution.py",
+  "families": 24,
+  "keys": [
+    "fullprefix",
+    "node",
+    "mergedclass",
+    "truestate"
+  ],
+  "levels": [
+    80,
+    160,
+    320,
+    2000
+  ],
+  "seeds": 6,
+  "seed0": 10600,
+  "budget": 200000,
+  "query_rule": "arrival: ask once per (attribution state, event), reuse after",
+  "runs": 2304,
+  "source_sha256": "6a205a321cff54120abdc82246a69db361451a967fe76d654cee0c7309ed6753",
+  "data_sha256": "56d78738791cebc2cf2457404846dbf612ffe5ff545361d46ead75db2121272c",
+  "written": "2026-09-11"
+}

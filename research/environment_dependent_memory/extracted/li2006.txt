@@ -1,0 +1,670 @@
+      Towards a Unified Theory of State Abstraction for MDPs
+                     Lihong Li        Thomas J. Walsh                Michael L. Littman
+
+                                 Department of Computer Science
+                                       Rutgers University,
+                                      Piscataway, NJ 08854
+                           {lihong,thomaswa,mlittman}@cs.rutgers.edu
+
+
+Abstract                                                     tion [18], and policy irrelevance [14]. Given the di-
+                                                             versity of choices, natural questions arise such as:
+State abstraction (or state aggregation) has been
+                                                               • Is there a unified definition of state abstrac-
+extensively studied in the fields of artificial intel-
+                                                                 tion?
+ligence and operations research. Instead of work-
+ing in the ground state space, the decision maker              • What are the relationships among these ab-
+usually finds solutions in the abstract state space              stractions?
+much faster by treating groups of states as a unit             • How does a solution to the abstract MDP relate
+by ignoring irrelevant state information. A num-                 to the ground MDP? What guarantees can be
+ber of abstractions have been proposed and studied               made?
+in the reinforcement-learning and planning litera-             • How can we select among abstraction schemes?
+tures, and positive and negative results are known.
+We provide a unified treatment of state abstraction             With the different types of abstractions being de-
+for Markov decision processes. We study five partic-         veloped rather independently, a unified treatment is
+ular abstraction schemes, some of which have been            not yet available. Although there are results for es-
+proposed in the past in different forms, and analyze         timating and bounding approximation errors with
+their usability for planning and learning.                   state abstraction [1, 2, 30], we seek to answer quali-
+                                                             tative questions like “What information is lost when
+                                                             an abstraction is applied?” and “When is the opti-
+1    Introduction                                            mal policy still preserved?” In fact, lacking such
+                                                             qualitative insights about state abstractions can
+State abstraction (or state aggregation) has been            lead to negative results when using state abstrac-
+widely studied in artificial intelligence (e.g., [10])       tion. For example, McCallum [18] has observed
+and operations research [25] as a technique for ac-          that aggregating states using one form of state ab-
+celerating decision making. Abstraction can be               straction makes it impossible to find the optimal
+thought of as a process that maps the ground rep-            policy using value iteration [22] or Q-learning [31];
+resentation, the original description of a problem,          Gordon [12] reported a chattering phenomenon of
+to an abstract representation, a much more com-              SARSA(λ) [26] when combined with improperly
+pact and easier one to work with [10]. In other              constrained state abstraction.
+words, abstraction allows the decision maker to dis-            The major contribution of this paper is a general
+tinguish relevant information from irrelevant infor-         treatment of state abstraction that unifies many
+mation. From a computational perspective, state              previous works on the topic. Instead of providing
+abstraction is a technique for making learning and           immediately available algorithms for solving more
+planning algorithms practical in large, real-world           concrete problems, we will focus on the abstraction
+problems.                                                    theory itself, including formal definitions, relation-
+   In this paper, we will focus on state abstraction         ships, and qualitative properties (such as preserva-
+in Markov decision processes [22], where different           tion of optimality and learnability).
+types of abstraction have been proposed, including              The rest of the paper is organized as follows. Sec-
+bisimulation [11], homomorphism [23], utile distinc-         tion 2 presents notation and reviews previous work.
+
+                                                         1
+2   BACKGROUND & PRIOR WORK                                                                                     2
+
+
+Section 3 studies state abstraction formally and ex-        special case of their own form of abstraction, bisim-
+amines five particular types of abstraction in some         ulation, where states with the same transition and
+detail. Section 4 discusses concrete examples and           reward functions are aggregated. Given a flat rep-
+illustrates how these abstractions affect the size of       resentation of an MDP, this partitioning can be ac-
+the abstract state space. Finally, we give some con-        complished in polynomial time.
+cluding remarks and mention future research direc-             Although such partitioning provides a compact
+tions in Section 5.                                         representation of the ground MDP, bisimulation is
+                                                            a very strict criterion for aggregation. As such, sev-
+                                                            eral adaptations have been proposed. Ravindran et
+2     Background & Prior Work                               al. [23] examined state aggregation based on homo-
+                                                            morphisms of the model, rather than strict action
+In this paper, we will focus on sequential decision
+                                                            matching. They also propounded the use of options
+making problems and the concrete model of Markov
+                                                            [29] as a mechanism for encapsulating abstraction
+decision processes (MDPs) [22]. An MDP can be
+                                                            information. We note here that such a vehicle can
+described as a five-tuple hS, A, P, R, γi where S is a
+                                                            be used independently of the type of abstraction
+finite set of states; A is a finite set of actions; P is
+                                  a                         being performed. Givan et al. [5] analyzed approx-
+the transition function with Pss    0 denoting the next-
+                                                            imate bisimulation, which drops the exact equiva-
+state distribution after taking action a in state s; R
+                                                            lence requirement in favor of a bound, as a method
+is a bounded reward function with Rsa denoting the
+                                                            for producing boundedly accurate MDPs (BMDPs).
+expected immediate reward gained by taking action
+                                                            Similarly, Ferns et al. [8] proposed bisimulation
+a in state s; and γ ∈ [0, 1] is a discount factor.
+                                                            metrics, which use statistical semi-metrics [9] to
+   A policy is a mapping from states to actions:
+                                                            determine the similarity between two states’ transi-
+S 7→ A. Given a policy π, we define the state-
+                                                            tion functions. This measure is then combined with
+value function, V π (s), as the expected cumulative
+                                                            the difference in the reward functions to decide ag-
+reward received by executing π from state s. Sim-
+                                                            gregation. We note that this criterion comes very
+ilarly, the state-action value function, Qπ (s, a), is
+                                                            close to comparing the actual value functions of the
+the expected cumulative reward received by taking
+                                                            two states, an idea we will return to shortly.
+action a in state s and following π thereafter. A
+reinforcement-learning agent [27] attempts to learn     Several of these algorithms can be used to ag-
+an optimal policy π ∗ whose value functions are de-  gregate states between iterations of model-based
+                                                     planning algorithms like value iteration or policy
+noted by V ∗ (s) and Q∗ (s, a), respectively. It is well-
+known that V ∗ = maxπ V π and Q∗ = maxπ Qπ .         iteration. This approach is reminiscent of a pre-
+   Given the full model of an MDP (i.e., the five-   viously proposed adaptive aggregation strategy [2],
+tuple), a set of standard algorithms exists for find-which groups states in between runs of value iter-
+ing the optimal value function as well as the optimalation based on Bellman residuals. This algorithm
+policy, including linear programming, value itera-   was unique both in its criterion and its allowance
+                                                     for states to be aggregated or disaggregated at every
+tion, and policy iteration [22]. However, if the tran-
+sition and/or reward functions are unknown, the de-  abstraction step. Dietterich’s MAXQ hierarchy [6]
+cision maker has to gather information by interact-  effectively aggregates states within a subtask only if
+ing with the environment. In fact, a reinforcement-  their reward and transition functions are the same
+learning agent is able to compute the optimal policy for any policy consistent with the hierarchy. Mc-
+by such interaction [27].                            Callum [18] proposed a less strict criterion, aggre-
+                                                     gating only states that have the same optimal ac-
+                                                     tion and similar Q-values for these actions, based
+2.1 Previous Work                                    on a statistical test. McCallum allowed such aggre-
+The problem of defining state abstraction rules has gation to occur while the system was learning the
+been the focus of previous work. Boutlier et al. [3] MDP itself. Using statistics to do the abstraction
+introduced an algorithm, stochastic dynamic pro- online was a feature of earlier works including the
+gramming, that built aggregation trees in the fac- G-algorithm [4], which aggregated states with the
+tored setting to create an abstract model where same reward and Q-values for each action.
+states with the same transition and reward func-        A more recent online aggregation strategy us-
+tions under a fixed policy were grouped together. ing statistical tests was provided by Jong and
+This work was identified by Givan et al. [11] as a Stone [14], which groups states based on “Policy
+3   A STATE ABSTRACTION THEORY                                                                                              3
+
+
+    Abstraction       Mecha-      Criterion                   Exactness          MDP       Notes
+    nism                                                                         given?∗
+    Bisimulation [11]             Model equivalence           Exact              Yes       Strictest measure
+    Homomorphisms [23]            Model equivalence           Exact, match-      Yes       Accounts for spacial relations
+                                                              ing of actions               (e.g. symmetry)
+                                                              flexible
+    Approximate    Bisimula-      Model similarity            Bounded            Yes       Builds BMDPs
+    tion [5]
+    Bisimulation Metrics [8]      Model similarity            Statistically      Yes       Error bounds deducible
+                                                              tested
+    MAXQ [6]                      Model equivalence for       Exact              Yes       Integrated into the MAXQ hi-
+                                  hierarchically consistent                                erarchy
+                                  policies
+    Stochastic Dynamic Pro-       Equivalent models given a   Exact              Yes       Covered by bisimulation
+    gramming [3]                  policy
+    G Algorithm [4]               Equivalent rewards and      Statistically      No        Each feature’s relevance must
+                                  Q-values                    tested                       be independent
+    Utile Distinction [18]        Equivalent best actions     Statistically      No        Aggregation occurs online
+                                  with similar Q-values       tested
+    Policy Irrelevance [14]       Equivalent best actions     Statistically      No        May not yield optimal policy
+                                                              tested                       for ground MDP
+    Adaptive Aggregation [2]      Similar Bellman residuals   Bounded            Yes       States can be (dis)aggregated
+                                                                                           dynamically
+
+* I.e., does abstraction discovery require the MDP model?
+
+
+
+                              Table 1: Selected previous strategies for state aggregation
+
+Irrelevance”—states are aggregated if they have the              the methods we have cited attempt “fuzzy conser-
+same optimal action. However, if such abstract                   vation” of such properties through statistical tests
+MDPs are used to learn a policy for the larger MDP,              and notions of bounding, but in the interest of de-
+they may not yield optimal policies [14, 18] and may             veloping a formalism we choose to focus on abstrac-
+even prevent some algorithms from converging [12].               tion schemes where states are only aggregated when
+   A summary of the properties of the aforemen-                  they have exact equality over the parameters of the
+tioned work is presented in Table 1. The table or-               abstraction scheme.
+ders the algorithms roughly from strictest to coars-
+est abstractions. It has been noted that coarser
+abstractions methods, although providing a better
+potential for computational efficiency and general-              3.1          A General Definition of State
+ization, have looser performance loss bounds on the                           Abstraction
+value function [30]. These methods overlap consid-
+erably, and in this paper we endeavor to formalize a             The definition of state abstraction in MDPs we give
+unified theory of abstraction to better understand               here is not novel. However, based on this definition,
+these similarities, and the differences.                         we are able to study formal properties of abstraction
+                                                                 itself in subsequent sections.
+3     A State Abstraction Theory
+We adopt the viewpoint of Giunchiglia and                        Definition 1 Let M = hS, A, P, R, γi be the
+Walsh [10], who argue that abstraction is in gen-                ground MDP and its abstract version be M̄ =
+eral a mapping from one problem representation to                hS̄, A, P̄ , R̄, γi. Define the abstraction function as
+a new representation, while preserving some prop-                φ : S 7→ S̄; φ(s) ∈ S̄ is the abstract state corre-
+erties. In this work, we focus on the preservation of            sponding to ground state s, and the inverse image
+properties that are needed for an agent to make de-              φ−1 (s̄), with s̄ ∈ S̄, is the set of ground states that
+cisions that lead to optimal behavior. Previous ab-              correspond to s̄ under abstraction function φ. Note
+straction definitions have applied this insight. For             that under these assumptions, {φ−1 (s̄) | s̄ ∈ S̄}
+example, bisimulation is essentially a type of ab-               partitions the ground state space S. To guaran-
+straction that preserves the one-step model of an                tee P̄ and R̄ are well-defined, a weighting func-
+MDP (i.e., the transition and reward functions),                 tion is needed: w : S 7→ [0, 1], where for each
+                                                                           P
+while policy-irrelevance types of abstraction at-                s̄ ∈ S̄, s∈φ−1 (s̄) w(s) = 1. With these definitions
+tempt to preserve the optimal actions. Many of                   at hand, we can define the transition and reward
+3   A STATE ABSTRACTION THEORY                                                                                           4
+
+
+functions of the abstract MDP as follows:                    Theorem 1 The finer relation  is a partial or-
+                    X                                        dering.
+        R̄s̄a =           w(s)Rsa ,
+                       s∈φ−1 (s̄)
+                         X           X                           In other words, if we depict the topology of the
+           a                                    a             abstraction space ΦM as a graph, we would obtain
+        P̄s̄s̄ 0   =                       w(s)Pss 0.
+
+                    s∈φ−1 (s̄) s0 ∈φ−1 (s̄)                   a directed acyclic graph (DAG) with a self-loop at
+                                                              each node; each edge points from an abstraction φ1
+                                 a
+  It is easy to verify that P̄s̄s̄ 0 is a well-defined next-
+                                                              to another abstraction φ2  φ1 . At the very end
+                                                   a
+                                            P
+state distribution by checking that s̄0 P̄s̄s̄       0 sum up
+                                                              is the finest representation (the ground representa-
+to 1 for any a and s̄ ∈ S̄:                                   tion) we denoted φ0 (i.e., φ0 is the identity mapping
+    X
+             a
+                    X X                 X
+                                                        a     and S̄ = S), and at the other extreme is the coarsest
+          P̄s̄s̄0 =                              w(s)Pss0
+      s̄0            s̄0 s∈φ−1 (s̄) s0 ∈φ−1 (s̄)
+                                                              representation (the null representation consisting of
+                        X              X                      a single abstract state).
+                                               a
+                  =            w(s)         Pss  0
+
+                       s∈φ−1 (s̄)      s0 ∈S
+                          X                                  3.3     Five Types of Abstraction
+                   =                w(s) = 1.
+                       s∈φ−1 (s̄)                             There are many abstractions for an MDP, because
+                                                              there are many possible ways to partition the state
+Intuitively, w(s) measures the extent to which a space. However, not all abstractions appear to be
+state s contributes to the abstract state φ(s). In equally important. A useful abstraction has to pre-
+the rest of the paper, we will only mention w when serve some information that is critical for solving
+necessary; otherwise, it can be any valid weighting the original MDP. In this subsection, we will see
+function.                                                     how five pieces of important information in MDPs
+   Next, we consider how policies π̄ in the abstract lead to respective abstractions, as defined below. 1
+MDP translate to policies π in the ground MDP.
+Since all ground states in φ−1 (s) are treated iden- Definition 3 Given an MDP M = hS, A, P, R, γi,
+tically, it is natural to translate policies by the fol- and any states s , s ∈ S, we define five types of
+                                                                                 1 2
+lowing rule: π(s, a) = π̄(φ(s), a) for all s and a.           abstraction as below, with an arbitrary but fixed
+   Finally, value functions for the abstract MDP M̄ weighting function w(s).2
+can be defined in the straightforward way and are
+denoted V π̄ (s̄), V ∗ (s̄), Qπ̄ (s̄, a), and Q∗ (s̄, a), re-   1. A model-irrelevance abstraction φmodel is such
+spectively.                                                        that for any action a and any abstract state s̄,
+                                                                   φmodel (s1 ) = φmodel (s2 ) implies Rsa1 = Rsa2 and
+                                                                                   a                        a
+                                                                   P                       P
+3.2 Topology of Abstraction Space                                    s0 ∈φ−1 (s̄) Ps1 s0 =
+                                                                           model              s0 ∈φ−1 (s̄) Ps2 s0 .
+                                                                                                   model
+
+In this subsection, we are concerned with the ques-                    π
+                                                              2. A Q -irrelevance abstraction φQπ is such that
+tion of how these abstractions relate to each other.             for any policy π and any action a, φQπ (s1 ) =
+Let ΦM denote the abstraction space—the set of ab-               φQπ (s2 ) implies Qπ (s1 , a) = Qπ (s2 , a).
+stractions on MDP M . We will need the following
+definition.                                                   3. A Q∗ -irrelevance abstraction φQ∗ is such that
+                                                                 for any action a, φQ∗ (s1 ) = φQ∗ (s2 ) implies
+Definition 2 Suppose φ1 , φ2 ∈ ΦM . We say φ1                    Q∗ (s1 , a) = Q∗ (s2 , a).
+is finer than φ2 , denoted φ1  φ2 , iff for any
+states s1 , s2 ∈ S, φ1 (s1 ) = φ1 (s2 ) implies φ2 (s1 ) =    4. An a∗ -irrelevance abstraction φa∗ is such that
+φ2 (s2 ). If, in addition, φ1 6= φ2 , then φ1 is strictly        every abstract class has an action a∗ that is
+finer than φ2 , denoted φ1  φ2 . We may also say                optimal for all the states in that class, and
+φ2 is (strictly) coarser than φ1 , denoted φ2  φ1               φa∗ (s1 ) = φa∗ (s2 ) implies that Q∗ (s1 , a∗ ) =
+(φ2 ≺ φ1 ). We say φ1 and φ2 are comparable if                   maxa Q∗ (s1 , a) = maxa Q∗ (s2 , a) = Q∗ (s2 , a∗ ).
+either φ1  φ2 or φ2  φ1 .
+                                                                1 Similar definitions are possible with state value func-
+
+   It is obvious from Definitions 1 and 2 that the           tions, but we focus on state-action value functions because of
+                                                             their key role in popular planning and learning algorithms.
+relation  satisfies reflexibility, antisymmetry, and           2 Although w does not appear important in the definition,
+transitivity. Therefore, we arrive at the following          it can play an important role in affecting planning and/or
+theorem.                                                     learning efficiency [30].
+3     A STATE ABSTRACTION THEORY                                                                                       5
+
+
+    5. A π ∗ -irrelevance abstraction φπ∗ is such that        in the ground MDP. However, there exists exam-
+       every abstract class has an action a∗ that             ples where the optimal policy with abstraction φπ∗
+       is optimal for all the states in that class,           is suboptimal in the ground MDP [14] (see also Fig-
+       that is φπ∗ (s1 ) = φπ∗ (s2 ) implies that             ure 1(b)).
+       Q∗ (s1 , a∗ ) = maxa Q∗ (s1 , a) and Q∗ (s2 , a∗ ) =
+       maxa Q∗ (s2 , a).                                      Proof (sketch) We are able to show that the value-
+                                                              iteration operator on the state-action value func-
+   Intuitively, φmodel preserves the one-step model           tions in the abstract MDP is a contraction map-
+(e.g., bisimulation [11]); φQπ preserves the state-           ping, of which the optimal value function is the
+action value function for all policies; φQ∗ pre-              fixed point [22]. The optimality then follows from
+serves the optimal state-action value function (e.g.,         the fact that the optimal actions as well as their
+stochastic dynamic programming with factored rep-             Q-values are preserved after abstraction.                
+resentations [3] or the G-algorithm [4]); φa∗ pre-               Finally, we consider the learning problem, where
+serves the optimal action and its value (e.g., utile          the agent estimates the optimal value function
+distinction [18]); and φπ∗ attempts to preserve the           based on experience. In the abstraction case, Q-
+optimal action [14]. 3                                        learning requires some modification. After observ-
+                                                              ing a transition (st , at , rt , st+1 ), the agent does the
+3.4       Properties of the Abstractions                      following backup in the abstract state-action space:
+                                                                                  α
+In the previous subsection, we introduced a collec-
+                                                                                 t
+                                                                 Q(φ(st ), at ) ←− rt + γ max
+                                                                                           0
+                                                                                              Q(φ(st+1 ), a0 ),
+                                                                                                 a
+tion of state abstractions. Below we study their
+properties formally, which provides insights into             where αt is an appropriately decaying step-size pa-
+                                                                                   P                 P 2
+some previous findings.                                       rameter such that      t αt = ∞ and      t αt < ∞.
+   The first question we address is how the abstrac-          Using standard tools in stochastic approximation
+tions relate to one another. The following theorem            theory [13, 17, 24], we obtain the following results
+states that they form a chain under the partial or-           for Q-learning:
+der . Furthermore, there exist examples showing
+that they are not equal to each other in general.      Theorem 4 Assume that each state-action pair is
+                                                       visited infinitely often and the step-size parameters
+Theorem 2 For any MDP, we have φ0  φmodel  decay appropriately.
+φQπ  φQ∗  φa∗  φπ∗ .
+                                                         1. Q-learning with abstractions φmodel , φQπ , or
+   As a consequence, any one of the five abstractions       φQ∗ converges to the optimal state-action value
+is a special case of other finer abstractions. For ex-      function in the ground MDP. Therefore, the re-
+ample, an instance of φQ∗ is also an instance of φa∗ -      sulting optimal abstract policy is also optimal
+and φπ -irrelevance abstraction, but is not necessar-
+       ∗
+                                                            in the ground MDP.
+ily a φmodel - or φQπ -irrelevance abstraction. This           2. Q-learning with abstraction φa∗ does not neces-
+observation is helpful when we consider the learning              sarily converge. However, if the behavior pol-
+and planning problems below, that is, if we prove                 icy is fixed, Q-learning converges to Q̄∗ with
+some property of an abstraction, this property au-                respect to some weighting w(s), and the greedy
+tomatically applies to the finer abstractions.                    policy is optimal in the ground MDP, although
+   The second question is related to planning. More               Q̄∗ may not predict the optimal values for sub-
+specifically, given an abstract MDP M̄ , we may use               optimal actions in the ground MDP.
+standard dynamic-programming algorithms such as
+value iteration and policy iteration to solve it, ob-          3. Q-learning with abstraction φπ∗ can converge
+taining an optimal abstract policy π̄ ∗ . With what               to an action-value function whose greedy policy
+abstractions will π̄ ∗ be guaranteed to be optimal in             is suboptimal in the ground MDP. However, we
+the ground MDP M ? We have the following results:                 note that policy-search methods (e.g. [28]) may
+                                                                  still find the optimal policy in this case.
+Theorem 3 With abstractions φmodel , φQπ , φQ∗ ,
+and φa∗ , the optimal abstract policy π̄ ∗ is optimal Proof (sketch) The first part of the theorem fol-
+   3 We note that several of these examples are not the coars- lows earlier convergence results [17, Theorem 1],
+est possible implementations of their respective abstractions, since the conditions in the theorem are all satis-
+including those listed for φQ∗ and φπ∗ .                       fied. For the second part, since we assume that each
+3   A STATE ABSTRACTION THEORY                                                                                   6
+
+
+(s, a) is visited infinitely often and a fixed behavior   learning algorithm based on on-trajectory sampling,
+policy is being followed, the learner must run into a     combined with a non-stationary policy.
+steady state-occupation distribution µ(s) > 0 for all        φπ∗ introduces a new liability for Q-learning be-
+s ∈ S. The weighting function w(s) associated with        yond the possible chattering of optimal action Q-
+φa∗ is in proportion to µ(s) and fixed in the limit.      values. Under φπ∗ it is possible for Q-learning to
+So, the resulting abstract MDP is well-defined and        converge to values that indicate an optimal action
+stationary. The convergence of Q-learning then fol-       in M̄ that is suboptimal in M . This shortcoming
+lows from previous analyses under these conditions.       of policy irrelevance has been noted previously by
+If the behavior policy is not fixed, however, we have     others [14, 18]. The crux of this failure is that the
+empirically observed a chattering phenomenon sim-         combination of two such states can lead to a Q-value
+ilar to what Gordon observed [12], as illustrated in      for the aggregate state, Q0 = Q∗ (s̄, a∗ ) > Q∗ (s, a∗ ),
+Figure 1(c). The third part of the theorem comes          if the state s is aggregated with another state that
+from existing examples [14] or the one shown in Fig-      has a higher Q-value. Since Q0 corresponds to the
+ure 1(b). More details are given below.                  optimal action, it will be used to define the Q-values
+                                                          of other state-action pairs recursively through the
+   The negative learning results described above for
+                                                          Bellman equation. Hence in the one-step case, as in
+φa∗ and φπ∗ stem from similar causes, although φπ∗
+                                                          Figure 1(b), since r1 = Rsa01 > r2 = Rsa02 and hence
+introduces a pitfall beyond non-convergence: con-
+                                                          r1 + γQ0 > r2 + γQ0 , a1 is the optimal action in s0
+vergence to a suboptimal policy. We investigate
+                                                          of M̄ , but indeed is suboptimal in M . We note this
+both cases through the examples in Figure 1. First,
+                                                          concern is not limited to the one-step backup case,
+there is the possibility under φa∗ or φπ∗ that Q-
+                                                          but to all state-action pairs that receive a backup
+learning will fail to converge. An example MDP and
+                                                          from s̄ (i.e., all states with a path leading to s̄).
+abstraction, along with a sample run of Q-learning
+                                                          Also notice that suboptimal action selection is im-
+under a periodically changing policy is provided in
+                                                          possible under φa∗ because under this abstraction
+Figures 1(a and c). For φa∗ this malady can only af-
+                                                          scheme, Q0 = Q∗ (s̄, a∗ ) = Q∗ (s, a∗ ).
+flict the suboptimal actions, but in φπ∗ all state ac-
+                                                             In contrast to model-free reinforcement learn-
+tion pairs are susceptible. Removing action 1 from
+                                                          ing (e.g., Q-learning) is model-based learning (e.g.,
+the aggregate state in Figure 1(a) provides such an
+                                                          Prioritized Sweeping [19]), where the agent first
+example. Gordon [12] observed this behavior for
+                                                          builds an empirical model to approximate the MDP
+the combination of SARSA and φπ∗ . One might
+                                                          through interaction experience, and then solves this
+think that because Q-learning’s backups are off-
+                                                          model. In the context of state abstraction, the
+policy, this behavior would not be possible. How-
+                                                          agent first builds an empirical abstract model of M̄
+ever, the chattering phenomena is actually caused
+                                                          and then solves for π̄ ∗ , which will be translated back
+not by the learning algorithm, but by partial ob-
+                                                          into a ground policy. For such a class of learning
+servability introduced by the abstraction function
+                                                          algorithms, we have the following results:
+(or more generally, function approximator).
+                                                          Theorem 5 With abstractions φmodel , φQπ , φQ∗ ,
+   Suppose, using φa∗ , we combine two state-action
+                                                          and φa∗ , the empirical model built from experience
+pairs that have different Q-values (say, (s1 , a) and
+                                                          converges to the true abstract model with infinite
+(s2 , a)), making the Q-value of the abstract state:
+                                                          experience, if the weighting function w(s) is fixed.
+Q(s̄, a) = w(s1 ) · Q(s1 , a) + w(s2 ) · Q(s2 , a). If
+                                                          Furthermore, model-based reinforcement learning
+these weights are based on state occupation prob-
+                                                          converges to the optimal abstract value function
+abilities and a changing policy is used (as in our
+                                                          whose greedy policy is optimal in the ground MDP.
+example) these weights may not come from a sta-
+                                                          For φπ∗ , optimality is not guaranteed in general.
+tionary distribution, causing Q-learning to chatter.
+The cause of chatter under φπ∗ is similar, but the        Proof (sketch) If the weighting function is fixed,
+weighted sum above does not hold strictly in this         the abstract MDP is well-defined, regardless of the
+case. Thus, neither φa∗ nor φπ∗ can guarantee Q-          policy used to collect the empirical data, and the
+learning convergence unless a fixed policy is used.       empirical model converges asymptotically to the
+To our knowledge, this is the first time such be-         true abstract MDP given enough samples. There-
+havior has been catalogued for Q-learning or for an       fore, with abstractions φmodel , φQπ , φQ∗ , and φa∗ ,
+abstraction scheme guaranteed to preserve the Q-          the optimal policy in the empirical abstract MDP
+values of the optimal actions. We also note that          converges to the optimal policy in the true abstract
+our results hold not just for Q-learning, but for any     MDP, which in turn is optimal in the ground MDP
+3   A STATE ABSTRACTION THEORY                                                                                       7
+
+
+
+                     (a)                         4      (b) 0.5                          a1
+                             1
+                                                                                1        a2
+                                             1
+                       s0                                    s0
+                                             2                                  2
+                             1                                      0
+                                                 4
+
+                      (c)
+                                             Action Values at Aggregate State
+
+                                     5
+                                     4
+
+                             Value
+                                     3
+                                     2
+                                     1
+                                     0
+                                         0           10000              20000           30000
+                                                             Timestep           a1       a2
+
+
+
+
+Figure 1: (a) An example problem where φa∗ is applied but Q-learning may fail to converge. The solid
+and dashed lines represent actions 1 and 2 respectively. The corresponding graph shows the value function
+in the aggregated (middle) state for each of its actions. The policy is changed every 2000 steps from “do
+action 1 w.p. 1 − ” to “do action 2 w.p. 1 − ”. With probability  = .1, a random action is selected.
+Notice the instability (chattering) of the suboptimal action value. (b) An MDP that when subjected to
+φπ∗ yields an optimal policy for M̄ that is suboptimal in M . Both of these examples are modifications
+of the MDP investigated by Gordon [12].
+
+
+by Theorem 3. With abstraction φπ∗ , the empir-                   function values of the two candidate states to decide
+ical abstract model is inherently flawed (c.f. Fig-               whether these two states should be aggregated. No-
+ure 1(b)), and therefore, a planning algorithm may                tice that Φlc contains all the abstraction functions
+fail to find the optimal policy in the ground MDP.                defined in Definition 3. Investigating this class, we
+                                                                 come to the following conclusions:
+
+                                                                  Theorem 6 Within Φlc , φa∗ is the coarsest pos-
+3.5    Necessary Conditions for Locally sible abstraction with which it is guaranteed that
+       Checkable Abstraction            model-based reinforcement learning algorithms un-
+                                                                  der the conditions in Theorem 5, or Q-learning
+Since φa∗ is the coarsest abstraction function listed             with a fixed policy, will converge to a value func-
+in Theorem 5 as being sufficient for convergence in               tion whose greedy policy is optimal in the ground
+a model-based setting for convergence to a policy                 MDP.
+that is also optimal in the ground MDP, one may
+speculate whether the conditions defining φa∗ are                    Theorem 6 follows from the fact that if even one
+also necessary for this guarantee. This harkens back              of the optimal action’s Q-values were changed, we
+to an open question posed by McCallum [18] ask-                   can construct a malicious example in the spirit of
+ing if Utile Distinction (his instantiation of φa∗ ) is a         Figure 1(b) where the new Q-value causes a state
+necessary and sufficient condition for preserving the             in a trajectory leading to the aggregated state to
+optimal policy. In a limited sense, we find that the              promote a sub-optimal action in M to optimality
+answer is “yes”. We define the set of locally check-              in M̄ . This lower bound on the coarseness stands
+able abstractions, Φlc to be those that use only the              as necessary in this class because reasoning on the
+one-step reward and transition, the abstract class of             transition or reward function from the states being
+the one-step reachable states, and the optimal Q-                 aggregated cannot ensure optimality without also
+5   CONCLUSIONS                                                                                              8
+
+
+ensuring the preservation of the optimal action’s Q-    where a robot is wandering around five locations:
+value.                                                  lab, office, coffee room, mail room, and hallway. Its
+                                                        goal is three-fold: to tidy up the lab, to deliver cof-
+3.6    Summary                                          fee and mail to the user sitting in the office. There
+                                                        are a total of 400 ground states and the robot is
+We have introduced a general definition of state ab-    able to perform 7 actions (although not all actions
+straction and used it to derive formal properties of    are allowed in all states). It receives a −1 reward
+several natural types of abstraction. Given a num-      upon taking any single action, and is rewarded when
+ber of choices of abstractions, an important ques-      coffee and mail are delivered, and when the lab is
+tion is: which one shall we prefer? As can be seen      tidy. We use two reward functions and obtain two
+from the analysis above, more and more information      versions of this problem.
+about the problem (the MDP) is lost with coarser           The last problem is called bitflip, variations of
+and coarser abstractions. For example, φmodel gives     which have been studied under other names [11, 16].
+the opportunity to recover essentially the entire       In this problem, the agent is given a binary vec-
+model, while it is only possible to represent and       tor of 10 bits. Its goal is to reach the zero vector
+learn the optimal state-action value function with      by flipping bits that are 1’s; it is illegal to flip a
+φQ∗ . The coarser φa∗ ceases to guarantee learn-        bit that is 0. At any moment it has three actions
+ability of the value function for suboptimal actions,   to choose from: flip highest bit, flip lowest bit, and
+but does allow for planning (i.e., value iteration).    flip random bit, each of which results in an imme-
+Finally, at the very end of the chain, even opti-       diate reward of −1. If the bit to flip, say bit k, is
+mal planning is generally lost with φπ∗ , although      the highest bit (namely, all bits j > k are 0’s), it is
+an optimal policy is still representable. However,      reset to 0 and other bits are unchanged; otherwise,
+a coarser abstraction results in a larger reduction     all higher bits j ≥ k are set to 1 and lower bits i < k
+in the state space, which in turn translates into ef-   remain unchanged. The optimal action in all states
+ficiency of solving the problem. Therefore, there       is flip highest bit and the optimal value of a state is
+is a tradeoff between minimizing information loss       the negative of the number of 1’s in the state.
+and maximizing state space reduction when select-          The sizes of the coarsest abstract state space of
+ing abstractions. In the next section, we will exam-    each type of abstraction in all three problems are
+ine several examples that will shed some light on       shown in Table 2. Note that φ0 corresponds to no
+how much state space reduction could be achieved        abstraction, and the coarsest studied abstraction,
+with these abstractions.                                φπ∗ , always has a size no greater than |A|. The
+                                                        results have several implications. First, φmodel and
+4     Case Studies                                      φQ∗ do not appear to provide great opportunity for
+                                                        state-space reduction, compared to φa∗ and φπ∗ .
+Here, we consider three concrete, widely studied ex-    In the taxi domain, for example, the abstract state
+amples, and study how different types of abstrac-       space is (almost) as large as the ground state space.
+tion affect the size of abstract state space. Since it     Second, φπ∗ seems to provide the greatest op-
+is an open question how to find Qπ -irrelevance ab-     portunity of state space reduction. However, as
+stractions efficiently without enumerating all possi-   we have shown in previous theorems, φπ∗ does
+ble policies, we will not give results for φQπ below.   not guarantee that dynamic programming and Q-
+However, we should note that the size of the ab-        learning will converge to the optimal policy and/or
+stract state space with φQπ is between the sizes of     value function.
+abstract state spaces with φmodel and φQ∗ .                These two observations, when combined together,
+   The first problem is the taxi domain [6], where      and also considering Theorem 5, imply that φa∗ ab-
+a taxi is to navigate in a 5 × 5 grid world, pick up    straction may be a useful type of abstraction, which
+a passenger and then deliver her to the destination.    not only possesses guaranteed optimality but also
+There are 500 states in the ground state space and      leads to significant state space reduction.
+6 actions. The agent is charged a reward of −1 for
+each action and a final +20 for successfully deliver- 5    Conclusions
+ing the passenger to her destination.
+   Another problem is known as the coffee do- We have introduced a theory of state abstraction
+main [3], several versions of which have been studied for Markov decision processes. In particular, we
+in the literature. We consider a simplified scenario gave a formal definition of state abstraction and
+REFERENCES                                                                                                9
+
+
+ domains          φ0     φmodel   φQ∗    φa∗     φπ∗   composition. Finally, we would like to mention a
+ taxi (5 × 5)     500     500     489    381      6    connection between state abstraction and factored
+ coffee (v1)      400     296     256    124      7    representations [3] as well as state-space partition-
+ coffee (v2)      400     296     256    132      7    ing in continuous MDPs [15, 20].
+ bitflip (10)    1024     513     257    11       1
+                                                       Acknowledgements
+      Table 2: Sizes of abstract state spaces.
+                                                       We gratefully acknowledge the support of the Na-
+                                                       tional Science Foundation (IIS-0325281), DARPA
+analyzed the properties of general abstractions as IPTO (HR0011-04-1-0050), and NASA. Carlos
+well as some specific abstractions. Equipped with Diuk provided the solution to the taxi problem. We
+this theory, more insights and a better understand- also thank Nick Jong for helpful discussions on pol-
+ing are obtained. We have provided the beginnings icy irrelevance.
+of a formal foundation and classification for state
+abstraction, which we hope will spur more efforts
+in formal analysis for state abstraction and novel References
+powerful algorithms.
+                                                        [1] James C. Bean, John R. Birge, and Robert L.
+   One important problem we did not address is
+                                                            Smith. Aggregation in dynamic programming.
+the discovery problem. That is, given a model
+                                                            Operations Research, 35(2):215–220, 1987.
+or interaction experience, how does the agent dis-
+cover a specific abstraction? Efficient discovery al-   [2] Dimitri P. Bertsekas and David A. Castañon.
+gorithms exist for some abstractions such as bisimu-        Adaptive aggregation methods for infinite hori-
+lation [11]; however, it is not obvious at present how      zon dynamic programming. IEEE Transac-
+to efficiently discover some other types of abstrac-        tions on Automatic Control, 34(6):589–598,
+tion, for example, φQπ , without exhaustively com-          1989.
+puting all value functions. Givan et al. [11] voiced
+                                                        [3] Craig Boutilier, Richard Dearden, and Moisés
+such concerns regarding abstraction measures based
+                                                            Goldszmidt. Stochastic dynamic programming
+on Q-functions. However, there has been significant
+                                                            with factored representations. Artificial Intel-
+work in approximate tests for value-function-based
+                                                            ligence, 121(1–2):49–107, 2000.
+irrelevance notions [8, 18]. So, although we con-
+cede that the discovery problem for these abstrac-      [4] David Chapman and Leslie Pack Kaelbling.
+tions is an open problem, we believe this avenue            Input generalization in delayed reinforcement
+of research merits further exploration, particularly        learning: An algorithm and performance com-
+given our results regarding φQ∗ and φa∗ . We would          parisons. In IJCAI-91, pages 726–731, 1991.
+like to emphasize that discovering abstractions can
+                                                        [5] Thomas Dean, Robert Givan, and Sonia M.
+be important for solving sets of related MDPs. For
+                                                            Leach. Model reduction techniques for com-
+example, abstractions can be a form of knowledge
+                                                            puting approximately optimal solutions for
+transferred across a set of related tasks [14].
+                                                            Markov decision processes. In UAI-97, pages
+   We have only presented a set of basic results of
+                                                            124–131, 1997.
+the abstraction theory. In fact, there are several in-
+teresting extensions. First, the abstractions in Def-   [6] Thomas G. Dietterich. Hierarchical reinforce-
+inition 3 are based on exact equivalence of certain         ment learning with the MAXQ value function
+quantities. This definition is often too stringent in       decomposition. Journal of Artificial Intelli-
+practice, especially in stochastic domains and dis-         gence Research, 13:227–303, 2000.
+counted MDPs. One possible extension is to relax
+                                                        [7] Eyal Even-Dar and Yishay Mansour. Approxi-
+the exactness and allow some form of approximate
+                                                            mate equivalence of Markov decision processes.
+or soft abstraction [5, 7, 8]. Second, we can ex-
+                                                            In COLT-03, pages 581–594, 2003.
+tend the definition of abstraction using action ho-
+momorphisms [23]. Third, it is important to see         [8] Norm Ferns, Prakash Panangaden, and Doina
+how state abstraction theory could be used in hier-         Precup. Metrics for finite Markov decision pro-
+archical reinforcement learning [6, 21, 29]. Fourth,        cesses. In Proceedings of the Twentieth Confer-
+there could be theoretical interest in investigating        ence on Uncertainty in Artificial Intelligence
+operations on abstractions, such as intersection and        (UAI-04), pages 162–169, 2004.
+REFERENCES                                                                                          10
+
+
+ [9] Alison L. Gibbs and Francis Edward Su. On [21] Ronald Parr and Stuart J. Russell. Reinforce-
+     choosing and bounding probability metrics. In- ment learning with hierarchies of machines.
+     ternational Statistical Review, 70(3):419–435, In Advances of Neural Information Processing
+     2002.                                          Systems 10, pages 1043–1049, 1998.
+
+[10] Fausto Giunchiglia and Toby Walsh. A the- [22] Martin L. Puterman. Markov Decision Pro-
+     ory of abstraction. Artificial Intelligence, 57(2– cesses: Discrete Stochastic Dynamic Program-
+     3):323–390, 1992.                                  ming. Wiley-Interscience, New York, 1994.
+
+[11] Robert Givan, Thomas Dean, and Matthew [23] Balaraman Ravindran and Andrew G. Barto.
+     Greig. Equivalence notions and model mini-           SMDP homomorphisms: An algebraic ap-
+     mization in Markov decision processes. Artifi-       proach to abstraction in semi-Markov deci-
+     cial Intelligence, 147(1–2):163–223, 2003.           sion processes. In IJCAI-03, pages 1011–1016,
+                                                          2003.
+[12] Geoffrey J. Gordon. Chattering in Sarsa(λ).
+     Technical report, CMU Learning Lab, 1996.       [24] Herbert Robbins and Sutton Monro.           A
+                                                          stochastic approximation method. Annals of
+[13] Tommi Jaakkola, Michael I. Jordan, and Satin-        Mathematical Statistics, 22(3):400–407, 1951.
+     der P. Singh. On the convergence of stochas-
+     tic iterative dynamic programming algorithms. [25] David F. Rogers, Robert D. Plante, Richard T.
+     Neural Computation, 6(6):1185–1201, 1994.            Wong, and James R. Evans. Aggregation and
+                                                          disaggregation techniques and methodology in
+[14] Nicholas K. Jong and Peter Stone. State ab-          optimization. Operations Research, 39:553–
+     straction discovery from irrelevant state vari-      582, 1991.
+     ables. In IJCAI-05, 2005.
+                                                     [26] Richard S. Sutton. Generalization in rein-
+[15] Lihong Li and Michael L. Littman. Lazy               forcement learning: Successful examples using
+     approximation for solving continuous finite-         sparse coarse coding. In Advances in Neural
+     horizon MDPs. In AAAI-05, pages 1175–1180,           Information Processing Systems 8, pages 1038–
+     2005.                                                1044, 1996.
+[16] Michael L. Littman, Carlos Diuk, and Alexan- [27] Richard S. Sutton and Andrew G. Barto. Re-
+     der L. Strehl. A hierarchical approach to ef-       inforcement Learning: An Introduction. MIT
+     ficient reinforcement learning. In Proceedings      Press, Cambridge, MA, March 1998.
+     of the ICML-05 Workshop on Rich Represen-
+     tations for Reinforcement Learning, 2005.      [28] Richard S. Sutton, David McAllester, Satin-
+                                                         der P. Singh, and Yishay Mansour. Policy gra-
+[17] Michael L. Littman and Csaba Szepesvári.           dient methods for reinforcement learning with
+     A generalized reinforcement-learning model:         function approximation. In Advances in Neu-
+     Convergence and applications. In ICML-96,           ral Information Processing Systems 12, pages
+     pages 310–318, 1996.                                1057–1063, 2000.
+[18] Andrew McCallum.         Reinforcement Learn- [29] Richard S. Sutton, Doina Precup, and Satin-
+     ing with Selective Perception and Hidden           der P. Singh. Between MDPs and semi-MDPs:
+     State. PhD thesis, University of Rochester,        A framework for temporal abstraction in re-
+     Rochester, NY, 1995.                               inforcement learning. Artificial Intelligence,
+                                                        112(1–2):181–211, 1999.
+[19] Andrew W. Moore and Christopher G. Atke-
+     son.    Prioritized sweeping: Reinforcement [30] Benjamin van Roy. Performance loss bounds
+     learning with less data and less time. Machine     for approximate value iteration with state ag-
+     Learning, 13(1):103–130, 1993.                     gregation. Mathematics of Operations Re-
+                                                        search. To appear.
+[20] Andrew W. Moore and Christopher G. Atke-
+     son. The parti-game algorithm for variable [31] Christopher J.C.H. Watkins. Learning from
+     resolution reinforcement learning in multidi-      Delayed Rewards. PhD thesis, King’s College,
+     mensional state-spaces. Machine Learning,          University of Cambridge, UK, 1989.
+     21(3):199–233, 1995.
+

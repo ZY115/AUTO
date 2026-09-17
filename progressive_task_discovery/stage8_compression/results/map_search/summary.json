@@ -1,0 +1,350 @@
+{
+  "candidates": 1080,
+  "layouts": 360,
+  "selected": [
+    {
+      "target": 1.2,
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_1.2.json",
+      "n": 3,
+      "instances": 1,
+      "m": 1,
+      "suffix": [
+        3
+      ],
+      "starts": [
+        65,
+        68
+      ],
+      "optimal_histories": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          1,
+          0,
+          3
+        ]
+      ],
+      "optimal_lengths": [
+        14,
+        15
+      ],
+      "orders": 2,
+      "history_states": 9,
+      "task_states": 7,
+      "compression": 1.2857142857142858,
+      "history_nonterminal": 7,
+      "task_nonterminal": 6
+    },
+    {
+      "target": 2,
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_2.json",
+      "n": 4,
+      "instances": 6,
+      "m": 1,
+      "suffix": [
+        4
+      ],
+      "starts": [
+        65,
+        60,
+        42,
+        48
+      ],
+      "optimal_histories": [
+        [
+          0,
+          3,
+          2,
+          1,
+          4
+        ],
+        [
+          1,
+          2,
+          3,
+          0,
+          4
+        ],
+        [
+          2,
+          1,
+          3,
+          0,
+          4
+        ],
+        [
+          3,
+          0,
+          2,
+          1,
+          4
+        ]
+      ],
+      "optimal_lengths": [
+        16,
+        15,
+        17,
+        17
+      ],
+      "orders": 4,
+      "history_states": 21,
+      "task_states": 11,
+      "compression": 1.9090909090909092,
+      "history_nonterminal": 17,
+      "task_nonterminal": 10
+    },
+    {
+      "target": 3,
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_3.json",
+      "n": 4,
+      "instances": 8,
+      "m": 4,
+      "suffix": [
+        4,
+        5,
+        6,
+        4
+      ],
+      "starts": [
+        55,
+        12,
+        73,
+        31,
+        76,
+        15,
+        62
+      ],
+      "optimal_histories": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          1,
+          3,
+          2,
+          0,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          2,
+          1,
+          3,
+          0,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          2,
+          3,
+          1,
+          0,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          3,
+          1,
+          0,
+          2,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          3,
+          1,
+          2,
+          0,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          3,
+          2,
+          0,
+          1,
+          4,
+          5,
+          6,
+          4
+        ]
+      ],
+      "optimal_lengths": [
+        40,
+        41,
+        40,
+        40,
+        41,
+        42,
+        39
+      ],
+      "orders": 7,
+      "history_states": 53,
+      "task_states": 18,
+      "compression": 2.9444444444444446,
+      "history_nonterminal": 46,
+      "task_nonterminal": 17
+    },
+    {
+      "target": 4,
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/map_search/layout_4.json",
+      "n": 4,
+      "instances": 6,
+      "m": 4,
+      "suffix": [
+        4,
+        5,
+        6,
+        4
+      ],
+      "starts": [
+        79,
+        65,
+        73,
+        41,
+        16,
+        4,
+        0,
+        11,
+        18
+      ],
+      "optimal_histories": [
+        [
+          0,
+          2,
+          1,
+          3,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          0,
+          3,
+          1,
+          2,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          1,
+          2,
+          0,
+          3,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          1,
+          3,
+          0,
+          2,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          1,
+          3,
+          2,
+          0,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          2,
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          2,
+          3,
+          1,
+          0,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          3,
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          4
+        ],
+        [
+          3,
+          1,
+          0,
+          2,
+          4,
+          5,
+          6,
+          4
+        ]
+      ],
+      "optimal_lengths": [
+        42,
+        42,
+        42,
+        40,
+        43,
+        43,
+        45,
+        44,
+        43
+      ],
+      "orders": 9,
+      "history_states": 67,
+      "task_states": 18,
+      "compression": 3.7222222222222223,
+      "history_nonterminal": 58,
+      "task_nonterminal": 17
+    }
+  ],
+  "unreached_bins": [
+    6
+  ],
+  "max_compression": 4.681818181818182,
+  "seconds": 1.0870781250000001,
+  "source_sha256": "5bfd7c562caf8dc5380db237477fdf51dc28ebd254a8c8cfa228c0813e74ecb5"
+}

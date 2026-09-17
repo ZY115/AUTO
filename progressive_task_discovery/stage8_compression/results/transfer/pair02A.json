@@ -1,0 +1,169 @@
+{
+  "pair_id": "pair02",
+  "n": 4,
+  "d": 3,
+  "m": 1,
+  "m2": 4,
+  "pair": [
+    0,
+    1
+  ],
+  "L": 2,
+  "arm": 8,
+  "mapA": {
+    "seed": 79954,
+    "tag": "pair02A",
+    "orders": 4,
+    "cells": 31,
+    "horizon": 54,
+    "lengths": [
+      26,
+      26,
+      27,
+      23
+    ],
+    "history_states": 40,
+    "minimal_states": 22
+  },
+  "mapB": {
+    "seed": 79955,
+    "tag": "pair02B",
+    "orders": 6,
+    "cells": 31,
+    "horizon": 62,
+    "lengths": [
+      27,
+      17,
+      25,
+      18,
+      31,
+      20
+    ],
+    "history_states": 53,
+    "minimal_states": 25
+  },
+  "seed": 79954,
+  "tag": "pair02A",
+  "target": "pair02A",
+  "horizon": 54,
+  "lengths": [
+    26,
+    26,
+    27,
+    23
+  ],
+  "starts": [
+    14,
+    5,
+    28,
+    2
+  ],
+  "tail_lengths": [
+    1,
+    4
+  ],
+  "fatal": false,
+  "failing_states": 0,
+  "history_states": 40,
+  "minimal_states": 22,
+  "denominator": "window4",
+  "denominator_states": 31,
+  "min_sufficient_window": 4,
+  "honest_ratio": 1.4090909090909092,
+  "orders": 4,
+  "feature_sizes": {
+    "count": 12,
+    "bag": 19,
+    "window1": 22,
+    "window2": 25,
+    "window3": 28,
+    "window4": 31,
+    "window5": 33,
+    "window6": 35,
+    "window7": 37,
+    "window8": 39,
+    "history": 40
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": false,
+    "window4": true,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "window8": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      2,
+      3,
+      1,
+      4,
+      5,
+      6,
+      4
+    ],
+    [
+      2,
+      3,
+      1,
+      0,
+      4,
+      5,
+      6,
+      5,
+      6,
+      4,
+      5
+    ],
+    [
+      3,
+      1,
+      0,
+      2,
+      4,
+      5,
+      6,
+      5,
+      6,
+      4,
+      5
+    ],
+    [
+      3,
+      1,
+      2,
+      0,
+      4,
+      5,
+      6,
+      5,
+      6,
+      4,
+      5
+    ]
+  ],
+  "task_states": 31,
+  "minimal_total": 30,
+  "bridge": [
+    4,
+    5,
+    6
+  ],
+  "tails": [
+    [
+      4
+    ],
+    [
+      5,
+      6,
+      4,
+      5
+    ]
+  ]
+}

@@ -1,0 +1,100 @@
+[
+  {
+    "rung": "rung_1.8",
+    "method": "history",
+    "shape": "none",
+    "seed": 800,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  },
+  {
+    "rung": "rung_1.8",
+    "method": "merged",
+    "shape": "none",
+    "seed": 800,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  },
+  {
+    "rung": "rung_1.8",
+    "method": "merged",
+    "shape": "frontier",
+    "seed": 800,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  },
+  {
+    "rung": "rung_2.6",
+    "method": "history",
+    "shape": "none",
+    "seed": 700,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  },
+  {
+    "rung": "rung_2.6",
+    "method": "history",
+    "shape": "count",
+    "seed": 700,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  },
+  {
+    "rung": "rung_2.6",
+    "method": "history",
+    "shape": "frontier",
+    "seed": 700,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  },
+  {
+    "rung": "rung_2.6",
+    "method": "history",
+    "shape": "oracle",
+    "seed": 700,
+    "checks": {
+      "trace_hash": true,
+      "checkpoints": true,
+      "first90": true,
+      "first_success": true,
+      "auc": true,
+      "merge_precision": true
+    }
+  }
+]

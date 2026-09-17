@@ -1,0 +1,288 @@
+{
+  "name": "bridge_development",
+  "defaults": {
+    "budget": 80000,
+    "every": 1000,
+    "hfactor": 20,
+    "bridge": 1
+  },
+  "conditions": [
+    {
+      "name": "balanced",
+      "args": {}
+    }
+  ],
+  "lengths": [
+    4,
+    8,
+    12
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "variants": [
+    {
+      "name": "count_replay_e0.005",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "count_replay_e0.02",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "count_replay_e0.05",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "count_replay_e0.2",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "history_replay_e0.005",
+      "args": {
+        "method": "history_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "history_replay_e0.02",
+      "args": {
+        "method": "history_replay",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "history_replay_e0.05",
+      "args": {
+        "method": "history_replay",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "history_replay_e0.2",
+      "args": {
+        "method": "history_replay",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "hand_replay_e0.005",
+      "args": {
+        "method": "hand_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "hand_replay_e0.02",
+      "args": {
+        "method": "hand_replay",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "hand_replay_e0.05",
+      "args": {
+        "method": "hand_replay",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "hand_replay_e0.2",
+      "args": {
+        "method": "hand_replay",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "learned_replay_e0.005",
+      "args": {
+        "method": "learned_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "learned_replay_e0.02",
+      "args": {
+        "method": "learned_replay",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "learned_replay_e0.05",
+      "args": {
+        "method": "learned_replay",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "learned_replay_e0.2",
+      "args": {
+        "method": "learned_replay",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "delayed_skill_e0.005",
+      "args": {
+        "method": "delayed_skill",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "delayed_skill_e0.02",
+      "args": {
+        "method": "delayed_skill",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "delayed_skill_e0.05",
+      "args": {
+        "method": "delayed_skill",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "delayed_skill_e0.2",
+      "args": {
+        "method": "delayed_skill",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "immediate_skill_e0.005",
+      "args": {
+        "method": "immediate_skill",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "immediate_skill_e0.02",
+      "args": {
+        "method": "immediate_skill",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "immediate_skill_e0.05",
+      "args": {
+        "method": "immediate_skill",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "immediate_skill_e0.2",
+      "args": {
+        "method": "immediate_skill",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "oracle_skill_e0.005",
+      "args": {
+        "method": "oracle_skill",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "oracle_skill_e0.02",
+      "args": {
+        "method": "oracle_skill",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "oracle_skill_e0.05",
+      "args": {
+        "method": "oracle_skill",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "oracle_skill_e0.2",
+      "args": {
+        "method": "oracle_skill",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "history_skill_e0.005",
+      "args": {
+        "method": "history_skill",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "history_skill_e0.02",
+      "args": {
+        "method": "history_skill",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "history_skill_e0.05",
+      "args": {
+        "method": "history_skill",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "history_skill_e0.2",
+      "args": {
+        "method": "history_skill",
+        "epsilon": 0.2
+      }
+    },
+    {
+      "name": "last_event_replay_e0.005",
+      "args": {
+        "method": "last_event_replay",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "last_event_replay_e0.02",
+      "args": {
+        "method": "last_event_replay",
+        "epsilon": 0.02
+      }
+    },
+    {
+      "name": "last_event_replay_e0.05",
+      "args": {
+        "method": "last_event_replay",
+        "epsilon": 0.05
+      }
+    },
+    {
+      "name": "last_event_replay_e0.2",
+      "args": {
+        "method": "last_event_replay",
+        "epsilon": 0.2
+      }
+    }
+  ]
+}

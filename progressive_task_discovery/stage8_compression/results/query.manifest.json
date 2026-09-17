@@ -1,0 +1,29 @@
+{
+  "runner": "src/run_query.py",
+  "families": 24,
+  "levels": [
+    40,
+    80,
+    160,
+    320
+  ],
+  "policies": [
+    "arrival",
+    "random",
+    "decision",
+    "novel"
+  ],
+  "fallbacks": [
+    "own",
+    "class"
+  ],
+  "rate": 0.5,
+  "merge_rule": "edsm",
+  "seeds": 6,
+  "seed0": 9800,
+  "budget": 200000,
+  "runs": 4608,
+  "source_sha256": "660a6645e62d7f8f1ab4356a4fdb4db0d3310da74098b42fd205f24cb139fe42",
+  "data_sha256": "6cb96c2281f35f1b329b227030d7ca19b811c7ae19049ae53de6c6d734eb2b0d",
+  "written": "2026-09-10"
+}

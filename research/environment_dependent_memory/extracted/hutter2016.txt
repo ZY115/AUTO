@@ -1,0 +1,1637 @@
+          Extreme State Aggregation
+       beyond Markov Decision Processes
+
+                            Marcus Hutter
+                  Research School of Computer Science
+                     Australian National University
+                    Canberra, ACT, 0200, Australia
+                        http://www.hutter1.net/
+
+                            22 February 2016
+                                  Abstract
+    We consider a Reinforcement Learning setup where an agent interacts
+with an environment in observation-reward-action cycles without any (esp.
+MDP) assumptions on the environment. State aggregation and more generally
+feature reinforcement learning is concerned with mapping histories/raw-states
+to reduced/aggregated states. The idea behind both is that the resulting
+reduced process (approximately) forms a small stationary finite-state MDP,
+which can then be efficiently solved or learnt. We considerably generalize
+existing aggregation results by showing that even if the reduced process is not
+an MDP, the (q-)value functions and (optimal) policies of an associated MDP
+with same state-space size solve the original problem, as long as the solution
+can approximately be represented as a function of the reduced states. This
+implies an upper bound on the required state space size that holds uniformly
+for all RL problems. It may also explain why RL algorithms designed for
+MDPs sometimes perform well beyond MDPs.
+                                 Contents
+1 Introduction                                                               2
+2 Feature Markov Decision Processes (ΦMDP)                                   3
+3 Exact Aggregation for Pφ ∈ MDP                                             6
+4 Approximate Aggregation for General P                                      8
+5 Approximate Aggregation Results                                           10
+6 Extreme Aggregation                                                       19
+7 Reinforcement Learning                                                    21
+8 Feature Reinforcement Learning                                            24
+9 Action Permutation Instead of Policy Condition                            27
+10 Discussion                                                               27
+References                                                                  29
+A List of Notation                                                          32
+
+                                 Keywords
+
+state aggregation, reinforcement learning, non-MDP.
+
+
+                                      1
+1     Introduction
+
+
+
+In Reinforcement Learning (RL) [SB98], an agent Π takes actions in some environ-
+ment P and observes its consequences and is rewarded for them. A well-understood
+and efficiently solvable [Put94] and efficiently learnable [SLL09, LH14b] case is where
+the environment is (modelled as) a finite-state stationary Markov Decision Process
+(MDP). Unfortunately most interesting real-world problems P are neither finite-
+state, nor stationary, nor Markov. One way of dealing with this mismatch is to
+somehow transform the real-world problem into a small MDP: Feature Reinforce-
+ment Learning (FRL) [Hut09c] and U-tree [McC96] deal with the case of arbitrary
+unknown environments, while state aggregation assumes the environment is a large
+known stationary MDP [GDG03, EDM03, FPP04]. The former maps histories into
+states (Section 2), the latter groups raw states into aggregated states.
+
+
+     Here we follow the FRL approach and terminology, since it is arguably most gen-
+eral: It subsumes the cases where the original process P is an MDP, a k-order MDP,
+a POMDP, and others (Section 3). Thinking in terms of histories also naturally
+stifles any temptation of a naive frequency estimate of P (no history ever repeats).
+Finally we find the history vs state terminologically somewhat neater than raw state
+vs aggregated state.
+
+
+    More importantly, we consider maps φ from histories to states for which the
+reduced process Pφ is not (even approximately) an MDP (Section 4). At first this
+seems to defeat the original purpose, namely of reducing P to a well-understood and
+efficiently solvable problem class, namely small MDPs. The main novel contribution
+of this paper is to show that there is still an associated finite-state stationary MDP
+p whose solution (approximately) solves the original problem P , as long as the
+solution can still be represented (Section 5). Indeed, we provide an upper bound
+on the required state space size that holds uniformly for all P (Section 6). While
+these are interesting theoretical insights, it is a-priori not clear whether they could
+by utilized to design (better) RL algorithms. We also show how to learn p from
+experience (Section 7), and sketch an overall learning algorithm and regret/PAC
+analysis based on our main theorems (Section 8). We briefly discuss how to relax
+one of the conditions in our main theorems by permuting actions (Section 9). We
+conclude with an outlook on future work and open problems (Section 10). A list of
+notation can be found in Appendix A.
+
+
+    The diagram below depicts the dependencies between our results:
+
+                                          2
+                                                                         
+    Theorem 2  - Theorem 8   - Theorem 11   Theorem 9 
+    [φMDP∗]      [φQ∗]
+                           Y 
+                           H
+                                [Extreme φ]  [φV ∗]   
+           6                    6      HH                               6
+                                    H                                    
+                                          H
+    Theorem 1   Lemma 7                Theorem 5   Theorem 6
+    [φMDPπ]   [Qπ∗]                  [φQπ]       [φV π]
+                                                 Y 
+                                                 H         HH
+                                                              
+                                                                       6
+                                                      H                  
+                                                              H
+    Bnds(10&12)      Theorem 12        Lemma 3               - Lemma 4
+    |v-V
+        | ≤ |q-Q|  [p-estimation]
+                                   p-rel.]
+                                      [BP                     |qhQi| ≤ γ|vV | 
+
+
+
+2    Feature Markov Decision Processes (ΦMDP)
+This section formally describes the setup of [Hut09c]. It consists of the agent-
+environment framework and maps φ from observation-reward-action histories to
+MDP states. This arrangement is called “Feature MDP” or short ΦMDP. We use
+upper-case letters P , Q, V , and Π for the Probability, (Q-)Value, and Policy of the
+original (agent-environment interactive) Process, and lower-case letters p, q, v, and
+π for the probability, (q-)value, and policy of the (reduced/aggregated) MDP.
+Agent-environment setup [Hut09c]. We start with the standard agent-
+environment setup [RN10] in which an agent Π interacts with an environment P .
+The agent can choose from actions a∈A and the environment provides observations
+o ∈ O and real-valued rewards r ∈ R ⊆ [0;1] to the agent. This happens in cycles
+t = 1,2,3,...: At time t, after observing ot and receiving reward rt , the agent takes
+action at based on history
+
+        ht := o1 r1 a1 ...ot−1 rt−1 at−1 ot rt ∈ Ht := (O × R × A)t−1 × O × R
+
+Then the next cycle t+1 starts. The agent’s objective is to maximize its long-term
+reward. To avoid integrals and densities, we assume spaces O and R are finite. They
+may be huge, so this is not really restrictive. Indeed, the ΦMDP framework has been
+specifically developed for huge observation spaces. Generalization to continuous O
+and R is routine [Hut09a]. Furthermore we assume that A is finite and smallish,
+which is restrictive. Potential extensions to continuous A are discussed in Section 10.
+   The agent and environment may be viewed as a pair of interlocking functions of
+the history H := (O×R×A)∗ ×O×R ∪ {}, where  is the empty history.
+
+     Env. P : H × A ; O × R,     P (ot+1 rt+1 |ht at ),             observation
+    Agent Π : H ; A,       Π(at |ht ) or at = Π(ht ),            ? ? reward
+                                                                                   
+                                                               Agent Π        Env.P
+                                                                       action   6
+
+where ; indicates that mappings → are in general stochastic. We make no (sta-
+tionarity or Markov or other) assumption on environment P . For most parts, en-
+vironment P is assumed to be fixed, so dependencies on P will be suppressed. For
+
+                                          3
+convenience and since optimal policies can be chosen to be deterministic (see Eq.(4)),
+we consider deterministic policies at = Π(ht ) only.
+Value functions, optimal Policies, and history Bellman equations. We
+measure the performance of a policy Π in terms of the P -expected γ-discounted
+reward sum (0 ≤ γ < 1), called (Q-)Value of Policy Π at history ht (and action at )
+                                                                         X∞
+  Π         Π                   Π            Π
+V (ht ) := E [Rt |ht ] and Q (ht , at ) := E [Rt |ht at ], where Rt :=       γ τ −t rτ
+                                                                               τ =t+1
+The optimal Policy and (Q-)Value functions are
+
+                                V ∗ (ht ) := max V Π (ht )
+                                                  Π
+                            Q∗ (ht , at ) := max QΠ (ht , at )                          (1)
+                                                  Π
+                                     Π∗ :∈ arg max V Π ()
+                                                      Π
+
+The maximum over all policies Π always exists [LH14a] but may not be unique, in
+which case argmax denotes the set of optimal policies and Π∗ denotes a representa-
+tive or the whole set of optimal policies. Despite being history-based we can write
+down (pseudo)recursive Bellman (optimality) equations for the (optimal) (Q-)Values
+[Hut05, Sec.4.2]:
+                               X
+               QΠ (ht , at ) =    P (ot+1 rt+1 |ht at )[rt+1 + γV Π (ht+1 )]    (2)
+                               ot+1 rt+1
+                    Π               Π
+                  V (ht ) = Q (ht , Π(ht ))
+                                X
+                Q∗ (ht , at ) =   P (ot+1 rt+1 |ht at )[rt+1 + γV ∗ (ht+1 )]            (3)
+                               ot+1 rt+1
+                   V ∗ (ht ) = max Q∗ (ht , at )
+                                 at ∈A
+
+
+                   Π∗ (ht ) ∈ arg max Q∗ (ht , at )                                     (4)
+                                      at ∈A
+
+Unlike their classical state-space cousins (see below), they are not self-consistency
+equations: The r.h.s. refers to a longer history ht+1 which is always different from the
+history ht on the l.h.s, which precludes any learning algorithm based on estimating
+the frequency of state/history visits. Still the recursions will be convenient for the
+mathematical development.
+From histories to states (φ). The space of histories is huge and unwieldy and no
+history ever repeats. Standard ways of dealing with this are to define a similarity
+metric on histories [McC96] or to aggregate histories [Hut09c]. We pursue the latter
+via a feature map φ : H → S which reduces histories ht ∈ H to states st := φ(ht ) ∈ S.
+W.l.g. we assume that φ is surjective. We also assume that state space S is finite;
+indeed we are interested in small S. This corresponds and indeed is equivalent to a
+partitioning of histories {φ−1 (s):s∈S}. Classical state aggregation usually uses the
+
+                                              4
+partitioning view [GDG03, Ort07], but the map notation is a bit more convenient
+here.
+    The state st is supposed to summarize all relevant information in history ht ,
+which lower bounds the size of S. We pass from the complete history o1 r1 a1 ...on rn
+to a ‘reduced’ history s1 r1 a1 ...sn rn . Traditionally, ‘relevant’ means that the future
+is predictable from st (and at ) alone, or technically that the reduced history forms
+a Markov decision process. This is precisely the condition this paper intends to lift
+(later).
+
+From histories to MDPs. The probability of the successor states and rewards
+can be obtained by marginalization
+                                           X
+                 Pφ (st+1 rt+1 |ht at ) :=   P (õt+1 rt+1 |ht at )     (5)
+                                              õt+1 :φ(ht at õt+1 rt+1 )=st+1
+
+
+Note that rewards (and actions) of the reduced process Pφ are the same as rewards
+(and actions) of the original process. The reduced process Pφ is a Markov Decision
+Process, or Markov for short, if Pφ only depends on ht through st , i.e. is the same
+for all histories mapped to the same state. Formally
+
+   Pφ ∈ MDP       :⇐⇒      ∃p : Pφ (st+1 rt+1 |h̃t at ) = p(st+1 rt+1 |st at ) ∀φ(h̃t ) = st   (6)
+
+Here and elsewhere a quantifier such as ∀φ(h̃t ) = st shall mean: for all values of all
+involved variables consistent with the constraint φ(h̃t )=st . The MDP Pφ is assumed
+to be stationary, i.e. independent of t; another condition to be lifted later. Condition
+(6) is essentially the stochastic bisimulation condition generalized to histories and
+being somewhat more restrictive regarding rewards: It is a condition on the reward
+distribution, while [GDG03] constrains its expectation only. This could easily be
+rectified but is besides the point of this paper. The bisimulation metric [FPP04] is
+an approximate version of (6), which measures the deviation of Pφ from being an
+MDP.
+    Many problems P can be reduced (approximately) to stationary MDPs [Hut09c]:
+Full-information games such as chess with a static opponent are already Markov,
+classical physics is approximately 2nd-order Markov, (conditional) i.i.d. processes
+such as Bandits have counting sufficient statistics, and for a POMDP planning prob-
+lem, the belief vector is Markov.
+
+Markov decision processes (MDP). We have used and continue to use upper-
+case letters V , Q, Π for the general process P . We will use lower-case letters v, q,
+π for (stationary) MDPs p. We use s and a for the current state and action, and
+s0 and r0 for successor state and reward. Consider a stationary finite-state MDP
+p : S ×A ; S ×R and stationary deterministic policy π : S → A. Only in Section 3
+will this p be given by (6), but in general p will be different from (6). In any case,
+the p-expected γ-discounted reward sum, called (q-)value of (optimal) policy π (∗) in
+
+                                               5
+MDP p, are given by the Bellman (optimality) equations
+                  X
+    q π (s, a) =      p(s0 r0 |sa)[r0 +γv π (s0 )] and v π (s) = q π (s, π(s))                   (7)
+                       s0 r 0
+                      X
+       q ∗ (s, a) =             p(s0 r0 |sa)[r0 +γv ∗ (s0 )] and v ∗ (s) = max q ∗ (s, a)        (8)
+                                                                             a
+                       s0 r 0
+          π ∗ (s) ∈ arg max q ∗ (s, a). Note: v π (s) ≤ v ∗ (s), q π (s, a) ≤ q ∗ (s, a)         (9)
+                                  a
+
+Using p(s0 r0 |sa) = p(r0 |sas0 )p(s0 |sa) we could also rewrite (7) and (8) in terms of
+transition matrix p(s0 |sa) and expected reward E[r0 |sa] [SB98].
+More notation. While our equations often assume or imply s = st , a = at , s0 =
+st+1 , r0 = rt+1 , (and ht+1 = ht ao0 r0 ) for some t, technically s,a,s0 ,r0 are different
+variables from all variables in history hn = o1 r1 a1 ...ot rt at ot+1 rt+1 ...an rn . Less prone
+to confusion are o = ot , o0 = ot+1 , h = ht , h0 = hao0 r0 .
+    We call a function f (h), piecewise constant or φ-uniform iff f (h) = f (h̃) for all
+φ(h)=φ(h̃). Here and elsewhere ∀φ(h)=φ(h̃) is short for ∀h,h̃:φ(h)=φ(h̃). Similarly
+∀s = φ(h) is short for ∀s,h : s = φ(h). Etc.
+    The Iverson bracket, [[R]] := 1 if R=true and [[R]] := 0 if R=false, denotes the
+indicator function. Throughout, ε,δ ≥ 0 denote approximation accuracy. Note that
+this includes the exact = 0 case.
+    We now show that if P reduces via φ to an MDP p, the solution of these equations
+yields (Q-)Values and optimal Policy of the original process P . This is not surprising
+and are just history-based versions of classical state-aggregation results [GDG03].
+We state and prove them here, since notation and setup are somewhat different, and
+proof ideas and fragments will be reused later.
+
+
+3     Exact Aggregation for Pφ ∈ MDP
+The following two theorems show that if φ reduces P to a stationary MDP via (5)
+and (6), then V and Q (and Π∗ ) essentially coincide with v and q (and π ∗ ), where
+policy Π (Π∗ ) has to be assumed (will be shown) constant within each partition
+φ−1 (s). This allows to efficiently solve for (and learn in the case of unknown P ) V
+and Q (and Π∗ ) in time polynomial in S by solving/learning (7) (or (8) and (9))
+instead of (2) (or (3) and (4)).
+
+Theorem 1 (φMDPπ) Let φ be a reduction such that Pφ ∈MDP reduces to MDP
+p defined in (6), and let Π be some policy such that Π(h) =Π(h̃) for all φ(h) = φ(h̃).
+Then for all a and h it holds:
+
+V Π (h) = v π (s)   and         QΠ (h, a) = q π (s, a),   where π(s) := Π(h)        and     s = φ(h)
+
+Note that π(s) is well-defined, since φ is surjective and Π(h) is the same for all h ∈
+φ−1 (s). The standard proof considers an m-horizon truncated MDP and induction
+
+                                                     6
+on m and m → ∞. Besides the adaptation to histories, the proof below is a slight
+variation that avoids such truncation and limit. This style will be useful later. We
+explain all steps in detail here, since variations will be utilized later.
+Proof. Let δ := sup|q π (s,a)−QΠ (h,a)|. Using a0 := π(s0 ) = Π(h0 ) for s0 = φ(h0 ) and
+                   s=φ(h),a
+(2) and (7) lets us bound the value difference
+
+            |v π (s0 )−V Π (h0 )| = |q π (s0 , a0 )−QΠ (h0 , a0 )| ≤ δ ∀s0 = φ(h0 )                          (10)
+
+For any a and h, this implies
+                     (a)   X
+       QΠ (h, a) =                     P (o0 r0 |ha)[r0 + γV Π (h0 )]                      [h0 = hao0 r0 ]
+                              o0 r 0
+                     (b)   X             X
+                     ≶                              P (o0 r0 |ha)[r0 +γ(v π (s0 ) ± δ)]                      (11)
+                              s0 r0 o0 :φ(h0 )=s0
+                     (c)   X
+                     =                 Pφ (s0 r0 |ha)[r0 +γv π (s0 )] ± γδ
+                              s0 r 0
+                     (d)   X
+                     =                 p(s0 r0 |sa)[r0 +γv π (s0 )] ± γδ                    [s := φ(h)]
+                              s0 r 0
+                     (e)
+                     = q π (s, a) ± γδ
+
+(a) is just (2). In (b) we sum over all o0 by first summing over all o0 such that
+φ(hao0 r0 ) = s0 and then summing over all s0 . We have also upper/lower bounded
+V Π (h0 ) via (10). (c) is the definition (5) of Pφ and pulls out γδ using that probability
+Pφ sums to 1. (d) is the definition (6) of p. (e) is simply (7). The chain (11a-e)
+holds for all s = φ(h) and a, hence
+
+                    δ = sup |q π (s, a)−QΠ (h, a)| ≤ γδ                        ⇒      δ≤0
+                           s=φ(h),a
+
+
+Hence v π (s) = V Π (h) and q π (s,a) = QΠ (h,a) for all s = φ(h) and a.
+
+
+Theorem 2 (φMDP∗) Let φ be a reduction such that Pφ ∈ MDP reduces to MDP
+p defined in (6), Then for all a and h it holds:
+
+Π∗ (h) = π ∗ (s)    and       V ∗ (h) = v ∗ (s)          and     Q∗ (h, a) = q ∗ (s, a),      where s = φ(h)
+
+     In case optimal policies/actions are not unique, Π∗ (h)=π ∗ (s) means that the set
+π ∗ (s) of optimal actions in state s=φ(h) coincides with the set of optimal actions in
+history h. The core of the proof follows the same steps (11a-e) as for the previous
+theorem, but the rest is slightly different. Additionally we have to show that some
+Π∗ is piecewise constant (in Theorem 1 we assumed Π was).
+
+                                                            7
+Proof. Let δ := sup|q ∗ (s,a)−Q∗ (h,a)|. We can bound the value difference
+                s=φ(h),a
+
+                               (a)
+           v ∗ (s) − V ∗ (h)   =     max q ∗ (s, a) − max Q∗ (h, a)                    (12)
+                                         a            a
+                               (b)                              (c)
+                               ≤ max q ∗ (s, a) − Q∗ (h, a) ≤ δ       ∀s = φ(h)
+                                     a
+
+(a) follows from the definitions (3) and (8). (b) follows from the following general
+elementary frequently used bound
+
+                       max f (x) − max g(x) ≤ max f (x) − g(x)                         (13)
+                           x             x             x
+
+(c) follows from the definition of δ.
+    One now can show that Q∗ (h,a) ≶ q ∗ (s,a)±γδ for s = φ(h) by following exactly
+the same steps as (11a-e) just with Π and π replaced by ∗ and using (12) instead
+of (10), and using the Bellman optimality equations (3) and (8) instead of the
+Bellman equations (2) and (7). Also as before, this implies δ ≤ γδ, hence δ ≤ 0,
+hence v ∗ (s) = V ∗ (h) and q ∗ (s,a) = Q∗ (h,a) for all s = φ(h) and a. Finally, the latter
+implies π ∗ (s) = argmaxa q ∗ (s,a) = argmaxa Q∗ (h,a) = Π∗ (h).
+
+   Approximate aggregation results if Pφ is approximately MDP can also be derived
+[EDM03]. The core results in the next section show that aggregation is possible far
+beyond Pφ being approximately MDP.
+
+
+4     Approximate Aggregation for General P
+This section prepares for the main technical contribution of the paper in the next
+section. The key quantity to relate original and reduced Bellman equations is a form
+of stochastic inverse of φ, whose choice and analysis will be deferred to Section 7.
+Dispersion probability B. Let Bφ : S ×A ; H be a probability distribution on
+finite histories for each state-action pair such that Bφ (h|sa) = 0 if s 6= φ(h). B ≡ Bφ
+may be viewed as a stochastic inverse of φ that assigns non-zero probability only to
+h ∈ φ−1 (s). The formal constraints we pose on B are
+                                     X             X
+              B(h|sa) ≥ 0 and           B(h|sa) =      B(h|sa) = 1 ∀s, a            (14)
+                                         h∈H         h:φ(h)=s
+
+
+This implicitly requires φ to be surjective, i.e. φ(H) = S, which can always be made
+true by defining S := Sφ := φ(H). Note that the sum is taken over histories of
+any/mixed length. In general, B is a somewhat weird distribution, since it assigns
+probabilities to past and future observations given the current state and action. The
+interpretation and choice of B does not need to concern us, except later when we
+want to learn p.
+
+                                               8
+   The MDP requirement (6) will be replaced by the following definition:
+                       X
+       p(s0 r0 |sa) :=   Pφ (s0 r0 |ha)B(h|sa)                                                    (15)
+                           h∈H
+                           X∞ X
+                      ≡                     Pφ (st+1 = s0 , rt+1 = r0 |ht , at = a)B(ht |sa)
+                            t=1 ht ∈Ht
+
+That is, the finite-state stationary MDP p is built from feature map φ, dispersion
+probability B, and environment P : The p-probability of observing state-reward pair
+(s0 ,r0 ) from state-action pair (s,a) is defined as the B-average of Pφ over all histories
+h consistent with (s,a), where Pφ (s0 r0 |ha) is the Pφ -probability of observing (s0 ,r0 ),
+obtained from P by φ-marginalization, given history h and action a. The r.h.s. of
+the first line is merely shorthand for the second line. Note that sas0 r0 are fixed and
+do not appear in h which ranges over histories H of all lengths. It is easy to see that
+p is a probability distribution, and it is Markov by definition. If Pφ ∈ MDP, then
+definition (15) coincides with p defined in (6). In general, the MDP p, depending on
+arbitrary B, is not the state distribution induced by P (and Π), which in general is
+non-Markov. Note that p is a stationary MDP for any B satisfying (14) and any φ
+and P . We need the following lemmas:
+Some lemmas. The first lemma establishes the key relation between P and p via
+B used later to relate original history Bellman (optimality) equations (2–4) with
+reduced state Bellman (optimality) equations (7–9).
+
+Lemma 3 (B-P -p relation) For any function f :S ×R→R and p defined in (15)
+in terms of P via (5), and s0 := φ(h0 ) and h0 := hao0 r0 it holds
+            X           X                                  X
+                B(h|sa)        P (o0 r0 |ha)f (s0 , r0 ) =        p(s0 r0 |sa)f (s0 , r0 )
+            h∈H         o0 r 0                 ↑           s0 r 0
+                                            depends on hao0 r0
+
+Proof.                     X                    X
+                                    B(h|sa)              P (o0 r0 |ha)f (s0 , r0 )
+                           h∈H                  o0 r 0
+                     (a)   X                    X           X
+                     =              B(h|sa)                           P (o0 r0 |ha)f (s0 , r0 )
+                           h∈H                  s0 r0 o0 :φ(h0 )=s0
+                     (b)   X                    X
+                     =              B(h|sa)              Pφ (s0 r0 |ha)f (s0 , r0 )
+                           h∈H                  s0 r0
+                     (c)   X
+                     =              p(s0 r0 |sa)f (s0 , r0 )
+                           s0 r 0
+
+In (a) we sum over all o0 by first summing over all o0 such that φ(hao0 r0 ) = s0 and
+then summing over all s0 . In (b) we used the definition (5) of Pφ . In (c) we used
+the definition (15) of p.
+
+
+                                                           9
+    Inequalities (10) and (12) trivially bound v − V differences in terms of q − Q
+differences: |v −V | ≤ maxa |q −Q|. The following lemma shows that a reverse holds
+in expectation, i.e. |q −hQiB | ≤ γ|v −V |. The expectation can (only) be dropped if
+Q is constant for h ∈ φ−1 (s). Formally define
+                                X
+                hf (h, a)iB :=      B(h̃|sa)f (h̃, a), where s := φ(h)         (16)
+                                h̃∈H
+
+That is, hf (h,a)iB takes a B-average over all h̃ that φ maps to the same state as h.
+For convenience we will sometimes drop the tilde over h when using (16), which we
+can do if we declare s := φ(h) to refer to the ‘global’ h in hf (h,a)iB and not to the
+‘local’ variable in the h ∈ H sum.
+Lemma 4 (|q −hQi| ≤ γ|v −V |) For any P , φ, B, Π, π, define p via (15) and
+(5).
+(i) If |v π (s)−V Π (h)| ≤ δ ∀s = φ(h)
+      then |q π (s,a)−hQΠ (h,a)iB | ≤ γδ ∀s = φ(h) ∀a.
+(ii) If |v ∗ (s)−V ∗ (h)| ≤ δ ∀s = φ(h)
+      then |q ∗ (s,a)−hQ∗ (h,a)iB | ≤ γδ ∀s = φ(h) ∀a.
+
+Proof. (i) Let s := φ(h) and h0 := hao0 r0 and s0 := φ(h0 ). Then
+                        (16)  X
+         hQΠ (h, a)iB    ≡        B(h|sa)QΠ (h, a)
+                                h∈H
+                          (2)   X                  X
+                          =              B(h|sa)            P (o0 r0 |ha)[r0 + γV Π (h0 )]
+                                h∈H                o0 r 0
+                         (a)    X                  X
+                          ≶              B(h|sa)            P (o0 r0 |ha)[r0 +γ(v π (s0 ) ± δ)]
+                                h∈H                o0 r 0
+                        Lem.3
+                                X
+                          =              p(s0 r0 |sa)[r0 +γv π (s0 )] ± γδ
+                                s0 r 0
+                          (7)
+                          =     q π (s, a) ± γδ
+In (a) we used the assumption (i) of the Lemma. The derived upper and lower
+bounds imply |q π (s,a)−hQΠ (h,a)iB | ≤ γδ (for all s = φ(h) and a).
+    (ii) follows the same steps except with Π and π replaced by Π∗ and π ∗ , and
+using (3) and (8) instead of (2) and (7) to justify the steps. Note that in general
+Π∗ 6= π ∗ !
+
+
+
+5     Approximate Aggregation Results
+This section contains the main technical contribution of the paper. We show that
+histories (or raw states) can be aggregated and modeled by an MDP even if the true
+
+                                                 10
+aggregated process is actually not an MDP. A necessary condition for successful
+aggregation is of course that the quantities of interest, namely (Q-)Value functions
+and Policies can be represented as functions of the aggregated states. The results
+in this section roughly show that these necessary conditions, which are significantly
+weaker than the MDP requirements, are also sufficient. All but one result also
+hold for approximate aggregation, i.e. approximate conditions lead to approximate
+reductions. We also lift the stationarity assumption.
+
+   • Theorem 5 shows how (approximately) φ-uniform QΠ and Π can be obtained
+     from the reduced Bellman equations (7).
+   • Theorem 6 weakens the assumptions and conclusions to (approximately) φ-
+     uniform V Π and Π.
+   • Theorem 8 shows that for (approximately) φ-uniform Q∗ , the optimal policy
+     is (approximately) φ-uniform, and (an approximation of it) can be obtained
+     via the reduced Bellman optimality equations (8).
+   • Theorem 9 shows that for (approximately) φ-uniform V ∗ and Π∗ we can obtain
+     similar but somewhat weaker results. The proof of the latter involves extra
+     complications not present in the other three proofs. Indeed, the arguably most
+     desirable bound (28) does not hold.
+
+Note that all theorems crucially differ in their conditions and conclusions.
+
+Theorem 5 (φQπ) For any P , φ, and B, define p via (15) and (5). Let Π be
+some policy such that |QΠ (h,a)−QΠ (h̃,a)| ≤ εq and either Π(h) = Π(h̃) with εv := 0
+or |V Π (h)−V Π (h̃)| ≤ εv , for all φ(h) = φ(h̃) and all a. Then for all a and h it holds:
+                                 ε                                  ε
+        |QΠ (h, a) − q π (s, a)| ≤     and   |V Π (h) − v π (s)| ≤     ,
+                               1−γ                                 1−γ
+                    where π(s) := Π(h) and s = φ(h) and ε := εv + εq
+
+    For the either-condition, π(s) is uniquely defined, since Π(h) is the same for all
+h ∈ φ−1 (s). For the or-condition, π(s) is not unique, but any choice of h ∈ φ−1 (s)
+will do. Ignoring a factor 2 in the bounds, the or-condition is weaker than the
+either-condition; it allows to aggregate histories on which Π differs, as long as their
+(Q-)Values are close.
+Proof. Let                   δ := sup|q π (s, a) − QΠ (h, a)|                          (17)
+                                     s=φ(h),a
+We first show
+                         |v π (s) − V Π (h)| ≤ δ + εv      ∀s = φ(h)                   (18)
+Under the either-condition this follows immediately from (10). For the or-condition,
+let π(s) := Π(h̃) for some h̃ ∈ φ−1 (s). Then
+                   (a)                               (b)                        (c)
+|v π (s) − V Π (h)| ≤ |v π (s) − V Π (h̃)| + εv = |q π (s, ã) − QΠ (h̃, ã)| + εv ≤ δ + εv
+
+                                                11
+where (a) follows from the assumption by a triangle inequality, (b) from (2) and (7)
+and ã := π(s) ≡ Π(h̃), and (c) from the definition of δ.
+   Now in both cases, (18) implies
+
+                  |q π (s, a) − hQΠ (h, a)iB | ≤ γ(δ + εv ) ∀s = φ(h), a                       (19)
+
+by Lemma 4i. By assumption on QΠ and B, for s = φ(h) we have
+               X                      X
+hQΠ (h, a)iB ≡   B(h̃|sa)QΠ (h̃, a) ≶   B(h̃|sa)[QΠ (h, a) ± εq ] = QΠ (h, a) ± εq
+               h̃∈H:φ(h̃)=s                      h̃∈H:φ(h̃)=s
+
+
+Together with (19) this implies |q π (s,a) − QΠ (h,a)| ≤ γ(δ + εv ) + εq , hence
+δ ≤ γ(δ + εv ) + εq , hence δ ≤ εq1−γ
+                                  +γεv
+                                       . Inserting this δ into (17) and (18) estab-
+lishes the bounds in the theorem.
+
+
+Theorem 6 (φV π) For any P , φ, and B, define p via (15) and (5). Let Π be
+some policy such that Π(h)=Π(h̃) and |V Π (h)−V Π (h̃)|≤ε for all φ(h)=φ(h̃). Then
+for all a and h it holds:
+                           ε                                           εγ
+       |V Π (h) − v π (s)| ≤     and   |q π (s, a) − hQΠ (h, a)iB | ≤
+                         1−γ                                          1−γ
+              where π(s) := Π(h) and s = φ(h)
+
+Proof. Let δ := sup|v π (s)−V Π (h)|, fix some s = φ(h), and let aπ := Π(h). Now
+               s=φ(h),a
+
+                                  X                             (a)   X
+         hQΠ (h, aπ )iB ≡             B(h̃|saπ )QΠ (h̃, aπ ) =            B(h̃|saπ )V Π (h̃)
+                                  h̃∈H:φ(h̃)=s                        h̃∈H:φ(h̃)=s
+                                  X
+                              ≶       B(h̃|sa )[V (h) ± ε] = V Π (h) ± ε
+                                                 π    Π
+                                                                                               (20)
+                                  h̃∈H:φ(h̃)=s
+
+
+where (a) follows from aπ =Π(h)=Π(h̃) and QΠ (h̃,Π(h̃))=V Π (h̃). By Lemma 4i we
+have
+                     |q π (s, a) − hQΠ (h, a)iB | ≤ γδ ∀s = φ(h), a         (21)
+We also have q π (s,aπ )=q π (s,π(s))=v π (s) from (7). Together with (20) and (21) for
+a = aπ this yields
+
+  |v π (s) − V Π (h)| ≤ |v π (s)−hQΠ (h, aπ )iB | + |hQΠ (h, aπ )iB −V Π (h)| ≤ γδ + ε
+                                                          ε
+hence δ ≤ γδ + ε by the definition of δ, hence δ ≤ 1−γ      . Note that while
+  π    π     Π    π      ε                 π         Π           ε
+|q (s,a ) − Q (h,a )| ≤ 1−γ , in general |q (s,a) − Q (h,a)| 6≤ 1−γ for a 6= aπ .
+
+
+
+                                                     12
+Example. Consider a process P which itself is an MDP in the observations with
+                                                                       ar0
+transition matrix T and reward function R, i.e. P (o0 r0 |ha) = Too
+                                                                 a
+                                                                    0 Roo0 , where o is the
+
+last observation in h. The example below has the special form P (o0 r0 |ha)=Too0 ·[[r0 =
+R(o)]] with
+                                                                -
+                                                            γ/2                 1+γ/2
+                                                       r0 = 1+γ 00 1/2 01 r0 = 1+γ
+                                                 
+             1    1
+                                          γ/2
+      ·       /2   /2   ·                  1+γ                  
+       1
+      /2      ·    ·    1
+                        /2 
+                                         1+γ/2   
+                                                               1/2
+                                                                    I 
+                                                                    @
+                                                                     1 @1  1/2
+ T =                      ,    R=       1+γ    ,
+                                                 
+     ·       1    ·    ·                                              
+                                            0
+                                                                 ?    @ ?
+      1       ·    ·    ·                   1             r0 = 0 10     11 r0 = 1
+                                                                     
+                                                               | {z } | {z }
+                                                                 s=0      s=1
+
+
+It is an action-independent Markov process T with deterministic reward function R.
+                                                                                γ/2
+The observation space is O={00,01,10,11}. For instance, T00,01 = 1/2 and R(00)= 1+γ .
+Consider the reduction
+                                                  
+                                0 if ot = 00 or 10
+              st := φ(ht ) :=                         ∈ S := {0, 1}
+                                1 if ot = 01 or 11
+
+The reduced process Pφ is not (even approximately) Markov:
+
+            Pφ (s0 = 0|o = 00) = T00,00 + T00,10 = 0 + 1/2 = 1/2
+            Pφ (s0 = 0|o = 10) = T10,00 + T10,10 = 0 + 0 = 0
+                                                                           6=
+
+That is, P violates the bisimulation condition [GDG03], and raw states 00 and 10
+have a large bisimulation distance [FPP04, Ort07]. On the other hand, the (Q-)Value
+function V (ot ) := V π (ht ) = Qπ (ht ,at )∀at can easily be verified to be
+
+                                  γ                                         1
+          V (00) = V (10) =                and        V (01) = V (11) =
+                                1 − γ2                                    1 − γ2
+
+That is, V and Q are φ-uniform. The conditions of Theorems 5 and 6 are
+satisfied exactly (ε=0), and hence the four raw states O can be aggregated into two
+states S despite Pφ 6∈ MDP (the policy is irrelevant and can be chosen constant). ♦
+
+    We now turn from the fixed policy case to similar theorems for optimal policies.
+For this we need the following lemma, which shows that if replacing the first action
+after h of the optimal policy Π∗ by the action provided by Π thereafter following Π∗
+                                                           ε
+is at most ε-suboptimal, then always using Π is at most 1−γ  -suboptimal.
+
+Lemma 7 (Qπ∗) If Q∗ (h,Π(h)) ≥ V ∗ (h)−ε for all h for some policy Π, then for
+all h and a
+                                    εγ                                              ε
+  0 ≤ Q∗ (h, a) − QΠ (h, a) ≤                   and     0 ≤ V ∗ (h) − V Π (h) ≤
+                                   1−γ                                             1−γ
+
+                                            13
+Proof. Let δ := sup[Q∗ (h,a)−QΠ (h,a)]. This implies
+                   h,a
+
+           (a)                         (b)                                    (c)
+         0 ≤ V ∗ (h) − V Π (h) ≤ ε + Q∗ (h, Π(h)) − QΠ (h, Π(h)) ≤ ε + δ                      (22)
+(a) follows from (1); (b) by assumption; and (c) by definition of δ for a=Π(h). Now
+for any a and h, this implies
+             (1)           (3) X
+ QΠ (h, a) ≤ Q∗ (h, a) =          P (o0 r0 |ha)[r0 + γV ∗ (h0 )]         [h0 = hao0 r0 ]
+                                      o0 r 0
+            (22)   X                                              (2)
+             ≤              P (o0 r0 |ha)[r0 + γ(V Π (h0 ) + ε + δ)] = QΠ (h, a) + γ(ε + δ)
+                   o0 r 0
+                             εγ
+Hence δ ≤ γ(ε+δ), hence δ ≤ 1−γ .
+
+Theorem 8 (φQ∗) For any P , φ, and B, define p via (15) and (5). Assume
+|Q∗ (h,a)−Q∗ (h̃,a)| ≤ ε for all φ(h) = φ(h̃) and all a. Then for all a and h and
+s = φ(h) it holds:
+                                          ε                                 ε
+          (i) |Q∗ (h, a) − q ∗ (s, a)| ≤         and |V ∗ (h) − v ∗ (s)| ≤     ,
+                                         1−γ                               1−γ
+                                                   2εγ
+          (ii) 0 ≤ Q∗ (h, a) − QΠ̃ (h, a) ≤                and
+                                                (1 − γ)2
+                                               2ε
+                0 ≤ V ∗ (h) − V Π̃ (h) ≤             , where Π̃(h) := π ∗ (s)
+                                            (1 − γ)2
+         (iii) If ε = 0 then Π∗ (h) = π ∗ (s)
+
+Proof. (i) The proof follows the same steps as the proof of Theorem 5, replacing
+all Π and π by ∗ and using (12) instead of (10) and Lemma 4ii instead of Lemma 4i
+to justify the steps.
+    (iii) If ε = 0, then Q∗ (h,a) = q ∗ (s,a) by (i) implies Π∗ (h) = π ∗ (s), where it is
+worthwhile to carefully check that the latter has actually not been used inadvertently
+in proving the former. Cf. the next theorem and proof.
+    (ii) For s = φ(h) and ã := Π̃(h) = π ∗ (s),
+                              ε  (i)       (8)           (i)             ε
+             V ∗ (h) −           ≤ v ∗ (s) = q ∗ (s, ã) ≤ Q∗ (h, ã) +
+                             1−γ                                        1−γ
+which implies Q∗ (h,Π̃(h))≥V ∗ (h)− 1−γ
+                                     2ε
+                                        . The claim now follows from Lemma 7.
+
+Theorem 9 (φV ∗) For any P , φ, and B, define p via (15) and (5). Assume
+Π∗ (h) = Π∗ (h̃) and |V ∗ (h)−V ∗ (h̃)| ≤ ε for all φ(h) = φ(h̃). Then for all a and h and
+s = φ(h) it holds:
+                                    3ε                                            3εγ
+      (i) |V ∗ (h) − v ∗ (s)| ≤          2
+                                             and |q ∗ (s, a) − hQ∗ (h, a)iB | ≤          ,
+                                (1 − γ)                                         (1 − γ)2
+     (iii) If ε = 0 then Π∗ (h) = π ∗ (s)
+
+                                                  14
+   The proof (27) actually implies the stronger upper bound V ∗ (h)−v ∗ (s)≤ 1−γ
+                                                                              ε
+                                                                                 and
+similarly for Q∗ , but we do not know whether the upper bound can be improved.
+Proof. While proofs start to get routine, here is a warning that care is in order when
+recycling similar proofs. Theorem 6 relies on the assumption that π(s) = Π(h) for
+s=φ(h), while we were lucky that the proof of Theorem 8 worked for π ∗ (s)6= Π∗ (h).
+Here we have to work a bit harder.
+   Let us define a0 := π 0 (s) := Π∗ (h) for s = φ(h). The Bellman equation for policy
+ 0
+π is
+        0                                   0              0         0
+                   X
+     q π (s, a) =      p(s0 r0 |sa)[r0 +γv π (s0 )] and v π (s) = q π (s, π 0 (s)) (23)
+                        s0 r0
+
+At this stage π 0 may well be different from π ∗ , since π ∗ satisfies (8), not (23), but
+we will now show that for ε = 0 it actually does. First note that
+                    0                        0                  ∗         ε               ε
+                q π (s, a0 ) = v π (s) ≶ V Π (h) ±                           = V ∗ (h) ±                     (24)
+                                                                         1−γ             1−γ
+where the bounds follow from Theorem 6 applied to Π := Π∗ (with π = π 0 ). For
+general a we only get an upper bound:
+                0              εγ            T hm.6         ∗             (16)   X
+           q π (s, a) −                          ≤       hQΠ (h, a)iB      =            B(h̃|sa)Q∗ (h̃, a)   (25)
+                              1−γ
+                                                                                 h̃∈H
+                        (4)       X                                       (14)    X
+                        ≤                  B(h̃|sa)Q∗ (h̃, Π∗ (h̃))        =             B(h̃|sa)V ∗ (h̃)
+                                                                           (3)
+                                  h̃∈H                                           h̃:φ(h̃)=s
+                          (a)          X                                  (14)
+                          ≤                  B(h̃|sa)[V ∗ (h) + ε]         =     V ∗ (h) + ε
+                                       h̃:φ(h̃)=s
+
+(a) uses the theorem’s assumption on V ∗ (h). Together, (24) and (25) imply
+
+   0     (23)       0                                0
+                                                                (25)              ε  (24)  0       2ε
+ v π (s) = q π (s, a0 ) ≤ max q π (s, a) ≤ V ∗ (h) +                                  ≤ v π (s) +     (26)
+                                             a                                   1−γ              1−γ
+We first prove (ii) of the theorem, then (i):
+                                                         0           0
+   (iii) For ε = 0, the previous equation implies v π (s) = maxa q π (s,a), hence (23)
+can be rewritten as
+          0                                   0              0             0
+                     X
+       q π (s, a) =      p(s0 r0 |sa)[r0 +γv π (s0 )] and v π (s) = max q π (s, a)
+                                                                                                a
+                              s0 r 0
+                         0             0
+This shows that (q π ,v π ) satisfies the same Bellman optimality equation as (q ∗ ,v ∗ )
+                                                                 0                 0
+does. Since it has a unique solution, we must have q π ≡ q ∗ and v π ≡ v ∗ and
+π ∗ ≡ π 0 , which for s = φ(h) implies Π∗ (h) = π ∗ (s) by definition of π 0 . It also implies
+V ∗ (h) = v ∗ (s) by (24), and q ∗ (s,a) = hQ∗ (h,a)iB by Lemma 4ii, i.e. the ε = 0 version
+of (i).
+
+                                                                    15
+   (i) We now continue with the general ε > 0 case. For all s and a we have
+  (9)                0          (7) X                                        0
+                                                                                    (a)                    0
+0 ≤ q ∗ (s,a) − q π (s,a) =                    p(s0 r0 |sa)γ(v ∗ (s0 ) − v π (s0 )) ≤ γ max
+                                                                                         0
+                                                                                           {v ∗ (s0 ) − v π (s0 )}
+                                (8)                                                           s
+                                      s0 r 0
+ (9)            0
+                     (26)                                  0
+                                                                             (13)                  0
+0 ≤ v ∗ (s)−v π (s) ≤ max q ∗ (s,a)−max q π (s,a)+ 1−γ
+                                                    2ε
+                                                       ≤ max{q ∗ (s,a)−q π (s,a)}+ 1−γ
+                                                                                    2ε
+                      (8)   a                        a                              a
+
+In (a) we have upper bounded the p-expectation by the maximum. Together this
+gives
+                                                0                                         0        2ε
+                    max{v ∗ (s) − v π (s)}               ≤     γ max{v ∗ (s) − v π (s)} +
+                     s                                               s                            1−γ
+                                                0                    2ε
+            ⇒       max{v ∗ (s) − v π (s)}               ≤
+                     s                                            (1 − γ)2
+                                 ε   (24)  0
+                                                (9)       -    0        2ε
+  Hence for s = φ(h) : V ∗ (h)−       ≤ v π (s) ≤ v ∗ (s) ≤ v π (s)+                                           (27)
+                               1−γ                                   (1 − γ)2
+        (24)           ε      2ε                       3ε
+         ≤ V ∗ (h) +      +        2
+                                      ≤ V ∗ (h) +
+                     1 − γ (1 − γ)                  (1 − γ)2
+Together with Lemma 4ii this implies (i).
+
+    We are primarily interested in the optimal policy Π∗ (h); to correctly represent
+the value V ∗ (h) is only of indirect interest. If Π∗ is φ-uniform, it can be represented
+as Π∗ (h) = π 0 (s) for some π 0 , but if the φ-uniformity condition on V ∗ in Theorem 9
+is dropped, the conclusion Π∗ (h) = π ∗ (s) can fail as the following example shows.
+Counter Example. Let P be the MDP P (o0 r0 |ha) := Too     a       0    a
+                                                             0 ·[[r = Ro ]] with two raw
+
+states o ∈ {0,1} and two actions a ∈ {α,β} formally defined on the left and depicted
+on the right:                                         
+                                                '$? β,      r0 = 0, p = 1/2 -'$
+       α         1 0           α      1/6
+     T :=               ,    R :=            ,                         0
+                 1 0                    1              0      α, r = 1             1
+                                                    &%
+                                                             β, r0 = 1/2 , p = 1&%
+                                                       
+               1/2 1/2                  0                                        /2
+     T β :=               ,   Rβ :=          ,        6
+                                                                                   
+                                                                                      6
+               1/2 1/2                 1/2                0
+                                                     α, r = /6   1
+
+The value of policy π in vector notation is V π = Rπ +γT π V π , where Voπt := V π (ht ).
+The 4 stationary policies are denoted by π = a0 a1 , where ao is the action taken in
+raw state o. For γ = 0, their values are
+                                       γ = 0, π αα αβ βα ββ
+                                             π(0)
+                                      V0π = R0    1/6 1/6 0 0
+                                        π    π(1)
+                                      V1 = R1      1 1/2 1 1/2
+
+Policy π = αα has the highest value, therefore Π∗ (h) ≡ α. Let us now aggregate raw
+states o ∈ {0,1} to a 1-state MDP. The most natural and useful choice of dispersion
+
+                                                             16
+probability B is described in Section 7. For the stationary raw MDP and constant
+behavior policy of this example, (35) reduces to p(s0 r0 |sa) = PφB (s0 r0 |sa). One
+                                                                        1 >
+can show that for this B, the value of the 1-state MDP is v = 1−γ         ρ R = ρ>R for
+γ = 0, where ρ is the stationary distribution ρ> = ρ>T of T , in particular ρα = ( 10 )
+for T α and ρβ = ( 1/2 1/2
+                           ) for T β . Since there is only 1 aggregated state, there are
+only 2 stationary policies, one for each action. This leads to v α = 16 < 14 = v β , hence
+π ∗ (s) ≡ β 6= α ≡ Π∗ (h) ∀s,h. That is, despite Π∗ being constant, π ∗ 6= Π∗ , which
+shows that the condition on V ∗ in Theorem 9 cannot be dropped. Note that
+V ∗ = V αα = ( 1/6
+                1
+                   ) is far from constant. By continuity, the policy reversal also holds
+for γ > 0. Indeed, this example works for all γ < 52 and other examples work for all
+0 ≤ γ < 1.                                                                            ♦
+
+Missing Bound (ii) in Theorem 9. The absence of an analogue of Theorem 8ii
+from Theorem 9 of the form
+                                 ??
+                                         ε     
+         (ii) V ∗ (h) − V Π̃ (h) = O              where Π̃(h) := π ∗ (s) (28)
+                                       (1 − γ)?
+is apparent. Here are some (weak) arguments why (28) is plausible:
+    (1) Given that for fixed policy, Theorems 5 and 6 with approximately φ-uniform
+Q respectively V were similar, it seems a-priori plausible that (28) could hold.
+    (2) For ε = 0 it immediately follows from Theorem 9, since in this case Π̃(h) =
+  ∗
+Π (h). One might expect that some continuity argument allows to establish a bound
+for small ε > 0.
+    (3) Theorem 8i&iii mostly carried over to Theorem 9, so a-priori it is not too
+implausible that Theorem 8ii carries over to (28). On the other hand, the proofs of
+(i) and (iii) of both theorems were sufficiently different, so the analogy argument is
+weak.
+    (4) Let ã := Π̃(h) := π ∗ (s) for s = φ(h). Then
+                T hm.9i                     3εγ    (8)             3εγ    (27)              3ε
+                                                         ∗                       ∗
+hQ∗ (h, ã)iB     ≥       q ∗ (s, ã) −            =   v   (s) −           ≥   V   (h) −
+                                          (1 − γ)2               (1 − γ)2                (1 − γ)2
+                  (3)
+   Q∗ (h, ã)     ≤       V ∗ (h)
+For ε = 0 this pair of inequalities implies that Q∗ (h,ã) lower bounds its own expec-
+tation, therefore it must be constant and equal to V ∗ (h) on each φ−1 (s)-partition.
+For ε > 0, with high probability Q∗ (h,ã) cannot be much smaller than V ∗ (h). If
+it weren’t for the probability qualifier we could now apply Lemma 7 to establish
+(28) (as in the proof of Theorem 8ii). Low probability events could invalidate this
+argument.
+    Indeed, (28) does not hold:
+Theorem 10 (φV ∗) For any 0≤γ <1 and any (arbitrarily large) C, there exist P ,
+φ, and B with Π∗ (h)=Π∗ (h̃) and |V ∗ (h)−V ∗ (h̃)|≤ε for all φ(h)=φ(h̃) such that for
+p defined via (15) and (5) and Π̃(h):=π ∗ (s) for s=φ(h), we have V ∗ (h)−V Π̃ (h)≥C.
+
+                                                    17
+Proof. An (28) offending raw and aggregated MDP are depicted in the following
+diagram:
+
+                                                                          α,β
+  α,β           α,β            β      α −R
+                                                             α           1−γ
+        F               E              C             D               G    α,β H
+   1            1+            0     β                       0
+                                                                          1+
+                                     0
+       α,β                     β                             α                       α,β
+                φ(F )                        φ(C)                         φ(H)
+        1                      0                             0                   rφ(H)
+
+                        a
+   An arrow (A)−→    (B) denotes that action a ∈ A := {α,β} leads with probability 1
+                  r0
+and reward r0 from state A to state B. R is a large positive reward. For the above
+raw MDP, we have Π∗ (C) = Π∗ (D) = β and Π∗ (E) = Π∗ (F ) = Π∗ (G) = Π∗ (H) = A.
+Under this policy
+
+                 V ∗ (F ) =    1 + γ + γ 2 + γ 3 + ...   =    1
+                                                             1−γ
+                 V ∗ (E) =      (1 + ε) + γV ∗ (F )      =    1
+                                                             1−γ
+                                                                 +ε
+                   ∗
+                 V (G) =       (1 − γε) + γV ∗ (H)       =    1
+                                                             1−γ
+                                                                  < V ∗ (E)
+                   ∗                            ∗             1
+                 V (H) =     (1 + ε) + γV (G)   =            1−γ
+                                                                 +ε
+                   ∗                                          γ
+                 V (C) = V ∗ (D) = 0 + γV ∗ (E) =            1−γ
+                                                                 + γε
+
+Now for φ aggregating the dashed-encircled states, and for stochastic inverse
+B(F |φ(F )) := 1, and B(H|φ(H)) := 1/2, and B(C|φ(C)) := 0, the aggregated MDP
+is depicted in the lower part of the above diagram, where
+
+                        rφ(H) := (1 − γε)B(G|φ(H)) + (1 + ε)B(H|φ(H))
+                               = 21 (1 − γε) + 12 (1 + ε) = 1 + 2ε (1 − γ)
+                                  rφ(H)         1       ε     1
+            ⇒     v ∗ (φ(H)) =            =          +    >          = v ∗ (φ(F ))
+                                 1−γ         1−γ 2          1−γ
+
+The optimal action in state φ(C) is therefore π ∗ (φ(C)) = α = Π̃(C), hence
+           −R
+V Π̃ (C) = 1−γ , hence V ∗ −V Π̃ can be made arbitrarily large.
+
+
+Discussion. Theorem 8ii is our main result. It implies that we can aggregate
+histories as much as we wish, as long as the optimal Q-value function and policy
+are still approximately representable as functions of aggregated states. Whether the
+reduced process Pφ is Markov or not is immaterial. We can use surrogate MDP p
+to find an ε-optimal policy for P .
+    All bounds in this sections can be shown to be tight by constructing appropriate
+example MDPs. Furthermore, all conditions of the theorems and lemmas can be
+
+                                              18
+shown to be necessary by constructing counter-examples that violate one of the
+conditions and the conclusions in each theorem/lemma.
+     Most RL work, including on state aggregation, is formulated in terms of MDPs,
+i.e. the original process P is already an MDP. Let us call this the original or raw
+MDP. We could interpret the whole history as a raw state, which formally makes
+every P an MDP, but normally only observations are identified with raw states,
+i.e. P is a raw MDP iff P (o0 r0 |ha) = P (o0 r0 |oa). In this case, V ∗ (ht ) = V ∗ (ot ) etc.
+depends on raw states only (which is well known or follows from Theorem 2 with
+φ(ht )=ot ). Since our results hold for all P , they clearly hold if P is a raw MDP and
+if φ(ht ) := φ(ot ) maps raw states to aggregated states.
+     The remainder of this paper shows how much we can aggregate and how to
+develop RL algorithms exploiting these insights.
+
+
+6     Extreme Aggregation
+The results of Section 5 showed that histories can be aggregated and modeled by an
+MDP even if the true aggregated process is not an MDP. The only restrictions were
+that the (Q-)Value functions and Policies could still be (approximately) represented
+as functions of the aggregated states. We will see in this section that in theory this
+allows to represent any process P as a small finite-state MDP.
+Extreme aggregation based on Theorem 8. Consider φ that maps each history
+to the vector-over-actions of optimal Q-values Q∗ (h,·) discretized to some finite ε-
+grid:
+             φ(h) := bQ∗ (h, a)/εc a∈A ∈ {0, 1, ..., b ε(1−γ)
+                                                          1
+                                                              c}A =: S
+                                    
+                                                                                 (29)
+That is, all histories with ε-close Q∗ -values are mapped to the same state:
+
+                     |Q∗ (h, a) − Q∗ (h̃, a)| ≤ ε ∀φ(h) = φ(h̃) ∀a
+
+Now choose some B and determine p from P via (15) and (5). Find the optimal
+policy π ∗ of MDP p of size |S|. Define Π̃(h) := π ∗ (φ(h)). By Theorem 8ii, Π̃ is an
+ε0 -optimal policy of the original process P in the sense that
+                                                         2ε
+                          |V Π̃ (h) − V ∗ (h)| ≤               =: ε0
+                                                      (1 − γ)2
+The following theorem summarizes the considerations for the above choice of φ:
+
+Theorem 11 (Extreme φ) For every process P there exists a reduction φ (29)
+and MDP p defined via (15) and (5) whose optimal policy π ∗ is an ε0 -optimal policy
+Π̃(h) := π ∗ (φ(h)) for P . The size of the MDP is bounded (uniformly for any P ) by
+                                                    3     |A|
+                                   |S| ≤
+                                               ε0 (1 − γ)3
+
+                                                 19
+Proof. For S defined in (29) we have
+
+                          1
+                                 |A|            2
+                                                            |A|              3
+                                                                                   |A|
+            |S| =    b ε(1−γ) c+1     =   b ε0 (1−γ)3 c+1          ≤     ε0 (1−γ)3
+
+
+where in the last inequality we have assumed ε0 ≤ 1−γ
+                                                    1
+                                                      . (For ε0 > 1−γ
+                                                                   1
+                                                                      the theorem
+is trivial, since any policy is ε0 -optimal). The theorem now follows from the
+considerations in the paragraphs before the theorem.
+
+
+Extreme aggregation based on (28). If (28) would hold, we could aggregate even
+better: Consider φ that maps each history to the optimal Value V ∗ (h) discretized
+to some finite ε-grid and to the optimal action Π∗ (h):
+
+                      bV ∗ (h)/εc, Π∗ (h) ∈ {0, 1, ..., b ε(1−γ)
+                                                             1
+                                         
+           φ(h) :=                                               c} × A =: S              (30)
+
+That is, all histories with ε-close V ∗ -Values and same optimal action are mapped to
+the same state:
+
+           |V ∗ (h) − V ∗ (h̃)| ≤ ε and Π∗ (h) = Π∗ (h̃)               ∀φ(h) = φ(h̃)
+
+As before, determine p, find its optimal policy π ∗ , and define Π̃(h) := π ∗ (φ(h)). If
+(28) holds, then Π̃ is an ε0 -optimal policy of original process P in the sense that
+                                                    ε     
+                       |V Π̃ (h) − V ∗ (h)| = O              =: ε0
+                                                  (1 − γ)?
+
+hence the size of the required MDP in Theorem 11 would only be linear rather than
+exponential in A:
+                                            |A|     
+                               |S| = O 0                                      (31)
+                                        ε (1 − γ)1+?
+
+Discussion. A valid question is of course whether Theorem 11 is just an interesting
+theoretical insight/curiosity or of any practical use. After all, φ depends on Q∗ (or
+V ∗ and Π∗ ), but if we knew Q∗ , Π∗ would readily be available and the detour through
+p and π ∗ pointless.
+    Theorem 11 reaches relevance by the following observation: If we start with a
+sufficiently rich class of maps Φ that contains at least one φ approximately represent-
+ing Q∗ (h,·), and have a learning algorithm that favors such φ, then Theorems 5–9
+tell us that we do not need to worry about whether Pφ is MDP or not; we “sim-
+ply” use/learn MDP p instead. Theorem 11 tells us that this allows for extreme
+aggregation far beyond MDPs.
+    This program is in parts worked out in the next two sections, but more research
+is needed for its completion. Learning p from (real) P -samples is considered in
+Section 7 and learning φ in Section 8.
+
+                                          20
+7     Reinforcement Learning
+In RL, P and therefore p are unknown. We now show how to learn p from samples
+from P . For this we have to link B to the distribution over histories induced by P
+and to the behavior policy ΠB the agent follows. We still assume φ is given.
+Behavior policy ΠB . Let ΠB :H;A be the behavior policy of our RL agent, which
+in general is non-stationary due to learning, often stochastic to ensure exploration,
+and (usually) different from any policy considered so far (Π∗, π ∗, Π̃,π 0, Π,π). Note
+that a sequence of policies Π1 ,Π2 ,... where each Πt is learnt from ht and used at
+time t (or for some number of steps) is nothing but a single non-stationary policy
+ΠB (ht ) = Πt (ht )∀t,ht , so ΠB indeed includes the case of policy learning.
+Choice of B. The interaction of agent ΠB with environment P stochastically
+generates some history ht followed by action at with joint probability, say PB (ht at ).
+We use subscripts B and/or φ to indicate dependence on ΠB and/or φ. A natural
+choice for B(h|sa) in (14) would be to condition on PB on st at . We now show that
+this does not work and how to fix the problem. We can get PφB (ht |st at ) from P
+and ΠB and several other useful distributions by standard probability manipulations
+(conditioning, marginalization, product and chain rule) as follows:
+
+       PB (ht+1 |ht ) = P (ot+1 rt+1 |ht at )ΠB (at |ht )         [ht+1 = ht at ot+1 rt+1 ]
+                        n−1
+                        Y
+           PB (hn ) =       PB (ht+1 |ht ),           PB (ht at ) = ΠB (at |ht )PB (ht )
+                              t=0
+                              X                                                PB (ht at )
+         PφB (st at ) =             PB (ht at ),          PφB (ht |st at ) =                [[φ(ht ) = st ]]
+                                                                               PφB (st at )
+                            ht :φ(ht )=st
+                              X
+PφB (st+1 rt+1 |st at ) =           Pφ (st+1 rt+1 |ht at )PφB (ht |st at ) [see (5) for def. of Pφ ] (32)
+                            ht :φ(ht )=st
+PφB (st at st+1 rt+1 ) = PφB (st+1 rt+1 |st at )PφB (st at )
+
+PφB (ht |st at ) has the following properties:
+                                X                      X
+ PφB (ht |st at ) ≥ 0 and           PφB (ht |st at ) =   PφB (ht |st at ) = 1 ∀t, st , at (33)
+                                    ht ∈Ht               ht :φ(ht )=st
+
+
+This is close to the required condition (14) for B but crucially different. The sum
+in (14) is over histories of all lengths while in (33) the sum is limited to histories of
+length t. It is easy to miss this difference due to the compact notation. Technically
+PB is a probability measure on infinite sequences H∞ and PB (ht ) is short for PB (Γht )
+where Γht is the set of infinite histories starting
+                                             P      with ht , i.e. PB (ht ) is the probability
+that the infinite history starts with ht ( ht ∈Ht PB (ht ) = 1∀t). On theP        other hand,
+B(h) is a probability distribution over finite histories of mixed length ( h∈H B(h)=
+1); similarly for PB and B conditioned on / parameterized by s and a.
+
+                                                    21
+   We can fix this mismatch by introducing weights wt : S ×A ; [0;1] and define
+                                                                           ∞
+                                                                           X
+ B(ht |sa) := wt (sa)PφB (ht |st = s, at = a) ∀t,              where              wt (sa) = 1 ∀s, a (34)
+                                                                            t=1
+                                         P           P∞ P
+which now satisfies (14) (due to             h∈H =     t=1     ht ∈Ht ).   MDP p can now be repre-
+sented as
+                   ∞
+                   X               X
+  p(s0 r0 |sa) =         wt (sa)       Pφ (st+1 = s0 , rt+1 = r0 |ht , at = a)PφB (ht |st = s, at = a)
+                   t=1          ht ∈Ht
+                   ∞
+                   X
+               =                 t
+                         wt (sa)PφB (s0 r0 |sa)                                                    (35)
+                   t=1
+
+                                              t
+That is, p is the w-weighted time-average of PφB . The first equality follows from (15)
+and (34); the second one from (32). We also introduced the shorthand PφB   t
+                                                                             (s0 r0 |sa):=
+PφB (st+1 = s0 ,rt+1 = r0 |st = s,at = a).
+Choice of wt . If PφB      t
+                               in (35) is stationary, i.e. independent of t, then p(s0 r0 |sa) =
+  t
+PφB  (s0 r0 |sa) for all t, since the weights sum to one, and estimation is easy. Note
+                                                              t
+that in general we cannot estimate non-stationary PφB           , since for each t we have only
+one sample available, but we will see that estimation of p is still possible. Assume
+we have observed hn for some (fixed) n, and choose wt (sa) to average over all time
+steps t in which state s is obtained and action a is taken:
+                   1
+                     n(sa)
+                             if t ∈ Tn (sa),          Tn (sa) := {t ≤ n : st = s, at = a}
+  wt (sa) :=
+                       0     else.                      n(sa) := #Tn (sa)
+                                                                                            (36)
+Inserting this into (35) gives
+                                                1 X t 0 0
+                            p(s0 r0 |sa) =          PφB (s r |sa)                                  (37)
+                                              n(sa)
+                                                       t∈Tn (sa)
+
+
+We can estimate the right-hand-side as follows:
+Law of large numbers. For τ =1,2,3,...P let Xτ ∈{0,1} be binary random variables
+with expectation E[Xτ ]. Define N1 = N τ =1 Xτ be the number of sampled 1s. The
+strong law of large numbers says that
+          N
+  N1   1 X           N →∞
+     −        E[Xτ ] −−−→ 0                almost surely           under weak conditions           (38)
+  N    N τ =1
+
+Note that the law holds far beyond i.i.d. random variables under a variety of con-
+ditions [Faz06, VGS05] which we collectively call ‘weak conditions’. It is not even
+necessary for N1 /N to converge.
+
+                                                  22
+Estimation of p. Now fix some (s,a), and let Xτ := [[st+1 = s0 ,rt+1 = r0 ]] ≡
+[[st at st+1 rt+1 = sas0 r0 ]], where t = tsa
+                                           τ is the τ -th occurrence of sa in the history.
+Formally, τ = #Tt (sa) and st = s and at = a. (Here we assume that variables in ht ,
+                                                       0 0
+hence also tsa   τ , are random variables, while sas r are realizations.) Let N := n(sa)
+and
+                                       XN
+              n(sas0 r0 ) := N1 =         Xτ = #{t ≤ n : st at st+1 rt+1 = sas0 r0 }
+                                  τ =1
+
+and E[Xτ ] = P (Xτ = 1) = PφB  t
+                                 (s0 r0 ) = PφB
+                                             t
+                                                (s0 r0 |sa), with t = tsa
+                                                                       τ . The last equality
+                                             PN         tsa  P          t
+holds, since stsa
+               τ
+                  = s and atsa
+                            τ
+                               = a. Using τ =1 PφB = t∈Tn (sa) PφB
+                                                         τ
+                                                                          , (38) implies
+
+  n(sas0 r0 )     1 X t 0 0         n(sa)→∞
+              −       PφB (s r |sa) −−−−−→ 0 a.s. under weak conditions
+   n(sa)        n(sa)
+                      t∈Tn (sa)
+                                                                                       (39)
+
+Theorem 12 (p-estimation) For B defined in (34) and (36), convergence (39)
+implies
+              n(sas0 r0 )                 n→∞
+                          − p(s0 r0 |sa) −−−→ 0 almost surely         (40)
+               n(sa)
+For example, if Xτ (for each sa) are stationary ergodic processes, then (39) hence
+(40) hold for all state-action pairs that matter (i.e. for those occurring infinitely
+often).
+
+Proof. (39) trivially implies (40) by (37). For stationary ergodic Xτ , provided
+N → ∞, (38) hence (39) hold by
+                           N                                        N
+              N1   1 X       ergodicity    stationarity 1
+                                                          X
+                 ≡        Xτ −−−−−→ E[X1 ]      =              E[Xτ ]
+              N    N τ =1                               N τ =1
+
+Discussion. Limit (40) shows that standard frequency estimation for p will con-
+verge to the true p under weak conditions. If Pφ is MDP, samples are conditionally
+i.i.d. and the ‘weak conditions’ are satisfied. But the law of large numbers and hence
+(40) holds far beyond the i.i.d. case [FK01, VGS05], e.g. for stationary ergodic pro-
+cesses. For instance, if the original process P is a stationary ergodic MDP, and φ
+aggregates raw states, the resulting process Pφ is (only) a Partially Observable MDP
+(POMDP). Still, for stationary ΠB , the POMDP is stationary and ergodic, hence p
+can be estimated by (40). Stationarity is actually not necessary, and indeed often
+does not hold due to a non-stationary environment P or a non-stationary behavior
+policy ΠB (or both).
+     A subtlety which we have glossed over is that implicitly Tn (sa) also depends
+on hn . Mathematically this means that Tn , wt , and p are random variables, which
+requires some extra care in the derivation. Practically this means that p can depend
+on the realized history (data) hn , which is no problem, since (40) is all that matters.
+
+                                            23
+Note that the estimation itself depends on the history, and p converges provided
+n(sas0 r0 )/n(sa) converges. For time-independent PφB   t
+                                                            (s0 r0 |sa), p is independent of
+hn .
+                                                          t
+                                                              (sa)/ nt=1 PφB  t
+                                                                      P
+     Other choices for wt are possible, e.g. wt (sa) := PφB                     (sa) for t ≤ n
+and 0 for t>n is independent of hn and leads to very similar results under somewhat
+      P conditions [Hut14]. We could also use any w for which wt (sa)=0 if t6∈ Tn (sa)
+stronger
+and nt=1 wt (sa) = 1. This leads to a w-weighted average estimator. For instance,
+functions wtsaτ
+                (sa) increasing with τ would weigh more recent observations higher in
+the estimation of p, which can be beneficial in non-stationary problems.
+     We estimate p in order to estimate q ∗ and ultimately π ∗ . This is model-based RL.
+We can also learn π ∗ model-free. For instance, condition (40) should be sufficient
+for Q-learning to converge to Q∗ . Q-learning and other RL algorithms designed for
+MDPs have been observed to often (but not always) perform well even if applied
+to non-MDP domains. Our results appear to explain why, but this calls for further
+investigations.
+
+
+8       Feature Reinforcement Learning
+The idea of FRL is to learn φ [Hut09c]. FRL starts with a class of maps Φ, compares
+different φ ∈ Φ, and selects the most appropriate one given the experience ht so
+far. Several criteria based on how well φ reduces P to an MDP have been devised
+[Hut09b, Hut09a] and theoretically [SH10] and experimentally [NSH11] investigated
+[Ngu13]. Theorems 5–9 show that demanding Pφ to be approximately MDP is
+overly restrictive. Theorem 11 suggests that if we relax this condition, much more
+substantial aggregation is possible, provided Φ is rich enough.
+    (F)RL deals with the case of unknown P . We first discuss learning φ for the
+unrealistic case of exact aggregation (ε = 0) and infinite sample size (n = ∞). This
+serves as a useful guide to work out its generalization to the realistic but significantly
+more complex case of approximate aggregation based on finite sample size. Finally
+we discuss a family of recent algorithms (BLB and extensions [Ngu13]) that appear
+to nearly have the right properties for our purpose. This section is more a collection
+of ideas and outlook towards algorithms exploiting and motivating the usefulness of
+the new insights obtained in the previous sections.
+Search for exact φ based on infinite sample size.1 Since we are now concerned
+with comparing different φ ∈ Φ, we subscribe quantities with φ when necessary.
+Consider the unrealistic case of infinite sample size (n = ∞) and a search for exact
+reductions φ. We call a reduction φ : H → Sφ exact iff Q∗ (h,a) = qφ∗ (s,a) for all
+s = φ(h) and a (cf. Theorem 8). The condition could be weakened to V ∗ (h) = vφ∗ (s)
+and Π∗ (h) = πφ∗ (s) (cf. Theorem 9).
+    1
+    The definitions of the order relations  and × in the published version [Hut16] were incom-
+plete and have been updated. This is the only post-publication change.
+
+
+                                              24
+    Even for n=∞, P hence Q∗ needed for Π∗ is (usually) not estimable (from h∞ ).
+On the other hand, for each φ∈Φ, p=pφ can be determined (exactly) by (40) (under
+weak conditions). From pφ we can determine qφ∗ and πφ∗ via (8) and (9). The solution
+always satisfies the reduced Bellman equations exactly, even for very bad reductions,
+e.g. single state φ(h) ≡ 0 ∀h. So the reduced problem is not sufficient to judge the
+quality of φ. An alternative to assuming n=∞ is to assume that P is known, which
+also allows to determine pφ , etc. So what follows applies to stochastic planning as
+well.
+    Coarsening and refining reductions φ: Let us now coarsen φ, i.e. further merge
+some partitions φ−1 (s). In the simplest case we just merge two states into one.
+In general, consider coarsening χ : Sφ → Sψ and coarser reduction ψ : H → Sψ such
+that ψ(h) = χ(φ(h)). We also call Sφ a refinement of Sψ . For example, U-trees
+[McC96, UV98] and Kd-trees have been used in RL [EGW05], where expanding a
+leaf corresponds to splitting a state. Or in φDBN, Sφ = {0,1}d is a binary feature
+vector, where removing one component corresponds to pairwise combining 2d states
+to 2d−1 states [Hut09a].
+    Ordering reductions in Φ: We can partially order Φ as follows:
+
+           ψ  φ :⇐ qφ∗ is constant on all sφ ∈ χ−1 (sψ ) for all sψ and a
+                  ⇔ qφ∗ (sφ , a) = qψ∗ (sψ , a) for all sψ = χ(sφ ) and a.
+
+ψ  φ means ψ is a better reduction than φ, since it leads to the same optimal
+q-value and therefore policy as ψ does, but is more parsimonious (coarser) than φ.
+If qφ∗ is not constant on ψ-partitions, coarsening φ to ψ and using ψ (potentially)
+leads worse to solutions. We capture this by
+
+        φ  ψ :⇐ qφ∗ is not constant on all sφ ∈ χ−1 (sψ ) for all sψ and a
+               ⇔ qφ∗ (sφ , a) 6= qψ∗ (sψ , a) for some sψ = χ(sφ ) and a.
+
+Note that  is a partial order, so this reverse definition is not redundant. As
+common, we also define ψ φ iff φψ iff ψ is worse than φ. ψ and φ are isomorphic
+iff ψ ≃ φ iff ψ  φ and φ  ψ iff χ is a bijection iff qφ∗ ≡ qψ∗ .
+    Enriching the order :  is a transitive but ‘very’ partial order. Two maps are
+incomparable if neither is a refinement or coarsening of the other. We can enrich
+order  as follows: For any two maps ψ 6≃ ψ 0 , the map φ(h) := (ψ(h),ψ 0 (h)) ∈ Sφ ⊆
+Sψ ×Sψ0 refines both. We could define ψ × ψ 0 iff ψ φψ 0 , which is still equivalent
+to , but enables a natural extension: Case ψ  φ  ψ 0 : This is only possible if q ∗ of
+ψ and ψ 0 (and φ) coincide in the sense that there exists a (finest common coarsening)
+ρ with ρ  ψ and ρ  ψ 0 . A secondary criterion based on the relative complexity of
+ψ and ψ 0 could decide the case, e.g. ψ × ψ 0 iff |Sψ | ≤ |Sψ0 |. Case ψ  φ  ψ 0 : This
+is only possible if φ is neither ψ-uniform nor ψ 0 -uniform, hence strictly better than
+                        0                                             0
+both (φ r ψ and φ  r ψ ), so assuming φ∈Φ, we can order ψ and ψ at will, e.g. again
+
+
+
+                                           25
+w.r.t. size. It is therefore natural to define an extended order as
+
+         ψ × ψ 0 :⇔ [ψ  φ  ψ 0 ] or [ψ  φ  ψ 0 and |Sψ | ≤ |Sψ0 |]
+                     or     [φ ∈ Φ and ψ  φ  ψ 0 and |Sψ | ≤ |Sψ0 |]
+
+If Φ is closed under Cartesian product refinement (i.e. the above φ is always in Φ),
+then × is a total order, otherwise it may (still) only be a partial order.
+     Search for φ: Assume Φ contains at least one exact reduction φ0 . Then the
+-minimal elements in Φ smaller than φ0 are exactly the maximally coarse exact
+φ ∈ Φ. If Φ is closed under arbitrary coarsening, then there is a unique minimizer
+(modulo isomorphism). The same holds for × . This implies that any exhaustive
+search for a × -minimum in Φ will give an exact φ with minimal number of states,
+say φmin . Now Theorem 8 tells us that qφ∗ min (and hence πφ∗ min ) are the optimal value
+and policy also of the original process P , irrespective of whether Pφmin is Markov or
+not. So while the conditions of Theorem 8 cannot be verified in practice, the theorem
+justifies a search procedure based on qφ∗ that ignores the (non-)Markov structure of
+Pφ .
+Search for approximate φ based on finite sample size. The principle approach
+in the previous paragraph is sound, but needs to be generalized in various ways
+before it can be used: Real sample size is finite, which means we only have access to
+approximations q̂φ∗ and π̂φ∗ via estimation p̂φ of pφ . The criterion for exact equality
+qφ∗ =qψ∗ in  needs to be replaced by a suitable q̂φ∗ ≈ q̂ψ∗ , which should be done anyway,
+since real-word problems seldom allow for exact reductions. ≈ should be chosen so
+as to come with statistical guarantees; e.g. Kolmogorov-Smirnov tests have been
+used in [McC96]. A suitable π̂φ∗ ≈ π̂ψ∗ requires more effort (see outlook). For large Φ
+this also requires appropriate regularization, i.e. penalizing complex φ [Hut09c]. To
+ensure q̂ ∗ → q ∗ for n → ∞, we need proper exploration strategies [SLL09]. Finally,
+we want an efficient search procedure in Φ, rather than exhaustive search. This will
+be heuristic or will require strong assumptions on Φ [Ngu13]. All but the last point
+raised above have or should have general solutions (see next paragraph).
+Utilizing existing algorithms. The BLB algorithm [MMR11] and its extensions
+IBLB [NMRO13] and improvements OMS [NOR13] solve most of the problems above
+and can (nearly) readily be used for our purpose.
+    The BLB family uses the same basic FRL setup from [Hut09c] used also here.
+The authors consider a countable class Φ assumed to contain at least one φ such
+that Pφ is an MDP (6). They consider average reward, rather than discounting, and
+analyze regret, which (in general) requires some assumption on the mixing rate or
+‘diameter’ of the MDP. They prove that the total regret grows with Õ(n1/2...2/3 ),
+depending on the algorithm.
+    Their algorithms and analyses rely on UCRL2 [JOA10], an exploration algorithm
+for finite-state MDPs. Going through the BLB proofs, it appears that the condition
+that Pφ is an MDP can be removed if p (15) is used instead, modulo the analysis of
+UCRL2 itself. The proofs for the bounds for UCRL2 exploit that s0 ,r0 conditioned on
+
+                                            26
+s,a are i.i.d., which is true if Pφ is Markov but not in general. Asymptotic versions
+should remain valid under the ‘weak conditions’ alluded to in (40). With some
+stronger assumptions that guarantee good convergence rates, the regret analysis of
+UCRL2 should remain valid too. Formally, the use of Hoeffding’s inequality for i.i.d.
+need to be replaced by comparable bounds with weaker conditions, e.g. Azuma’s
+inequality for martingales.
+    There is one serious gap in the argument above. BLB uses average reward while
+our theorems are for discounted reward. It is often possible to adapt algorithms
+and proofs which come with regret bounds for average reward to PAC bounds for
+discounted reward or vice versa. This would have to be done first: either a PAC
+version of BLB by combining MERL [LHS13] with UCRLγ [LH14b], or average
+reward versions of the bounds derived in this paper.
+
+
+9     Action Permutation Instead of Policy Condi-
+      tion
+We can rename actions without changing the underlying problem: Let A:A→ Ã be
+a bijection, and define P̃ (o0 r0 |hã) := P (o0 r0 |ha), where ã := A(a). Clearly, all results
+for P also hold for P̃ if a is replaced by ã everywhere, in particular Π̃(h):=A(Π(h)).
+In general, this is of little use. Things become more interesting if we allow the
+bijection A to be history-dependent, which we can do since our results hold for
+any, even non-stationarity, P̃ . This allows us to devise an A : A×H → Ã such that
+A(Π(h);h) =constant for the policy Π of interest. For example, for Ã := A, this is
+achieved by a permutation that swaps action a=Π(h) with some arbitrary but fixed
+action a1 ∈ A, and leaves all other actions unchanged:
+                                      1
+                                      a             if Π(h) = a
+                       A(a; h) :=        Π(h) if Π(h) 6= a = a1
+                                          a       else
+                                     
+
+Since Π̃(h) ≡ A(Π(h);h) ≡ a1 is constant, the φ-uniformity condition for Π̃ in Theo-
+rems 5, 6 and 9 becomes vacuous. While this transformation is of theoretical interest,
+it only becomes practically useful if we can somehow learn the function A without
+knowledge of Π, and in particular of Π∗ . We could also allow non-bijective A that
+merge actions that have (approximately) the same (optimal) Q-value.
+
+
+10      Discussion
+Summary. Our results show that RL algorithms for finite-state MDPs can be
+utilized even for problems P that have arbitrary history dependence and history-
+to-state reductions/aggregations φ that induce Pφ that are also neither stationary
+nor MDP. The only condition to be placed on the reduction is that the quantities
+
+                                              27
+of interest, (Q-)Values and (optimal) Policies, can approximately be represented.
+This considerably generalizes previous work on feature reinforcement learning and
+MDP state aggregation and allows for extreme state aggregations beyond MDPs.
+The obtained tight results may also explain why RL algorithms designed for MDPs
+sometimes perform well beyond MDPs.
+
+
+Outlook. As usual, lots remain to be done. A list of the more interesting remaining
+tasks and open questions follows:
+  • While the approximate φ-uniformity condition on Q∗ in Theorem 8 is very weak
+compared to bisimilarity, uniformity of V ∗ in Theorem 9 is even weaker (Hypothet-
+ical Bound (31) compared to Theorem 11 shows how much of a difference this can
+make). The discussion before Theorem 10 indicates that weaker forms of (31) in
+expectation or with high probability or so may hold.
+  • An algorithm learning φ beyond MDPs that comes with regret or PAC guaran-
+tees has yet to be developed. This could be done by generalizing the partial order ×
+to n < ∞, or by adapting the class and proofs of BLB algorithms, or by integrating
+MERL with UCRLγ.
+  • The trick to use an a-dependent Q∗ as a-independent map φ in Section 6 was to
+vectorize Q∗ in a. Unfortunately this leads to a state-space size exponential in A.
+Are there better ways of dealing with actions? Are there other extreme aggregations
+φ, or are a-dependent φ possible?
+  • Are average-reward total-regret versions of our discounted reward results pos-
+sible, under suitable mixing rate conditions?
+  • For small discrete action spaces typical for many board games, the exact con-
+ditions on Π are met. For continuous action spaces as in robotics, we can simply
+discretize the action space, introducing another ε-error, but action-continuous ver-
+sions of our results would be nicer. Any interesting generalization should replace
+the exact by approximate φ-uniformity conditions on Π.
+  • Our theorems and/or proof ideas should allow to extend existing convergence
+theorems for RL algorithms such as Q-learning and others from MDPs to beyond
+MDPs.
+  • The bisimulation conditions of classical state aggregation results are for re-
+ward and transition probabilities. It would be interesting to derive explicit weaker
+conditions for them that still imply our conditions on (Q-)Values.
+
+
+Acknowledgements. Thanks to: Daniel Filan for showing that the bounds in
+Section 5 are tight and that all conditions in the theorems/lemmas are necessary
+(unpublished); to Jan Leike for providing the counter-example for Theorem 10; to
+the anonymous reviewers for valuable feedback on earlier submissions; and to the
+Australian Research Council for support under grant DP120100950.
+
+                                         28
+References
+[EDM03]    E. Even-Dar and Y. Mansour. Approximate equivalence of Markov decision
+           processes. In Proc. 16th Annual Conf. on Learning Theory (COLT’03), volume
+           2777 of LNAI, pages 581–594. Springer, 2003.
+
+[EGW05]    D. Ernst, P. Geurts, and L. Wehenkel. Tree-based batch mode reinforcement
+           learning. Journal of Machine Learning Research, 6:503–556, 2005.
+
+[Faz06]    I. Fazekas. On a general approach to the strong laws of large numbers. Tech-
+           nical report, Faculty of Informatics, University of Debrecen, Hungary, 2006.
+
+[FK01]     I. Fazekas and O. Klesov. A general approach to the strong law of large
+           numbers. Theory of Probability & Its Applications, 45(3):436–449, 2001.
+
+[FPP04]    N. Ferns, P. Panangaden, and D. Precup. Metrics for finite Markov deci-
+           sion processes. In Proc. 20th conf. on Uncertainty in Artificial Intelligence
+           (UAI’04), pages 162–169, 2004.
+
+[GDG03]    R. Givan, T. Dean, and M. Greig. Equivalence notions and model minimiza-
+           tion in Markov decision processes. Artificial Intelligence, 147(1–2):163–223,
+           2003.
+
+[Hut05]    M. Hutter. Universal Artificial Intelligence: Sequential Decisions based on
+           Algorithmic Probability. Springer, Berlin, 2005.
+
+[Hut09a]   M. Hutter. Feature dynamic Bayesian networks. In Proc. 2nd Conf. on Ar-
+           tificial General Intelligence (AGI’09), volume 8, pages 67–73. Atlantis Press,
+           2009.
+
+[Hut09b]   M. Hutter. Feature Markov decision processes. In Proc. 2nd Conf. on Artificial
+           General Intelligence (AGI’09), volume 8, pages 61–66. Atlantis Press, 2009.
+           First Runner-Up for the Kurzweil Best Paper Award.
+
+[Hut09c]   M. Hutter. Feature reinforcement learning: Part I: Unstructured MDPs. Jour-
+           nal of Artificial General Intelligence, 1:3–24, 2009.
+
+[Hut14]    M. Hutter. Extreme state aggregation beyond MDPs. In Proc. 25th Interna-
+           tional Conf. on Algorithmic Learning Theory (ALT’14), volume 8776 of LNAI,
+           pages 185–199, Bled, Slovenia, 2014. Springer.
+
+[Hut16]    M. Hutter. Extreme state aggregation beyond Markov decision processes.
+           Theoretical Computer Science, 650:73–91, 2016.
+
+[JOA10]    T. Jaksch, R. Ortner, and P. Auer. Near-optimal regret bounds for reinforce-
+           ment learning. Journal of Machine Learning Research, 11:1563–1600, 2010.
+
+[LH14a]    T. Lattimore and M. Hutter. General time consistent discounting. Theoretical
+           Computer Science, 519:140–154, 2014.
+
+                                          29
+[LH14b]   T. Lattimore and M. Hutter. Near-optimal PAC bounds for discounted MDPs.
+          Theoretical Computer Science, 558:125–143, 2014.
+
+[LHS13]   T. Lattimore, M. Hutter, and P. Sunehag. The sample-complexity of gen-
+          eral reinforcement learning. Journal of Machine Learning Research, W&CP:
+          ICML, 28(3):28–36, 2013.
+
+[McC96]   A. K. McCallum. Reinforcement Learning with Selective Perception and
+          Hidden State. PhD thesis, Department of Computer Science, University of
+          Rochester, 1996.
+
+[MMR11]   O.-A. Maillard, R. Munos, and D. Ryabko. Selecting the state-representation
+          in reinforcement learning. In Advances in Neural Information Processing Sys-
+          tems (NIPS’11), volume 24, pages 2627–2635, 2011.
+
+[Ngu13]   P. Nguyen. Feature Reinforcement Learning Agents. PhD thesis, Research
+          School of Computer Science, Australian National University, 2013.
+
+[NMRO13] P. Nguyen, O. Maillard, D. Ryabko, and R. Ortner. Competing with an
+         infinite set of models in reinforcement learning. JMLR WS&CP AISTATS,
+         31:463–471, 2013.
+
+[NOR13]   O.-A. Maillard P. Nguyen, R. Ortner, and D. Ryabko. Optimal regret bounds
+          for selecting the state representation in reinforcement learning. JMLR W&CP
+          ICML, 28(1):543–551, 2013.
+
+[NSH11]   P. Nguyen, P. Sunehag, and M. Hutter. Feature reinforcement learning in prac-
+          tice. In Proc. 9th European Workshop on Reinforcement Learning (EWRL-9),
+          volume 7188 of LNAI, pages 66–77. Springer, September 2011.
+
+[Ort07]   R. Ortner. Pseudometrics for state aggregation in average reward Markov
+          decision processes. In Proc. 18th International Conf. on Algorithmic Learning
+          Theory (ALT’07), volume 4754 of LNAI, pages 373–387, Sendai, Japan, 2007.
+
+[Put94]   M. L. Puterman. Markov Decision Processes — Discrete Stochastic Dynamic
+          Programming. Wiley, New York, NY, 1994.
+
+[RN10]    S. J. Russell and P. Norvig. Artificial Intelligence. A Modern Approach.
+          Prentice-Hall, Englewood Cliffs, NJ, 3rd edition, 2010.
+
+[SB98]    R. S. Sutton and A. G. Barto. Reinforcement Learning: An Introduction. MIT
+          Press, Cambridge, MA, 1998.
+
+[SH10]    P. Sunehag and M. Hutter. Consistency of feature Markov processes. In Proc.
+          21st International Conf. on Algorithmic Learning Theory (ALT’10), volume
+          6331 of LNAI, pages 360–374, Canberra, Australia, 2010. Springer.
+
+[SLL09]   A. L. Strehl, L. Li, and Michael L. Littman. Reinforcement learning in finite
+          MDPs: PAC analysis. Journal of Machine Learning Research, 10:2413–2444,
+          2009.
+
+                                         30
+[UV98]    W. T. B. Uther and M. M. Veloso. Tree based discretization for continuous
+          state space reinforcement learning. In AAAI, pages 769–774, 1998.
+
+[VGS05]   V. Vovk, A. Gammerman, and G. Shafer. Algorithmic Learning in a Random
+          World. Springer, New York, 2005.
+
+
+
+
+                                       31
+A     List of Notation
+General notation
+[[R]]    = 1 if R=true and =0 if R=false (Iverson bracket)
+#X       size of set X
+ε,δ      small non-negative real numbers
+        empty string
+bzc      largest integer ≤ z
+
+Original history-based process
+O,R,A         = finite observation, reward, action spaces.
+ot rt at      ∈ O×R×A = observation, reward, action at time t
+t ≤ n ∈ N = any time ≤ sample size
+P,Q,V,Π = Probability, (Q-)Value, Policy of original history-based Process
+Π∗ ,Π̃,ΠB = optimal, approximately optimal, behavior Policy
+h∈H           = (O×R×A)∗ ×O×R = possible histories of any length
+h0 = hao0 r0 = successor history of h ∈ H
+ht            = o1 r1 a1 ...ot rt = history up to time t
+Ht            = (O×R×A)t−1 ×O×R = history of length t
+P (o0 r0 |ha) = probability of next observation&reward given history&action
+
+Reduction/aggregation from history to states
+Sφ           = finite state space induced by φ (range of φ)
+φ : H → Sφ = reduction/map/aggregation from histories to states
+st           = φ(ht ) ∈ S = state at time t
+     0 0
+Pφ (s r |ha) = marginalized P -probability over state&reward given history&action
+B(h|sa)      = dispersion probability. Stochastic “inverse” of φ
+hQ(h,a)iB   = B-average over {h̃ : φ(h̃) = φ(h)}
+            = non-negative weight function ∞
+                                              P
+wt (sa)                                          t=1 wt (sa) = 1 ∀sa
+PB (h)      = probability of h from P interacting with ΠB
+PφB ()      = (partially) φ-reduced, marginalized, conditionalized PB
+,×        = (extended) ordering of φ w.r.t. quality (n = ∞ so far only)
+
+Finite state Markov decision process (MDP)
+S          = finite state space
+p,q,v,π    = probability, (q-)value, policy of MDP
+      0 0
+s,a,s ,r   = stat, action, successor state, reward
+n(sas r ) = number of times sas0 r0 appears in hn+1
+       0 0
+
+γ ∈ [0;1)  = discount factor
+
+                                        32
+

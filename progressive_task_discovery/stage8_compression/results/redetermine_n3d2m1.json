@@ -1,0 +1,22 @@
+[
+  {
+    "task": "c_n3d2m1_4L2a7",
+    "ktrue": 19,
+    "kmin_last": 8,
+    "checked": 40,
+    "determined": 8,
+    "ambiguous": 32,
+    "contradicted": 0,
+    "unknown": 0
+  },
+  {
+    "task": "c_n3d2m1_4L3a11",
+    "ktrue": 19,
+    "kmin_last": 12,
+    "checked": 20,
+    "determined": 0,
+    "ambiguous": 20,
+    "contradicted": 0,
+    "unknown": 20
+  }
+]

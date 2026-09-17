@@ -1,0 +1,11 @@
+{
+  "runner": "src/run_goal.py",
+  "tasks": 12,
+  "seeds": 16,
+  "budget": 100000,
+  "every": 100,
+  "runs": 1728,
+  "source_sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e",
+  "data_sha256": "6ee8072ba703c497f9f203fa0c783af7fe4dede07f610464af5180436b4ef06d",
+  "written": "2026-09-10"
+}

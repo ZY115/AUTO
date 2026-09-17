@@ -1,0 +1,96 @@
+{
+  "source_sha256": "3f664781325ec11cc6a4ff1ea4f3bcac35d13498bd8452d7b440cec2ea1dd97d",
+  "binary_sha256": "50062b01f5d4ecea49324a32326bfb772e92975aa66ca9bb1684fe5a3771c1d5",
+  "existing_tests_passed": 18,
+  "full": [
+    {
+      "arm": "automaton",
+      "n": 192,
+      "mean_capped_first90": 13354.166666666666,
+      "auc": 0.9480446875,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "automaton+random",
+      "n": 192,
+      "mean_capped_first90": 9614.583333333334,
+      "auc": 0.9643422604166667,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "automaton+scarcest",
+      "n": 192,
+      "mean_capped_first90": 6369.791666666667,
+      "auc": 0.9776558333333333,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "automaton+shape+scarcest",
+      "n": 192,
+      "mean_capped_first90": 3765.625,
+      "auc": 0.9880998177083333,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "history",
+      "n": 192,
+      "mean_capped_first90": 32187.5,
+      "auc": 0.890856796875,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "history+random",
+      "n": 192,
+      "mean_capped_first90": 24281.25,
+      "auc": 0.924671,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "history+scarcest",
+      "n": 192,
+      "mean_capped_first90": 11692.708333333334,
+      "auc": 0.9613791197916667,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "history+shape",
+      "n": 192,
+      "mean_capped_first90": 10677.083333333334,
+      "auc": 0.9588339791666667,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "history+shape+scarcest",
+      "n": 192,
+      "mean_capped_first90": 5432.291666666667,
+      "auc": 0.9824802760416667,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "history+shape_oracle",
+      "n": 192,
+      "mean_capped_first90": 5588.541666666667,
+      "auc": 0.986204203125,
+      "final_success": 1,
+      "merge_precision": 1
+    },
+    {
+      "arm": "merged+scarcest",
+      "n": 192,
+      "mean_capped_first90": 11750,
+      "auc": 0.8711260885416666,
+      "final_success": 0.8949652708333333,
+      "merge_precision": 0.6992928125
+    }
+  ],
+  "counterexamples": "representative_probe conflict=1 merged=1\npropagation_probe children_meet_quota=0 children_merged=1\npotential_probe deepest=0 phi0=-0 phi1=-0 phi2=-0\n"
+}

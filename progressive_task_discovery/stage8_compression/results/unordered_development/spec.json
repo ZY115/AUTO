@@ -1,0 +1,96 @@
+{
+  "name": "unordered_development",
+  "defaults": {
+    "budget": 200000,
+    "every": 1000,
+    "bridge": 0,
+    "hfactor": 24,
+    "epsilon": 0.02,
+    "gamma": 0.99,
+    "reward_ratio": 8
+  },
+  "conditions": [
+    {
+      "name": "unordered",
+      "args": {
+        "branching": 1
+      }
+    },
+    {
+      "name": "fixed_order",
+      "args": {
+        "branching": 0
+      }
+    }
+  ],
+  "variants": [
+    {
+      "name": "position_replay",
+      "args": {
+        "method": "position_replay"
+      }
+    },
+    {
+      "name": "count_replay",
+      "args": {
+        "method": "count_replay"
+      }
+    },
+    {
+      "name": "last_event_replay",
+      "args": {
+        "method": "last_event_replay"
+      }
+    },
+    {
+      "name": "history_replay",
+      "args": {
+        "method": "history_replay"
+      }
+    },
+    {
+      "name": "learned_replay",
+      "args": {
+        "method": "learned_replay"
+      }
+    },
+    {
+      "name": "oracle_state_replay",
+      "args": {
+        "method": "oracle_state_replay"
+      }
+    },
+    {
+      "name": "immediate_skill",
+      "args": {
+        "method": "immediate_skill"
+      }
+    },
+    {
+      "name": "hand_skill",
+      "args": {
+        "method": "hand_skill"
+      }
+    }
+  ],
+  "lengths": [
+    2,
+    6,
+    10,
+    18
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "runs": 1920,
+  "maps": 15,
+  "arms": [
+    "count",
+    "history",
+    "merged",
+    "oracle"
+  ],
+  "seeds": 16,
+  "seed0": 4000,
+  "budget": 200000,
+  "source_sha256": "cd0535c2652894382817e944fffb3ae4bef39a9e19a487f9b5807d6d7bd38b86"
+}

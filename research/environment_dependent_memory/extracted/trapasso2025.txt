@@ -1,0 +1,1068 @@
+                                                            Model-Based Reinforcement Learning in Discrete-Action
+                                                                 Non-Markovian Reward Decision Processes
+                                                                    Alessandro Trapasso1,2 , Luca Iocchi2 , Fabio Patrizi2
+                                                                            1
+                                                                              Fondazione Bruno Kessler, Trento, Italy
+                                                                          2
+                                                                            Sapienza University of Rome, Rome, Italy
+                                                                 atrapasso@fbk.eu, {trapasso, iocchi, patrizi}@diag.uniroma1.it
+
+                                                                 Abstract                                Toro Icarte et al., 2022]. Any NMRDP can be reduced to an
+
+
+
+
+arXiv:2512.14617v2 [cs.LG] 8 Jun 2026
+                                                                                                         ordinary Markov Decision Process (MDP) whose states are
+                                             Many practical decision-making problems involve             pairs (s, q) of environment state and automaton state [Braf-
+                                             tasks whose success depends on the entire system            man et al., 2018]. Model-free agents operate in S × Q
+                                             history, rather than on achieving a state with de-          without storing a transition model [De Giacomo et al., 2020;
+                                             sired properties. Markovian Reinforcement Learn-            Toro Icarte et al., 2022], while model-based algorithms such
+                                             ing (RL) can be inadequate for such tasks, while            as R-Max [Brafman and Tennenholtz, 2003] can in princi-
+                                             modeling them as non-Markovian reward decision              ple learn a PAC-optimal policy on the same space [Gaon and
+                                             processes (NMRDPs) enables agents to handle tem-            Brafman, 2020]. Despite this theoretical effectiveness, treat-
+                                             poral dependencies. Existing approaches offer lim-          ing (s, q) as an opaque state discards the fact that the transition
+                                             ited formal guarantees on both (near-)optimality and        kernel is still Markovian and that only the reward component
+                                             sample efficiency. We address both issues with QR-          is history-dependent, leading to redundant exploration.
+                                             Max, a novel model-based algorithm for NMRDPs
+                                             with discrete actions that factorizes Markovian tran-          We show that preserving this structural distinction unlocks
+                                             sition learning from non-Markovian reward han-              substantial gains. By factorizing the dynamics into the Marko-
+                                             dling via reward machines. To our knowledge, this           vian environment transition P (s′ |s, a) and the determinis-
+                                             is the first model-based RL algorithm for discrete-         tic automaton update q ′ = η(q, s′ ), we devise QR-Max,
+                                             action NMRDPs that leverages this factorization to          a model-based algorithm that reuses each learned environ-
+                                             obtain PAC convergence to ε-optimal policies with           ment transition for every automaton state and retains sepa-
+                                             polynomial sample complexity. We then extend                rate optimistic bonuses. We show that QR-Max is PAC–
+                                             QR-Max to continuous state spaces with Bucket-              MDP: with high probability, all but a polynomial number
+                                             QR-Max, a SimHash-based discretizer that pre-               of interaction steps are ε-optimal. Its sample bound has
+                                             serves the same factorized structure and achieves           the factorized unknown-component term U = |S||A|mE +
+                                             fast and stable learning without manual gridding or         |S||Q|mQ , where mE , mQ are the environment and automa-
+                                             function approximation. We experimentally com-              ton knownness thresholds, instead of the product-space count
+                                             pare our method with state-of-the-art model-based           |S||Q||A|m incurred by applying R-Max directly on S × Q.
+                                             RL approaches on environments of increasing com-            Thus factorization avoids relearning the environment transi-
+                                             plexity, showing substantially improved sample ef-          tion model separately for every automaton state. To the best of
+                                             ficiency and greater robustness in finding optimal          our knowledge, this is the first model-based RL algorithm for
+                                             policies.                                                   discrete-action NMRDPs that explicitly leverages the decou-
+                                                                                                         pling between environment and automaton dynamics to obtain
+                                                                                                         PAC guarantees with improved sample-complexity bounds.
+                                        1   Introduction                                                 Building on the same idea, we also introduce Bucket-QR-
+                                        Reinforcement Learning (RL) has achieved striking success in     Max, a variant of QR-Max combining SimHash discretisa-
+                                        domains that range from game playing to robotics, thanks to      tion [Charikar, 2002] with the factorised counts, which ex-
+                                        its ability to shape behaviour from sparse feedback. Designing   tends the approach to continuous state spaces without man-
+                                        such feedback, however, is difficult when the objective spans    ual gridding and, under a standard bounded-discretisation as-
+                                        multiple temporally ordered sub-goals: specifying such tasks     sumption, admits a conditional PAC–MDP bound.
+                                        with a Markovian reward often yields brittle or misleading          We evaluate QR-Max on five maps, each combined with
+                                        signals. Non-Markovian Reward Decision Processes (NM-            seven distinct Reward Machines of increasing spatial and
+                                        RDPs) address this difficulty by allowing the reward to depend   temporal complexity, and we also include a continuous-state
+                                        on the environment history; compact logical or automata for-     variant. On the benchmarks we consider, our approach is
+                                        malisms, including Reward Machines and ltlf /ldlf specifi-       one to two orders of magnitude more sample-efficient than
+                                        cations, allow for encoding these rewards succinctly [Bacchus    standard R-Max, the reward-machine-aware QRM, and opti-
+                                        et al., 1996; Thiébaux et al., 2006; Brafman et al., 2018;      mistic explorers such as UCBVI, PSRL and OPSRL, while
+retaining formal PAC guarantees. These results suggest               finite-trace automata (regular languages). Nonetheless, on fi-
+that QR-Max and its continuous-state extension are practi-           nite traces such approaches reduce to Q-learning and QRM,
+cal model-based algorithms with formal sample-complexity             which we compare against, so our experiments indirectly ac-
+bounds for discrete-action NMRDPs. Moreover, optimal                 count for [Shao and Kwiatkowska, 2023].
+discrete-action solutions can drive effective and efficient train-      Finally, a substantial body of work aims to learn the NMR
+ing in continuous-actions MDPs using hierarchical RL ap-             model itself, e.g., [Gaon and Brafman, 2020]; this is outside
+proaches (e.g., [Cipollone et al., 2025]).                           our scope since we assume a given NMR specification. To
+                                                                     the best of our knowledge, QR-Max is the first tabular model-
+                                                                     based RL algorithm for discounted NMRDPs that factorizes
+2   Related Work                                                     environment and reward dynamics to obtain PAC-MDP guar-
+RL with non-Markovian rewards has been studied via NM-               antees with improved sample-complexity bounds over R-Max
+RDPs, Reward Machines (RMs), and temporal-logic specifi-             on S × Q.
+cations. Two strands are most relevant here: model-based RL
+for NMRDPs and structure-aware methods for non-Markovian             3    Background
+tasks. Prior work applies R-Max to NMRDPs by incremen-
+tally extending an MDP with reward-automaton states, i.e.,           A Markov Decision Process (MDP) is a tuple M =
+learning in a representation akin to the R-Max baseline we           (S, A, P, RE ) with finite states S, actions A, transition kernel
+use [Gaon and Brafman, 2020]. In contrast, our approach              P (s′ |s, a), and reward function RE : S × A × S → R. A
+improves sample efficiency by factorizing environment dy-            policy ρ : S → A induces the return v ρ (s) = Eρ [r0 + γr1 +
+namics and reusing learned environment transitions across            γ 2 r2 + · · · ], where ri = RE (si , ρ(si ), si+1 ), s0 = s, and
+automaton states.                                                    γ ∈ [0, 1] is the discount factor. The goal is to find an optimal
+   We also benchmark against state-of-the-art model-based ex-        policy ρ∗ maximizing v ∗ (s) for all s ∈ S. In RL, the func-
+ploration methods for finite MDPs. UCBVI [Azar et al., 2017]         tions P and RE are unknown and must be learned through
+matches minimax-optimal regret using empirical counts and            interaction.
+confidence bonuses, with memory O(S 2 A). PSRL [Osband                   RL methods are typically model-free or model-based: the
+et al., 2013] and its optimistic variant OPSRL [Tiapkin et al.,      former seek ρ∗ without explicitly estimating P and RE , while
+2022] maintain Dirichlet posteriors for transitions, yielding        the latter learn both. Two representative algorithms are Q-
+memory O(H, S 2 A) (see Strens [2000], §5.1); this quadratic         learning [Watkins and Dayan, 1992] and R-Max [Brafman
+dependence on S makes them impractical on our largest grids,         and Tennenholtz, 2003]. A central notion is the optimal state-
+hence we omit PSRL/OPSRL when the state space is very                action value function Q⋆ : S × A → R, where Q⋆ (s, a) is
+large. On the 15×15 grid with H=250, PSRL/OPSRL need                 the expected discounted return obtained by executing a in
+≈ 50.6M entries vs. 0.204M for QR-Max, exceeding our                 s and then acting optimally; an optimal policy is ρ⋆ (s) ∈
+budget (see Appendix).                                               arg maxa Q⋆ (s, a). While Q⋆ can be computed from P and
+   A recent line of work develops structure-aware algorithms         RE (e.g., via Value Iteration [Sutton and Barto, 2018]), this
+for non-Markovian tasks. Exploration in deterministic RMs            is not directly possible in RL since P and RE are unknown.
+has been studied with regret bounds exploiting automaton                 Q-learning maintains an estimate b     Q, initialized arbitrarily
+structure [Bourel et al., 2023], and extensions to Probabilistic     and updated from experience using an update rule based on
+RMs (PRMs) have also been proposed [Bourel et al., 2024;             Bellman’s optimality condition; with sufficient exploration,
+Lin and Zhang, 2025]. These methods typically optimize re-           Qb approximates Q⋆ and induces a near-optimal policy. In
+gret (often average-reward or finite-horizon) under a known          contrast, R-Max estimates P and RE by collecting samples
+RM/PRM, and are therefore not directly comparable to our             for state-action pairs (s, a) until they are deemed known; it
+discounted PAC-style evaluation; in our setting we pro-              then plans in the learned model (typically via value iteration),
+vide a tabular model-based baseline and improve over R-              using optimism to drive exploration. In standard RL, RE is
+Max on S × Q by reusing environment transitions across               Markovian, depending only on the current (and possibly next)
+automaton states. Our factorization is orthogonal to fac-            state; here we consider non-Markovian rewards.
+tored MDPs, where the state is represented by variables                  A Non-Markovian Reward Decision Process (NMRDP) is
+and the transition model factorises as a dynamic Bayesian            a tuple N = (M, RA ), where RA : S + → R is a Non-
+network [Kearns and Koller, 1999; Guestrin et al., 2003;             Markovian Reward Function (NMR) depending on state his-
+Strehl, 2007; Osband and Roy, 2014]. Here, the underly-              tories. NMRs can be specified compactly, e.g., by Reward Ma-
+ing environment need not be factored: the gain comes from            chines [Toro Icarte et al., 2022] or Restraining Bolts [De Gi-
+separating Markovian environment dynamics from the non-              acomo et al., 2020]. We unify them using a Deterministic
+Markovian reward automaton. Other NMRDP and temporal-                Finite-state Automaton (DFA) A = (S, Q, q0 , η, F ), where
+logic approaches either estimate alternative dynamics or fo-         S is the input alphabet, Q the automaton states, q0 the ini-
+cus mostly on model-free learning [Gupta et al., 2021;               tial state, η : Q × S → Q the transition function, and F
+Toro Icarte et al., 2022; De Giacomo et al., 2020], whereas          the final states. We assume full observability of both the en-
+we focus on model-based PAC learning. Among model-free               vironment state and the automaton state: after executing an
+methods, one approach maximizes the probability of satisfy-          action, the agent observes (s′ , q ′ ) (equivalently, it can update
+ing an ltl formula [Shao and Kwiatkowska, 2023]; it differs          q ′ deterministically when A is known). The reward is given
+from our setting in focusing on infinite traces, while we use        by RA (q, s′ , q ′ ) for the last automaton transition (q, s′ , q ′ ). In
+this notation, a reward machine is a deterministic automaton                     Equations 1 and 2 describe a factorization of the system
+endowed with transition rewards, while a restraining bolt is the              dynamics that decouples the Markovian environment dynam-
+DFA induced by the temporal specification; acceptance can                     ics (P (s′ |s, a), RE (s, a, s′ )) from the non-Markovian reward
+be encoded through RA , e.g., by assigning positive reward to                 expressed by the DFA (P (q ′ |s′ , q), RA (q, s′ , q ′ )).
+transitions entering F . Thus F has no separate algorithmic                   Observability and RM Knowledge. We assume the agent
+role unless acceptance itself is part of the reward specification.            observes the current automaton state q (as standard in RM set-
+   A compactly captures temporal properties of the history;                   tings via a monitor over observable propositions) and receives
+in practice |Q| ≪ |S|. In an NMRDP N = (M, RA )                               the RM reward component rA from the RM monitor/wrapper.
+with M = (S, A, P, RE ), after a trajectory s0 a0 · · · sas′ ,                We consider two settings: QR-Max does not assume knowl-
+the reward is RE (s, a, s′ ) + RA (q, s′ , q ′ ), where q (resp. q ′ )        edge of the automaton transition function η (it only receives
+is the DFA state after consuming s0 · · · s (resp. s0 · · · ss′ ).            the q → q ′ signal), while QR-MaxRM assumes the RM is
+Although this makes the reward stateful, NMRDPs can be                        given (including η), enabling counterfactual updates across
+reduced to Markovian RL by augmenting the state with                          automaton states. If q is not observable, the problem becomes
+the automaton component. As shown in [Brafman et al.,                         partially observable and is outside our scope.
+2018], N is equivalent to an MDP M′ = (S ′ , A, P ′ , R′ )
+over S ′ = S × Q, with P ′ capturing synchronous tran-                        Learning Algorithms. Discrete model-based RL can be ap-
+sitions and R′ Markovian. Standard RL methods can                             plied in the joint state space S × Q to estimate the transition
+then be applied (see, e.g., [De Giacomo et al., 2020;                         and reward functions P (s′ , q ′ |s, q, a) and R(s, q, a, s′ , q ′ ). In
+Toro Icarte et al., 2022]).                                                   this paper, we compare our method based on the above fac-
+   However, this reduction treats (s, q) as an atomic state,                  torization with different model-based RL approaches that use
+losing the distinction between the MDP dynamics (M) and                       the joint space S × Q, such as that in [Brafman et al., 2018;
+the DFA dynamics (A). For instance, learning transitions                      Gaon and Brafman, 2020]. As shown in the experiments, the
+from (s, q) on action a does not help with (s, q ′ ), even though             use of the joint space does not scale well with the task’s com-
+the environment dynamics from s are identical. Since A is                     plexity, since it does not exploit the Markovian nature of the
+deterministic (and typically easier to learn), this coupling can              environment transitions.
+yield redundant exploration. We investigate how to retain this                4.1    QR-Max Algorithm
+opportunity by factorizing N ’s dynamics into M’s and A’s.
+                                                                              In this section, we describe QR-Max, a novel algorithm ex-
+                                                                              tending R-Max to non-Markovian rewards and Markovian
+4    Decoupling Environment and Reward                                        transitions, by exploiting the factorization described above.
+     Dynamics                                                                 As shown later on, QR-Max provides the same guarantees
+We model an NMRDP N = (M, RA ), by combining the dy-                          for near-optimal solutions as R-Max, but exhibits a sig-
+namics of the environment M with that of the NMR RA and                       nificantly higher sample efficiency. The main advantage
+the DFA A it is based on, as follows: (1) when the system is                  of QR-Max is that the terms of Equations 1 and 2, i.e.,
+reset, the environment is set to an initial state s0 , A is set to its        P (s′ |s, a), P (q ′ |s′ , q), RE (s, a, s′ ), and RA (q, s′ , q ′ ), can
+initial state q0 , and a dummy DFA transition q0 = η(q0 , s0 )                be estimated in parallel by setting different thresholds, tE and
+is performed, s.t. A consumes s0 ; (2) at each step, given the                tQ , to determine when they are known. For nE (s, a) and
+current state (s, q) and the chosen action a, the environment                 nQ (q, s′ ) the number of visits to the environment’s and DFA’s
+progresses to a state s′ (with probability P (s′ |s, a)), A pro-              states, respectively, we use the following conditions to label
+gresses to q ′ = η(q, s′ ) (with probability 1), and the returned             states as known: nE (s, a) ≥ tE =⇒ Known(s, a) and
+total reward is RE (s, a, s′ ) + RA (q, s′ , q ′ ).                           nQ (q, s′ ) ≥ tQ =⇒ Known(q, s′ ).
+                                                                                 The experience for nE (s, a) is collected independently of
+   The resulting transition function is captured as follows:
+                                                                              the state of A and once Known(s, a) holds and the environ-
+     P (s′ , q ′ |s, q, a) = P (q ′ |s′ , q, s, a) P (s′ |s, q, a),           ment transition and reward functions are estimated, respec-
+                                                                              tively as P̂ (s′ |s, a) and RˆE (s, a, s′ ), these values are used
+where P (s′ , q ′ |s, q, a), P (q ′ |s′ , q, s, a), P (s′ |s, q, a) are the   also in other unseen states of A. This decoupling yields a
+transition probability distributions of N , RA ’s automaton A,                significant improvement in sample efficiency with a standard,
+and the environment M, respectively. However, since M is                      monolithic formulation of the joint space. Observe, in par-
+Markovian: P (s′ |s, q, a) = P (s′ |s, a), i.e., given s and a,               ticular, that for deterministic A (as is the case here), tQ = 1
+s′ is independent of the history leading A to q. Also, since                  is sufficient to know all A’s states, thus yielding a signifi-
+q ′ depends only on q and s′ : P (q ′ |s′ , q, s, a) = P (q ′ |s′ , q).       cant saving in time for learning A. We keep the threshold
+Thus, N ’s transition model is:                                               tQ for modularity and generality, to make the algorithm ap-
+             P (s′ , q ′ |s, q, a) = P (s′ |s, a)P (q ′ |s′ , q).      (1)    plicable also to more general machines, such as stochastic
+                                                                              RMs [Corazza et al., 2022].
+    As for the reward function, we simply have:                                  Following R-Max’s approach, QR-Max (Algorithm 1) ini-
+                                                                              tializes the Q-table QT with a maximum value (line 1) for
+        R(s, q, a, s′ , q ′ ) = RE (s, a, s′ ) + RA (q, s′ , q ′ ).    (2)    every state-action pair (notice states now consist of s and q)
+                                                                              and selects the next action to execute as the argmax of the
+                      ′   ′
+Note that RA (q, s , q ) does not depend on s or a, i.e., on how              current Q-table (line 8). In lines 11–26, environment transi-
+state (s′ , q ′ ) has been reached from any state (s, q).                     tions and rewards (τE , ρE , nE ) and automaton transitions and
+ Algorithm 1. QR-Max                                                                      τE (s, a, s′ ) > 0, also KnownQ (q, s′ ) holds. All other entries
+   Input: S, Q, A states and actions, E environment,                                      retain their initial optimistic value Rmax /(1−γ); equivalently,
+   γ discount factor, Rmax max expected reward,                                           any unobserved successor probability mass is assigned to an
+   tE , tQ thresholds, T value iteration horizon                                          absorbing optimistic state with value Rmax /(1 − γ) (standard
+   Output: QT optimal Q-table
+                                                                                          R-Max), underpinning the PAC–MDP analysis in Section 4.2.
+   QT (s, q, a) ← Rmax /(1 − γ), ∀s ∈ S, q ∈ Q, a ∈ A                                        In contrast to RM-aware methods that assume direct access
+   τE (s, a, s′ ) ← 0, ρE (s, a, s′ ) ← 0, ∀s, s′ ∈ S, a ∈ A
+   nE (s, a) ← 0, ∀s ∈ S, a ∈ A
+                                                                                          to the automaton transition function η, QR-Max does not
+   τQ (q, s′ , q ′ ) ← 0, ρQ (q, s′ , q ′ ) ← 0, ∀s′ ∈ S, q, q ′ ∈ Q                      require η as an input: it only assumes access to the automaton-
+   nQ (q, s′ ) ← 0, ∀s′ ∈ S, q ∈ Q                                                        state signal, i.e., the agent observes the current automaton state
+   s, q ← E.reset()
+   for t = 1, . . . , Nsteps do                                                           q and, after each action, the updated state q ′ together with the
+         ā ← argmaxa QT (s, q, a)                                                        reward, as formalized above. If q is not observable and the
+         s′ , q ′ , rE , rA , done = E.step(ā)                                           RM is unknown, the problem becomes partially observable;
+         doVI = False
+         if nE (s, ā) < tE then                                                          we leave automaton-state inference to future work.
+                 τE (s, ā, s′ ) + = 1                                                       When the DFA/RM is available, we can additionally gen-
+                 ρE (s, ā, s′ ) + = rE
+                 nE (s, ā) + = 1
+                                                                                          erate counterfactual experience across automaton states and
+                 if nE (s, ā) = tE then                                                  apply the same factorized updates to it, obtaining the structure-
+                       doVI = True                                                        aware variant QR-MaxRM, which we also evaluate experi-
+         if nQ (q, s′ ) < tQ then                                                         mentally.
+              τQ (q, s′ , q ′ ) + = 1
+              ρQ (q, s′ , q ′ ) + = rA
+              nQ (q, s′ ) + = 1                                                           4.2   Theoretical Guarantees of QR-Max
+              if nQ (q, s′ ) = tQ then                                                    Let X = S × Q, Vmax = Rmax /(1 − γ), and U =
+                    doVI = True
+                                                                                          |S||A|mE + |S||Q|mQ , where U is the number of factorized
+         if done then
+               QT (s′ , q ′ , a′ ) ← 0, ∀a′ ∈ A
+                                                                                          components that can be unknown before becoming known.
+         if doVI then
+                                                                                          We assume one-step rewards are bounded in [0, Rmax ]. For
+              QT ← VI(QT, τE , ρE , nE , τQ , ρQ , nQ , γ, T )                            the PAC analysis, we denote the knownness thresholds by
+         if done then                                                                     mE = tE and mQ = tQ . The thresholds mE , mQ are cho-
+               s, q ← E.reset()                                                           sen by standard concentration bounds and a union bound over
+         else
+               s, q ← s′ , q ′                                                            the events for RE , PE , RA , and PQ , so that, with probability
+                                                                                          at least 1 − δ, every known component induces reward er-
+   return QT
+                                                                                          ror at most ξR , environment-transition error at most ξE , and
+rewards (τQ , ρQ , nQ ) are accumulated separately, using dif-                            automaton-transition error at most ξQ . They are chosen so
+ferent thresholds, tE , tQ . If any pair (s, a) or (q, s′ ) reaches                       that 2(ξR + γVmax (ξE + ξQ ))/(1 − γ) + ηVI ≤ ϵ, where
+the corresponding target threshold (lines 15-17 and 23-25),                               ηVI is the value-iteration truncation error. For deterministic
+a value iteration step (V I) is run for T iterations (line 31)                            reward machines with deterministic transition rewards, one
+to update the Q-table values. When an episode terminates,                                 observation suffices for each observed (q, s′ ), hence mQ = 1
+the Q-table values for the final states are set to zero (line 28)                         and ξQ = 0 on known automaton components.
+and the environment is reset (line 34). For value iteration, a
+standard algorithm is adopted, which uses Equations 1 and 2                               Lemma 1 (Factored Accuracy). On the above event, every
+to describe the process and estimate the model functions as                               known product component satisfies |R       b − R| ≤ ξR and ∥Pb(· |
+follows, considering only known pairs:                                                    s, q, a) − P (· | s, q, a)∥1 ≤ ξE + ξQ . Indeed, from Eq. (1),
+                                                                                          ∥Pb − P ∥1 ≤ ∥PbE (· | s, a) − PE (· | s, a)∥1 + s′ PbE (s′ |
+                                                                                                                                                 P
+                      τE (s, a, s′ )                       τQ (q, s′ , q ′ )
+         P̂ (s′ |s, a) =              , P̂ (q ′ |s′ , q) =                   ,
+                        nE (s, a)                           nQ (q, s′ )                   s, a)∥PbQ (· | q, s′ ) − PQ (· | q, s′ )∥1 ≤ ξE + ξQ .
+                     ρE (s, a, s′ )                        ρQ (q, s′ , q ′ )              Lemma 2 (Near-Optimality in the Known Model). Condi-
+   R̂E (s, a, s′ ) =                , R̂Q (q, s′ , q ′ ) =                   .
+                      nE (s, a)                             nQ (q, s′ )                   tioned on Lemma 1, the greedy policy computed in the op-
+Bellman Backup Used in VI.                     For known components, VI:                  timistic model is ϵ-optimal whenever no unknown compo-
+                         X                          X
+                                                                                          nent is reached within the effective horizon. This follows
+   Qk+1 (s, q, a) =             R̂E (s, a, s′ ) +          P̂ (s′ |s, a)                  from the discounted simulation bound ∥Tb V − T V ∥∞ ≤
+                           s′                        s′                                   ξR + γVmax (ξE + ξQ ), valid for all ∥V ∥∞ ≤ Vmax , and
+                                                                                          from the above choice of ξR , ξE , ξQ , and ηVI .
+ X                               X                                            
+         R̂Q (q, s′ , q ′ ) + γ        P̂ (q ′ |s′ , q) max
+                                                         ′
+                                                            Qk (s′ , q ′ , a′ ) .   (3)
+                                                       a
+    q′                            q′                                                      Theorem 3 (PAC-MDP Bound). With the above thresh-
+                                                                                          olds, QR-Max is PAC-MDP. With probability at least 1 − δ,
+   Here R̂E (s, a, s′ ) and R̂Q (q, s′ , q ′ ) are reward-mass                            the number of interaction steps in which its greedy pol-
+estimates:      R̂E (s, a, s′ ) = P̂ (s′ |s, a) r̂E (s, a, s′ ) and                       icy is not ϵ-optimal is bounded by the standard optimistic-
+R̂Q (q, s , q ) = P̂ (q ′ |s′ , q) r̂Q (q, s′ , q ′ ). Thus Eq. (3) is iden-
+          ′ ′
+                                                                                          model escape bound O((HU/p) log(U/δ)), where H =
+tical to the canonical expected-reward backup, but written in                             ⌈(1 − γ)−1 ln(2Rmax /[ϵ(1 − γ)])⌉, p = ϵ(1 − γ)/(2Rmax ),
+mass form to avoid conditioning on rare successor events.                                 and U = |S||A|mE + |S||Q|mQ . Equivalently, the lead-
+   During value iteration we update QT (s, q, a) only when                                ing unknown-component dependence is factorized rather than
+KnownE (s, a) holds and, for every successor state s′ with                                product-based.
+   Proof Sketch. Condition on the event of Lemma 1. If the           for reward-machine transitions, and nQR (q, b′ ) and
+optimistic greedy policy is not ϵ-optimal, Lemma 2 implies           RQ (q, b′ ) for non-Markovian rewards. The correspond-
+that, by the standard R-Max escape-event argument [Brafman           ing knownness conditions are (nET (b, a), nER (b, a)) ≥
+and Tennenholtz, 2003; Strehl et al., 2009], it must reach           (tET , tER ), (nQT (q, b′ ), nQR (q, b′ )) ≥ (tQT , tQR ). Only
+an unknown component within horizon H with probability at            when all four conditions are met is the triple (b, a, q)
+least p. Each escape is charged to the first unknown component       marked known and Value Iteration triggered. The thresh-
+reached. Since environment components can be charged at              olds tET , tER , tQT , tQR are chosen by the same PAC-MDP
+most |S||A|mE times and automaton components at most                 concentration argument as in Sec. 4.2, applied to the in-
+|S||Q|mQ times, the standard PAC-MDP argument yields the             duced bucket MDP. The agent maintains an optimistic Q-table
+stated bound. Value iteration affects computation time but           Q[b, q, a] = Rmax /(1 − γ) for every discovered bucket b and
+does not consume environment interactions.                           runs synchronous Value Iteration over the finite abstraction
+                                                                     on ι(B) × Q until convergence up to εVI . The tabular solver
+Product-Space R-Max Comparison. Applied directly to                  therefore keeps QR-Max’s factorised counts and an optimistic
+the product MDP over S × Q, R-Max learns unknown com-                value function over O(|Bt ||Q||A|) entries.
+ponents indexed by (s, q, a), giving a product-space count
+of order |S||Q||A|m. In contrast, QR-Max learns the en-              Exploration and Optimism
+vironment component once for each (s, a) and the automa-             Because the hash granularity is fixed a priori, each bucket
+ton component once for each (q, s′ ), giving the factorized          b plays the role of a discrete state s in QR-Max: the same
+count U = |S||A|mE + |S||Q|mQ . Thus the expensive                   factorised counters and model estimates (PE , PQ , RE , RQ )
+environment-transition estimation is not repeated for every          are reused, and the Q-table remains optimistic at Rmax /(1 −
+automaton state. In deterministic reward machines, where             γ) until (b, a, q) becomes known. Thus Bucket-QR-Max
+mQ = 1, the dominant learned component is typically the              inherits exactly the same optimistic-exploration mechanism
+shared environment model, which gives the main sample-               as the discrete algorithm.
+efficiency advantage over product-space R-Max.                       Design Intuition and Conditional PAC Guarantee
+   A complete proof is provided in Appendix A.                       For any fixed finite partition B of the state space, Bucket-
+                                                                     QR-Max reduces to running QR-Max on the abstract MDP
+5   Bucket-QR-Max: Continuous State Spaces                           with states (b, q) ∈ B × Q. In Appendix B, we formalise
+QR-Max assumes that the environment state component                  a bounded-discretisation assumption (small bucket diameter
+s ∈ S is discrete. In many real-world problems the agent             and Lipschitz-continuous dynamics and rewards, see Assump-
+instead observes a continuous vector scont ∈ Rd , while ac-          tion B.1) and show that, under this assumption, the induced
+tions remain finite and discrete. A common way to han-               bucket MDP is a close approximation of the underlying contin-
+dle continuous states is to discretise them into a finite set of     uous MDP. The resulting conditional PAC-MDP bound (The-
+“buckets” and treat each bucket as a discrete state. We follow       orem B.2) mirrors the discrete bound in Theorem 3, with |S|
+this idea and integrate a hash-based discretisation into QR-         replaced by |B|. Intuitively, when nearby continuous states
+Max, yielding Bucket-QR-Max, a model-based extension                 tend to fall into the same bucket and the environment is suf-
+that retains the structural advantages of QR-Max (separate           ficiently smooth, an ε-optimal policy for the bucket MDP is
+counts for Markovian dynamics and non-Markovian reward,              also near-optimal in the original continuous MDP. In practice,
+optimistic value iteration) while handling continuous obser-         SimHash does not deterministically bound bucket diameters;
+vations without neural approximation. Under a bounded-               our PAC guarantee is conditional on the induced partition
+discretisation assumption on the induced buckets (formalised         satisfying the bounded-diameter assumption, and hash col-
+as Assumption B.1 in Appendix B), we derive a conditional            lisions can be absorbed into an additional failure probability
+PAC-MDP bound for Bucket-QR-Max in the underlying con-               δLSH (overall success at least 1 − (δ + δLSH )), see Appendix B
+tinuous MDP (Theorem B.2).                                           for details.
+
+Locality-Sensitive Hashing Discretisation                            Relation to Bucket-R-Max and Implementation.
+Let h : Rd → B be a family of L independent SimHash                  The Covering-RMAX algorithm replaces exact states in R-
+functions [Charikar, 2002], h(·) = (h1 (·), . . . , hL (·)), where   Max with a balls-in-metric-space partition [Bernstein and
+each hℓ projects scont onto {0, . . . , 2dh − 1}. Given scont
+                                                            t  we    Shimkin, 2008]. Bucket-QR-Max differs in two essential
+                                             L                       ways:
+                           t ) ∈ B ⊂ N . The mapping is
+obtain a bucket bt = h(scont
+data–dependent: new buckets are added on-the-fly and as-              1. Hash vs. metric balls. LSH only probabilistically
+signed the next integer index ι : B → {0, . . . , Bt }. A joint          groups nearby states: by increasing the number of hash
+observation is therefore represented as (b, q) ∈ B × Q. The              functions and projections, the probability that distant
+automaton component remains exact and finite, while the con-             states collide in the same bucket can be made small.
+tinuous part is covered by a dynamically growing countable               SimHash needs no explicit metric and updates in O(L)
+partition.                                                               time, whereas searching the nearest-centre set grows with
+                                                                         the cover size. In high-dimensional spaces, Covering-
+Bucket-QR-Max Counters and Reward Sums                                   RMAX can suffer from the curse of dimensionality, as the
+It keeps nET (b, a) for environment transitions, nER (b, a)              number of metric balls required grows with the dimen-
+and RE (b, a) for environment rewards, nQT (q, b′ )                      sion, whereas for a fixed hash family SimHash maintains
+      a fixed per-update computational cost.                         return samples. With early stopping enabled, in stochastic
+  2. Decoupled NM-reward. We preserve the QR-Max fac-                environments training terminates when the Welch t-test fails
+      torization, yielding a sample complexity in |B| |A| +          to detect a significant difference at a 10% significance level
+      |B| |Q| instead of the cubic |B| |Q| |A| inherited by a        (p-value ≥ 0.1), treating the two policies as statistically in-
+      naive continuous R-Max reduction.                              distinguishable. In deterministic settings the t-test is skipped
+   Bucket-QR-Max differs from discrete QR-Max in exactly             due to zero variance. We apply this rule uniformly; additional
+three lines: (i) LSH discretisation b ← h(scont ); (ii) four sepa-   Appendix curves (e.g., fixed-budget success rates) confirm the
+rate counters nET , nER , nQT , nQR , each with its own thresh-      same ordering. For visualization purposes, we run the learned
+old; only when all four exceed their thresholds is (b, a, q)         policies on the corresponding deterministic testing environ-
+marked known and VI invoked; (iii) all counters, model es-           ments, where actions always produce their nominal outcome.
+timates, and Q-values are indexed by buckets b instead of            This simplifies comparing the learned policies with VI solu-
+discrete states s. Full pseudocode is reported in Algorithm 2        tions, in terms of required timesteps to reach the goal. We
+in Appendix B.                                                       report mean ± std over 10 seeds on three configurations.
+                                                                     Configuration 1 — map0 exp0 (10 × 10). We use the
+6       Experiments                                                  simple grid world from prior work [Tiapkin et al., 2022], using
+In this section, we compare QR-Max and QR-MaxRM against              H = 50 and eight Thompson samples, following the original
+several state-of-the-art algorithms, on different environments       papers. The agent’s non-Markovian task consists in starting
+of increasing difficulty.1 Our goal is to show that the fac-         from the top-left cell, collecting a letter in the bottom-right
+torization introduced in QR-Max enhances sample efficiency           cell, returning to the start position to pick up a coffee, and
+and enables optimal solution of complex tasks, confirming the        finally delivering both items to the office in the bottom-left
+theoretical results obtained in Sec. 4.                              cell. The issued reward is 1 on task completion, 0 otherwise.
+   The compared methods include: 1) model-based meth-                Figure 1 shows the success rate: QR-MaxRM and QR-Max
+ods for MDPs over the joint space S × Q: UCBVI-sB (sim-              achieve significantly better performance in roughly one order
+plified Bernstein bonus), UCBVI-H (Hoeffding bonus), and             of magnitude fewer training steps than UCBVI, PSRL, and
+UCBVI-B (Bernstein bonus) from [Azar et al., 2017]; PSRL             OPSRL, confirming that the factorised dynamics improves
+[Osband et al., 2013]; OPSRL [Tiapkin et al., 2022]; R-              sample efficiency.
+Max [Brafman and Tennenholtz, 2003]; 2) the model-free
+method QRM [Toro Icarte et al., 2022] for NMRDP. We do               Configuration 2 — map1 exp5 (Office World, 12 × 9).
+not compare directly with [Gaon and Brafman, 2020], which            This map contains walls and ornamental objects that impose
+focuses on learning the RM, since when this is available, the        a penalty of −100 upon contact. For UCBVI and its variants
+approach corresponds to R-Max, which we evaluate. Also,              we set H = 150. As illustrated in Figure 2, as task com-
+as already mentioned, [Shao and Kwiatkowska, 2023] is in-            plexity grows, QR-Max and QR-MaxRM maintain a gap of
+directly compared, corresponding, on the problems consid-            nearly two orders of magnitude over UCBVI-H and UCBVI-B,
+ered, to QRM. For clarity, QR-Max uses only the observed             and about one order over QRM (which has access to the RM),
+automaton-state signal (q) and does not assume access to η,          R-Max, and UCBVI-sB. PSRL and OPSRL exceed the prede-
+whereas QR-MaxRM assumes the RM is given (including η)               fined memory/CPU budget on this instance (see Appendix C
+and uses it for counterfactual updates across automaton states.      for the resource limits).
+   Unless stated otherwise, we use the authors’ recommended          Configuration 3 — map4 exp6 (15 × 15). The third con-
+hyper-parameters. For finite-horizon baselines that require a        figuration is a maze-like space featuring two coffee machines:
+horizon (UCBVI, PSRL/OPSRL), we set H to the VI-optimal              a good one (reward 1000) and a regular one (reward 1). The
+path length plus a small safety margin (Appendix C); this            agent receives a reward only after picking up a coffee and
+uses oracle knowledge to choose a favorable H for these base-        delivering it to the office. Figure 3 shows that QR-Max and
+lines, hence the comparison is conservative w.r.t. QR-Max.           QR-MaxRM converge to the optimal policy, bringing the bet-
+The benchmark we use for experimental comparison takes               ter coffee in 57 steps, whereas QRM, UCBVI and their variants
+inspiration from, and extends, the Office gridworld environ-         remain trapped for many training steps in the local optimum
+ment [Toro Icarte et al., 2022] (full details are reported in        associated with the nearer coffee machine.
+Appendix C), used to evaluate NMRDP solutions. In all the
+experiments, during training, we use stochastic actions, all         Evaluation of Bucket-QR-Max. We evaluate Bucket-
+having a nominal outcome, i.e., one with highest probability         QR-Max on a continuous-state variant of Frozen Lake and
+wrt all the others.                                                  Office World (5 subtasks), using SimHash-based discretiza-
+   For each experimental configuration, we compute a VI              tions and the same factorized counting scheme as in the dis-
+baseline by running value iteration on the full MDP model            crete case (see Appendix for details). As baselines, we train a
+(obtained from the environment). Periodically we compare             DQN on the same inputs (scont , q) and sparse non-Markovian
+the current learned policy (greedy w.r.t. the Q- table) to the       reward, with a standard two-layer MLP and replay buffer, and
+VI policy by running 10,000 evaluation episodes per pol-             we also include a controlled R-Max variant that uses the same
+icy in the stochastic environment and collecting discounted          SimHash buckets but learns a monolithic model over joint
+episode returns. We apply a two-sided Welch t-test to the two        states (b, q) (see Appendix). In this setting Bucket-QR-Max
+                                                                     reaches near-optimal performance in 50±10 episodes, over an
+    1
+        Code: https://github.com/Alee08/qrmax.                       order of magnitude faster than DQN (which requires > 500
+             Figure 1: Configuration 1 (map0 exp0).                                         Figure 3: Configuration 3 (map4 exp6).
+
+                                                                   Map     Exp      QR-MAX QR-MAXRM R-MAX                       QRM UCBVI-sB UCBVI-B UCBVI-H PSRL/OPSRL†
+                                                                   MAP0 EXP0            14 483              4 150      49 759 162 040     142 015   159 092     191 983 88 437 / 128 188
+                                                                   MAP1 EXP5            24 222              3 125 272 080 225 140         250 800   555 977   1 320 070               —
+                                                                   MAP4 EXP6            20 150              5 630      82 000 9 910 340    80 160    90 030     101 120               —
+                                                                   †
+                                                                     Eight posterior samples per episode, as in prior work [Tiap-
+                                                                   kin et al., 2022].
+
+
+                                                                         Table 1: Steps to a VI-optimal policy (mean over 10 seeds).
+                                                                   other model-based RL algorithms considered in this paper in-
+                                                                   clude parameters such as the horizon H, whose setup requires
+                                                                   both domain and task knowledge, and the Thompson-sampling
+                                                                   count, which has a similar meaning of tE and tQ , but a higher
+                                                                   impact especially on the algorithm’s memory requirements.
+
+                                                                   7       Conclusions
+             Figure 2: Configuration 2 (map1 exp5).
+                                                                   In this work, we introduced QR-Max, the first model-based
+episodes) and with lower variance, indicating that combin-         RL algorithm for discrete-action NMRDPs that exploits the
+ing SimHash discretizations with separate environment and          decoupling between Markovian environment dynamics and
+automaton counters yields fast, stable learning in continuous      non-Markovian rewards. We prove that QR-Max is PAC-
+state spaces without manual gridding or neural function ap-        MDP, i.e., all but a polynomial number of interaction steps
+proximation.                                                       are ε-optimal with high probability, and show on an extended
+                                                                   Office grid-world benchmark that it substantially reduces the
+Summary of the Results. The experimental analysis
+                                                                   required interactions compared to both model-free and stan-
+demonstrates that, by exploiting model-based RL and the
+                                                                   dard model-based approaches. We also described Bucket-
+proposed factorization, QR-Max, QR-MaxRM, and Bucket-
+                                                                   QR-Max, which leverages SimHash to handle continuous-
+QR-Max consistently achieve better sample efficiency than
+                                                                   state NMRDPs without manual gridding or neural approxima-
+both model-free baselines and model-based counterparts with-
+                                                                   tors; under mild smoothness and discretization assumptions,
+out factorization on all the scenarios we consider. Wall-clock
+                                                                   it admits a conditional PAC-MDP guarantee (see Appendix).
+times remained comparable to UCBVI within the same re-
+                                                                   Across our benchmarks, QR-Max and its variants exhibit
+source limits (see Appendix). We also observe different im-
+                                                                   higher sample efficiency and scalability, reduced computa-
+pacts of hyper-parameter tuning on solution quality. The main
+                                                                   tional cost, and easier hyper-parameter tuning than the evalu-
+hyper-parameters of QR-Max and variants are the thresholds
+                                                                   ated baselines. Future directions include extending the factor-
+tE and tQ , which control the number of samples needed to
+                                                                   ization framework to deep RL techniques, handling stochastic
+reliably estimate transitions and rewards. We set tE = 39
+                                                                   RMs [Corazza et al., 2022], learning reward models automat-
+empirically and tQ = 1 because the considered RMs are de-
+                                                                   ically, and extending the approach to multi-agent scenarios,
+terministic. In practice, tE is relatively easy to set because
+                                                                   where reward machines have already been used for coop-
+performance is weakly sensitive beyond the threshold, and
+                                                                   erative and concurrent multi-agent RL [Neary et al., 2021;
+training steps scale roughly linearly with tE . In contrast, the
+                                                                   Trapasso and Jonsson, 2025].
+hyper-parameters for the other methods are significantly more
+difficult to tune and yield higher result sensitivity. For in-
+stance, model-free RL algorithms require setting the learning      Acknowledgments
+rate, exploration factors, and initial Q-table values, result-
+ing in high impact on the solutions; moreover, such param-         This research is supported by the PNRR MUR project
+eters cannot easily be related to the specific problem. The        PE0000013- FAIR.
+References                                                            tored mdps. Journal of Artificial Intelligence Research,
+[Azar et al., 2017] Mohammad Gheshlaghi Azar, Ian Os-                 19:399–468, October 2003.
+   band, and Rémi Munos. Minimax regret bounds for re-            [Gupta et al., 2021] Gaurav Gupta, Chenzhong Yin, Jyotir-
+   inforcement learning. In Doina Precup and Yee Whye Teh,            moy V. Deshmukh, and Paul Bogdan. Non-Markovian
+   editors, Proceedings of the 34th International Conference          reinforcement learning using fractional dynamics. In Proc.
+   on Machine Learning, volume 70 of Proceedings of Ma-               CDC, pages 1542–1547, 2021.
+   chine Learning Research, pages 263–272. PMLR, 06–11             [Kearns and Koller, 1999] Michael Kearns and Daphne
+   Aug 2017.                                                          Koller. Efficient reinforcement learning in factored mdps.
+[Bacchus et al., 1996] Fahiem Bacchus, Craig Boutilier, and           In Proceedings of the 16th International Joint Confer-
+   Adam J. Grove. Rewarding behaviors. In Proc. AAAI,                 ence on Artificial Intelligence - Volume 2, IJCAI’99, page
+   pages 1160–1167, 1996.                                             740–747, San Francisco, CA, USA, 1999. Morgan Kauf-
+[Bernstein and Shimkin, 2008] Andrey                                  mann Publishers Inc.
+                                             Bernstein      and
+   Nahum Shimkin. Adaptive aggregation for reinforcement           [Lin and Zhang, 2025] Xiaofeng Lin and Xuezhou Zhang.
+   learning with efficient exploration: Deterministic domains.        Efficient reinforcement learning in probabilistic reward ma-
+   In COLT, pages 323–334. Citeseer, 2008.                            chines. Proceedings of the AAAI Conference on Artificial
+                                                                      Intelligence, 39(18):18728–18736, Apr. 2025.
+[Bourel et al., 2023] Hippolyte Bourel, Anders Jonsson,
+   Odalric-Ambrym Maillard, and Mohammad Sadegh                    [Neary et al., 2021] Cyrus Neary, Zhe Xu, Bo Wu, and Ufuk
+   Talebi. Exploration in Reward Machines with Low Re-                Topcu. Reward machines for cooperative multi-agent re-
+   gret. In International Conference on Artificial Intelligence       inforcement learning. In AAMAS ’21: 20th International
+   and Statistics (AISTATS), page 4114–4146, 2023.                    Conference on Autonomous Agents and Multiagent Sys-
+                                                                      tems, Virtual Event, United Kingdom, May 3–7, 2021,
+[Bourel et al., 2024] Hippolyte Bourel, Anders Jonsson,
+                                                                      pages 934–942. ACM, 2021.
+   Odalric-Ambrym Maillard, Chenxiao Ma, and Moham-
+   mad Sadegh Talebi. Provably efficient exploration in re-        [Osband and Roy, 2014] Ian Osband and Benjamin Van Roy.
+   ward machines with low regret. CoRR, abs/2412.19194,               Near-optimal reinforcement learning in factored mdps,
+   2024.                                                              2014.
+[Brafman and Tennenholtz, 2003] Ronen I. Brafman and               [Osband et al., 2013] Ian Osband, Daniel Russo, and Ben-
+   Moshe Tennenholtz. R-max - a general polynomial time al-           jamin Van Roy. (more) efficient reinforcement learning via
+   gorithm for near-optimal reinforcement learning. J. Mach.          posterior sampling, 2013.
+   Learn. Res., 3:213–231, 2003.                                   [Shao and Kwiatkowska, 2023] Daqian Shao and Marta
+[Brafman et al., 2018] Ronen Brafman, Giuseppe De Gia-                Kwiatkowska. Sample efficient model-free reinforcement
+   como, and Fabio Patrizi. LTLf/LDLf non-Markovian re-               learning from LTL specifications with optimality guaran-
+   wards. In Proc. AAAI, pages 1771–1778, 2018.                       tees. In Proceedings of the Thirty-Second International
+                                                                      Joint Conference on Artificial Intelligence, IJCAI 2023,
+[Charikar, 2002] Moses S. Charikar. Similarity estimation             19th-25th August 2023, Macao, SAR, China, pages 4180–
+   techniques from rounding algorithms. In Proceedings of             4189. ijcai.org, 2023.
+   the Thiry-Fourth Annual ACM Symposium on Theory of
+                                                                   [Strehl et al., 2009] Alexander L. Strehl, Lihong Li, and
+   Computing, STOC ’02, page 380–388, New York, NY,
+   USA, 2002. Association for Computing Machinery.                    Michael L. Littman. Reinforcement learning in finite mdps:
+                                                                      PAC analysis. J. Mach. Learn. Res., 10:2413–2444, 2009.
+[Cipollone et al., 2025] Roberto Cipollone, Marco Favorito,
+                                                                   [Strehl, 2007] Alexander L. Strehl. Model-based reinforce-
+   Flavio Maiorana, Giuseppe De Giacomo, Luca Iocchi, and
+   Fabio Patrizi. Exploiting robot abstractions in episodic           ment learning in factored-state mdps. In Proceedings of the
+   RL via reward shaping and heuristics. Robotics and Au-             2007 IEEE International Symposium on Approximate Dy-
+   tonomous Systems, 193:105116, November 2025.                       namic Programming and Reinforcement Learning, pages
+                                                                      103–110. IEEE, 2007.
+[Corazza et al., 2022] Jan Corazza, Ivan Gavran, and Daniel
+                                                                   [Strens, 2000] Malcolm J. A. Strens. A bayesian framework
+   Neider. Reinforcement learning with stochastic reward ma-
+                                                                      for reinforcement learning. In Proceedings of the Sev-
+   chines. In Proc. AAAI, pages 6429–6436, 2022.
+                                                                      enteenth International Conference on Machine Learning,
+[De Giacomo et al., 2020] Giuseppe De Giacomo, Luca Ioc-              ICML ’00, page 943–950, San Francisco, CA, USA, 2000.
+   chi, Marco Favorito, and Fabio Patrizi. Restraining bolts for      Morgan Kaufmann Publishers Inc.
+   reinforcement learning agents. In Proc, ICAPS, volume 34,       [Sutton and Barto, 2018] Richard S Sutton and Andrew G
+   pages 13659–13662, 2020.                                           Barto. Reinforcement learning: An introduction. MIT
+[Gaon and Brafman, 2020] Maor Gaon and Ronen I. Braf-                 press, 2018.
+   man. Reinforcement learning with non-Markovian re-              [Thiébaux et al., 2006] Sylvie Thiébaux, Charles Gretton,
+   wards. In Proc. AAAI, pages 3980–3987, 2020.                       John K. Slaney, David Price, and Froduald Kabanza.
+[Guestrin et al., 2003] C. Guestrin, D. Koller, R. Parr, and          Decision-theoretic planning with non-markovian rewards.
+   S. Venkataraman. Efficient solution algorithms for fac-            J. Artif. Intell. Res., 25:17–74, 2006.
+[Tiapkin et al., 2022] Daniil Tiapkin, Denis Belomestny,
+   Daniele Calandriello, Eric Moulines, Remi Munos, Alexey
+   Naumov, Mark Rowland, Michal Valko, and Pierre Menard.
+   Optimistic posterior sampling for reinforcement learning
+   with few samples and tight guarantees. In Alice H. Oh,
+   Alekh Agarwal, Danielle Belgrave, and Kyunghyun Cho,
+   editors, Advances in Neural Information Processing Sys-
+   tems, 2022.
+[Toro Icarte et al., 2022] Rodrigo Toro Icarte, Toryn Q.
+   Klassen, Richard Anthony Valenzano, and Sheila A. McIl-
+   raith. Reward machines: Exploiting reward function struc-
+   ture in reinforcement learning. J. Artif. Intell. Res., 73:173–
+   208, 2022.
+[Trapasso and Jonsson, 2025] Alessandro Trapasso and An-
+   ders Jonsson. Concurrent multiagent reinforcement learn-
+   ing with reward machines. In ECAI 2025 - 28th Euro-
+   pean Conference on Artificial Intelligence, volume 413 of
+   Frontiers in Artificial Intelligence and Applications, pages
+   3735–3742. IOS Press, 2025.
+[Watkins and Dayan, 1992] Christopher Watkins and Peter
+   Dayan. Q-learning. Mach. Learn., 8(3):279–292, 1992.
+A     Detailed Proofs for QR-Max                                                  Proof. Condition on the event of Lemma A.1. Consider an
+We give the full proofs of Lemmas A.1–A.2 and Theorem                             execution of the greedy policy in which no unknown envi-
+A.3 that were stated without proof in Section 4.2 of the main                     ronment or automaton component is reached within the ef-
+paper.                                                                            fective horizon H. Along this event, all Bellman backups
+                                                                                  involve only known components. Hence the empirical fac-
+A.1     Notation and Preliminaries                                                torised model and the true model differ only by the reward
+                                                                                  and transition errors controlled in Lemma A.1.
+Let NE = |S| |A| and NQ = |S| |Q|. For every environment                             For any value function V with ∥V ∥∞ ≤ Vmax , the one-step
+state-action pair (s, a) and next state s′ , define:                              simulation bound gives
+                     τE (s, a, s′ )                         ρE (s, a, s′ )                  ∥TbV − T V ∥∞ ≤ ξR + γVmax (ξE + ξQ ),
+P̂E (s′ | s, a) =                     ,   R̂E (s, a, s′ ) =                  ,
+                      nE (s, a)                              nE (s, a)
+                                                                                  where ξR , ξE , ξQ are the reward, environment-transition, and
+                     τQ (q, s′ , q ′ )                      ρQ (q, s′ , q ′ )
+P̂Q (q ′ | q, s′ ) =                   , R̂ Q (q, s′ ′
+                                                    , q ) =                   .   automaton-transition errors. By the choice of the thresholds
+                      nQ (q, s′ )                            nQ (q, s′ )          and of the value-iteration accuracy ηVI , the accumulated dis-
+                                                                                  counted error over the effective horizon is at most ϵ. Therefore,
+All other notation follows Algorithm 1 in the main text.
+                                                                                  conditional on not reaching an unknown component within H,
+A.2     Proof of Lemma A.1 (Accurate Estimates)                                   the greedy policy computed in the optimistic known model is
+                                                                                  ϵ-optimal in the true model.
+β = ϵ(1 − γ)/4 and define the thresholds mE and mQ ac-
+cordingly.                                                                        A.4     Proof of Theorem 3
+Lemma A.1 (Factored Accuracy). With probability at least                          Theorem A.3 (PAC-MDP Bound for QR-Max). Let
+1 − δ, whenever QR-MAX marks a pair known (i.e., (s, a)
+                                                                                                  U = |S||A|mE + |S||Q|mQ .
+after mE visits or (q, s′ ) after mQ visits), the following si-
+multaneously hold for all (s, a) and (q, s′ ):                                    With the thresholds chosen as in Lemma A.1, QR-Max is PAC-
+                                                                                  MDP. With probability at least 1−δ, the number of interaction
+                   |R̂E (s, a) − R̄E (s, a)| ≤ β,                                 steps in which its greedy policy is not ϵ-optimal is bounded by
+                                                       β                                                   
+                                                                                                             HU        U
+                                                                                                                         
+          ∥P̂E (· | s, a) − PE (· | s, a)∥1 ≤         ,                                                  O        log       ,
+                                                 Rmax                                                         p        δ
+                                                                      (A.1)
+                 |R̂Q (q, s′ ) − R̄Q (q, s′ )| ≤ β,
+                                                                                  where
+                                                    β
+         ∥P̂Q (· | q, s′ ) − PQ (· | q, s′ )∥1 ≤
+                                                                                                           
+                                                      .                                        1     2Rmax                       ϵ(1 − γ)
+                                                 Rmax                                     H=      ln          ,             p=            .
+                                                                                             1 − γ ϵ(1 − γ)                       2Rmax
+Proof. For reward estimation in [0, Rmax ], Hoeffding’s in-
+equality implies that for mE i.i.d. samples:                                      Proof. Condition on the concentration event of Lemma A.1.
+                                                                                  If the greedy policy in the optimistic model is not ϵ-optimal,
+                                                                                  then Lemma A.2 implies that, within the effective horizon H,
+    h      X                  i
+ Pr m1E        ri − E[r] > β ≤ 2 exp −2mE β 2 /Rmax 2
+                                                       
+                                                         .
+                                                                                  the policy must reach an unknown component with probability
+               i
+                                                                                  at least p. Each such escape is charged to the first unknown
+Setting mE = ⌈8Rmax      2
+                             β −2 ln(2NE /δ)⌉ bounds this by                      component reached.
+δ/(2NE ). A union bound over all NE pairs ensures all reward                         Environment components can be charged at most |S||A|mE
+estimates are within β with probability at least 1 − δ/2.                         times and automaton components at most |S||Q|mQ times.
+   For transition estimation in ℓ1 , Weissman’s inequality states                 Hence the total number of escapes is at most
+that for a distribution over |S| outcomes and mE samples:                                         U = |S||A|mE + |S||Q|mQ .
+   Pr ∥P̂E − PE ∥1 > ϵP ≤ (2|S| − 2) exp −mE ϵ2P /2 .
+                                                          
+                                                                                  The standard R-Max escape-event argument then gives
+                                                                                                                    
+Choosing        ϵP      =        β/Rmax     and    requiring                                              HU      U
+                                                                                                      O       log
+(2|S| ) exp(−mE β 2 /(2Rmax2
+                               )) ≤ δ/(2NE ) yields a                                                      p       δ
+similar threshold on mE . The same argument applies to
+the (q, s′ ) counts with mQ , NQ . A final union bound gives                      non-ϵ-optimal interaction steps with probability at least 1 − δ.
+overall failure probability at most δ.                                            Value iteration affects computation time but does not consume
+                                                                                  environment interactions.
+A.3     Proof of Lemma A.2 (Near-Optimal
+        Optimistic Policy)                                                        B     Bucket-QR-Max: Pseudocode and
+Lemma A.2 (Near-Optimality in the Known Model). Con-                                    Conditional PAC-MDP Bound
+ditioned on Lemma A.1, the greedy policy computed in the                          We now give the full pseudocode for Bucket-QR-Max and
+optimistic model is ϵ-optimal whenever no unknown compo-                          state a PAC–MDP guarantee in the continuous-state setting,
+nent is reached within the effective horizon H.                                   under a standard bounded-discretisation assumption. The
+                                                                                  proof proceeds by viewing Bucket-QR-Max as QR-Max on
+                                                                                  the abstract MDP induced by the buckets, and then controlling
+Algorithm 2. Bucket-QR-Max                                                        the approximation error due to discretisation.
+                                                                                     The routine BucketVI performs optimistic value iteration
+ Input: Hash map h : Rd → B, action set A, automaton states Q,
+          environment E, discount factor γ, maximum reward Rmax ,                 on the finite abstraction Bdisc × Q. The empirical estimates
+          thresholds tET , tER , tQT , tQR , VI horizon T , number of steps       used in the backup are
+          Nsteps .
+                                                                                                                   ′
+ Output: Optimistic action-value table QB .                                                           τE (b, a, b )                                ρE (b, a)
+ Vmax ← Rmax /(1 − γ)                                                               PbE (b′ | b, a) =               ,            rbE (b, a) =                ,
+ Bdisc ← ∅                                         // Discovered buckets                               nET (b, a)                                 nER (b, a)
+ Initialize all counters lazily to zero: τE (b, a, b′ ), nET (b, a), ρE (b, a),
+   nER (b, a), τQ (q, b′ , q ′ ), nQT (q, b′ ), ρQ (q, b′ ), nQR (q, b′ )
+                                                                                  and
+                                                                                                               ′   ′
+                                                                                                       τQ (q, b , q )                               ρQ (q, b′ )
+ Function AddBucket(b):
+     if b ∈
+          / Bdisc then                                                            PbQ (q ′ | q, b′ ) =                ,          rbQ (q, b′ ) =                 .
+           Bdisc ← Bdisc ∪ {b}
+                                                                                                        nQT (q, b′ )                               nQR (q, b′ )
+           QB (b, q, a) ← Vmax for all q ∈ Q, a ∈ A
+           Initialize all counters involving b to zero                            A triple (b, q, a) is treated as known only when nET (b, a) ≥
+                                                                                  tET , nER (b, a) ≥ tER , and, for every observed succes-
+ scont , q ← E.reset()                                                            sor bucket b′ with τE (b, a, b′ ) > 0, nQT (q, b′ ) ≥ tQT and
+ b ← h(scont )                                                                    nQR (q, b′ ) ≥ tQR .
+ AddBucket(b)
+ for t ← 1 to Nsteps do
+                                                                                    For compactness, let
+       ā ← arg maxa∈A QB (b, q, a)
+       scont′ , q ′ , rE , rA , done ← E.step(ā)
+                                                                                                    Vk (b, q) := max Qk (b, q, a),
+                                                                                                                       a∈A
+       b′ ← h(scont′ )
+       AddBucket(b′ )                                                             and define
+       doVI ← False                                                                                                     X
+      // Environment transition component
+                                                                                    Gk (q, b′ ) := rbQ (q, b′ ) + γ             PbQ (q ′ | q, b′ )Vk (b′ , q ′ ).
+      if nET (b, ā) < tET then                                                                                        q ′ ∈Q
+           τE (b, ā, b′ ) ← τE (b, ā, b′ ) + 1
+           nET (b, ā) ← nET (b, ā) + 1                                          For known triples, BucketVI applies the factorised Bellman
+           if nET (b, ā) = tET then                                              backup
+                doVI ← True                                                                                      X
+      // Environment reward component
+                                                                                   Qk+1 (b, q, a) = rbE (b, a) +     PbE (b′ | b, a)Gk (q, b′ ).
+      if nER (b, ā) < tER then                                                                                        b′ ∈Bdisc
+           ρE (b, ā) ← ρE (b, ā) + rE                                                                                            (B.1)
+           nER (b, ā) ← nER (b, ā) + 1
+           if nER (b, ā) = tER then
+                                                                                  Unknown triples retain their optimistic value Vmax =
+                doVI ← True                                                       Rmax /(1 − γ).
+
+      // Automaton transition component                                           B.1    Bounded-Discretisation Assumption
+      if nQT (q, b′ ) < tQT then                                                  We formalise the regularity condition under which the bucket
+           τQ (q, b′ , q ′ ) ← τQ (q, b′ , q ′ ) + 1
+           nQT (q, b′ ) ← nQT (q, b′ ) + 1
+                                                                                  abstraction approximates the underlying continuous MDP
+           if nQT (q, b′ ) = tQT then                                             closely enough.
+                doVI ← True
+                                                                                  Assumption B.1 (Bounded discretisation error). Let M be
+      // Non-Markovian reward component                                           the true MDP with continuous state space S ⊆ Rd and let
+      if nQR (q, b′ ) < tQR then                                                  h : S → B be the SimHash-based discretisation used by
+           ρQ (q, b′ ) ← ρQ (q, b′ ) + rA                                         Bucket-QRMAX, inducing a partition B = {b1 , . . . , b|B| } of
+           nQR (q, b′ ) ← nQR (q, b′ ) + 1
+           if nQR (q, b′ ) = tQR then
+                                                                                  S. We assume that there exists a diameter parameter ϕ > 0
+                doVI ← True                                                       such that, for every bucket b ∈ B and any pair of states
+                                                                                  s, s′ ∈ S with h(s) = h(s′ ) = b, we have
+      if done then
+           QB (b′ , q ′ , a′ ) ← 0 for all a′ ∈ A                                                            ∥s − s′ ∥ ≤ ϕ.
+      if doVI then
+           QB ←                                                                   Moreover, we assume that the reward and transition dynamics
+            BucketVI(QB , τE , ρE , nET , nER , τQ , ρQ , nQT , nQR , γ, T )      are Lipschitz-continuous in the state, i.e., there exists L > 0
+                                                                                  such that for all s, s′ ∈ S and all a ∈ A,
+      if done then
+           scont , q ← E.reset()                                                   |RE (x, a, z) − RE (y, a, z)| ≤ L∥x − y∥                      ∀x, y, z ∈ S
+           b ← h(scont )
+           AddBucket(b)                                                           and the transition kernels satisfy a corresponding Lipschitz
+      else
+                                                                                  condition (e.g., in total-variation or Wasserstein distance)
+             scont , q, b ← scont′ , q ′ , b′                                     with constant L.
+ return QB                                                                           Assumption B.1 captures the intuition that each bucket
+                                                                                  groups together nearby states and that the MDP is sufficiently
+                                                                                  smooth in the state. In particular, if ϕ is small, then the error
+                                                                                  incurred by replacing s with its bucket b = h(s) is also small.
+B.2   Conditional PAC-MDP Bound                                   for all known components, with failure probability at most δ.
+We now show that, under Assumption B.1, the discretisation           Conditioned on this event, applying Theorem A.3 to the
+error can be absorbed into the standard PAC–MDP analysis,         abstract bucket MDP gives the same optimistic escape bound
+yielding a conditional PAC guarantee for Bucket-QRMAX.            with
+Theorem B.2 (Conditional PAC–MDP Bound for Buck-                      UB = |B||A|(mET + mER ) + |B||Q|(mQT + mQR ).
+et-QR-Max). Assume B.1 holds. Let ε > 0 and δ ∈ (0, 1),
+and set                                                           Thus the greedy policy is β-optimal in M̄ , except for
+                            ε(1 − γ)                                                    
+                                                                                          HUB       UB
+                                                                                                        
+                       β=             .                                               O         log
+                                8                                                            p       δ
+Choose thresholds
+                         2                                      interaction steps.
+                         8Rmax 2|B||A|
+         mET , mER =              ln          ,                   3. Combining the Two Sources of Error. For any state s
+                            β2          δ                         with bucket b = h(s), decompose the value gap as
+                           2                   
+                            8Rmax 2|B||Q|                                 πt
+                                                                         VM         ∗
+                                                                             (s) − VM        πt
+                                                                                      (s) ≤ VM          πt
+                                                                                                (s) − VM̄  (b, q)
+            mQT , mQR =              ln           .
+                               β2         δ                                                         πt            ∗
+                                                                                                + VM̄  (b, q) − VM̄ (b, q)
+Let
+                                                                                                    ∗           ∗
+                                                                                                + VM̄ (b, q) − VM (s) .
+   UB = |B||A|(mET + mER ) + |B||Q|(mQT + mQR ).
+                                                                  The two discretisation terms are controlled by Step 1, while the
+Moreover, let                                                     estimation term is controlled by Step 2 on all non-escape steps.
+                              
+                  1     2Rmax                    ε(1 − γ)         Choosing the constants in the thresholds so that these three
+     H=              ln          ,       p=               .       contributions sum to at most ε yields the stated guarantee.
+                1 − γ ε(1 − γ)                    2Rmax
+                                                                  Therefore the same optimistic escape-event argument gives
+Suppose that the bucket diameter satisfies ϕ ≤ cβ/L for a                                                
+                                                                                            HUB       UB
+suitable universal constant c > 0. Then, with probability at                           O          log
+least 1 − δ, Bucket-QR-Max executes at most                                                   p        δ
+                                                                non-ε-optimal interactions.
+                         HUB       UB
+                     O         log
+                           p        δ                             Remark B.3 (On the role of SimHash). Assumption B.1 is a
+                                                                  property of the partition B induced by the discretisation. In
+interactions in which its policy is not ε-optimal in the true     our implementation the partition is generated by a SimHash-
+continuous MDP M , up to the discretisation error controlled      based locality-sensitive hash. SimHash does not deterministi-
+by Assumption B.1.                                                cally guarantee a given diameter ϕ, but increasing the number
+1. Discretisation Error and Abstract MDP. Let M be the            of hash functions and projections reduces the probability that
+true continuous-state MDP and let M̄ be the abstract MDP          distant states collide in the same bucket. Thus, Bucket-QR-
+whose states are the bucket–automaton pairs (b, q) ∈ B × Q,       Max can be viewed as satisfying a PAC-type property with
+with transitions and rewards given by the bucket-averaged         probability at least 1 − (δ + δLSH ), where δLSH denotes the
+quantities. Under Assumption B.1, any two states s, s′            probability that the induced partition violates Assumption B.1.
+mapped to the same bucket b satisfy ∥s − s′ ∥ ≤ ϕ. Lips-          In the main text we focus on the PAC bound for the induced
+chitz continuity then implies that the reward and transition      bucket MDP, and leave a detailed analysis of δLSH to future
+probabilities of M at s and s′ differ by at most O(Lϕ).           work.
+   By a standard simulation-lemma argument, there exists a
+universal constant c > 0 such that, if ϕ ≤ cβ/L, then M̄ is a     C     Additional Experimental Results
+β-approximation of M : for any policy π and any state s with      The experiments were performed on a Linux x86-64 work-
+bucket b = h(s),                                                  station with a single-socket AMD Ryzen 9 7950X processor
+                                           β                      (Zen 4, 16 cores/32 threads, boost clock ∼5.9 GHz). The
+                    π         π
+                   VM (s) − VM̄ (b, q) ≤     .                    system is equipped with 128 GB of DDR5 RAM (≈124 GiB
+                                           2                      available at idle) and an 8 GB swap partition. Hardware ac-
+2. Estimation Error in the Bucket MDP. Within the abstract        celeration is provided by two NVIDIA GeForce RTX 4090
+MDP M̄ on (b, q), Bucket-QR-Max behaves as QR-Max                 (AD102) GPUs. This configuration underlies all the results
+on a discrete MDP with state space B × Q. The thresh-             presented in our work.
+olds mET , mER , mQT , mQR are chosen so that, once a triple
+(b, a, q) is marked known, the empirical estimates are β-         C.1    Office gridworld Benchmark
+accurate with high probability. More precisely, a concen-         The benchmark used for experimental comparison in this pa-
+tration argument and a union bound over all (b, a) and (q, b′ )   per takes inspiration from and extends the Office gridworld
+yield                                                             environment [Toro Icarte et al., 2022] already used to evalu-
+                          β                                       ate solutions for NMRDPs. We extend the original environ-
+            ∥Pb − P ∥1 ≤      ,    |R
+                                    b − R| ≤ β
+                                                                  ment with the following features: (1) stochastic outcomes of
+                         Rmax
+actions: the nominal effect of an action is achieved with prob-
+ability h, and two adjacent actions with probability (1 − h)/2;
+(2) three different sizes of the map 9×12, 12×12, and 15×15
+(the latter is shown in Figure 10); additional locations to be
+used as goals; the definition of 5 different tasks of increasing
+complexity. The benchmark can be used to test algorithms in
+15 environments (5 tasks in 3 maps) with increasing complex-
+ity.
+   In the first task, the agent must deliver coffee to the office.
+In the second task, the goal is to deliver mail to the office.
+The third task requires the agent to deliver both coffee and
+mail to the office in any order. The fourth task requires the
+agent to visit locations A, B, C, and D in the correct sequence.
+Finally, in the fifth task, the agent must first visit locations A,
+B, C, and D, then collect both mail and coffee in any order,
+and ultimately reach the office (the DFA for the latter task is
+illustrated in Figure 15).
+   The agent observation space is given by its own position
+extended with the state of the DFA, i.e., (s, q) ∈ S × Q.
+The action space is formed by the four cardinal actions. The
+reward signal is 1 for completing the task (i.e., for goal states
+in A) and 0 otherwise. Walls make the agent remain in the                             Figure 4: Map0 - task 0 (10x10)
+same cell, while hitting decorations terminates the episode           while R-MaxRM and QR-MaxRM extend R-Max and QR-
+with reward −100.                                                     Max, respectively, by propagating knowledge to unseen states
+                                                                      as in QRM.
+C.2    Environment map0.
+We build on the grid–world map0 introduced by [Tiapkin et                The algorithms QL, R-Max, QR-Max, R-MaxRM and
+al., 2022], a 10 × 10 grid. For UCBVI, PSRL, and OPSRL                QR-MaxRM use the discount factor γ = 0.9. All the vari-
+the planning horizon is fixed at H = 50; the two Bayesian             ants of UCBVI and PSRL/OPSRL use the discount factor
+methods use eight Thompson samples per episode, following             γ = 1. For R-Max, QR-Max, R-MaxRM and QR-MaxRM,
+the authors’ default.                                                 a transition is considered known after 39 visits. QRM and
+                                                                      Q-learning employ an exploration rate ϵ = 0.1 and a learn-
+Non-Markovian extension. The original one-shot objective              ing rate α = 0.1. Following the original papers, PSRL and
+is replaced by a four-stage mission that forces the agent to          OPSRL draw eight Thompson samples per episode, and the
+remember past events. The episode begins in the top-left              planning horizon is set to H = 50 for map0 and H = 150 for
+cell; the agent must first travel to the bottom-right cell to pick    map1.
+up a letter, then return to the start cell to collect a coffee, and
+finally deliver both items to the office located in the bottom-left
+corner. A reward of 1 is granted only when this entire sequence       Horizon and reward scheme. All finite–horizon explo-
+is completed; every other transition yields zero reward.              ration methods—UCBVI (every variant), PSRL and OP-
+                                                                      SRL—require a hand-chosen horizon H. To give these
+C.3    Comparison algorithms
+                                                                      baselines favourable yet realistic conditions we set H to the
+Our evaluation includes both optimistic planners and poste-           average optimal-path length computed by Value Iteration,
+rior–sampling methods defined over the joint space S × Q.             adding a small safety margin for stochastic slips: H = 50 in
+We adopt the three variants of UCBVI proposed by [Azar et             MAP0 EXP0, H = 150 in MAP1 EXP5 and MAP4 EXP6,
+al., 2017]: UCBVI-sB uses the simplified Bernstein bonus,             and H = 350 in MAP2 EXP5 (Table 4). Choosing H too
+UCBVI-H the Hoeffding bonus, and UCBVI-B the full Bern-               low truncates the policy, while over-estimating it inflates ex-
+stein bonus; in each case planning is performed with tabular
+                                                                      ploration bonuses and slows learning at a rate of e   O(H 2–4 );
+value iteration and the same optimism constant c. To repre-
+                                                                      the calibration therefore embodies non-trivial prior knowledge
+sent the Bayesian family we run PSRL [Osband et al., 2013],
+                                                                      that horizon-free algorithms do not need.
+which samples one MDP from a Dirichlet–Gaussian poste-
+rior at the start of every episode, and OPSRL [Tiapkin et al.,           A uniform, deliberately sparse reward is used throughout:
+2022], which augments each posterior sample with an ex-               the agent receives +1 only when the Reward-Machine task is
+plicit exploration bonus. As a classical optimistic baseline we       fully completed and −100 upon hitting a decoration; all other
+include R-Max [Brafman and Tennenholtz, 2003]. For the                transitions yield zero. The strong terminal penalty restarts the
+non-Markovian setting we also test the model-free algorithm           episode immediately, ensuring that no method—irrespective
+QRM [Toro Icarte et al., 2022], which learns a Q-function             of its dependence on H—wastes steps in an absorbing state.
+directly over S × Q.                                                  This design isolates exploration efficiency as the sole differen-
+   The algorithm introduced in this paper, QR-Max, exploits           tiator between algorithms and prevents any hidden advantage
+the factorisation of the environment and automaton dynamics,          from reward shaping.
+                                                                            tion compensates for the lack of reward-machine knowl-
+                                                                            edge.
+                                                                          In summary, factorising environment and reward dynam-
+                                                                       ics delivers substantial and orthogonal gains over both clas-
+                                                                       sic R-Max and reward-machine baselines, yielding the most
+                                                                       sample-efficient algorithm across all Office-World configura-
+                                                                       tions (Figure 7).
+
+                                                                       C.5    Detailed results on 5 configurations
+                                                                       In this section, we analyze in detail the behavior of the dif-
+                                                                       ferent algorithms on 5 relevant configurations of the Office
+                                                                       gridworld environment. In particular, we used three distinct
+                                                                       maps and five different Reward Machines, each progressively
+                                                                       more complex. Map 1 in figure 8 is a 12x9 grid, the same used
+                                                                       by Icarte et al. (2022). Map 2 in figure 9 is a 12x12 grid, fea-
+                                                                       turing more rooms and decorations. Map 3 in figure 10 is the
+                                                                       most complex, a 15x15 maze-like grid with goals arranged to
+                                                                       challenge the agent. All environments share the same discrete
+                                                                       action set—up, down, left, right—and a stochastic transition
+                                                                       noise of 0.2. In map0 exp0 (a 10 × 10 empty grid), each
+           Figure 5: Map4 - task 6 (15x15) - Office World              action has a 20% chance of being replaced by any other action.
+                                                                       In map1 exp5 and map4 exp6 the noise deflects the agent
+      Algorithm       Type         Dynamics           DFA              towards a perpendicular action, mirroring the slip mechanism
+                                   factorized        known             of Frozen Lake.
+      Q-Learning   model-free         ✗                ✗                  The agent’s objective is to reach the goals in a specific order
+      R-Max        model-based        ✗                ✗
+      QR-Max       model-based        ✓                ✗
+                                                                       without stepping on any decorations, which would terminate
+      QRM          model-free         ✗                ✓               the episode.
+      R-MaxRM      model-based        ✗                ✓                  The five Reward Machines correspond to five experiments
+      QR-MaxRM     model-based        ✓                ✓
+                                                                       with increasing difficulty:
+                   Table 2: Compared algorithms.                          • Task 1: Deliver coffee to the office without breaking any
+                                                                             decoration (figure 11).
+C.4      Overall results on 15 configurations                             • Task 2: Deliver mail to the office without breaking any
+Figure 6 and Table 4 reports, for each map–task instance, the                decoration (figure 12).
+training steps (log scale, mean ± std. dev.) required by each             • Task 3: Deliver both coffee and mail to the office, in any
+algorithm to learn a policy that is optimal in the correspond-               order, without breaking any decoration (figure 13).
+ing deterministic MDP. Results are averaged over thirty runs              • Task 4: Patrol locations A, B, C, and D in the correct
+with 30 different random seeds, and at regular intervals the                 order, without breaking any decoration (figure 14).
+current policy is evaluated over 100 deterministic episodes;              • Task 5: Patrol locations A, B, C, D, then collect email
+training stops as soon as its mean return is statistically indistin-         and coffee in any order, and finally go to the office (figure
+guishable from the optimal one (p > 0.1, two-sided Welch’s                   15).
+t-test).                                                               In addition, we consider a sixth task (Task 6), defined only
+   • Model-based vs. model-free: both R-Max and QR-                    on the largest map (Map4), where the environment is a maze-
+      Max consistently require far fewer steps than their              like space featuring two coffee machines: a good one (reward
+      model-free counterparts (Q-learning, QRM), regard-               1000) and a regular one (reward 1); see Figure 16.
+      less of DFA access.                                                 Table 3 reports the mean and standard deviation of the num-
+   • Benefit of knowing the DFA: supplying the                         ber of training steps required by each algorithm to reach 100%
+      reward-machine structure (suffix RM) yields an ad-               success, averaged over the five experiments (exp1–exp5) on
+      ditional 10–50× reduction in sample complexity (R-               each map. As the table shows, the model-free baseline Q-
+      MaxRM, QR-MaxRM vs. R-Max, QR-Max).                              Learning incurs extremely high sample complexity (on the
+   • Impact of the factorisation: even with DFA knowledge,             order of 5 × 105 to 1.8 × 106 steps) with very large variance,
+      QR-MaxRM is about 1.5–2× faster than R-MaxRM, and                particularly on the larger maps. Introducing a model (R-Max)
+      without DFA QR-Max is roughly an order of magnitude              reduces the mean by a factor of roughly 3–6, while QR-Max
+      faster than R-Max, showing that sharing the learned en-          further cuts it by another factor of ≈ 4, achieving means of
+      vironment model across automaton states remains ad-              3.1×104 , 6.9×104 , and 1.16×105 on Maps 1–3 respectively.
+      vantageous.                                                      Equipping the solvers with the reward-machine structure (the
+   • Overall winner: QR-MaxRM achieves the lowest step                 “RM” variants) yields additional speedups: R-MaxRM re-
+      count on every instance; even without the DFA, QR-               quires on average only 2.7 × 104 , 6.0 × 104 , and 9.8 × 104
+      Max outperforms QRM, confirming that the factorisa-              steps, while QR-MaxRM plunges to 7.3 × 103 , 1.6 × 104 ,
+            Figure 6: Scalability with respect to task complexity. Training steps needed to achieve the goal in 15 different tasks.
+
+
+
+
+ Figure 7: Office World - 15 tasks with 95 % confidence intervals.
+and 2.5 × 104 steps on Maps 1–3, with relatively low standard
+deviations (see Table 3).
+   Table 4 presents the full breakdown by map and experiment,
+together with the optimal path length and the success rate of
+value iteration (VI). For example, on Map1 exp1 the opti-                                Figure 8: Map1 (12x9) - Office World
+mal makespan is 21.08 steps (VI success 66.76%), and QR-
+MAXRM converges in 10,964 steps—an order of magnitude                     complexity across all environments and difficulty levels, while
+fewer than R-MAXRM (21,777) and two orders fewer than Q-                  the per-experiment metrics in Table 4 highlight the scalabil-
+Learning (128,973). As task complexity grows (e.g. exp5 on                ity and robustness of QR-MAXRM even as the optimal plans
+each map), the optimal path length increases substantially (up            lengthen and the domain becomes more challenging.
+to 156.46 steps on Map3 exp5) and the VI success rate falls               Discussion of the results. As summarised in Table 6, the
+below 10%, reflecting harder coordination challenges. Nev-                factorised agent QR-Max consistently attains a policy sta-
+ertheless, QR-MAXRM still completes training in 1.47 × 104                tistically indistinguishable from the value–iteration optimum
+steps on Map3 exp5, compared to 1.29 × 105 for R-MAXRM                    after roughly one order of magnitude fewer interactions than
+and 5.47 × 106 for Q-Learning.                                            the strongest optimistic baselines. On the easiest instance
+   Taken together, these results demonstrate that factorising             (MAP0--EXP0) QR-Max converges in about 1.4 × 104 tran-
+environment and reward dynamics, combined with reward-                    sitions, whereas the most sample–efficient UCBVI variant re-
+machine knowledge, drives dramatic reductions in sample                   quires over 1.4×105 ; on the hardest instance (MAP3--EXP5)
+              Figure 9: Map2 (12x12) - Office World                                    Figure 10: Map3 (15x15) - Office World
+
+
+Table 3: Mean ± Std. dev. of training steps to reach 100% success,
+aggregated over five experiments (exp1–exp5) per map
+ Algorithm         Map 1               Map 2                 Map 3
+ Q-Learning   484,528 ± 457,245   977,552 ± 946,899   1,819,687 ± 2,080,127
+ R-MAX         136,622 ± 91,486   307,805 ± 246,020     567,680 ± 582,237
+ QR-MAX         31,316 ± 4,073      69,494 ± 12,854      116,237 ± 25,001
+ QRM           137,263 ± 59,580    282,943 ± 90,035     479,702 ± 236,923
+ R-MAXRM        26,776 ± 3,199      60,058 ± 11,165       97,639 ± 26,300     Figure 11: Reward Machine of Experiment 1 - Office World
+ QR-MAXRM        7,312 ± 2,774       16,240 ± 7,990        25,222 ± 8,385
+
+the respective figures are 1.6 × 105 versus at least 1.4 × 106 .
+   When the Reward–Machine structure is supplied, QR-
+MaxRM delivers an even steeper reduction. Across the four
+largest benchmarks it converges in 3.8 × 103 to 5.8 × 103
+interactions, while the model-free QRM requires from half
+a million to ten million and the non-factorised R-MaxRM
+more than 1 × 105 . Hence, coupling factorisation with ex-                    Figure 12: Reward Machine of Experiment 2 - Office World
+plicit knowledge of the logical task cuts sample complexity
+by two, and in one case three, orders of magnitude relative
+to the best published alternatives. These results position QR-
+Max as the best when the reward structure is unknown, and
+establish QR-MaxRM as the most sample-efficient algorithm
+presently available when the Reward Machine is given.
+
+
+
+
+                                                                              Figure 13: Reward Machine of Experiment 3 - Office World
+
+
+
+
+                                                                              Figure 14: Reward Machine of Experiment 4 - Office World
+Table 4: Training steps to reach the optimal policy compared with Value Iteration (VI). The last two columns show the performance of the
+optimal solutions computed through Value Iteration, highlighting the increasing difficulty of the task.
+ Map        Exp    Q-Learning      R-MAX      QR-MAX        QRM       R-MAXRM             QR-MAXRM        Average length (VI)       Success rate (VI) (%)
+ Map1       exp1       128,973       59,691      30,376    66,693           21,777            10,964                      21.08                       66.76
+ Map1       exp2       201,835       77,797      27,619   129,804           26,232             9,339                      39.31                       39.40
+ Map1       exp3       355,070      155,347      30,325   122,827           28,682             6,087                      40.94                       38.68
+ Map1       exp4       469,313      103,211      29,950   135,119           26,953             6,062                      42.23                       34.37
+ Map1       exp5     1,267,449      287,066      38,312   231,870           30,238             4,107                      77.86                       15.47
+ Map2       exp1       334,894      213,942      83,593   225,491           74,250            28,729                      52.46                       54.69
+ Map2       exp2       326,306       88,636      56,445   220,334           49,577            19,214                      53.10                       37.92
+ Map2       exp3       723,051      316,672      62,583   280,763           63,066            12,415                      63.04                       37.25
+ Map2       exp4       889,842      196,334      61,775   249,912           47,873            12,445                      73.80                       28.18
+ Map2       exp5     2,613,669      723,441      83,076   438,213           65,523             8,396                     123.39                       14.15
+ Map3       exp1       501,559     201,731       98,663   297,975           73,832            33,815                      55.83                       33.32
+ Map3       exp2       553,517     170,926       99,952   353,658           66,949            33,853                      63.76                       32.57
+ Map3       exp3     1,105,417     388,562      110,808   406,122          111,349            21,856                      68.69                       32.42
+ Map3       exp4     1,466,896     495,878      112,165   449,594          107,115            21,869                      81.91                       21.27
+ Map3       exp5     5,471,046   1,581,301      159,597   891,160          128,950            14,717                     156.46                        6.55
+
+
+   Method                  Memory             H-dep.?          Sample complexity∗           Key drivers
+                           2
+                                                                                            (s, a, s′ ) counts + automaton counts (q, s′ , q ′ )
+                                                                                   
+   QR-MAX (ours)     Õ |S| |A| + |S||Q|        No            Õ |S||A| + |S||Q|
+                         Õ H |S|2 |A|                         Õ |S||A| H 3 †
+                                                                               
+   UCBVI                                        Yes                                         Empirical counts and UCB bonuses for every time–step (h, s, a)
+   OPSRL / PSRL          Õ H |S|2 |A|         Yes       — (high-probability regret
+                                                                                 only)     Posterior parameters (Dirichlet / Gaussian) for every (h, s, a)
+   R-MAX‡               Õ |S|2 |A||Q|
+                                      2
+                                                No               Õ |S||A||Q|               Counts on the full product MDP S×Q
+   QRM                   Õ |S||A||Q|           No                 — (no PAC)               One Q-value table per (s, q, a)
+
+
+Table 5: Asymptotic memory and (when available) PAC-style sample complexity. Õ hides poly-log factors; H is the episode horizon, Q the
+number of reward-machine states. † Based on Azar et al. (2017), Thm. 2, combined with the standard conversion from regret to PAC-style
+bounds (omitting the dependence on ε). ‡ Brafman & Tennenholtz (2002).
+∗
+  Sample-complexity entries are given in terms of |S|, |A|, |Q| and H, omitting the explicit dependence on ε and (1 − γ) for clarity.
+Reference scenario — 15 × 15 grid: |S|=225, |A|=4, Q=8, H=250.
+• QR-MAX memory: 2252 × 4 + 225× 8 = 0.204 M entries. • OPSRL/PSRL memory: 250× 2252 × 4 = 50.6 M. ⇒ ≈ 250× less memory.
+• QR-MAX PAC bound (in |S|, |Q|): 225× 4 + 225× 8 = 2.7 k. • UCBVI PAC-style bound (in |S|, H): 225× 4× 2503 ≈ 3.5 × 1012 . ⇒
+≈ 109 × fewer samples.
+
+
+
+
+   Figure 15: Reward Machine of Experiment 5 - Office World
+
+
+
+
+                                                                                             Figure 17: Map1 Exp1 - Office World
+
+
+
+
+   Figure 16: Reward Machine of Experiment 6 - Office World
+Table 6: Average training steps to find a policy that produces results indistinguishable from VI optimal solution (mean over 10 random seeds).
+ Map        Exp      QR-MAX QR-MAXRM                R-MAX          QRM UCBVI-sB UCBVI-B UCBVI-H                            PSRL/OPSRL†
+ MAP0       EXP0         14 483            4 150    49 759   162 040         142 015       159 092      191 983            88 437 / 128 188
+ MAP1       EXP5         24 222            3 125   272 080   225 140         250 800       555 977    1 320 070                          —
+ MAP4       EXP6         20 150            5 630    82 000 9 910 340          80 160        90 030      101 120                          —
+ MAP2       EXP5         83 076            3 767   723 441   438 213       1 150 000     1 400 000    1 890 000                          —
+ MAP3       EXP5        159 597            5 806 1 581 301   891 160       1 410 000     1 620 000    2 030 000                          —
+ †
+     Eight posterior samples per episode, as in the original papers.
+
+
+
+
+                  Figure 18: Map1 Exp2 - Office World                                   Figure 21: Map1 Exp5 - Office World
+
+
+
+
+                  Figure 19: Map1 Exp3 - Office World                                   Figure 22: Map2 Exp1 - Office World
+
+
+
+
+                  Figure 20: Map1 Exp4 - Office World                                   Figure 23: Map2 Exp2 - Office World
+Figure 24: Map2 Exp3 - Office World   Figure 28: Map3 Exp2 - Office World
+
+
+
+
+Figure 25: Map2 Exp4 - Office World   Figure 29: Map3 Exp3 - Office World
+
+
+
+
+Figure 26: Map2 Exp5 - Office World   Figure 30: Map3 Exp4 - Office World
+
+
+
+
+Figure 27: Map3 Exp1 - Office World   Figure 31: Map3 Exp5 - Office World
+

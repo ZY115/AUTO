@@ -1,0 +1,18 @@
+{
+  "runs": 512,
+  "seeds": "1200-1231",
+  "scales": {
+    "none": 0.05,
+    "frontier": 0.1,
+    "learned": 0.07,
+    "oracle": 0.07
+  },
+  "source_sha256": "6303ad005b722c23cc952aa1daa32c15fb113817afa234c4eb51b1ea45244474",
+  "binary_sha256": "bf691c84cb5cf45448801f70e46a950a72e43e15ec8cadd460ef1961a639ed1d",
+  "task_sha256": {
+    "gapA": "18d2d5742b506d90503ec63ca690490284e812d874890640352d7a237cc84181",
+    "gapB": "b2abe425572af83111551bcabcf0c988492d61fec9610155f099fecf406b07d9",
+    "gapC": "92b071bd470a69caa14e6ef31cb19fc93730cfeac87029e6dea6ce27e07565bd",
+    "gapD": "28d796c38bf49a31d86c39bff989916bdcc1ff125fbcdd6df7920e293d9c94e7"
+  }
+}

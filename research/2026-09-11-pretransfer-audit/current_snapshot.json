@@ -1,0 +1,2457 @@
+[
+  {
+    "path": "STEP39_PORTING.md",
+    "bytes": 4359,
+    "sha256": "7c7d13081b4d7268309060d2632fd1e084aaf63d7c0e9a9ab72c6376863c7f7b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP10.md",
+    "bytes": 5451,
+    "sha256": "40c74d53e3934fcd64b01e88da85fefd77f753d3f05b3ff17e65cb58d8ea2c71"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP11.md",
+    "bytes": 5439,
+    "sha256": "62ad78e4bc80e106d9e422521f9a7827d79e5b8bc769f342b8ed3579fde38eba"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP12.md",
+    "bytes": 4439,
+    "sha256": "b155c398ff3c5d0177e7f9d146508acc8812654c215a6e85f875b47656b53eb4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP13.md",
+    "bytes": 5099,
+    "sha256": "55f1c17302914d6447510c037bd089db8b749d16e9c807440ff7b857edf52c98"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP14.md",
+    "bytes": 4258,
+    "sha256": "f82ed112cc194a1d3fbd4ca907f2485f17be207602d135e59f9636dd29f1a06e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP15.md",
+    "bytes": 10982,
+    "sha256": "7cd8499ef1e4832e39afee5e70ebdf25d2e0f4b22fce1413afb75f6b285d8dd8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP16.md",
+    "bytes": 10459,
+    "sha256": "77589580793c35023671bf060c8127e534258b70fe408f216a2a22c7ec455356"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP17.md",
+    "bytes": 10963,
+    "sha256": "1b8e255be9b27e9c9b156f6ec354a52e8ac3708a1e5ff7e6313dce35c5e29d77"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP18.md",
+    "bytes": 8078,
+    "sha256": "175461d5cb58127305a31e0be14b818bba6dbf556cdbf508a595f620956b73de"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP19.md",
+    "bytes": 8495,
+    "sha256": "cfe4e5faf9088d56fe0eca68887f6fbcdcd3a3ad2fb7c083308ad7c882c505d7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP20.md",
+    "bytes": 7487,
+    "sha256": "7a16bb99cdd725ff1093fbed992ee6c5aa1ff7f60eb8e741c6867c940b6c1562"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP21.md",
+    "bytes": 7350,
+    "sha256": "151abe607b5879db7c6d9fc1c5810bdff07611cc7b5f4040edb0b70941ee4e2b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP22.md",
+    "bytes": 8564,
+    "sha256": "91855543e5d84bdc1208f1d80efbb0979c23a9cc13b781ad39f73c88fe81d3fc"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP23.md",
+    "bytes": 5397,
+    "sha256": "d94af1c1e5db90e19e3467507dabc8805c0b81705211c5e42b772a1419edef82"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP24.md",
+    "bytes": 6000,
+    "sha256": "568e01deb7a49895a3f165de459b1f969a528862fc4a2d979a0a2719a73f5b50"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP25.md",
+    "bytes": 4728,
+    "sha256": "caf6feacaf66d8892408ee3511f3ac0fafe1f08d9fbdc585b80a6c895d967d7a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP26.md",
+    "bytes": 5700,
+    "sha256": "b31204ce708f1663bea3b84c2a644d94ff0d23c2ac262149b746d4274c4a35c0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP27.md",
+    "bytes": 7071,
+    "sha256": "f5e923f5089529e3b70ed2776418d335b712500c9e6ecb0862db66057ced44ba"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP28.md",
+    "bytes": 6631,
+    "sha256": "d0cd9032308fa278df6cd46a1e8bce82b9caec1180ce6baf53b308ed357d9deb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP29.md",
+    "bytes": 4095,
+    "sha256": "8fb77814cf9ff615f2ebbce4852bc07d49024bc8dd0cf120578e7e5f63f7fb32"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP3.md",
+    "bytes": 6776,
+    "sha256": "e5b7b7f9e8197309a734a098832a2ed539bee5b5657b7c47fb54452be5817564"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP30.md",
+    "bytes": 4368,
+    "sha256": "4c7a3bea22b0cbfe0f35f9ed6479e9bf5aef5f90c838873c240237e4bdea0a67"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP31.md",
+    "bytes": 5236,
+    "sha256": "bfe353739369905c77ed79002e4985d714d3cfb3e9e59ae1e5b37d9d15af6442"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP32.md",
+    "bytes": 5647,
+    "sha256": "829043803c466a867bfe81b9c9282e530157c9834fcfdb40e025e7100c42953d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP33.md",
+    "bytes": 8368,
+    "sha256": "1c952e64e26ce494e4c4fbc11466a7154db9f12f9f0bab84c4954c7a7e8fc117"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP34.md",
+    "bytes": 6807,
+    "sha256": "85425e46bedc7a2dfa2ec148ea020950a5c2aef62e897a25be4ab0d5471ca87a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP35.md",
+    "bytes": 4720,
+    "sha256": "8116698c559dad0b9df782482d7b48f9e78fc8af6f48e6557fb4d4fc908402e8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP36.md",
+    "bytes": 6035,
+    "sha256": "e85953c3e014576c2b4352bc1574fa0c9d27413da8488bd2bf087dd48c143ea8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP37.md",
+    "bytes": 6024,
+    "sha256": "19c058a1b8ace0891c350f321d72b7a108302f261a585da1b3b860ca6f2362bd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP38.md",
+    "bytes": 5864,
+    "sha256": "468b4dcf6758ccad20a1a1d34d73d7ee98c84677518f8639237d51e7d7673606"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP38_5.md",
+    "bytes": 8984,
+    "sha256": "f3a7c468d1d89e23ada1587b78aeb6e52f013b4feca93b6ca4f3d2e3449eb643"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP4.md",
+    "bytes": 5854,
+    "sha256": "a77f07d95132ceb46c9334c861b55ca79ef7f4c2b63c063af8fe61b8a2816373"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP5.md",
+    "bytes": 9108,
+    "sha256": "7d6b56a552b606f3bf646aac3efd79b0ef29acf68bef11f2794afaeaa68d41d3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP5R.md",
+    "bytes": 7195,
+    "sha256": "4cc73a53d1a3d1cccf3ee7983da44a79c8e459ec1b8afd60270819f1db4688be"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP6.md",
+    "bytes": 6471,
+    "sha256": "ec6f4c47dcd0495674b3491523934705492598d3e57ab8d6ea3160fc613d309d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP7.md",
+    "bytes": 6379,
+    "sha256": "e8e854cc159ceb13ed360fb27a021bffd0a9db177c37d119efca3e66fbe99159"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP8.md",
+    "bytes": 6590,
+    "sha256": "58a3b57f24d3a136a99f518e05c505a0254ddc9443dfdbbbf6e74faea2558ec7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/REPORT_STEP9.md",
+    "bytes": 5312,
+    "sha256": "0dfd2f5deafcb548969a16294adbc682f023dc6fac123f6659a85a957f5670c3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/compress",
+    "bytes": 186408,
+    "sha256": "35d77c90a0d7b8b4344ee244b8b4a81506c96e821f22535f66c6aeb2570ee4ff"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/docs/DECISIONS.md",
+    "bytes": 136772,
+    "sha256": "3d8dc3fc87fbfad3a9802b1442899e1a4d31c0b6cbd3c3ea183a8d06fff594cd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/docs/PLAN.md",
+    "bytes": 19831,
+    "sha256": "172196a2dfc9cc1bdc3a022912f8c4a094093b12224262ddac661caea3145c25"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/active_both.json",
+    "bytes": 3279,
+    "sha256": "0333cabf769ea48dc6a1ed5cd399e70075530c8bbd0e3234d09955001418b86b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/active_value.json",
+    "bytes": 24783,
+    "sha256": "94823916102d9830c1744671c694769bdfbcd7ae881c3a1111355a16328aab2e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/attribution.manifest.json",
+    "bytes": 543,
+    "sha256": "a20dbf79c59e063d5ab595a8214966e8b63c88972414d10a35b2bb406ae1781b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/attribution2.manifest.json",
+    "bytes": 572,
+    "sha256": "411c8de5ac323444c8cae4f59c2d133f6d22941ea7a769d622c1651923c658ae"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/audit.manifest.json",
+    "bytes": 671,
+    "sha256": "f944d46ba3262dc92d28ec3a0f9fce79d97b84c5d22e1efd1645a48184f26026"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/baseline_denominators.json",
+    "bytes": 16644,
+    "sha256": "f313233a3c66c3a55c11a96635300ea651e1d21c21031fa5248cc74f04cfb90c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/ceiling.manifest.json",
+    "bytes": 581,
+    "sha256": "718591ba453a9eaaaae4207f57a76c6b809674cd2fab866bbf6cddf488894d27"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/conversion.manifest.json",
+    "bytes": 679,
+    "sha256": "7eb0fdeea2d420732a69bf2351374dd0168e6936c2e902eebbafab832bec436a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/conversion_fatal.manifest.json",
+    "bytes": 445,
+    "sha256": "5a927e0e793d4b52099363dd20a4b560bcedf9896787a00ed502015f9f83298d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/cost_model.json",
+    "bytes": 791,
+    "sha256": "4902ce4099447f326f1fcc22cf69a6beb2f7a8a9a7fd81285da1bf6121c907fe"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/coverage_budget.json",
+    "bytes": 1265,
+    "sha256": "563acd084c9bf667555319727036fa4ad6f2ded8087e00b8183c04bb2af0812c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_cheap_0.task",
+    "bytes": 2134,
+    "sha256": "43098ee6e6cfa4acc6b9cba9862f3329221f570542303f2a90666026be252e3e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_cheap_1.task",
+    "bytes": 2026,
+    "sha256": "f288369026ea011b0e97fc059b03b753668b5686f93a46c90aa67f21ee9868bb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_cheap_2.task",
+    "bytes": 2180,
+    "sha256": "e5e6de0fb40e6c5f6093182fa54689aa369e8ac414431a173f4873f938bb351d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_cheap_3.task",
+    "bytes": 2237,
+    "sha256": "04ab66bb20e7241bf3fcebbe8bd8572f5369e13bafdbcec3b6f9d3719e66a5f7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_cheap_4.task",
+    "bytes": 2058,
+    "sha256": "36d93763a8ff5c6a48355f55d233ec4f878bccec38ea33cdec1f72591f6253fd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_cheap_5.task",
+    "bytes": 2315,
+    "sha256": "17a667322ed9fb3d1bbf34b0a967292434e9ed43078fc54a7b4dcf24b2d3fc0e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_expensive_0.task",
+    "bytes": 9607,
+    "sha256": "bc6261364c22745821627aa0f30396ced89fc908a563b781a039f8f86017c39b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_expensive_1.task",
+    "bytes": 9649,
+    "sha256": "32d7f5bd6bc255d6e8105b01e19ae3bcbeb0869307d7daa3920618ad5cbf8c52"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_expensive_2.task",
+    "bytes": 9609,
+    "sha256": "430a1462fe7bc479bcb3b885cc7f16c74b8d4792e6b3dd21330898f08102b798"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_expensive_3.task",
+    "bytes": 9601,
+    "sha256": "d985dd4e44c79878d8500deb9285ec817cfdc44cf15d27c5396320836477f780"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_expensive_4.task",
+    "bytes": 9588,
+    "sha256": "dbc7eaca89b817180edff74b3f1062b2ef952f6dcc4d6d5e5fceb64d268791e0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_book_expensive_5.task",
+    "bytes": 9572,
+    "sha256": "9dd349f6d81c35c658db49051b4ee4ff616e57905acdd745db8c8f8c2bcfa67b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_cheap_0.task",
+    "bytes": 5356,
+    "sha256": "3a2f9d2687872e5b041c7da99cd6f27a6a41193a480efc71bc7f271f1b8a572f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_cheap_1.task",
+    "bytes": 5152,
+    "sha256": "373a0078b25fad1fda6b15d45cfed8b1be7744666c9666ac0f9e80cc893a04aa"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_cheap_2.task",
+    "bytes": 5262,
+    "sha256": "5dfeb3e3a09989a1d8fe35b5ea744fdf69d08f3667471d4e9e1970771dc12c12"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_cheap_3.task",
+    "bytes": 5108,
+    "sha256": "520e7ef128d6940baa05abd1fc293446e3a8424b7bff0ca42fd5adf5cf81a3d0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_cheap_4.task",
+    "bytes": 5275,
+    "sha256": "0ea47106a942a6de4e4895e62e84719550d5cec85c8c16e36d12c3a567bf5325"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_cheap_5.task",
+    "bytes": 5405,
+    "sha256": "ae6bd133e2a4a006c358227d22c99de57a419f81464795aa145cc3502c6feef1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_expensive_0.task",
+    "bytes": 22074,
+    "sha256": "155ab7eb29ee72eb6804258795b5a93f886a5732f3f1e52da69cef64f26ca2c9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_expensive_1.task",
+    "bytes": 21972,
+    "sha256": "468c134352d9dbfb55d6899f9acdd0e1c5fc1ea9a6c103a7fc910bd617effc97"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_expensive_2.task",
+    "bytes": 22216,
+    "sha256": "1a4ae52c192ad65761ca755f0414f5a606e140e90e3e0a44dea6747165baae33"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_expensive_3.task",
+    "bytes": 22041,
+    "sha256": "e0e4ee56f2ecd138a36a0003fba3fcd38677967f16d376c6f9686e31d5c2b467"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_expensive_4.task",
+    "bytes": 22110,
+    "sha256": "112f62ac052212730fc95882942878e77ee9f826ae531570cef55f02dfb482c6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_bookandquill_expensive_5.task",
+    "bytes": 22088,
+    "sha256": "29d3ed0a0198700d9fdf96beefaed3db73fb1f6a7d478cc74f033b0254513e4d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_cheap_0.task",
+    "bytes": 4041,
+    "sha256": "ffe5bfdfdb3babd5be882293daa45bf2619dd66697d48f95e8b60f177e5cb984"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_cheap_1.task",
+    "bytes": 4040,
+    "sha256": "cab48b39ff7d795d4a08817d55c39577705a6e1e7a3b8027f08ed7dd3f7c2e31"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_cheap_2.task",
+    "bytes": 3956,
+    "sha256": "3dccdae9c4c2ab6fca82569995a9f863da8cbae2924fb841925cab3beee46f09"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_cheap_3.task",
+    "bytes": 3730,
+    "sha256": "2d26f229a14a8f39a566ecb6e237a06c47dad74c4909f130c6b1621efff498b1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_cheap_4.task",
+    "bytes": 3927,
+    "sha256": "53c1463bd56f3e91812fc2217423d0c26a5ddc0b3319a32395417193e55339ee"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_cheap_5.task",
+    "bytes": 3979,
+    "sha256": "aaf0cf6732a6773e9f321b4eacc30f298b6f03b0a3993fa2a9609694caa40bb8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_expensive_0.task",
+    "bytes": 16376,
+    "sha256": "5aded7aff99510fcbb5dcbeb483cfafb5076e253f5aedfa191762f1ac84d4dfb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_expensive_1.task",
+    "bytes": 16449,
+    "sha256": "aa770aeddacdd9ed26f59ce6748c7037935de8568b20bfef7e6bdd7a24ad6951"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_expensive_2.task",
+    "bytes": 17286,
+    "sha256": "5c2cce45a097adbc79ba845d59a01b0f2eb3d9bb9ac8f81c87e0d2f81e91ce54"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_expensive_3.task",
+    "bytes": 16331,
+    "sha256": "095a4bfb3c3babb67a5512236fde397ce3fabd92b7697171b87d9de307ff57f8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_expensive_4.task",
+    "bytes": 16189,
+    "sha256": "ff176c3d6684d1262e3758c856efddcced696b053a3cd0bb62206fd97667e048"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/cw_cake_expensive_5.task",
+    "bytes": 16333,
+    "sha256": "bce52251bacebd0ca854a36884a93b5362cdb150405ba578f18ce9dd03b491af"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld/tasks.json",
+    "bytes": 25798,
+    "sha256": "0ac6963633b0e2cdabfdce81b6557c451a13b99d23eca135a8d05bbb45a067ce"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_0_lava.task",
+    "bytes": 10887,
+    "sha256": "036ec548e84685231f37830698bcbd39a7de1770ff2e244c5ec631f201531c44"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_0_safe.task",
+    "bytes": 9623,
+    "sha256": "6899096e69da6977556e031a0c559c1480727c2f0dccaa28065fd2cda803573c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_1_lava.task",
+    "bytes": 10929,
+    "sha256": "916c9202255e9212e3f2150e8559ddb9e34767df3364b37b996e37f7a1da8164"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_1_safe.task",
+    "bytes": 9665,
+    "sha256": "755e058403ef38dda27b12f49b6a457e108e8a33a2d2a7cb2e6e945dc0fc6ac4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_2_lava.task",
+    "bytes": 10889,
+    "sha256": "b5350f88376d3890d4b7c20270036fddf65c38d15cd17fb6abe131f4b69eb2f7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_2_safe.task",
+    "bytes": 9625,
+    "sha256": "05c3961f43593e647b1550b5b8aa5a6f377e1dd79966006a27ac96bf0a0347ae"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_3_lava.task",
+    "bytes": 10881,
+    "sha256": "ee351ec3556eeef0c950f44bea2851e5f0ae73deaa42c8292b4e11046e681105"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_3_safe.task",
+    "bytes": 9617,
+    "sha256": "b0774737c27fe54022af209d534a9b664fbb5fad4c3a18def374c7479e68be32"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_4_lava.task",
+    "bytes": 10868,
+    "sha256": "3989713cb79b1da9a2a0d7b680b399879d3bb211c8dfa4fe8f431044f8ee04fa"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_4_safe.task",
+    "bytes": 9604,
+    "sha256": "eab7a2f33191664cb77d1afb2b166373b54cafd3ab789469cf0c3ea87c62d569"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_5_lava.task",
+    "bytes": 10852,
+    "sha256": "c09258a7a2f567dd8b3eb84a4a23e6b37f5dd707151c66424ee4fb70640167d3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_book_expensive_5_safe.task",
+    "bytes": 9588,
+    "sha256": "487cf163a4206b1da6c399f063bdb97db03345276c9785d21f269dd8b1d48fd0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_0_lava.task",
+    "bytes": 23413,
+    "sha256": "d3fedbc2beba9eb60c953b9de099923fa96ebb289f6f03a77c6948d4c40bc95e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_0_safe.task",
+    "bytes": 22127,
+    "sha256": "13efc3cd8df325d9fe41bd41ac112926186ed7cb7b46486d0bca6fd5bf1e4e8f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_1_lava.task",
+    "bytes": 23311,
+    "sha256": "e5d4f65efadd229e59cc5ac74dd95a076819a6098665182bc4361702e485edad"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_1_safe.task",
+    "bytes": 22025,
+    "sha256": "cfbf1664c8b9418e2af30e86feb8f8abda2340505201f749ba5c0c8b6b5779f4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_2_lava.task",
+    "bytes": 23555,
+    "sha256": "eeec4528915999226afb1b3f2934ceab1e8821f56524c9b565d17d6959e26508"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_2_safe.task",
+    "bytes": 22269,
+    "sha256": "e8fc33c828fea59b7818acab3235a2193abab391e86b757b2dd401ebbf677326"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_3_lava.task",
+    "bytes": 23380,
+    "sha256": "412ebdb7d90e2d79528194ac1462cb6bdeb76d1e45e473eb15c7d3f13d9dbfd7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_3_safe.task",
+    "bytes": 22094,
+    "sha256": "61bc960e20031fac33b8d2ccf9b7f938bcaf15ed263457aae7ac5ca73ed62468"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_4_lava.task",
+    "bytes": 23449,
+    "sha256": "6366ce77105e69519796c6d5e4f87b8049be2d8d5e8b8bca5d8018f7d4d58b5a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_4_safe.task",
+    "bytes": 22163,
+    "sha256": "6d9dc0e2600913f34f1874a538db1cac92affcdbcb9d5d169e107cbd23688823"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_5_lava.task",
+    "bytes": 23427,
+    "sha256": "2954bb33d6dbb610b1be33391ff6123d0d8a8242933dd57ae473f5ff3f3efb97"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_bookandquill_expensive_5_safe.task",
+    "bytes": 22141,
+    "sha256": "7f45fd4c31522d5de9584e6fdba7e0d65495bbb56c7b48546359a4ee15469e0a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_0_lava.task",
+    "bytes": 17700,
+    "sha256": "c5f5961f66f5567f2059d01d2022dc9729bca5c5df6c0146b7c96fd475474a9d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_0_safe.task",
+    "bytes": 16411,
+    "sha256": "c2a1493d5df16a7b8cb2771e406e02cb02aca2a170712676dec5bae42839b8a0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_1_lava.task",
+    "bytes": 17773,
+    "sha256": "09034a287a1fecba6926ea0cee773b6f384f3af2ab86b22473dc759359c10f10"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_1_safe.task",
+    "bytes": 16484,
+    "sha256": "b0cd8c816eacd261139ea4e75b5e04da9581d2fb8980a2507fe2c88775f3b867"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_2_lava.task",
+    "bytes": 18610,
+    "sha256": "84ae9dd19299d87d5b36eb3e652772911d4ef11500294dd7ce80a87fa6e239f2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_2_safe.task",
+    "bytes": 17321,
+    "sha256": "38f2dfeedce6c8d5b98806a786ea955ec11b6f2ef6c87b8ed67d68a484365008"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_3_lava.task",
+    "bytes": 17655,
+    "sha256": "d48224ef9417ee41d01f8d910eb6f58b38c8a19f8af8fd79cb94cae5d9097b1e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_3_safe.task",
+    "bytes": 16366,
+    "sha256": "924ec9e698930bd64f6df161eb9aaa1ca4fbe11da1cd6a854832a63c34fd8610"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_4_lava.task",
+    "bytes": 17513,
+    "sha256": "675705b8c5aebd65822e9f1f71ac6f5d87308e37f0e9a9ee1dbc310433459a83"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_4_safe.task",
+    "bytes": 16224,
+    "sha256": "fd56d07f034168041c909569ccffafb06ad437430fceda2616476b880d138d43"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_5_lava.task",
+    "bytes": 17657,
+    "sha256": "b717f5d285fec31ecbe66394ad01a00dce84fe01aab89a016d292f1181153ccd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/cwl_cake_expensive_5_safe.task",
+    "bytes": 16368,
+    "sha256": "2bd1ee95166400d502821bb5fc4d50ca51de474728284698bb563f4b60c6f04a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.00/tasks.json",
+    "bytes": 12831,
+    "sha256": "434bfab34f6eca7380c462306218cbd6f5a757414939c39b2b5efaa742164090"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_0_lava.task",
+    "bytes": 10888,
+    "sha256": "9be5ba01b9f40f6225cd07ff447efe3e168649da2dfda7682fffd5a20ef9d642"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_0_safe.task",
+    "bytes": 9624,
+    "sha256": "3604eb3df1593911fb152a3201925326e1109b7efd2419c8b1f8bec269189795"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_1_lava.task",
+    "bytes": 10931,
+    "sha256": "36dde34968ec10203366df8783bd570fa7a7f66fd838bc4c0f0e5aca6db2a5e8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_1_safe.task",
+    "bytes": 9667,
+    "sha256": "d877a57787287996bdea45308df8426d2605c822a76471c10943bc6afa984778"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_2_lava.task",
+    "bytes": 10893,
+    "sha256": "bbdcd3eb48486529bb71d02f0db54aaa7d868e41fe15e260cee3e74e8d4f3884"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_2_safe.task",
+    "bytes": 9629,
+    "sha256": "e0efb6bc1b2a3113af24557a9100b17cb3ace4efa319d78fca86d2393fa357ee"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_3_lava.task",
+    "bytes": 10882,
+    "sha256": "706c7fb6e0700ba272b85d8e2ad000666bb189a208c9b8597c4a7eeeac27b8ed"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_3_safe.task",
+    "bytes": 9618,
+    "sha256": "a97a58a4342a47c52b1e2e4ca3583072a36f00637abf28a43dc4da7ac4074801"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_4_lava.task",
+    "bytes": 10871,
+    "sha256": "44eb1af0157305d7648d30d7faff61659fc5acd92bc4414050131ac99ad41eca"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_4_safe.task",
+    "bytes": 9607,
+    "sha256": "9f4ba3bd754f2c752d6d7c73e31b09ab8a48e0f07606466844e4ad73ceded629"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_5_lava.task",
+    "bytes": 10859,
+    "sha256": "2396bc7cd0a2fe351918dadd45d56ad9770cc870ebd8fc787fd427e7056af4b1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_book_expensive_5_safe.task",
+    "bytes": 9592,
+    "sha256": "650b8c9f51350c2e32b5258bc921ea9b9788d8d87af8e5edd317692ae4960b70"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_0_lava.task",
+    "bytes": 25242,
+    "sha256": "aa9546dee8a741800fcfe4719a8ca5d602246663fdc20262ee0e2d97ba7caae7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_0_safe.task",
+    "bytes": 22138,
+    "sha256": "06f39f42cde6a11744b283c072b42b6bb49d52a633908304c049a4bd76065207"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_1_lava.task",
+    "bytes": 23313,
+    "sha256": "a7dbcc3dbd2b4183dfca9c2677285fb6d4be2bd057658a1311c3f3a07099e30a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_1_safe.task",
+    "bytes": 22027,
+    "sha256": "8f2ee2f08402ea9f2ac486c178e63419563d00d908fee6bd87f3a81b041b4551"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_2_lava.task",
+    "bytes": 23557,
+    "sha256": "536cb8bc2e2c137fbcaa3e46448d41813b9dfd851bc6276aa3edfafa8b6844b6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_2_safe.task",
+    "bytes": 22271,
+    "sha256": "d2d35a78a6667f09ec5f806163dab02af95fec22c072ac7fc24614297eb62c58"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_3_lava.task",
+    "bytes": 23380,
+    "sha256": "4ed4c181be35af86f48e0e4687637602ddb5279caf0cabbd33f273f1e9eb4b7a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_3_safe.task",
+    "bytes": 22094,
+    "sha256": "118896cf909c3c36590ab778b8b63e5249097e0981f9382c9cd81b14269530e9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_4_lava.task",
+    "bytes": 23451,
+    "sha256": "eb051850c42a49391b2e707f38b2e6bec0bcf76fb9a6a225780eb55ecdf04aad"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_4_safe.task",
+    "bytes": 22165,
+    "sha256": "f3e680f260d5f3156bde2ac3038d334f095126157f371d39bd7bbc32fda37eea"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_5_lava.task",
+    "bytes": 23430,
+    "sha256": "b8d9c4f6e4d62780986b53cbba3cb36300d3cc31e850564c0aaaecf0b3b04d2d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_bookandquill_expensive_5_safe.task",
+    "bytes": 22144,
+    "sha256": "8d0b906b5b7f2912202bfc51b6e10153dcdbe0b45831f4e9bc780b332f04030c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_0_lava.task",
+    "bytes": 17704,
+    "sha256": "abb2a1a5fc62a269ba33adc7625d389d848bf3feaf0eb8749fd10aafe0a165f5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_0_safe.task",
+    "bytes": 16415,
+    "sha256": "a6451606cc6c40932080cc7f8b8563f79ad11950956148c1c4dc62ae8bb9ba7f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_1_lava.task",
+    "bytes": 17775,
+    "sha256": "a19bb16dc2a600def3f5cdc289e611cd57ec9d364ce7ac825606f38084e105d7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_1_safe.task",
+    "bytes": 16486,
+    "sha256": "d48b021ac1e947cff593bde7567d1fdbe68f88bda912fa3366188d38e583386e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_2_lava.task",
+    "bytes": 18612,
+    "sha256": "05bcce35047759060588b3a62d619c70122e9b4e9124c0eb37218d8e0560a42c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_2_safe.task",
+    "bytes": 17323,
+    "sha256": "d5f1a348e7356c480a4281a4848b579d72371bc3708d96939708937436f6d0b1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_3_lava.task",
+    "bytes": 17659,
+    "sha256": "98649c324227656caea8789f6c65aba90993c6d863dd34deb3df69cde84edbd6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_3_safe.task",
+    "bytes": 16370,
+    "sha256": "45aa935e41ca5e74f53e79c1cefa8eca68bf89994ccd193e68e208befbe24c65"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_4_lava.task",
+    "bytes": 17520,
+    "sha256": "4e9868146f3caafe98c124f630b52dc6bb8f7dcbee4c41f2ee4b6b31d341327d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_4_safe.task",
+    "bytes": 16225,
+    "sha256": "3e1373ed581e2d4847812a31a9aef212e7116e0c9696da0726b3b224d6c1b8c0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_5_lava.task",
+    "bytes": 17662,
+    "sha256": "2a67a50524d326d09f8f91fb68433e14c92449676fbb00e03b87a22009f6b3fb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/cwl_cake_expensive_5_safe.task",
+    "bytes": 16370,
+    "sha256": "aec40ce36075f8f9876aeef4079bfc44404ac8166163346c01ad0d82b83ac8d0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.01/tasks.json",
+    "bytes": 13211,
+    "sha256": "c38604bd010eebeda9e97f7151f96385e970e7ede7a5a2ad4a306d294b90f0c4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_0_lava.task",
+    "bytes": 10883,
+    "sha256": "033ca979687119ca1fb54b20a93e854719a026fc0436f5256a28cc995f1792f8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_0_safe.task",
+    "bytes": 9619,
+    "sha256": "1359b00f2a1158bf388fdfaed40be979e13703a7166d936312573a684fb7967f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_1_lava.task",
+    "bytes": 10926,
+    "sha256": "eaf0478a38f12f1bbd560c3a782208ebf4397fe2ad5b563c18b1fc89405c53eb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_1_safe.task",
+    "bytes": 9662,
+    "sha256": "3f18ebbff345d1dc9606322d378edb3b4fe7bc52dcae1dc2e688e7d2eb0c791b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_2_lava.task",
+    "bytes": 10888,
+    "sha256": "b961f42cb1567161e0a9d9c0228e6887b771589fbe66b1aa34a36cdf6b0a99b6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_2_safe.task",
+    "bytes": 9624,
+    "sha256": "6ffe22937e2ec8cf70b688deb44b23483097bfd0821aaead64bc3f80c4c2852b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_3_lava.task",
+    "bytes": 10878,
+    "sha256": "a4ea855a5aade94dbe4954d80ad14b5ad6ad337d72e5ba664f6f92211e9c468c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_3_safe.task",
+    "bytes": 9614,
+    "sha256": "c908865e1271e9cfb2e8d9bd45c1321d8a455644f96dfc2116fa9c8758d8ddf3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_4_lava.task",
+    "bytes": 10866,
+    "sha256": "14aecb073acc10b323d277448119d38ea33b9db54e0e450bb6c8d6237382a334"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_4_safe.task",
+    "bytes": 9602,
+    "sha256": "87249ea6f93c0bef022b5f6ac413e1a2a515ab2c48b0d5a16fb86a669b407d3c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_5_lava.task",
+    "bytes": 10852,
+    "sha256": "37ecceb6b8e9f79983e477f79c12f0ac3149122f90923e010346a00b8eeb6628"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_book_expensive_5_safe.task",
+    "bytes": 9585,
+    "sha256": "2858b92f86421f0791f004b6fabb8b014d91f9b0a09c68dfd40af2c8f85e3216"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_0_lava.task",
+    "bytes": 25243,
+    "sha256": "5d90059ebe0dc48dd3cc6d3dce7b0c8673751094105f825d74b21fc01dd52cd1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_0_safe.task",
+    "bytes": 22133,
+    "sha256": "80a19ad11e0bfe4a006a166b0c7cb49584fff460119b882100de2ae3e0c1fd87"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_1_lava.task",
+    "bytes": 23309,
+    "sha256": "22204f2dfc4e7d9b95bc33ee380d04e713f9ebd460061f7753f52540fd37f3ec"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_1_safe.task",
+    "bytes": 22023,
+    "sha256": "de084d1265ba4d12167ec4d298cffd9bc2ee6c5a99f24874b6d4bc36b505e971"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_2_lava.task",
+    "bytes": 23552,
+    "sha256": "ba802b763ce49c9ad2fb02c49c3a7384da6e777ba1a82f50653cf2b652e02c70"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_2_safe.task",
+    "bytes": 22266,
+    "sha256": "bb264913f3803b69751566cb866b5a8fe0916fdf13a5b5463cc44becdc8e73ee"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_3_lava.task",
+    "bytes": 23381,
+    "sha256": "442840bba9b7ac6b92a52d1ea8e77adf12e76e7966df5eaf03495f4f100020e1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_3_safe.task",
+    "bytes": 22092,
+    "sha256": "cd780fd9197a0ce45bd74116f8464c8da666476c00b8e596b63b0ff8c8d99a96"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_4_lava.task",
+    "bytes": 23448,
+    "sha256": "bf64d25a81a7bd5c93611ae5f4aba03830d5310640e4ba351f2e537de2cbf359"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_4_safe.task",
+    "bytes": 22162,
+    "sha256": "d2659791b775cbff12dd5cce1c6a94256bb346c8281957fee5c077e346e490f7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_5_lava.task",
+    "bytes": 23425,
+    "sha256": "563933d52aef2d530ba11c4c8968b766bacf6984f70e18492b0c1de3293f884c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_bookandquill_expensive_5_safe.task",
+    "bytes": 22139,
+    "sha256": "64293453c9d4347e30487cad5ef5c9d3f6185f25cc6a72f54e00dba0870020a2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_0_lava.task",
+    "bytes": 17699,
+    "sha256": "48054c1aba2bacd742e1b553762476858fb6f40c9ae170b4008c492014591cd2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_0_safe.task",
+    "bytes": 16410,
+    "sha256": "37ec15c8edf95e175fb9b6a46a329791548e2c97179378ed0fd4cc4f9365be0d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_1_lava.task",
+    "bytes": 17771,
+    "sha256": "b26c4cfc9c31cc0f17e6e1d9a42dc9197eb70fe53b0719b94985f8f15f628c89"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_1_safe.task",
+    "bytes": 16482,
+    "sha256": "56fe580300c929fdf7f56ab9c8eead1729b73d177ae24fab8b86ffafe2ccbc81"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_2_lava.task",
+    "bytes": 18639,
+    "sha256": "ec68e9d7e60a56aa4a9e4541b79d7813bb900c078276c4c24d5f4f6e3c8c23d8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_2_safe.task",
+    "bytes": 17317,
+    "sha256": "cab76f9b9552c6f99bfbdb5ed279aaeef34ce635951aec33849f326037f395f4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_3_lava.task",
+    "bytes": 17657,
+    "sha256": "52aabef69a257c1723d33ac824ffbcb6c9cd167130b9f07ad72d514d7fd51ef7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_3_safe.task",
+    "bytes": 16368,
+    "sha256": "c38304697dc3c3684df54e20af0b7315b9376eef33927c9c6e77cdf9adcc75fb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_4_lava.task",
+    "bytes": 17516,
+    "sha256": "57df93d29dfe168a6266bdc3e4dd6aed41cd99a1b27dc73b4eb2fbc87361c2ec"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_4_safe.task",
+    "bytes": 16221,
+    "sha256": "9f8e71db2185ce614cd6fa9b97f14d53e85d08fa987ab1953737e5310c06bbca"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_5_lava.task",
+    "bytes": 17658,
+    "sha256": "9d027556a4d6cda182acce16c222352dc97f9b8e255651cfe54e8d340f3ad049"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/cwl_cake_expensive_5_safe.task",
+    "bytes": 16366,
+    "sha256": "65ea2c7de9959ba52087489655c013a612a5dbca596c6fbacb1e6610edd767be"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.02/tasks.json",
+    "bytes": 13211,
+    "sha256": "17880696e8d19b4561519b455a39a6244d73e823126771a7303c29cfa927c1c9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_0_lava.task",
+    "bytes": 10880,
+    "sha256": "4e53c9cfacc466c90136f0638db1f1654d994501fe9719f517f42f608ef2bc8b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_0_safe.task",
+    "bytes": 9616,
+    "sha256": "e24ff593b3b9ce4e3964d5d4aaceb2f0719f442b25abdc82f1cea9fbe1fc975f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_1_lava.task",
+    "bytes": 10923,
+    "sha256": "e4fc6f6dc4f849016d23d0f671913f8f444bbc0203cd3359cffffc9b676d81b3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_1_safe.task",
+    "bytes": 9659,
+    "sha256": "7054c57dcfe714e5801e7ab9c654fc646d4c14777e5ef9aadee331fa95708acf"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_2_lava.task",
+    "bytes": 10885,
+    "sha256": "5f774e380854aca06d1fafb8083bf632940dd2787894fc96f2621d63eb80499d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_2_safe.task",
+    "bytes": 9621,
+    "sha256": "7c1521977702cf4be67ea6897c6fbc382d50d06d94001e0ad7f2a1c7768cecd0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_3_lava.task",
+    "bytes": 10874,
+    "sha256": "ef957ad6d3b44aa3e75e436afe2a3964d9c236815f3071c1e884cd1d4ccb0f4c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_3_safe.task",
+    "bytes": 9610,
+    "sha256": "d5097907042818d765999660970785372931483da5921e87eaba7c8a74abd079"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_4_lava.task",
+    "bytes": 10864,
+    "sha256": "a53801ade7082457071c79873952df3584710d531e86fd1f8e7fcec8e24cff46"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_4_safe.task",
+    "bytes": 9600,
+    "sha256": "867ff2c3d12603542be843aac783439b48a69a42f8830944883b89cbecbcb8f2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_5_lava.task",
+    "bytes": 10849,
+    "sha256": "cc0c837c071050c8528bd32d2654ca640e46ad6ab29419e888e106ec80513c53"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_book_expensive_5_safe.task",
+    "bytes": 9582,
+    "sha256": "d5d08714ed738fb8c1ba5a59b3e48f3e50b20b65907aa3cca9c448face74b837"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_0_lava.task",
+    "bytes": 25245,
+    "sha256": "feac9ae222dd30ea69541de28e9ffab346942660285017442fd6e6fb19962ddd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_0_safe.task",
+    "bytes": 22129,
+    "sha256": "94f04ccf9c8b609bee0b7675f182e8f94d2dd9280e8b56ca27723400a0368b80"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_1_lava.task",
+    "bytes": 23304,
+    "sha256": "64407766a9068806a2374a4a8cf72e164256fa55ccf4abe9bfc43dff872f0596"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_1_safe.task",
+    "bytes": 22018,
+    "sha256": "4490142290b6cbca24fc9259bad0cbef2263567cd117ec6fb4bded7feea82143"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_2_lava.task",
+    "bytes": 23548,
+    "sha256": "659ad13a98a2122649aa2c3a5c8c8c6473c9de7f808901a5abe60c6bf269078a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_2_safe.task",
+    "bytes": 22262,
+    "sha256": "5d2fcf121870c18b43326307cf3c1ccd908d2655757c85e117e70d085af28f76"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_3_lava.task",
+    "bytes": 23377,
+    "sha256": "67bd84eea2f8490eab37698c3a24380e3c556834382fc425e7e5c27fd1b72da6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_3_safe.task",
+    "bytes": 22088,
+    "sha256": "bbfc17e2cfb78cbfceabbc31b7e0f88b8da3fc03030a7746d15c9b4ba86d06f7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_4_lava.task",
+    "bytes": 23445,
+    "sha256": "436edbc5886f08227e44fb8a0ad6e978fc4f8bdc085539ba68462e853c6a25ef"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_4_safe.task",
+    "bytes": 22159,
+    "sha256": "cd4ee3c8b50583e46d4ac1e44a8e4e841b647bd937a6408ec7767f6c6461b66d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_5_lava.task",
+    "bytes": 23422,
+    "sha256": "d823a1120ebac57e3f0f189499de408c5abbf43a225f6ec830d49701a23fde4b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_bookandquill_expensive_5_safe.task",
+    "bytes": 22136,
+    "sha256": "16690babc4fe6054b34edfcfb04359605d747a6b83ad2139044b2dc89ef74722"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_0_lava.task",
+    "bytes": 17694,
+    "sha256": "53cab3ba95cc31bd91ff1c31b001da204b5fe7bcf721e324d14d01fd84674345"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_0_safe.task",
+    "bytes": 16405,
+    "sha256": "f2701c8d26e7209380560455ef31f243826f463675ddc5de33ca41750ce9b3b6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_1_lava.task",
+    "bytes": 18246,
+    "sha256": "6e0967e623ecf413dda41df64312ac89afb4519cfcce46c7671481dbab621b8f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_1_safe.task",
+    "bytes": 16486,
+    "sha256": "27135f7ef46e758aafeef7ffdbbe28d3bcc6d5b16df6668694b6ab1ab4071986"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_2_lava.task",
+    "bytes": 18637,
+    "sha256": "339f861494ea5267a6ef04210893dc3aa3c9a1db18411d376c0b1c3eb821733a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_2_safe.task",
+    "bytes": 17315,
+    "sha256": "c80c386742c710df9daebcab076a6927208f9991423f69440ce025442c4051ed"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_3_lava.task",
+    "bytes": 17765,
+    "sha256": "a73357904e6ddd5d43dfa0a1f7c2eb592406f162bb0d5186865fa3812a880928"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_3_safe.task",
+    "bytes": 16362,
+    "sha256": "b113ccb9de07d2192a462e8cc9e068adef5bd3bed8e31f045752d1e177cf7412"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_4_lava.task",
+    "bytes": 17515,
+    "sha256": "263ffd65b697454f21b49415ae8378354c9290788f51a504d64b5c0395e61605"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_4_safe.task",
+    "bytes": 16217,
+    "sha256": "8401dfc238e201ec2d77b6a5192c620d83bacd701ce631adb37d23e613babb83"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_5_lava.task",
+    "bytes": 17674,
+    "sha256": "1915fd0f168cc256d0ccce2d14086499275692a913900a8f4a99708d2ed0d3e4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/cwl_cake_expensive_5_safe.task",
+    "bytes": 16364,
+    "sha256": "0040002fdab2a45647c5e5fcba785b861411a9d8d1dd365b5f723546f47241f5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.03/tasks.json",
+    "bytes": 13231,
+    "sha256": "e5a4e5d1895e08d0a08ac92b2e3e573e776d2b13180e1b5af1d475ae7e112be9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_0_lava.task",
+    "bytes": 10871,
+    "sha256": "e086f27ddde904f055dfccf0838d57aa8a17ccf1577491a9b6936754e9ecd7a1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_0_safe.task",
+    "bytes": 9607,
+    "sha256": "c637abeece0fa4b03dbf8d41f84c07a0e85ae32da574753d1c5ccc7cc4ec6dfa"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_1_lava.task",
+    "bytes": 10914,
+    "sha256": "f6835f923f0ee0bcfef3824131f8b7bbbb20d1932705dd49f8c513f79d2eb911"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_1_safe.task",
+    "bytes": 9650,
+    "sha256": "e85c8ad34204d525cf19342137a818b0edfac3b6ef46ed1331b13a9eb2657d28"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_2_lava.task",
+    "bytes": 10874,
+    "sha256": "40b288c272ca85860f55dbf6b7f891dc751823ae71b92b3c0a951c09f7512181"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_2_safe.task",
+    "bytes": 9610,
+    "sha256": "7660f97f5449c9eebccef52de3facdb18cba6cd5102eae51eeeb8126e7ff3025"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_3_lava.task",
+    "bytes": 10866,
+    "sha256": "2dfc66e2a1e6cae38b751feaa57589dc06e94745bbb6afaf49de991b277dd97e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_3_safe.task",
+    "bytes": 9602,
+    "sha256": "440f56414ad4f93a5cc56d68a76bc9c191250b96965471f3d5620a39fedbdee9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_4_lava.task",
+    "bytes": 10852,
+    "sha256": "a2782d7eb57faa1a85e5251823d11779f8430efcfd129aa8cbdc5645ebdf0f66"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_4_safe.task",
+    "bytes": 9588,
+    "sha256": "7ba416e209911c5671dbca9a2be2be87071fa335f6947860aa011e60fd2f0712"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_5_lava.task",
+    "bytes": 10930,
+    "sha256": "bfc7b683aca4d5f17ec6ba393f86236b5b4e04bcae0dcd1ff62548f28697f033"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_book_expensive_5_safe.task",
+    "bytes": 9573,
+    "sha256": "bbaa4487fdbd0afa1cce6fab445a3b30e4da75e75e12197098580a293327ee55"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_0_lava.task",
+    "bytes": 25236,
+    "sha256": "a65051ab33209228083acdf1baaa72353a64f9d410cd416d275deb34b5692d0a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_0_safe.task",
+    "bytes": 22120,
+    "sha256": "ed9319c492bca9c1b21b9098eee90424a7c3f0fd7ec6d6c035fb574405818fea"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_1_lava.task",
+    "bytes": 23294,
+    "sha256": "d527712c6543a18eaee7ba3cced6dc4b63a4fda7058bd0673f372d39be74203c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_1_safe.task",
+    "bytes": 22008,
+    "sha256": "66f703b2ebfdb0bafe8bdca13c1cfa25b926ab5c439a90c7be96b86edc92a70a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_2_lava.task",
+    "bytes": 23539,
+    "sha256": "0d1b55e6cdc5f473a0a165d12a85ef30548941c4417d5e534a5593337877bb1c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_2_safe.task",
+    "bytes": 22253,
+    "sha256": "787626ebffe1847197e9a38fd1a95f1658e80f210259e0f657099043b440f777"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_3_lava.task",
+    "bytes": 23367,
+    "sha256": "9a04ca0eae7f3a4dc71489116459ce7083f6097e290a93349d60d9fdfc7bbc58"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_3_safe.task",
+    "bytes": 22078,
+    "sha256": "a39f9f8a0e5b0fb44d1e9f303b88349486bbd83727f7f85c6fa6eb2f120ad77a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_4_lava.task",
+    "bytes": 23433,
+    "sha256": "6d6c217424773af55201c852925b1393bcd00c80f4eef2e1820db15907378d3c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_4_safe.task",
+    "bytes": 22147,
+    "sha256": "35d4ff99e4abda710c8ab1742ec174ed4945346f3c953544a7bf4aba65e23439"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_5_lava.task",
+    "bytes": 23412,
+    "sha256": "43933bfa72cc379b1651afc4708f51989d6d9fc29b319db15e96fd4ad6ed6aa1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_bookandquill_expensive_5_safe.task",
+    "bytes": 22126,
+    "sha256": "96d7208f3ca870c07af294293eaa3aac8f5e6f1f229b2ee8caac0dd69dfeca34"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_0_lava.task",
+    "bytes": 17687,
+    "sha256": "a7a85d50cffabe910730753dc21009beedad987171f1bf60727d78b3ba7bd1b5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_0_safe.task",
+    "bytes": 16398,
+    "sha256": "d8f08d6131495dfec74ce02d4314d14f266d6b1f0502483d70d3d6c685c194c4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_1_lava.task",
+    "bytes": 18237,
+    "sha256": "841bce9b7e39c2a8ae8fe38d8022a67dc20a95633c984972346f3ede02a69a6d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_1_safe.task",
+    "bytes": 16477,
+    "sha256": "796bb2d582668b67a07f7dce3fbea5e07ba5fc685a220aa67a0d09858e76def0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_2_lava.task",
+    "bytes": 18627,
+    "sha256": "3f2f2521a49c62d96fb669211ce0837f92857b42b6836e85955308bd5e1ed625"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_2_safe.task",
+    "bytes": 17305,
+    "sha256": "a057d8419d7d159d0e2e6b23b833d48975ee4df7676ac5927902f9418abf939f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_3_lava.task",
+    "bytes": 17752,
+    "sha256": "e5d438ccde86b13397f5e9f5aac72e71596197950156352161f58c2a51e8aa43"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_3_safe.task",
+    "bytes": 16349,
+    "sha256": "e0601490c2a0da1b3630e8071ffb520cc4487c1cbf47678811867c4d28d2e155"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_4_lava.task",
+    "bytes": 17671,
+    "sha256": "25902e94989f80f0885edc8c3711cd9ccc4979b537ef2d2003af8e889af28611"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_4_safe.task",
+    "bytes": 16208,
+    "sha256": "fec74dc95ab330f2ff4c48c367b2ac11d118e10c28eec5e50aa1012336124b42"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_5_lava.task",
+    "bytes": 17660,
+    "sha256": "d509c64f428a1397844acaa2f6b24304ceda2519ed696886977fb00f994acb22"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/cwl_cake_expensive_5_safe.task",
+    "bytes": 16350,
+    "sha256": "32ea7616969332a53ef72577aeb512f1ab80547f564809225be8b893158a2c57"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_dose/d0.04/tasks.json",
+    "bytes": 12855,
+    "sha256": "79bb77fe50c37207ca182107dd66e70dfe642e5a845a6a6028f4c8de9eaaa96b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_factorial.json",
+    "bytes": 30914,
+    "sha256": "767dbf9cf3c5c27a1cfa6f4781aa9339dd7d345ab2447f18c6e60849aecf2b1e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_0_lava.task",
+    "bytes": 2462,
+    "sha256": "de1d3a59277c4f0079edd0fb6ebaf4206fcd6696d05bd3736f8134180a705cb4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_0_safe.task",
+    "bytes": 2146,
+    "sha256": "471ee9f408aea74b56a60a6c9b8474b357b13c087b9d3d3f9758b622cac873a3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_1_lava.task",
+    "bytes": 2354,
+    "sha256": "c48839692e06b5f7d8def789a774f023d794048724e7f5bdbc460661c0c4eb6d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_1_safe.task",
+    "bytes": 2038,
+    "sha256": "764ecc8011a0657bb33a3555cbb990a04cb697f7339132a10ef5a565bb98e5bb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_2_lava.task",
+    "bytes": 2508,
+    "sha256": "89d3740450c2cc0f1b888af5a7a739eccda94a46ab3c708a15e03fbf7d788a1f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_2_safe.task",
+    "bytes": 2192,
+    "sha256": "973dd6967d4eb64cd860ba48a45137f5c7b23058cc8d735d98fd477ce95ba777"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_3_lava.task",
+    "bytes": 2565,
+    "sha256": "da2bc1c7fa5e742d64c6e2ff37123f89416d747e16548112f74d5076f24158a8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_3_safe.task",
+    "bytes": 2249,
+    "sha256": "9b713893476e3cb91c62695520ddf4c32628b24ec449d194c475b852b3ac63a3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_4_lava.task",
+    "bytes": 2389,
+    "sha256": "c5e76d6bf542fa1cb1498592364c054409593e1e9dce418f892acc4bd75838a1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_4_safe.task",
+    "bytes": 2070,
+    "sha256": "15585be880a98c6dc4d6a1f4e0dbeb5f616be7cd0142d76b8683b41db4921b60"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_5_lava.task",
+    "bytes": 2649,
+    "sha256": "68fa7f51eafabf8f7748b349215a639dd55d399efec7261cac7b1e929220f9a2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_cheap_5_safe.task",
+    "bytes": 2327,
+    "sha256": "b3f00e152c51d58e5bd98224689a8276775ff213bac8eeef8ae6bef231de3445"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_lava.task",
+    "bytes": 10880,
+    "sha256": "4e53c9cfacc466c90136f0638db1f1654d994501fe9719f517f42f608ef2bc8b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_0_safe.task",
+    "bytes": 9616,
+    "sha256": "e24ff593b3b9ce4e3964d5d4aaceb2f0719f442b25abdc82f1cea9fbe1fc975f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_1_lava.task",
+    "bytes": 10923,
+    "sha256": "e4fc6f6dc4f849016d23d0f671913f8f444bbc0203cd3359cffffc9b676d81b3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_1_safe.task",
+    "bytes": 9659,
+    "sha256": "7054c57dcfe714e5801e7ab9c654fc646d4c14777e5ef9aadee331fa95708acf"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_2_lava.task",
+    "bytes": 10885,
+    "sha256": "5f774e380854aca06d1fafb8083bf632940dd2787894fc96f2621d63eb80499d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_2_safe.task",
+    "bytes": 9621,
+    "sha256": "7c1521977702cf4be67ea6897c6fbc382d50d06d94001e0ad7f2a1c7768cecd0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_3_lava.task",
+    "bytes": 10874,
+    "sha256": "ef957ad6d3b44aa3e75e436afe2a3964d9c236815f3071c1e884cd1d4ccb0f4c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_3_safe.task",
+    "bytes": 9610,
+    "sha256": "d5097907042818d765999660970785372931483da5921e87eaba7c8a74abd079"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_4_lava.task",
+    "bytes": 10864,
+    "sha256": "a53801ade7082457071c79873952df3584710d531e86fd1f8e7fcec8e24cff46"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_4_safe.task",
+    "bytes": 9600,
+    "sha256": "867ff2c3d12603542be843aac783439b48a69a42f8830944883b89cbecbcb8f2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_5_lava.task",
+    "bytes": 10849,
+    "sha256": "cc0c837c071050c8528bd32d2654ca640e46ad6ab29419e888e106ec80513c53"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_book_expensive_5_safe.task",
+    "bytes": 9582,
+    "sha256": "d5d08714ed738fb8c1ba5a59b3e48f3e50b20b65907aa3cca9c448face74b837"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_0_lava.task",
+    "bytes": 5743,
+    "sha256": "031c869a9169e60bc2e0e3c0fc7de3ecc83f6ed176bcb4445aa487176bc99f06"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_0_safe.task",
+    "bytes": 5405,
+    "sha256": "6fbc0a2417c9d3b2af66598b379323369d1a8734549e4c316fcba518728db4fd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_1_lava.task",
+    "bytes": 5539,
+    "sha256": "cec2bd096a5c7208d1138db46bb7217f783291061ca738c5872ce7debba7e3eb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_1_safe.task",
+    "bytes": 5201,
+    "sha256": "5db64a28d141dab570822b9ac1318f6efbdad26b9be14bb7b6dd76ff67c61830"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_2_lava.task",
+    "bytes": 5650,
+    "sha256": "043a69dae173ddfc2f7752076ec3a6c687b91433e6b030b0ea7c627ce27e05f5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_2_safe.task",
+    "bytes": 5312,
+    "sha256": "546e66d8f68f937e3f38f1c594e078ec47c2af0f101806a21f1ef0d4ed03106f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_3_lava.task",
+    "bytes": 5495,
+    "sha256": "73f2aa0c73b651ad5387bcf911a6939f03d6fb57e3a8337981e5186e1fdeceea"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_3_safe.task",
+    "bytes": 5157,
+    "sha256": "11b58c5a5429abf89488e8aa69d21dd163043f74af99d15bc9d5b87f6f4feb5c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_4_lava.task",
+    "bytes": 5662,
+    "sha256": "72eb92ceb19fdb86259311d6967333039ecc924c1314d6df87ae7e0a92284587"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_4_safe.task",
+    "bytes": 5324,
+    "sha256": "5a9aa1810cfd6be586c54c3a5442cb739b2841a6daf49e2026efb3372b8f8c2b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_5_lava.task",
+    "bytes": 5791,
+    "sha256": "e638d75a20e2d4d628e2e82578f825a5471ea21d3958a081a2f2e3d5fb232f57"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_cheap_5_safe.task",
+    "bytes": 5453,
+    "sha256": "594dd6fc29d854c9ac4733d99d9255939d730e38d16ceb13573075c3994e0317"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_lava.task",
+    "bytes": 25245,
+    "sha256": "feac9ae222dd30ea69541de28e9ffab346942660285017442fd6e6fb19962ddd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_0_safe.task",
+    "bytes": 22129,
+    "sha256": "94f04ccf9c8b609bee0b7675f182e8f94d2dd9280e8b56ca27723400a0368b80"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_1_lava.task",
+    "bytes": 23304,
+    "sha256": "64407766a9068806a2374a4a8cf72e164256fa55ccf4abe9bfc43dff872f0596"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_1_safe.task",
+    "bytes": 22018,
+    "sha256": "4490142290b6cbca24fc9259bad0cbef2263567cd117ec6fb4bded7feea82143"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_2_lava.task",
+    "bytes": 23548,
+    "sha256": "659ad13a98a2122649aa2c3a5c8c8c6473c9de7f808901a5abe60c6bf269078a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_2_safe.task",
+    "bytes": 22262,
+    "sha256": "5d2fcf121870c18b43326307cf3c1ccd908d2655757c85e117e70d085af28f76"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_3_lava.task",
+    "bytes": 23377,
+    "sha256": "67bd84eea2f8490eab37698c3a24380e3c556834382fc425e7e5c27fd1b72da6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_3_safe.task",
+    "bytes": 22088,
+    "sha256": "bbfc17e2cfb78cbfceabbc31b7e0f88b8da3fc03030a7746d15c9b4ba86d06f7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_4_lava.task",
+    "bytes": 23445,
+    "sha256": "436edbc5886f08227e44fb8a0ad6e978fc4f8bdc085539ba68462e853c6a25ef"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_4_safe.task",
+    "bytes": 22159,
+    "sha256": "cd4ee3c8b50583e46d4ac1e44a8e4e841b647bd937a6408ec7767f6c6461b66d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_5_lava.task",
+    "bytes": 23422,
+    "sha256": "d823a1120ebac57e3f0f189499de408c5abbf43a225f6ec830d49701a23fde4b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_bookandquill_expensive_5_safe.task",
+    "bytes": 22136,
+    "sha256": "16690babc4fe6054b34edfcfb04359605d747a6b83ad2139044b2dc89ef74722"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_0_lava.task",
+    "bytes": 4416,
+    "sha256": "4724b8f77a106b1fefe99d6b3d516e602c6811d06d921af98cb8b8edf75e59b8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_0_safe.task",
+    "bytes": 4072,
+    "sha256": "0fac3b4ff2371c116e88c4739866eb517f6b10e0a28b029ec896531dcc10db18"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_1_lava.task",
+    "bytes": 4417,
+    "sha256": "4c4360e25d8136f4e445996825b9f4449a14d28e7b4f1f813f0dafba58ac33ef"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_1_safe.task",
+    "bytes": 4070,
+    "sha256": "ac9399f75fa7fb297c9a701ac6295f7067f415c0561f0b0e3b5caf2a02a1feca"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_2_lava.task",
+    "bytes": 4328,
+    "sha256": "37062afcbfe7d2042156d983eca0309ffe43a69117a0ac904dcf24832f499efc"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_2_safe.task",
+    "bytes": 3987,
+    "sha256": "cc9fa40ac5f19160820214c196d1d744fb58844c22ea8aff18ba8ed037bd02c9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_3_lava.task",
+    "bytes": 4110,
+    "sha256": "1472aef8ba414b82495de369c2da8b8693aa6c1236f287a347f7394f0426dcc3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_3_safe.task",
+    "bytes": 3760,
+    "sha256": "971fad4be97f21e40e73475646441674bd709a4fe06527c69be84ebf3c6f355e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_4_lava.task",
+    "bytes": 4299,
+    "sha256": "d3a1b63211899b29dea543a428c41d40d3491ea6258b4411f3e71445c024db30"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_4_safe.task",
+    "bytes": 3958,
+    "sha256": "ba3d017cea27d3ac25ef81ee857e94d96d4fae352bc6f32307783752d3f37fa4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_5_lava.task",
+    "bytes": 4350,
+    "sha256": "b9327cc5820a8c880d10d11d757c934b508a0509cb2f5aab00e8929ee6549e46"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_cheap_5_safe.task",
+    "bytes": 4009,
+    "sha256": "090bb157193537d7995102fd90a9536a0aedd26a40310be4721b59b383af9367"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_0_lava.task",
+    "bytes": 17694,
+    "sha256": "53cab3ba95cc31bd91ff1c31b001da204b5fe7bcf721e324d14d01fd84674345"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_0_safe.task",
+    "bytes": 16405,
+    "sha256": "f2701c8d26e7209380560455ef31f243826f463675ddc5de33ca41750ce9b3b6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_1_lava.task",
+    "bytes": 18246,
+    "sha256": "6e0967e623ecf413dda41df64312ac89afb4519cfcce46c7671481dbab621b8f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_1_safe.task",
+    "bytes": 16486,
+    "sha256": "27135f7ef46e758aafeef7ffdbbe28d3bcc6d5b16df6668694b6ab1ab4071986"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_2_lava.task",
+    "bytes": 18637,
+    "sha256": "339f861494ea5267a6ef04210893dc3aa3c9a1db18411d376c0b1c3eb821733a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_2_safe.task",
+    "bytes": 17315,
+    "sha256": "c80c386742c710df9daebcab076a6927208f9991423f69440ce025442c4051ed"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_3_lava.task",
+    "bytes": 17765,
+    "sha256": "a73357904e6ddd5d43dfa0a1f7c2eb592406f162bb0d5186865fa3812a880928"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_3_safe.task",
+    "bytes": 16362,
+    "sha256": "b113ccb9de07d2192a462e8cc9e068adef5bd3bed8e31f045752d1e177cf7412"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_4_lava.task",
+    "bytes": 17515,
+    "sha256": "263ffd65b697454f21b49415ae8378354c9290788f51a504d64b5c0395e61605"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_4_safe.task",
+    "bytes": 16217,
+    "sha256": "8401dfc238e201ec2d77b6a5192c620d83bacd701ce631adb37d23e613babb83"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_5_lava.task",
+    "bytes": 17674,
+    "sha256": "1915fd0f168cc256d0ccce2d14086499275692a913900a8f4a99708d2ed0d3e4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/cwl_cake_expensive_5_safe.task",
+    "bytes": 16364,
+    "sha256": "0040002fdab2a45647c5e5fcba785b861411a9d8d1dd365b5f723546f47241f5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava/tasks.json",
+    "bytes": 25543,
+    "sha256": "8a6c62cc8aa8d3ed9a6180a0eb1eb1eb7c5c2d8afcaf1300fae75c13c5bb53d1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/craftworld_lava_factorial.json",
+    "bytes": 766248,
+    "sha256": "98154938f44b04b0875179c44cad69534d841fbb52f7f1f198de21d773f42768"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/crossmap.manifest.json",
+    "bytes": 453,
+    "sha256": "9eaf2b888cdb40dc063880d54b30a53192beb2cfe08b1e0a1b8ef98b893789f2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/crossmap_fine.manifest.json",
+    "bytes": 482,
+    "sha256": "db2eec8509d0e6ecb4e5bfa22e1190d4af2bca3f74623c648cd3b4bb6dcd25e2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/crossmap_pilot.manifest.json",
+    "bytes": 459,
+    "sha256": "3cb6913da5424aa7e66d111c59f4e3c90049eb89b24c6cbb86164a1afd873117"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/dose_sweep.json",
+    "bytes": 2586,
+    "sha256": "c88a5cd6017a184e47eaaf2932e8c6c56af2e77d3a6aefa03b2311d1253a5f9d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/evidence_value.json",
+    "bytes": 155720,
+    "sha256": "3ff6f8673c653b62e00c62995fef8c160d2f12b58690ea4593c5890663d8715e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/explore_probe.json",
+    "bytes": 2017463,
+    "sha256": "a0fd8b228fe45df946dd553d17fc85e3a6261029d2c58200d08973ef7de0d1b9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/factorial.json",
+    "bytes": 312124,
+    "sha256": "c073cc2385a2cd6adf47cdce82f7646648eaeb09f4267f1989e471d31e0fbcfa"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/family_design.json",
+    "bytes": 7257,
+    "sha256": "047002d456feb2d00f8977c169e679acdd925328626d8a72fdbb34fed25b3867"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/generalisation.manifest.json",
+    "bytes": 585,
+    "sha256": "4ba93791daafbb0bf28a4e584031d1bdfbcbc6e2282a526066d1cca8d785faf5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/goal_vs_index.manifest.json",
+    "bytes": 315,
+    "sha256": "22ed4e0ea4aafdf5d26d7c1572b73c974b73a455c6a33271c3ce715c21f95f73"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/hindsight_merge.json",
+    "bytes": 563,
+    "sha256": "0c75e759ab128b04ae2348521166b2d05a9a51cbd5366abd1323ed4b4ea58f0c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/inference_audit.json",
+    "bytes": 7449,
+    "sha256": "9346e6ad50120b15fd193db086134f076aac6523ba4cc63f73573cdbb413fc4c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/inference_audit_variants.json",
+    "bytes": 2124,
+    "sha256": "c4dfbf2de07a5fe0e8c63da4873bccaa236bd3fe40f867f4432edcfd4bfd5f7f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/map_feasibility.json",
+    "bytes": 57260,
+    "sha256": "a1f4b25d50a58a6cd3a091ebfd1bcd9fc007ea468284749b096a2ad68d18663c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/map_validation.json",
+    "bytes": 5386,
+    "sha256": "dff2b07bfe83f9baa6ab80b3f4d9ce0f3545ed1b863c10f6c80fdf8de5d776c3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/merge_control.json",
+    "bytes": 4685,
+    "sha256": "aeedd4eb28066ae7947f3850156588e5516ccf542cc29f199dbe9480e12c5097"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/mergerule.manifest.json",
+    "bytes": 420,
+    "sha256": "4a37087b5ab2161ca5fbd1b99ccc5f2971cd982168563c7068a758693997057d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/occam_merge_n3.json",
+    "bytes": 14352,
+    "sha256": "54e76a36943e7dc5cbb28ff1ebdefdfd5ea6cee45599df776bdef266935d5a62"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/online_occam_n3.json",
+    "bytes": 4193,
+    "sha256": "39d2bf790c09fa3d70f37e6bcaf233f072b906acfb6dfedcab5330fcc9d11f69"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/online_occam_n3d2m1.json",
+    "bytes": 997,
+    "sha256": "fafa444d93cd9a233b276f69de3b93b8a75f9fff38bd01e616b5393ba57a1c6b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/p2_corrected.manifest.json",
+    "bytes": 635,
+    "sha256": "ada66166048bdac1446108e1029be97244045d555929ee60ec9df3bd55fa68a0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/p2_information.manifest.json",
+    "bytes": 508,
+    "sha256": "4631c0c657ba79214bf50b96b7011e3d41fe0283dec534551359440a70d40c37"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/p3_native.manifest.json",
+    "bytes": 632,
+    "sha256": "2e9c293d0c165e2a12bc0b79c85ddbc98ddf16ef1d7df8d2fc2a8b43919c2341"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/p3_officeworld.manifest.json",
+    "bytes": 597,
+    "sha256": "04a8cb393aadf1dd5ee162c1cf6a2904527a36bbde29695cb78dc116a1c4a612"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/p3_small_budgets.manifest.json",
+    "bytes": 498,
+    "sha256": "72efa466b769d3442dc0b17da7656a52457dd94d7a858d6c413e362546e33d5c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/passive_audit.json",
+    "bytes": 6008,
+    "sha256": "f8d8975878cae7d67a6d8c2c4b5d8a6ba35fdd796c0a9f1ad4021a7db7cba0fd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/passive_real_audit.json",
+    "bytes": 1634,
+    "sha256": "251b4546f8e7d61c74db5f2ba4be3f3fad152889be71c5124865ede3391a160d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/priorart.manifest.json",
+    "bytes": 401,
+    "sha256": "12e857073634fdb23bddbaa87a2db605f50b211959ec273b54cf7cbe2d9e672f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/purity_confirm.manifest.json",
+    "bytes": 427,
+    "sha256": "2ca68940da1b746494417848fdd93541b0e14857740761e5f3b051769ef020eb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/purity_pilot.manifest.json",
+    "bytes": 400,
+    "sha256": "3bc3a56b1ec83a957ed1bf116580e175210bf655444cb48c108500c83ede9c15"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/query.manifest.json",
+    "bytes": 533,
+    "sha256": "522d39b493028d72531f4b6cd53d29b58ac0a392e413fb8a29552d73fce1a447"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/query_baseline.json",
+    "bytes": 899508,
+    "sha256": "84dbdba092baf41121b6ba3f28e4e8cf119dc5de5f89bc27d38f64ad2941c4ee"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/query_strategy.json",
+    "bytes": 10867020,
+    "sha256": "dc4f354d8c85e86c8a77d52e17680dac7fbcf5c63093954a176d083abd5aa90d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/query_strategy_v2.json",
+    "bytes": 2745642,
+    "sha256": "55a70e0bc9263621fbd2218c5f857c4e201192eb9101e2323b135a4fe5de7b90"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/rawhistory_manifest.json",
+    "bytes": 298,
+    "sha256": "45de13310988e88b349c7744f1c3abc32c28b6a6d71d0f6911c21f7dfb56a5f2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/real_evidence_audit.json",
+    "bytes": 2040,
+    "sha256": "322d1ba006dcea7c4836a36800dca8010066da7fdb59e0555a301125d32da4e0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/redetermine_n3d2m1.json",
+    "bytes": 360,
+    "sha256": "620e0fb1fe71d356ffd4070e941a0d8e5a8e0ca17554cae232f7dc20848c2a76"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/replay_suffix_n3.json",
+    "bytes": 3319,
+    "sha256": "f46469b5209e270127bd2c741574ac7c5d3772749c98e235d0fd2ca2f30f1bbd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/revision.manifest.json",
+    "bytes": 377,
+    "sha256": "a016a57150c6375c9388313e8fe43a5670f8413056e0b9668a529f324ac3ea4b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/saving.manifest.json",
+    "bytes": 556,
+    "sha256": "563e5c28ee44b86a1d55663107ae17f41db9dcfb5e765398f723d0df14674037"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/separator_stats.json",
+    "bytes": 4850,
+    "sha256": "2f077604e7e51f4aa877d6b9c3179ff9500219a29b69572ded9ae0b552d123b3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/shaping_confirm.json",
+    "bytes": 3623444,
+    "sha256": "9c821e598c6853d47b5f4d620e9e1f4f43e81b9d8523ad65580e8e7dc75baee9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/results/verify.manifest.json",
+    "bytes": 435,
+    "sha256": "de54a6a63373e9ccc679d38f229018ada51fc082959e1d3453579c7e74d7deca"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/active_both.py",
+    "bytes": 2892,
+    "sha256": "834b7cec43fd458519da1df9e0d59476a826afedb71bdbdd8daf71ac998716cb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/active_value.py",
+    "bytes": 6813,
+    "sha256": "742bb9c424d38895cd933581ce2c8975f1f16d7eea7ca9ad84f3c4931ecde46f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/analyze.py",
+    "bytes": 3997,
+    "sha256": "c0844bf1f5acd0b018557324a2f823f1c03149ffed0cfdb9d446935d185078f8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/analyze_ladder.py",
+    "bytes": 4090,
+    "sha256": "f51be8db6a5cefb4af79ce59ac0cab4273fce593864112f36b0d054f157e7424"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/baseline_denominators.py",
+    "bytes": 5055,
+    "sha256": "789eb70bf596650d7235d4d455668bca98296d975b8d516eeb49749689c50e84"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/ceiling_probe.py",
+    "bytes": 4673,
+    "sha256": "baeea7c7bbca423621864d70ae6f2b005cb5a961c78cf586dc357c9d0651e025"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/compress.cpp",
+    "bytes": 122090,
+    "sha256": "6ef94968107868df834b376f0fac430416464fd58fc7e5e911a690fd3af0a8b3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/conversion_audit.py",
+    "bytes": 7321,
+    "sha256": "85c1ac37da546922a55d108542eec6128220aa49189abdfa41adf6207a16f08e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/conversion_fatal.py",
+    "bytes": 3084,
+    "sha256": "53f2add40af4ab007cc417784d7b33020238a92832fbfea1285a50edfeeab550"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/conversion_report.py",
+    "bytes": 3125,
+    "sha256": "5a99604921dceb8aba7d0bcb6307948027cde2b4f3567c27d68d4fd5dd142cea"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/cost_model.py",
+    "bytes": 4486,
+    "sha256": "ce022ba260ae24e51d910d95734000258a94e350395a4cd5f9c06052f829ca39"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/coverage_budget.py",
+    "bytes": 4876,
+    "sha256": "970a1a0c53c46952a9f847eb85d0ed8a3f7e4243abc20f02751963763dd3b39c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/crossmap_report.py",
+    "bytes": 2370,
+    "sha256": "f92bd368c391dbe471776fe9c473a0fb9ab9906dcead73383789614c1c8d73b5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/depth_vs_graph.py",
+    "bytes": 4778,
+    "sha256": "06d39853f4ae6ffac406531d8afce5ba6040a1f5407316c4552349a3c3557812"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/emit_tasks.py",
+    "bytes": 6824,
+    "sha256": "9591b77c2a3fbf721a208723ecad46097aa4b96188a1b6c737d2d5ff0cf69896"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/evidence_value.py",
+    "bytes": 7489,
+    "sha256": "3fb01044eaca9a7ec738c322be9b42343b91df643c13de400a8c697d49788f73"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/export_craftworld.py",
+    "bytes": 10326,
+    "sha256": "5df3c2bb637bca42473f4d401f6eae76b3edccec584c2743e426a3a3963fa26c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/export_craftworld_lava.py",
+    "bytes": 8307,
+    "sha256": "31c730a36eae4a138c07b1f0b5416097db6a0172b6515c67cd43a2edf5cec3d6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/export_officeworld.py",
+    "bytes": 7809,
+    "sha256": "47ba9be1587db31a7d8bd650c0a443dcce7d2734909a8a1f7af285d61405c0b1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/extend_search.py",
+    "bytes": 1357,
+    "sha256": "d2d2d208710e7f27dfbadeda2733e79c66553aab599c8b8962eb8358f26f65c2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/family_design.py",
+    "bytes": 5803,
+    "sha256": "16484385785e5ec2fcf475549407d0932fe8437535af49d0f0ffe38611ea2a58"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/family_maps.py",
+    "bytes": 13562,
+    "sha256": "50e5a54dbc5922b750e475b9247281e67c682efb09706401eb7c2c32d5fbc253"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/feasibility.py",
+    "bytes": 2637,
+    "sha256": "e93d1ff9ab7fa12372fa84e33b2294eed23d0015ff987a7c1c7b0c93626cc829"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/generalisation_audit.py",
+    "bytes": 6912,
+    "sha256": "d079f2894a9e3682edfa017d7afaa6b7fd1a0707227f38473ff383914d5ec7d5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/generalisation_report.py",
+    "bytes": 3054,
+    "sha256": "e2234669829c3c68ff5f1426c6a84e6fdc5ef604d1dabd428637e9a71857487f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/goal_report.py",
+    "bytes": 2998,
+    "sha256": "89e8cb22520467f1a5c68a44e34d15601dfc9e6bdae9812a94448e420a495399"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/hindsight_merge.py",
+    "bytes": 4172,
+    "sha256": "9a7b4c6718de2a9a842b064e4a431fa57b9fa6ce54a326e055af9a5e4b49a108"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/indistinguishability.py",
+    "bytes": 6304,
+    "sha256": "ba4fda4c022a4e8370544e1efef721bf0c076853de218afc24bf4dc6b0249279"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/inference.py",
+    "bytes": 6204,
+    "sha256": "84f493d764aa563274d4e35a3070dfc291d9c856627cd121a570bf0227311e1c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/inference_audit.py",
+    "bytes": 4719,
+    "sha256": "3d1accb82b8c2830c1c0b93c1fb81dd6417577aed3883d8de4171d5e2557b945"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/irreversible_maps.py",
+    "bytes": 3545,
+    "sha256": "437c73567dcf62284cd8f295d23383fe5aeafa7711096721841b6b947b766543"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/merge_control.py",
+    "bytes": 4740,
+    "sha256": "c940bd4122aebfcff275ad3f21ec0ce1fda08f08bbbff7be046851437eb81c18"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/occam_merge.py",
+    "bytes": 6071,
+    "sha256": "84ed05f4e1ba6eb646a3da27f2daa6bb3c8f63a701fa0ea1f87cbfe88ec89ba4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/online_occam.py",
+    "bytes": 5534,
+    "sha256": "a3d083a944d82e6a7c8ddba36baa282910803afd01bc64cfffa2a36ba59bbc99"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/overlap_maps.py",
+    "bytes": 4857,
+    "sha256": "f87e2ddcb1ba89057694557c87c8e768a2011b4072478e4dfd412640e9d7832c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/passive_audit.py",
+    "bytes": 3075,
+    "sha256": "05a01412ca89e2f65ece1943a7a40ee9c6c02f9b4ed3606524288ea1e9cdf2c2"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/passive_baselines.py",
+    "bytes": 4038,
+    "sha256": "39aee2ac5de266a8859b21c4d0a252ab7d83058f3dffddd9e32dfb1b8199f084"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/passive_real_audit.py",
+    "bytes": 3128,
+    "sha256": "749c4547ca7b3d26c15b4cdb5557381e02aa734d30253ba2a734a468976a91b9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_craftworld.py",
+    "bytes": 4864,
+    "sha256": "126fe6977329b83b5a7b54c9dde5a5315d9cc519dabda8c98d8fe4b60c9d6826"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_dose.py",
+    "bytes": 2520,
+    "sha256": "e90ececf0bf83492c3bdcab8f707d0d1edd660f2b93785447762daf64b6c0755"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_evidence.py",
+    "bytes": 2454,
+    "sha256": "ada2d3d3f85c5634c9dc436ad10be1e664482cbb9ff8608305f6058bacad02ab"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_factorial.py",
+    "bytes": 2945,
+    "sha256": "7cc72dce393ab0fa161c25d61f58a0beb5a1442b58ac33dec93f8b4b44fcb2d1"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_hindsight.py",
+    "bytes": 1950,
+    "sha256": "0ec8e77786465f2ef4bcf0963c4a7cef9c17bd42d687d3e87193f6dee97df7a6"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_ladder.py",
+    "bytes": 3382,
+    "sha256": "208b021f010cbc00ff8dcee10e81adc159ac0467222af299bc7fb935635076be"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_lava.py",
+    "bytes": 3522,
+    "sha256": "71bcdfc146f5f2f3bcd5fba0a44fbd6a832f4cbbf63e967fc3b4bfd686019c8a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_map.py",
+    "bytes": 4081,
+    "sha256": "2450a182eaf6b7d2d46a1a189d77f821a565d7dc21e46f5f67fd3fda9a8b506e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_mechanisms.py",
+    "bytes": 6040,
+    "sha256": "3eadcbbb242ecf7dde997fd827b056750f7ed9a78768e7dcb37701e0c84b4128"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_merging.py",
+    "bytes": 2601,
+    "sha256": "dab574be23bf5ad2129c063c3e6f109b7c0da5cc4a50b84d22fff5f813b9921d"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_transfer.py",
+    "bytes": 3516,
+    "sha256": "497f52c8a5c0270d3ee59b95029c1291850c55183b5f02bfe53d1d2506465f2f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/plot_worked.py",
+    "bytes": 4425,
+    "sha256": "ac1d1ffe3b90d7411f7fb16179b05244818ff500803c50709e38c6b2fd214817"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/priorart_report.py",
+    "bytes": 2252,
+    "sha256": "d6733a623f1e79a34a9b70068b1fd4131587b54c8ee29cb89e272eb38981d3d7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/purity_report.py",
+    "bytes": 2225,
+    "sha256": "691839baa787979c18d49623be62a13b1aefbdddb254af341c538797678d5783"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/real_evidence_audit.py",
+    "bytes": 3391,
+    "sha256": "bdb7d2471af080876f483dc0bd17f91138fc9e0a44162389d87d7de3655ffe30"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/redetermine.py",
+    "bytes": 5222,
+    "sha256": "f2b553c884d52819643e816da6506fbb354c06e7bcc4d520d950fb766a3b7f7c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/replay_suffix.py",
+    "bytes": 5071,
+    "sha256": "2ce3a37655225f00e6d825e59c51a1d22ed11f107fb840be64fb0aef83107d41"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_attribution.py",
+    "bytes": 4103,
+    "sha256": "6652b428a0201e530377458207bbe59f9d972e4347ab87247e2b0ece186329cd"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_audit.py",
+    "bytes": 3539,
+    "sha256": "27a19e9b60ff143c77859b5d6a97a972a5aeaa4ad4840572604944752c617cf5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_craftworld.py",
+    "bytes": 7185,
+    "sha256": "ca4f59893e71b5a50715e38b03a4afc2479ec320e3505177a4d12cd92ef9e9e4"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_craftworld_lava.py",
+    "bytes": 6759,
+    "sha256": "564872ed44180a4c4c217d680ea61dd98b774fcda0263c5ffae20ed1de6ae34e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_crossmap.py",
+    "bytes": 4968,
+    "sha256": "a4de6a1c28eefdfe6dce016f19c7c73af8b884e8edd8182aea18f83943338dbb"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_dose.py",
+    "bytes": 4013,
+    "sha256": "b689a6956623cfa8f03f2a2599aa0be2f1e03587f6a18680e7bd0d78522ff1c5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_dose_clean.py",
+    "bytes": 4364,
+    "sha256": "67aa15f56bbbb76257299836fc0a242eb3575192ea1d9903df30cefcb45aca21"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_explore.py",
+    "bytes": 3872,
+    "sha256": "9819dec059cb82f84ffd404c9f8a14482b1d93fe04860f7e2a4f4bfdbc77f53b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_factorial.py",
+    "bytes": 5978,
+    "sha256": "54333cee51ff483b13e32f72537a36dfd554a86e9196ee66e659d7cff70cafc3"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_gate.py",
+    "bytes": 2595,
+    "sha256": "a76615c5d68863a566b9aff460b78658b2b7339eb68d234f1c02dac02d12d622"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_goal.py",
+    "bytes": 3439,
+    "sha256": "627d8dffdce1fc46d4570843c0788e3344120a50413139752171d5825f511755"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_goal_irreversible.py",
+    "bytes": 3719,
+    "sha256": "73703f207e73c5ae44df509414c43d2fed8fd87f4fb02a037b7bf839be9e2e9e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_irreversible.py",
+    "bytes": 4909,
+    "sha256": "b28f6c5c90717938aaa1891966abe877cfb6d9ee71bc14bd94699a93a0d4e406"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_ladder.py",
+    "bytes": 2812,
+    "sha256": "29d12202d49ee6f7617f3eff9f9ea70d13e8e43ebfee9af0deeba1d8556bc39e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_mergerule.py",
+    "bytes": 3828,
+    "sha256": "3ff83292fa02d42e0950be8606916028bfa09637f68b35f949f3ca0f526e9309"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_overlap.py",
+    "bytes": 6893,
+    "sha256": "d8963ab2368be081d2a8cbc36347ae869d4a494b59c01156167439520155c306"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_p2.py",
+    "bytes": 3320,
+    "sha256": "78f8b80794cd2cd058a5067a98e913bf369f309fd00cfd5fde4f19f65403df00"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_p2b.py",
+    "bytes": 3832,
+    "sha256": "72f727a10812ac7062bf42181f8f4fc34bf2f786e2a4d8fcc73c3b373e6326ef"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_p3.py",
+    "bytes": 3609,
+    "sha256": "dbaf86674fae272feb91e341a05519c0cf27905336ae5176ff0f5897e29e80f9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_p3b.py",
+    "bytes": 2696,
+    "sha256": "373f53f02d03bb6ed450d38b35e369e64665576e3aa8e04e7685e00e902f5597"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_p3c.py",
+    "bytes": 3249,
+    "sha256": "6ab947fb844dc5f430b96387acb641d28c4f29095769b7d2ac6d65d4741d289c"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_priorart.py",
+    "bytes": 3250,
+    "sha256": "214a9f102455de8870244301bf387a66002ef9f14e3602c12d5440fc165e9723"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_purity.py",
+    "bytes": 5468,
+    "sha256": "fc16c6072041d1547846aaaf87a520299c4f033a8c92049a92bf35f1553335e9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_query.py",
+    "bytes": 3417,
+    "sha256": "1b5fbed3b341c0cdb21a528400ce8f1ff22305c4793b8a35bbf07bf704fad740"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_revision.py",
+    "bytes": 2641,
+    "sha256": "51d3ed5daa3f63c32043d7c6eb98a1f1a9dc778547a71f4738271e100ec726f0"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_saving.py",
+    "bytes": 3532,
+    "sha256": "b0a0961ea8e845023959220ea5b0fbfa2691bedf499a80978f6262172337638b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_sparse.py",
+    "bytes": 2605,
+    "sha256": "24775b43654e0d1a4253dd2e2d558cf429ba2b07ae840b8802cffbc37759976f"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_transfer.py",
+    "bytes": 6342,
+    "sha256": "1f5bb7b50068d46cc367c518abf03f67945806ada4612493e0387eff5731a605"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_unordered.py",
+    "bytes": 2620,
+    "sha256": "4bbe9cf0b0609c4fb123379ee52cbfb2869ab230db152bff7de4119738221fc5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/run_verify.py",
+    "bytes": 3080,
+    "sha256": "06346204e450de0952564efb888932bc5ec2e870f0e9c0a4deb42ee2baf6829b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/search_maps.py",
+    "bytes": 6987,
+    "sha256": "5bfd7c562caf8dc5380db237477fdf51dc28ebd254a8c8cfa228c0813e74ecb5"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/separator_stats.py",
+    "bytes": 3892,
+    "sha256": "48ea5d50442643e6b01e65c953621d76734e8f694c809b555335a299c5352db9"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/spoke_maps.py",
+    "bytes": 5798,
+    "sha256": "df2f465a8b084cf35f542b1838941542f1d3662531e867c4cfb836604fe1a025"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/structure.py",
+    "bytes": 1034,
+    "sha256": "e51079a8d21d3775fd83b02a42c4c2f1ed4772d4e80998ce787819317c5d8c67"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/taskfile.py",
+    "bytes": 3463,
+    "sha256": "25fb88eaaa4dfd272a795d537facdb7888f1be94941fdc2a0417b853b9ade9b7"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/transfer_maps.py",
+    "bytes": 3308,
+    "sha256": "2ff7e192e5eeebb6c410ff0f7b06770052bce6502f93eb19e1dd7d3134505597"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/validate_maps.py",
+    "bytes": 3257,
+    "sha256": "54558e4f8fb12754808b2a3662b85318887678aa925dbf5c9dcd9c176b71606e"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/src/version_space.py",
+    "bytes": 9474,
+    "sha256": "8afe545b618d35646b45e67755fe7bae7cd6c320c33d2b4f223a0a67e4324bce"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/tests/test_compress.py",
+    "bytes": 13831,
+    "sha256": "21ae4aaf9aaa3cf8bdf23e8ffdcd16287ba1b33c42a68e74ac43ee054810351a"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/tests/test_conversion.py",
+    "bytes": 3634,
+    "sha256": "c175b8fde9119f577d2980057b0b396fe2ccb390f5fb52e57320f000a1eaa8d8"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/tests/test_failure_semantics.py",
+    "bytes": 8233,
+    "sha256": "1c2c8909dd46a68d950cbfe868642fb6c313907e56045d6309d3c31c4faf8546"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/tests/test_inference.py",
+    "bytes": 7453,
+    "sha256": "83fd858f88208a6cfc85f372026b5a1cde102cef9bdc457cf979082e849dde3b"
+  },
+  {
+    "path": "progressive_task_discovery/stage8_compression/tests/test_passive.py",
+    "bytes": 2460,
+    "sha256": "69135c7f91ddc9cd8493e430dd1531e816aecf90baa930d50b43b57ea147f2d7"
+  }
+]

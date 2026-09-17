@@ -1,0 +1,27 @@
+{
+  "runner": "src/run_attribution.py",
+  "families": 24,
+  "keys": [
+    "fullprefix",
+    "node",
+    "edsm",
+    "sig2",
+    "sig3",
+    "sig4",
+    "truestate"
+  ],
+  "levels": [
+    80,
+    160,
+    320,
+    2000
+  ],
+  "seeds": 6,
+  "seed0": 10600,
+  "budget": 200000,
+  "query_rule": "arrival: ask once per (attribution state, event), reuse after",
+  "runs": 4032,
+  "source_sha256": "cf2143f4c87d69e0642e8e91cca4bd7d18ab999cafe9e0085f4253dbad4299e2",
+  "data_sha256": "a0145467e5035bdce12c69b821d223d28b00313d4502ee506180c84e5576a827",
+  "written": "2026-09-11"
+}

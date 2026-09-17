@@ -1,0 +1,61 @@
+{
+  "selection": {
+    "count": {
+      "method": "count",
+      "epsilon": 0.02
+    },
+    "progressive": {
+      "method": "progressive",
+      "high": 0.05,
+      "low": 0
+    },
+    "learned_qrm": {
+      "method": "learned_qrm",
+      "epsilon": 0.02
+    },
+    "count_replay": {
+      "method": "count_replay",
+      "epsilon": 0.05
+    },
+    "goal_reuse": {
+      "method": "goal_reuse",
+      "epsilon": 0.005
+    },
+    "progressive_goal": {
+      "method": "progressive_goal",
+      "high": 0.05,
+      "low": 0
+    },
+    "oracle_goal": {
+      "method": "oracle_goal",
+      "epsilon": 0.02
+    },
+    "oracle_qrm": {
+      "method": "oracle_qrm",
+      "epsilon": 0.02
+    }
+  },
+  "development_auc": {
+    "count_e0": 0.6511706918194722,
+    "count_e0.005": 0.677467366755389,
+    "count_e0.02": 0.6811948060963333,
+    "count_e0.05": 0.6791476869355834,
+    "learned_qrm_e0": 0.8278202018117222,
+    "learned_qrm_e0.005": 0.8366025227266527,
+    "learned_qrm_e0.02": 0.8375755605697361,
+    "learned_qrm_e0.05": 0.8340219866591946,
+    "count_replay_e0": 0.7995255603878284,
+    "count_replay_e0.005": 0.8786288042222361,
+    "count_replay_e0.02": 0.8798092690071388,
+    "count_replay_e0.05": 0.885137069811375,
+    "goal_reuse_e0": 0.8993906280717501,
+    "goal_reuse_e0.005": 0.9018482694886943,
+    "goal_reuse_e0.02": 0.8979876325315277,
+    "goal_reuse_e0.05": 0.900920776820764,
+    "progressive_h0.05": 0.6811570352499653,
+    "progressive_h0.2": 0.676296286977907,
+    "progressive_goal_h0.05": 0.9024533402646249,
+    "progressive_goal_h0.2": 0.8966864735806944,
+    "oracle_goal": 0.910344427025472
+  }
+}

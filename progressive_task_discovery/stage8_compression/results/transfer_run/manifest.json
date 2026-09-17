@@ -1,0 +1,16 @@
+{
+  "runs": 768,
+  "pairs": 6,
+  "arms": [
+    "cold_history",
+    "cold_merged",
+    "transfer",
+    "oracle"
+  ],
+  "seeds": 32,
+  "seed0": 2000,
+  "source_budget": 200000,
+  "budget": 200000,
+  "source_sha256": "8cd32928304f0eb3940bb297893be6220b70225ab2aae6fc530b24df9c950326",
+  "binary_sha256": "bb231d638e76a79ddef08287c97d4e2e521f5477bdcbc4e4110f9900b1ae2f1a"
+}

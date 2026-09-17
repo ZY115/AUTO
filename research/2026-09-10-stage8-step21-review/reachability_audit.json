@@ -1,0 +1,1550 @@
+{
+  "summary": {
+    "maps": 176,
+    "affected": 14,
+    "dfs_total": 13914,
+    "bfs_total": 13970,
+    "source_sha256": "92781a339ea0f37eb87351613018aea4836b45a61be808efdb8cf8e189c5e40d"
+  },
+  "maps": [
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high0A.task",
+      "dfs": 43,
+      "bfs": 43,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high0B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high1A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high1B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high2A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high2B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high3A.task",
+      "dfs": 31,
+      "bfs": 31,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high3B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high4A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_high4B.task",
+      "dfs": 34,
+      "bfs": 34,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid0A.task",
+      "dfs": 43,
+      "bfs": 43,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid0B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid1A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid1B.task",
+      "dfs": 31,
+      "bfs": 31,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid2A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid2B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid3A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid3B.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid4A.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskP_mid4B.task",
+      "dfs": 34,
+      "bfs": 34,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high0A.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high0B.task",
+      "dfs": 103,
+      "bfs": 109,
+      "missing": 6,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        0,
+        2,
+        4,
+        5,
+        6,
+        4
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high1A.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high1B.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high2A.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high2B.task",
+      "dfs": 63,
+      "bfs": 63,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high3A.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high3B.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high4A.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_high4B.task",
+      "dfs": 162,
+      "bfs": 162,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low0A.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low0B.task",
+      "dfs": 151,
+      "bfs": 151,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low1A.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low1B.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low2A.task",
+      "dfs": 96,
+      "bfs": 96,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low2B.task",
+      "dfs": 78,
+      "bfs": 78,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low3A.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low3B.task",
+      "dfs": 75,
+      "bfs": 75,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low4A.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_low4B.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid0A.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid0B.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid1A.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid1B.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid2A.task",
+      "dfs": 96,
+      "bfs": 96,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid2B.task",
+      "dfs": 134,
+      "bfs": 134,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid3A.task",
+      "dfs": 78,
+      "bfs": 78,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid3B.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid4A.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/overlap/taskQ_mid4B.task",
+      "dfs": 91,
+      "bfs": 91,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p00_safeA.task",
+      "dfs": 43,
+      "bfs": 43,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p00_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p01_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p01_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p02_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p02_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p03_safeA.task",
+      "dfs": 31,
+      "bfs": 31,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p03_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p04_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p04_safeB.task",
+      "dfs": 34,
+      "bfs": 34,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p05_safeA.task",
+      "dfs": 43,
+      "bfs": 43,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p05_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p06_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p06_safeB.task",
+      "dfs": 31,
+      "bfs": 31,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p07_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p07_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p08_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p08_safeB.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p09_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p09_safeB.task",
+      "dfs": 34,
+      "bfs": 34,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p10_fatalA.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p10_fatalB.task",
+      "dfs": 103,
+      "bfs": 109,
+      "missing": 6,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        0,
+        2,
+        4,
+        5,
+        6,
+        4
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p10_safeA.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p10_safeB.task",
+      "dfs": 103,
+      "bfs": 109,
+      "missing": 6,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        0,
+        2,
+        4,
+        5,
+        6,
+        4
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p11_fatalA.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p11_fatalB.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p11_safeA.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p11_safeB.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p12_fatalA.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p12_fatalB.task",
+      "dfs": 63,
+      "bfs": 63,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p12_safeA.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p12_safeB.task",
+      "dfs": 63,
+      "bfs": 63,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p13_fatalA.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p13_fatalB.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p13_safeA.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p13_safeB.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p14_fatalA.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p14_fatalB.task",
+      "dfs": 162,
+      "bfs": 162,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p14_safeA.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p14_safeB.task",
+      "dfs": 162,
+      "bfs": 162,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p15_fatalA.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p15_fatalB.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p15_safeA.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p15_safeB.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p16_fatalA.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p16_fatalB.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p16_safeA.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p16_safeB.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p17_fatalA.task",
+      "dfs": 96,
+      "bfs": 96,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p17_fatalB.task",
+      "dfs": 134,
+      "bfs": 134,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p17_safeA.task",
+      "dfs": 96,
+      "bfs": 96,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p17_safeB.task",
+      "dfs": 134,
+      "bfs": 134,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p18_fatalA.task",
+      "dfs": 78,
+      "bfs": 78,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p18_fatalB.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p18_safeA.task",
+      "dfs": 78,
+      "bfs": 78,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p18_safeB.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p19_fatalA.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p19_fatalB.task",
+      "dfs": 91,
+      "bfs": 91,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p19_safeA.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p19_safeB.task",
+      "dfs": 91,
+      "bfs": 91,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p20_fatalA.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p20_fatalB.task",
+      "dfs": 151,
+      "bfs": 151,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p20_safeA.task",
+      "dfs": 117,
+      "bfs": 117,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p20_safeB.task",
+      "dfs": 151,
+      "bfs": 151,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p21_fatalA.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p21_fatalB.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p21_safeA.task",
+      "dfs": 104,
+      "bfs": 104,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p21_safeB.task",
+      "dfs": 86,
+      "bfs": 88,
+      "missing": 2,
+      "extra": 0,
+      "witness": [
+        3,
+        1,
+        2,
+        0,
+        4,
+        5,
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p22_fatalA.task",
+      "dfs": 96,
+      "bfs": 96,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p22_fatalB.task",
+      "dfs": 78,
+      "bfs": 78,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p22_safeA.task",
+      "dfs": 96,
+      "bfs": 96,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p22_safeB.task",
+      "dfs": 78,
+      "bfs": 78,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p23_fatalA.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p23_fatalB.task",
+      "dfs": 75,
+      "bfs": 75,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p23_safeA.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p23_safeB.task",
+      "dfs": 75,
+      "bfs": 75,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p24_fatalA.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p24_fatalB.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p24_safeA.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/p24_safeB.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskP_high_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskP_high_safeB.task",
+      "dfs": 34,
+      "bfs": 34,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskP_mid_safeA.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskP_mid_safeB.task",
+      "dfs": 34,
+      "bfs": 34,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_high_fatalA.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_high_fatalB.task",
+      "dfs": 162,
+      "bfs": 162,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_high_safeA.task",
+      "dfs": 103,
+      "bfs": 103,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_high_safeB.task",
+      "dfs": 162,
+      "bfs": 162,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_low_fatalA.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_low_fatalB.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_low_safeA.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_low_safeB.task",
+      "dfs": 69,
+      "bfs": 69,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_mid_fatalA.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_mid_fatalB.task",
+      "dfs": 91,
+      "bfs": 91,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_mid_safeA.task",
+      "dfs": 80,
+      "bfs": 80,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskQ_mid_safeB.task",
+      "dfs": 91,
+      "bfs": 91,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_fatal.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_safe.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_01_fatal.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_01_safe.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_02_fatal.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_02_safe.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_03_fatal.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_03_safe.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_04_fatal.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_04_safe.task",
+      "dfs": 49,
+      "bfs": 49,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_00_fatal.task",
+      "dfs": 128,
+      "bfs": 128,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_00_safe.task",
+      "dfs": 128,
+      "bfs": 128,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_01_fatal.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_01_safe.task",
+      "dfs": 106,
+      "bfs": 106,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_02_fatal.task",
+      "dfs": 70,
+      "bfs": 80,
+      "missing": 10,
+      "extra": 0,
+      "witness": [
+        1,
+        3,
+        0,
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_02_safe.task",
+      "dfs": 70,
+      "bfs": 80,
+      "missing": 10,
+      "extra": 0,
+      "witness": [
+        1,
+        3,
+        0,
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_03_fatal.task",
+      "dfs": 87,
+      "bfs": 87,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_03_safe.task",
+      "dfs": 87,
+      "bfs": 87,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_04_fatal.task",
+      "dfs": 83,
+      "bfs": 83,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskS_04_safe.task",
+      "dfs": 83,
+      "bfs": 83,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_00_fatal.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_00_safe.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_01_fatal.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_01_safe.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_02_fatal.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_02_safe.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_03_fatal.task",
+      "dfs": 33,
+      "bfs": 33,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_03_safe.task",
+      "dfs": 33,
+      "bfs": 33,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_04_fatal.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    },
+    {
+      "path": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskT_04_safe.task",
+      "dfs": 40,
+      "bfs": 40,
+      "missing": 0,
+      "extra": 0,
+      "witness": null
+    }
+  ]
+}

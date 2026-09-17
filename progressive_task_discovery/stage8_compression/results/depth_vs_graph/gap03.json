@@ -1,0 +1,157 @@
+{
+  "tag": "gap03",
+  "target": "gap03",
+  "n": 3,
+  "d": 3,
+  "m": 1,
+  "m2": 5,
+  "L": 3,
+  "arm": 8,
+  "seed": 77721,
+  "pair": [
+    0,
+    2
+  ],
+  "gap": 4,
+  "horizon": 52,
+  "lengths": [
+    19,
+    22,
+    24,
+    20,
+    26,
+    19
+  ],
+  "starts": [
+    15,
+    4,
+    26,
+    22,
+    0,
+    19
+  ],
+  "tail_lengths": [
+    1,
+    5
+  ],
+  "history_states": 52,
+  "minimal_states": 21,
+  "denominator": "window5",
+  "denominator_states": 42,
+  "min_sufficient_window": 5,
+  "honest_ratio": 2.0,
+  "orders": 6,
+  "feature_sizes": {
+    "count": 12,
+    "bag": 17,
+    "window1": 19,
+    "window2": 27,
+    "window3": 32,
+    "window4": 37,
+    "window5": 42,
+    "window6": 45,
+    "window7": 47,
+    "history": 52
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": false,
+    "window4": false,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      3
+    ],
+    [
+      0,
+      2,
+      1,
+      3,
+      4,
+      5,
+      3
+    ],
+    [
+      1,
+      0,
+      2,
+      3,
+      4,
+      5,
+      3
+    ],
+    [
+      1,
+      2,
+      0,
+      3,
+      4,
+      5,
+      4,
+      5,
+      3,
+      4,
+      5
+    ],
+    [
+      2,
+      0,
+      1,
+      3,
+      4,
+      5,
+      4,
+      5,
+      3,
+      4,
+      5
+    ],
+    [
+      2,
+      1,
+      0,
+      3,
+      4,
+      5,
+      4,
+      5,
+      3,
+      4,
+      5
+    ]
+  ],
+  "task_states": 22,
+  "minimal_total": 21,
+  "bridge": [
+    3,
+    4,
+    5
+  ],
+  "tails": [
+    [
+      3
+    ],
+    [
+      4,
+      5,
+      3,
+      4,
+      5
+    ]
+  ],
+  "fatal": false,
+  "failing_states": 0
+}

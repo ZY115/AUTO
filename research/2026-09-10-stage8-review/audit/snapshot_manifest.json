@@ -1,0 +1,47 @@
+[
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/compress.cpp",
+    "snapshot": "audit/snapshot/src/compress.cpp",
+    "sha256": "a35ea9d929ea48345741e99e80083853b26e76063d9cd3cc5f9123b5e219fb8e"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/run_priorart.py",
+    "snapshot": "audit/snapshot/src/run_priorart.py",
+    "sha256": "214a9f102455de8870244301bf387a66002ef9f14e3602c12d5440fc165e9723"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/run_goal_irreversible.py",
+    "snapshot": "audit/snapshot/src/run_goal_irreversible.py",
+    "sha256": "2141d119c6428474b85d6d0705f46360dd3911144c1e55075ca4eefe264ca218"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/goal_report.py",
+    "snapshot": "audit/snapshot/src/goal_report.py",
+    "sha256": "89e8cb22520467f1a5c68a44e34d15601dfc9e6bdae9812a94448e420a495399"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/src/run_revision.py",
+    "snapshot": "audit/snapshot/src/run_revision.py",
+    "sha256": "51d3ed5daa3f63c32043d7c6eb98a1f1a9dc778547a71f4738271e100ec726f0"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP15.md",
+    "snapshot": "audit/snapshot/REPORT_STEP15.md",
+    "sha256": "f5bc7815f8f51e30a046316ffced760786ca63220e987a703b035f61eb8853d6"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP16.md",
+    "snapshot": "audit/snapshot/REPORT_STEP16.md",
+    "sha256": "3808b1cf7e93bd4fee8a87cd640a33ff0cb750e89680c627c83d19db6177f480"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/irreversible/taskR_00_fatal.task",
+    "snapshot": "audit/snapshot/results/irreversible/taskR_00_fatal.task",
+    "sha256": "b10ab688d923752ee79ed3e6c1d218f8f31c773b1a7f3d38b6c82080d1082eb2"
+  },
+  {
+    "source": "/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/results/depth_vs_graph/gap00.task",
+    "snapshot": "audit/snapshot/results/depth_vs_graph/gap00.task",
+    "sha256": "2b1b1cdd7cf575d8eea493424883946b3d6656244fb42b997a53bae2239d12c8"
+  }
+]

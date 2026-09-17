@@ -1,0 +1,20 @@
+{
+  "runner": "src/run_purity.py",
+  "stage": "pilot",
+  "pairs": 10,
+  "source_seeds": 4,
+  "target_seeds": 4,
+  "every": 25,
+  "source_budget": 40000,
+  "target_budget": 100000,
+  "arms": [
+    "scratch",
+    "dict_freq",
+    "dict_pure",
+    "struct_freq",
+    "struct_pure",
+    "oracle"
+  ],
+  "runs": 960,
+  "source_sha256": "8d171de54408533e0d53780d85eb74691a5ff57dce7ea905ffc8b2b132122000"
+}

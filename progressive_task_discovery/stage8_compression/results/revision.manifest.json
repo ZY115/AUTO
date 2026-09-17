@@ -1,0 +1,12 @@
+{
+  "runner": "src/run_revision.py",
+  "tasks": 12,
+  "seeds": 12,
+  "budget": 100000,
+  "every": 250,
+  "note": "re-run after the JIRP hypothesis-snapshot fix",
+  "runs": 576,
+  "source_sha256": "982737e762c5534da218fc5235e5d5839a418cc202c35ba2a322b8985aa182ce",
+  "data_sha256": "67e7632d4d5af7c9c5141fe083791df4fb675a5988a9d61f740fa5fc97722ae9",
+  "written": "2026-09-10"
+}

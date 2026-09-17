@@ -1,0 +1,19 @@
+{
+  "runner": "src/run_crossmap.py",
+  "note": "pilot, 2x2 seeds",
+  "pairs": 25,
+  "source_budget": 40000,
+  "target_budget": 100000,
+  "arms": [
+    "scratch",
+    "dict",
+    "structure",
+    "aggressive",
+    "selective",
+    "oracle"
+  ],
+  "runs": 600,
+  "source_sha256": "92781a339ea0f37eb87351613018aea4836b45a61be808efdb8cf8e189c5e40d",
+  "data_sha256": "b836b51ed81a51a83a8472252f4f1966d9230f0feff89b0e552097b868d90240",
+  "written": "2026-09-10"
+}

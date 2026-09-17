@@ -1,0 +1,10 @@
+Unattainable 90% thresholds: 0 / 32
+benign       flat                           cost=  200000 solved= 0/8 AUC=0.000 final=0.000
+benign       count                          cost=   20000 solved= 8/8 AUC=0.912 final=1.000
+benign       discovered                     cost=   20000 solved= 8/8 AUC=0.912 final=1.000
+benign       oracle_state                   cost=   20000 solved= 8/8 AUC=0.912 final=1.000
+benign       progressive                    cost=   20000 solved= 8/8 AUC=0.912 final=1.000
+benign       count_frontier                 cost=   20000 solved= 8/8 AUC=0.912 final=1.000
+benign       learned_qrm                    cost=   10625 solved= 8/8 AUC=0.959 final=1.000
+benign       progressive_qrm                cost=   10625 solved= 8/8 AUC=0.959 final=1.000
+benign       oracle_qrm                     cost=    6250 solved= 8/8 AUC=0.981 final=1.000

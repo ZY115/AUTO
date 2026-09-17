@@ -1,0 +1,677 @@
+                                     The Logical Options Framework
+
+
+        Brandon Araki 1 Xiao Li 1 Kiran Vodrahalli 2 Jonathan DeCastro 3 J. Micah Fry 4 Daniela Rus 1
+
+
+                        Abstract                                 ing and optimal, but not composable; the options framework
+     Learning composable policies for environments               (Sutton et al., 1999) is composable and hierarchically op-
+     with complex rules and tasks is a challenging prob-         timal, but cannot satisfy specifcations. An algorithm that
+     lem. We introduce a hierarchical reinforcement              achieves all three of these properties would be very pow-
+     learning framework called the Logical Options               erful because it would enable a model learned on one set
+     Framework (LOF) that learns policies that are sat-          of rules to generalize to arbitrary rules. We introduce the
+     isfying, optimal, and composable. LOF effciently            Logical Options Framework, which builds upon the options
+     learns policies that satisfy tasks by representing          framework and aims to combine symbolic reasoning and
+     the task as an automaton and integrating it into            low-level control to achieve satisfaction, optimality, and
+     learning and planning. We provide and prove con-            composability with as few compromises as possible. Fur-
+     ditions under which LOF will learn satisfying,              thermore, we demonstrate that models learned with our
+     optimal policies. And lastly, we show how LOF’s             framework generalize to arbitrary sets of rules without any
+     learned policies can be composed to satisfy un-             further learning, and we also show that our framework is
+     seen tasks with only 10-50 retraining steps on our          compatible with arbitrary domains and planning algorithms,
+     benchmarks. We evaluate LOF on four tasks in                from discrete domains and value iteration to continuous
+     discrete and continuous domains, including a 3D             domains and proximal policy optimization (PPO).
+     pick-and-place environment.                                 Satisfaction: An agent operating in an environment gov-
+                                                                 erned by rules must be able to satisfy the specifed rules.
+                                                                 Satisfaction is a concept from formal logic, in which the
+1. Introduction                                                  input to a logical formula causes the formula to evaluate to
+To operate in the real world, intelligent agents must be         True. Logical formulae can encapsulate rules and tasks
+able to make long-term plans by reasoning over symbolic          like the ones described in Fig. 1, such as “pick up the gro-
+abstractions while also maintaining the ability to react to      ceries” and “do not drive into a lake”. In this paper, we state
+low-level stimuli in their environment (Zhang & Sridharan,       conditions under which our method is guaranteed to learn
+2020). Many environments obey rules that can be repre-           satisfying policies.
+sented as logical formulae; e.g., the rules a driver follows     Optimality: Optimality requires that the agent maximize
+while driving, or a recipe a chef follows to cook a dish.        its expected cumulative reward for each episode. In general,
+Traditional motion and path planning techniques struggle         satisfaction can be achieved by rewarding the agent for satis-
+to plan over these long-horizon tasks, but hierarchical ap-      fying the rules of the environment. In hierarchical planning
+proaches such as hierarchical reinforcement learning (HRL)       there are several types of optimality, including hierarchi-
+can solve lengthy tasks by planning over both the high-level     cal optimality (optimal with respect to the hierarchy) and
+rules and the low-level environment. However, solving these      optimality (optimal with respect to everything). We prove
+problems involves trade-offs among multiple desirable prop-      in this paper that our method is hierarchically optimal and,
+erties, which we identify as satisfaction, optimality, and       under certain conditions, optimal.
+composability (described below). Today’s hierarchical plan-
+ning algorithms lack at least one of these objectives. For       Composability: Our method is also composable – once it
+example, Reward Machines (Icarte et al., 2018) are satisfy-      has learned the low-level components of a task, the learned
+                                                                 model can be rearranged to satisfy arbitrary tasks. More
+    1
+      CSAIL, Massachusetts Institute of Technology, Cambridge,   specifcally, the rules of an environment can be factored into
+MA, USA 2 Department of Computer Science, Columbia Univer-       liveness and safety properties, which we discuss in Sec. 3.
+sity, New York City, NY, USA 3 Toyota Research Institute, Cam-   The learned model has high-level actions called options that
+bridge, MA, USA 4 MIT Lincoln Laboratory, Lexington, MA, USA.
+Correspondence to: Brandon Araki <araki@csail.mit.edu>.          can be composed to satisfy new liveness properties. A short-
+                                                                 coming of many RL models is that they are not composable
+Proceedings of the 38 th International Conference on Machine     – trained to solve one specifc task, they are incapable of han-
+Learning, PMLR 139, 2021. Copyright 2021 by the author(s).
+                                                   The Logical Options Framework
+
+
+
+           “Go grocery shopping, pick up the kid, and go home, unless your partner calls telling you that they will pick
+
+                up the kid, in which case just go grocery shopping and then go home. And don’t drive into the lake.”
+
+                         (a) These natural language instructions can be transformed into an FSA, shown in (b).
+
+                                                                                            `
+                       S1
+
+           S0                        S3               G
+
+                       S2
+                                     Safety       Event
+         Subgoal propositions      proposition proposition
+
+       { , ,                   } { } { }
+(b) The FSA representing the natural language instructions. The               (c) The low-level MDP and corresponding policy that satis-
+propositions are divided into “subgoal”, “safety”, and “event.”               fes the instructions.
+
+Figure 1. Many parents face this task after school ends – who picks up the kid, and who gets groceries? The pictorial symbols represent
+propositions, which are true or false depending on the state of the environment. The arrows in (c) represent sub-policies, and the colors of
+the arrows match the corresponding transition in the FSA. The boxed phone at the beginning of some of the arrows represents how these
+sub-policies can occur only after the agent receives a phone call.
+
+
+dling even small variations in the task structure. However,                   and a low-level environment MDP.
+the real world is a dynamic and unpredictable place, so the
+ability to use a learned model to automatically reason over               2. A planning algorithm for learning options and meta-
+as-yet-unseen tasks is a crucial element of intelligence.                    policies for the SMDP that allows the options to be
+                                                                             composed to solve new tasks with only 10-50 retraining
+Fig. 1 gives an example of how LOF works. The environ-
+                                                                             steps on our benchmarks and no additional samples
+ment is a world with a grocery store, your (hypothetical)
+                                                                             from the environment.
+kid, your house, and some lakes, and in which you, the
+agent, are driving a car. The propositions are divided into               3. Conditions and proofs for satisfaction and optimality.
+“subgoals”, representing events that can be achieved, such
+as going grocery shopping; “safety” propositions, represent-              4. Experiments on a discrete delivery domain, a continu-
+ing events that you must avoid (driving into a lake); and                    ous 2D reacher domain, and a continuous 3D pick-and-
+“event” propositions, corresponding to events that you have                  place domain on four tasks demonstrating satisfaction,
+no control over (receiving a phone call) (Fig. 1b). In this                  optimality, and composability.
+environment, you have to follow rules (Fig. 1a). These rules
+can be converted into a logical formula, and from there into
+a fnite state automaton (FSA) (Fig. 1b). LOF learns an                  2. Background
+option for each subgoal (illustrated by the arrows in Fig. 1c),
+                                                                        Linear Temporal Logic: We use linear temporal logic
+and a meta-policy for choosing amongst the options to reach
+                                                                        (LTL) to formally specify rules (Clarke et al., 2001). LTL
+the goal state of the FSA. After learning, the options can be
+                                                                        can express tasks and rules using temporal operators such as
+recombined to fulfll arbitrary tasks.
+                                                                        “eventually” and “always.” LTL formulae are used only indi-
+                                                                        rectly in LOF, as they are converted into automata that the
+1.1. Contributions                                                      algorithm uses directly. We chose to use LTL to represent
+This paper introduces the Logical Options Framework                     rules because LTL corresponds closely to natural language
+(LOF) and makes four contributions to the hierarchical rein-            and has proven to be a more natural way of expressing
+forcement learning literature:                                          tasks and rules for engineers than designing FSAs by hand
+                                                                        (Kansou, 2019). Formulae φ have the syntax grammar
+  1. The defnition of a hierarchical semi-Markov Decision
+     Process (SMDP) that is the product of a logical FSA                           φ := p | ¬φ | φ1 ∨ φ2 |         φ | φ1 U φ2
+                                                       The Logical Options Framework
+
+where p is a proposition (a boolean-valued truth statement                  is associated with its own option, whose goal is to
+that can correspond to objects or events in the world), ¬                   achieve that subgoal. Safety propositions are used to
+is negation, ∨ is disjunction,     is “next”, and U is “until”.             defne rules. Event propositions serve as control fow
+The derived rules are conjunction (∧), implication ( =⇒                     variables that affect the task.
+), equivalence (↔), “eventually” (♦φ ≡ True U φ) and
+“always” (φ ≡ ¬♦¬φ) (Baier & Katoen, 2008). φ1 U φ2                     3. We defne an SMDP that is the product of a low-level
+means that φ1 is true until φ2 is true, ♦φ means that there is              MDP and a high-level logical FSA.
+a time where φ is true and φ means that φ is always true.               4. We defne the logical options.
+The Options Framework: The options framework is a
+                                                                         5. We present an algorithm for fnding the hierarchically
+framework for defning and solving semi-Markov Decision
+                                                                            optimal policy on the SMDP.
+Processes (SMDPs) with a type of macro-action called an
+option (Sutton et al., 1999). The inclusion of options in                6. We state conditions under which satisfaction of the
+an MDP problem turns it into an SMDP problem, because                       LTL specifcation is guaranteed, and we prove that the
+actions are dependent not just on the previous state but also               planning algorithm converges to an optimal policy by
+on the identity of the currently active option, which could                 showing that the hierarchically optimal SMDP policy
+have been initiated many time steps before the current time.                is the same as the optimal MDP policy.
+An option o is a variable-length sequence of actions defned
+as o = (I, π, β, Ro (s), To (s0 |s)). I ⊆ S is the initiation set      The Logic Formula: LTL formulae can be translated into
+of the option. π : S × A → [0, 1] is the policy of the option.         Büchi automata using automatic translation tools such as
+β : S → [0, 1] is the termination condition. Ro (s) is the             SPOT (Duret-Lutz et al., 2016). All Büchi automata can
+reward model of the option. To (s0 |s) is the transition model.        be decomposed into liveness and safety properties (Alpern
+A major challenge in option learning is that, in general, the          & Schneider, 1987). We assume here that the LTL for-
+number of time steps before the option terminates, k, is a             mula itself can be divided into liveness and safety formulae,
+random variable. With this in mind, Ro (s) is defned as                φ = φliveness ∧ φsaf ety . For the case where the LTL for-
+the expected cumulative reward of option o given that the              mula cannot be factored, see App. A. The liveness property
+option is initiated in state s at time t and ends after k time         describes “things that must happen” to satisfy the LTL for-
+steps. Letting rt be the reward received by the agent at t             mula. It is a task specifcation and is used in planning to
+time steps from the beginning of the option,                           determine which subgoals the agent must achieve. The
+                                                                       safety property describes “things that can never happen”
+                                                                       and is used to defne costs for violating the rules. In LOF,
+            Ro (s) = E r1 + γr2 + . . . γ k−1 rk
+                                                
+                                                                (1)    the liveness property is written using a fnite-trace subset of
+                                                                       LTL called syntactically co-safe LTL (Bhatia et al., 2010),
+To (s0 |s) is the combined probability po (s0 , k) that option o
+                                                                       in which  (“always”) is not allowed and , U, and ♦ are
+will terminate at state s0 after k time steps:
+                                                                       only used in positive normal form. This way, the liveness
+                                ∞
+                                                                       property can be satisfed by fnite sequences of propositions,
+                 To (s0 |s) =
+                                X
+                                      po (s0 , k)γ k            (2)    so the property can be represented as an FSA.
+                                k=1                                    Propositions: Propositions are boolean-valued truth state-
+                                                                       ments corresponding to goals, objects, and events in the
+A crucial beneft of using options is that they can be com-
+                                                                       environment. We distinguish between three types of propo-
+posed in arbitrary ways. In the next section, we describe
+                                                                       sitions: subgoals PG , safety propositions PS , and event
+how LOF composes them to satisfy logical specifcations.
+                                                                       propositions PE . Subgoals must be achieved in order to
+                                                                       satisfy the liveness property. They are associated with goals
+3. Logical Options Framework                                           such as “the agent is at the grocery store”. They only appear
+                                                                       in φliveness . Each subgoal may only be associated with one
+Here is a brief overview of how we will present our formu-
+                                                                       state. Note that in general, it may be impossible to avoid
+lation of LOF:
+                                                                       having subgoals appear in φsaf ety . App. A describes how
+                                                                       to deal with this scenario. Safety propositions are proposi-
+  1. The LTL formula is decomposed into liveness and
+                                                                       tions that the agent must avoid – for example, driving into
+     safety properties. The liveness property defnes the
+                                                                       a lake. They only appear in φsaf ety . Event propositions
+     task specifcation and the safety property defnes the
+                                                                       are not goals, but they can affect the task specifcation –
+     costs for violating rules.
+                                                                       for example, whether or not a phone call is received. They
+  2. The propositions are divided into subgoals, safety                may occur in φliveness , and, with extensions described in
+     propositions, and event propositions. Each subgoal                App. A, in φsaf ety . In the fully observable setting, event
+                                                   The Logical Options Framework
+
+propositions are somewhat trivial because the agent knows              Algorithm 1 Learning and Planning with Logical Options
+exactly when/if the event will occur, but in the partially              1: Given:
+observable setting, they enable complex control fow. Our                   Propositions P partitioned into subgoals PG , safety
+optimality guarantees only apply in the fully observable                   propositions PS , and event propositions PE
+setting; however, LOF’s properties of satisfaction and com-                Logical FSA T = (F, PG × PE , TF , RF , f0 , fg ) de-
+posability still apply in the partially observable setting. The            rived from φliveness
+goal state of the liveness FSA must be reachable from every                Low-level MDP E = (S, A, RE , TE , γ), where
+other state using only subgoals. This means that no matter                 RE (s, a) = RE (s, a) + RS (TPS (s)) combines the en-
+what event propositions occur, it must be possible for the                 vironment and safety rewards
+agent to satisfy the liveness property. TPG : S → 2PG                      Proposition labeling functions TPG : S → 2PG , TPS :
+and TPS : S → 2PS relate states to the subgoal and safety                  S → 2PS , and TPE : 2PE → {0, 1}
+propositions that are true at that state. TPE : 2PE → {0, 1}            2: To learn:
+assigns truth labels to the event propositions.                         3: Set of options O, one for each subgoal p ∈ PG
+Hierarchical SMDP: LOF defnes a hierarchical semi-                      4: Meta-policy µ(f, s, o), Q(f, s, o), and V (f, s)
+Markov Decision Process (SMDP), learns the options, and                 5: Learn logical options:
+plans over them. The high level of the SMDP is an FSA spec-             6: for p ∈ PG do
+ifed with LTL. The low level is an environment MDP. We                  7:    Learn an option that achieves p,
+assume that the LTL specifcation φ can be decomposed into                     op = (Iop , πop , βop , Rop (s), Top (s0 |s))
+a liveness property φliveness and a safety property φsaf ety .          8:    Io p = S
+                                                                                     (
+The propositions P are the union of the subgoals PG , safety                             1     if p ∈ TPG (s)
+propositions PS , and event propositions PE . We assume                 9:     βo p =
+                                                                                         0     otherwise
+that the liveness property can be translated into an FSA               10:     πop = optimal policy on E with rollouts terminating
+T = (F, P, TF , RF , f0 , fg ). F is the set of automaton                      when p ∈ TP⎧   (s)
+                                                                                            G
+states; P is the set of propositions; TF is the transition func-                            ⎨Eγ k       if p ∈ TPG (s0 ); k is number
+tion relating the current state and proposition to the next            11:           0
+                                                                               Top (s |s) =             of time steps to reach p
+state, TF : F × P × F → [0, 1]. In practice, TF is determin-                                ⎩0          otherwise
+istic despite our use of probabilistic notation. We assume
+that there is a single initial state f0 and fnal state fg , and that   12:    Rop (s) = E[RE (s, a1 ) + γRE (s1 , a2 ) + . . .
+the goal state fg is reachable from every state f ∈ F using                                 +γ k−1 RE (sk−1 , ak )]
+only subgoals. The reward function assigns a reward to ev-             13: end for
+ery FSA state, RF : F →                                                14: Find a meta-policy µ over the options:
+                             VR. In our experiments, the safety        15: Initialize Q : F × S × O → R, V : F × S → R to 0
+property takes the form ps ∈PS ¬ps , which implies that
+no safety proposition is allowed, and that they have asso-             16: for (k, f, s) ∈ [1, . . . , n] × F × S do
+ciated costs, RS : 2PS → R. φsaf ety is not limited to this            17:    for o ∈ O do
+form; App. A covers the general case. There is a low-level             18:       QP       Po) ←P
+                                                                                   k (f, s,        RF (f )Ro (s)+
+environment MDP E = (S, A, RE , TE , γ). S is the state                                                TF (f 0 |f, TP (s0 ), p̄e )TPE (p̄e )
+                                                                                  f 0 ∈F p̄e ∈2PE s0 ∈S
+space and A is the action space. They can be discrete or                                                  To (s0 |s)Vk−1 (f 0 , s0 )
+continuous. RE : S ×A → R is a low-level reward function               19:     end for
+that characterizes, for example, distance or actuation costs.          20:     Vk (f, s) ← max Qk (f, s, o)
+RE is a combination of the safety reward function RS and                                      o∈O
+RE , e.g. RE (s, a) = RE (s, a) + RS (TPS (s)). The transi-            21: end for
+tion function of the environment is TE : S ×A×S → [0, 1].              22: µ(f, s, o) = arg max Q(f, s, o)
+                                                                                              o∈O
+From these parts we defne a hierarchical SMDP M =                      23: Return: Options O, meta-policy µ(f, s, o) and Q- and
+(S × F, A, P, O, TE × TP × TF , RSM DP , γ). The hierar-                     value functions Q(f, s, o), V (f, s)
+chical state space contains two elements: low-level states
+S and FSA states F. The action space is A. The set of
+propositions is P. The set of options (one option associated           RSM DP (f, s, o) = RF (f )Ro (s), so RF (f ) is a weighting
+with each subgoal in PG ) is O. The transition function con-           on the option rewards. The SMDP has the same discount
+sists of the low-level environment transitions TE and the              factor γ as E. Planning is done on the SMDP in two steps:
+FSA transitions TF . TP = TPG × TPS × TPE . We call TP ,               frst, the options O are learned over E using an appropriate
+relating states to propositions, a transition function because         policy-learning algorithm such as PPO or Reward Machines.
+it determines when FSA transitions occur. The transitions              Next, a meta-policy over the task specifcation T is found
+are applied in the order TE , TP , TF . The reward function            using the learned options and the reward function RSM DP .
+                                                      The Logical Options Framework
+                                                                                                         0
+Logical Options: The frst step of Alg. 1 is to learn the                  of value functions: let V π (s|s0 ) be the expected return
+                                                                                                               0
+logical options. We associate every subgoal p with an option              of π 0 (s|s0 ). If V πg (s|sg ) > V π (s|s0 ) ∀s, s0 6= sg , then
+op = (Iop , πop , βop , Rop , Top ). These terms are defned               π ∗ (s) = πg (s|sg ). This occurs for example if −∞ <
+starting at Alg. 1 line 5. One assumption we make is that                 RE (s, a) < 0 and if the episode terminates when the agent
+the initiation set of every option is the entire state space              reaches sg . Then V πg is a bounded negative number, and
+                                                                               0
+S. This assumption can be easily loosened as long as the                  V π for all other states is −∞. We show that if every option
+liveness property does not require an infeasible sequence                 is guaranteed to achieve its subgoal, then there must exist at
+of options, e.g., if the task is to go to Room A and then                 least one sequence of options that satisfes the specifcation.
+Room B, the initiation set of the “Room B” option must
+include Room A. Every op has a policy πop whose goal is                   We then give the condition for the hierarchically optimal
+to reach the state sp where p is true. Options are learned                meta-policy µ∗ (s) to always achieve the FSA goal state fg .
+by training on the environment MDP E and terminating                      In our context, hierarchical optimality means that the meta-
+only when sp is reached. As we discuss in Sec. 3.1, under                 policy is optimal over the available options. Let µ0 (f, s|f 0 )
+certain conditions the optimal option policy is guaranteed to             be the hierarchically optimal goal-conditioned meta-policy
+always terminate at the subgoal. This allows us to simplify               for reaching FSA state f 0 . If the hierarchically optimal
+the transition model of Eq. 2 to the form in Alg. 1 line 11.              meta-policy equals the goal-conditioned meta-policy for
+In the experiments, we further simplify this expression by                reaching the FSA goal state fg , i.e. µ∗ (f, s) = µg (f, s|fg ),
+setting γ = 1.                                                            then µ∗ (f, s) will always reach fg . In terms of value func-
+                                                                                          0
+                                                                          tions: let V µ (f, s|f 0 ) be the expected return for µ0 . If
+                                                                                               0
+Logical Value Iteration: After fnding the logical options,                V µg (f, s|fg ) > V µ (f, s|f 0 )∀f, s, f 0 6= fg , then µ∗ = µg .
+the next step is to fnd a meta-policy for FSA T over the                  This occurs if all FSA rewards RF (f ) > 0, all environment
+options (see Alg. 1 line 14). Q- and value functions are                  rewards −∞ < RE (s, a) < 0, and the episode only termi-
+found for the SMDP using the Bellman update equations:                    nates when the agent reaches fg . Then V µg is a bounded
+                                                                                                       0
+                                                                          negative number, and V µ for all other states is −∞. Be-
+                                       X       X       X                  cause LOF uses the Bellman update equations to learn the
+ Qk (f, s, o) ← RF (f )Ro (s) +                                           meta-policy, the LOF meta-policy will converge to the hier-
+                                       f 0 ∈F p̄e ∈2PE s0 ∈S              archically optimal meta-policy.
+      TF (f 0 |f, TPG (s0 ), p̄e )TPE (p̄e )To (s0 |s)Vk−1 (f 0 , s0 )    Consider the SMDP where planning is allowed over low-
+                                                                    (3)   level actions, and let us call it the “hierarchical MDP”
+                                                                                                         ∗
+   Vk (f, s) ← max Qk (f, s, o)                                    (4)    (HMDP) with optimal policy πHM     DP . Our result is:
+                  o∈O
+
+
+Eq. 3 differs from the generic equations for SMDP value
+iteration
+       Pin that the transition function has  Ptwo extra compo-
+nents, f 0 ∈F TF (f 0 |f, TP (s0 ), p̄e ) and p̄e ∈2PE TPE (p̄e ).
+                                                                          Theorem 3.1. Given that the conditions for satisfaction
+The equations are derived from Araki et al. (2019) and the
+                                                                          and hierarchical optimality are met, the LOF hierarchically
+fact that, on every step in the environment, three transitions
+                                                                          optimal meta-policy µg with optimal option sub-policies πg
+are applied: the option transition To , the event proposi-                                                                     ∗
+                                                                          has the same expected returns as the optimal policy πHM DP
+tion “transition” TPE , and the FSA transition TF . Note that
+                                                                          and satisfes the task specifcation.
+Ro (s) and To (s0 |s) compress the consequences of choosing
+an option o at a state s from a multi-step trajectory into two
+real-valued numbers, allowing for more effcient planning.                 3.2. Composability
+                                                                          The results in Sec. 3.1 guarantee that LOF’s learned model
+3.1. Conditions for Satisfaction and Optimality                           can be composed to satisfy new tasks. Furthermore, the
+                                                                          composed policy has the same properties as the original
+Here we give an overview of the proofs and necessary con-
+                                                                          policy – satisfaction and optimality. LOF’s possession of
+ditions for satisfaction and optimality. The full proofs and
+                                                                          composability along with satisfaction and optimality derives
+defnitions are in App. B.
+                                                                          from two facts: 1) Options are inherently composable be-
+First, we describe the condition for an optimal option to                 cause they can be executed in any order. 2) If the conditions
+always reach its subgoal. Let π 0 (s|s0 ) be the optimal goal-            of Thm. 3.1 are met, LOF is guaranteed to fnd a (hierarchi-
+conditioned policy for reaching a goal s0 . If the optimal                cally) optimal policy over the options that will satisfy any
+option policy equals the goal-conditioned policy for reach-               liveness property that uses subgoals associated with the op-
+ing the subgoal sg , i.e. π ∗ (s) = πg (s|sg ), then the option           tions. The composability of LOF distinguishes it from other
+will always reach the subgoal. This can be stated in terms                algorithms that can achieve satisfaction and optimality.
+                                               The Logical Options Framework
+
+4. Experiments & Results                                                          `
+Experiments: We performed experiments to demonstrate                                              -2
+satisfaction and composability 1 . For satisfaction, we mea-                               -3
+sure cumulative reward over training steps. Cumulative re-
+ward is a proxy for satisfaction, as the environments can only
+achieve the maximum reward when they satisfy their tasks.                                                         -5
+For the composability experiments, we take the trained op-
+tions and record how many meta-policy retraining steps it
+takes to learn an optimal meta-policy for a new task.                            -2
+
+Environments: We measure the performance of LOF on
+three environments. The frst environment is a discrete                                                           LOF Total
+                                                                                 -3              -2
+gridworld (Fig. 3a) called the “delivery domain,” as it can                                                     Reward: -5
+represent a delivery truck delivering packages to three lo-
+cations (a, b, c) and having a home base h. There are also                 S0              S1             S2
+obstacles o (the black squares). The second environment
+is called the reacher domain, from OpenAI Gym (Fig. 3d).
+It is a two-link arm that has continuous state and action                        -2              -5            Greedy Total
+spaces. There are four subgoals represented by colored                                                          Reward: -7
+balls: red r, green g, blue b, and yellow y. The third en-
+vironment is called the pick-and-place domain, and it is a       Figure 2. In this environment, the agent must either pick up the
+continuous 3D environment with a robotic Panda arm from          kid or go grocery shopping, and then go home (the “OR” task).
+CoppeliaSim and PyRep (James et al., 2019). It is inspired       Starting at S0, the greedy algorithm picks the next step in the FSA
+by the lunchbox-packing experiments of Araki et al. (2019)       with the lowest cost (picking up the kid), which leads to a higher
+in which subgoals r, g, and b are food items that must be        overall cost. LOF fnds the optimal path through the FSA.
+packed into lunchbox y. All environments also have an
+event proposition called can, which represents when the
+need to fulfll part of a task is cancelled.                      celled. The “OR” task is meant to demonstrate the optimal-
+Tasks: We test satisfaction and composability on four tasks.     ity of our algorithm versus a greedy algorithm, as discussed
+The frst task is a “sequential” task. For the delivery domain,   in Fig. 2. Lastly, the composite task shows that learning and
+the LTL formula is ♦(a ∧ ♦(b ∧ ♦(c ∧ ♦h))) ∧ ¬o –               planning are effcient and effective even for complex tasks.
+“deliver package a, then b, then c, and then return to home      Baselines: We test four baselines against our algorithm.
+h. And always avoid obstacles.” The next task is the “IF”        Our algorithm is LOF-VI, short for “Logical Options
+task (equivalent to the task shown in Fig. 1b): (♦(c ∧ ♦a) ∧     Framework with Value Iteration,” because it uses value it-
+¬can) ∨ (♦c ∧ ♦can) ∧ ¬o – “deliver package c, and             eration for high-level planning. LOF-QL uses Q-learning
+then a, unless a gets cancelled. And always avoid obstacles”.    instead (details are in App. C.3). Unlike LOF-VI, LOF-QL
+We call the third task the “OR” task, ♦((a ∨ b) ∧ ♦c) ∧          does not need explicit knowledge of TF , the FSA transition
+¬o – “deliver package a or b, then c, and always avoid          function. Greedy is a naive implementation of task satis-
+obstacles”. The “composite” task has elements of all three       faction; it uses its knowledge of the FSA to select the next
+of the previous tasks: (♦((a ∨ b) ∧ ♦(c ∧ ♦h)) ∧ ¬can) ∨        subgoal with the lowest cost to attain. This leaves it vul-
+(♦((a ∨ b) ∧ ♦h) ∧ ♦can) ∧ ¬o. “Deliver package a or b,         nerable to choosing suboptimal paths through the FSA, as
+and then c, unless c gets cancelled, and then return to home     shown in Fig. 2. Flat Options uses the options frame-
+h. And always avoid obstacles”. The tasks for the reacher        work with no knowledge of the FSA. Its SMDP formulation
+and pick-and-place environments are equivalent, except that      is not hierarchical – the state space and transition function
+there are no obstacles for the reacher and arm to avoid.         do not contain high-level states F or transition function TF .
+The sequential task is meant to show that planning is eff-       The last baseline is RM, short for Q-Learning for Reward
+cient and effective even for long-time horizon tasks. The        Machines (Icarte et al., 2018). Whereas LOF learn options
+“IF” task shows that the agent’s policy can respond to event     to accomplish subgoals, RM learns sub-policies for every
+propositions, such as being alerted that a delivery is can-      FSA state. App. C.4 discusses the differences between RM
+                                                                 and LOF in detail.
+   1
+     Code for the discrete domain experiments is
+available       at        https://github.com/braraki/            Implementation: For the delivery domain, options were
+logical-options-framework.                Code for the other     learned using Q-learning with an -greedy exploration pol-
+domains is available in the supplementary material.              icy. RM was learned using the Q-Learning for Reward Ma-
+                                                   The Logical Options Framework
+
+                c
+
+
+
+            a
+
+                                    b
+                            h
+            (a) Delivery domain.                      (b) Satisfaction performance.                 (c) Composability performance.
+
+                    b           r
+                            y
+
+
+
+                                        g
+
+
+
+
+            (d) Reacher domain.                       (e) Satisfaction performance.                  (f) Composability performance.
+
+
+
+
+                                b
+                        r
+        y
+                                    g
+
+
+      (g) Pick-and-place domain.                      (h) Satisfaction performance.                  (i) Composability performance.
+
+
+
+Figure 3. Performance on the satisfaction and composability experiments, averaged over all tasks. Note that LOF-VI composes new
+meta-policies in just 10-50 retraining steps. The frst row is the delivery domain, the second row is the reacher domain, and the third row
+is the pick-and-place domain. All results, including RM performance on the reacher and pick-and-place domains, are in App. C.6.
+
+
+chines (QRM) algorithm described in Icarte et al. (2018).              RM learns much more slowly than the other methods. This
+For the reacher and pick-and-place domains, options were               is because for RM, a reward is only given for reaching the
+learned by using proximal policy optimization (PPO) (Schul-            goal state, whereas in the LOF-based methods, options are
+man et al., 2017) to train goal-oriented policy and value              rewarded for reaching their subgoals, so during training
+functions, which were represented using 128 × 128 and                  LOF-based methods have a richer reward function than RM.
+128 × 128 × 128 fully connected neural networks, respec-               For the continuous domains, RM takes an order of magnitude
+tively. Deep-QRM was used to train RM. The implementa-                 more steps to train, so we left it out of the fgures for clarity
+tion details are discussed more fully in App. C.                       (see App. Figs. 14 and 16). However, in the continuous
+                                                                       domains, RM eventually achieves a higher return than the
+4.1. Results                                                           LOF-based methods. This is because for those domains,
+                                                                       we defne the subgoals to be spherical regions rather than
+Satisfaction: Results for the satisfaction experiments, aver-          single states, violating one of the conditions for optimality.
+aged over all four tasks, are shown in Figs. 3b, 3e, and 3h.           Therefore, for example, it is possible that the meta-policy
+(Results on all tasks are in App. C.6). As expected, Flat              does not take advantage of the dynamics of the arm to swing
+Options shows no ability to satisfy tasks, as it has no                through the subgoals more effciently. RM does not have this
+knowledge of the FSAs. Greedy trains as quickly as                     condition and learns a single policy that can take advantage
+LOF-VI and LOF-QL, but its returns plateau before the                  of inter-subgoal dynamics to learn a more optimal policy.
+others because it chooses suboptimal paths in the composite
+and OR tasks. The difference is small in the continuous                Composability: The composability experiments were done
+domains but still present. LOF-QL achieves as high a return            on the three composable baselines, LOF-VI, LOF-QL, and
+as LOF-VI, but it is less composable (discussed below).                Greedy. App. C.4 discusses why RM is not composable.
+                                                                       Flat Options is not composable because its formula-
+                                               The Logical Options Framework
+
+tion does not include the FSA T . Therefore it is completely     Mason et al. (2017) use logical constraints to guide explo-
+incapable of recognizing and adjusting to changes in the         ration, and while these approaches are also satisfying and
+FSA. The composability results are shown in Figs. 3c, 3f,        optimal, they are not composable as the agent is trained
+and 3i. Greedy requires no retraining steps to “learn” a         for a specifc set of rules. LOF is composable unlike the
+meta-policy on a new FSA – given its current FSA state,          above methods because it has a hierarchical action space
+it simply chooses the next available FSA state that has the      with high-level options. Once the options are learned, they
+lowest cost to achieve. However, its meta-policy may be          can be composed arbitrarily.
+arbitrarily suboptimal. LOF-QL learns optimal (or in the
+                                                                 Not Satisfying: Most hierarchical frameworks cannot sat-
+continuous case, close-to-optimal) policies, but it takes ∼50-
+                                                                 isfy tasks. Instead, they focus on using state and action
+250 retraining steps, versus ∼10-50 for LOF-VI. Therefore
+                                                                 abstractions to make learning more effcient (Dietterich,
+LOF-VI strikes a balance between Greedy and LOF-QL,
+                                                                 2000; Dayan & Hinton, 1993; Parr & Russell, 1998; Diuk
+requiring far fewer steps than LOF-QL to retrain, and
+                                                                 et al., 2008; Oh et al., 2019). The options framework (Sutton
+achieving better performance than Greedy.
+                                                                 et al., 1999) stands out because of its composability and its
+                                                                 guarantee of hierarchical optimality, which is why we based
+5. Related Work                                                  our work off of it. There is also a class of HRL algorithms
+                                                                 that builds on the idea of goal-oriented policies that can
+We distinguish our work from related work in HRL by its
+                                                                 navigate to nearby subgoals (Eysenbach et al., 2019; Ghosh
+possession of three desirable properties – composability,
+                                                                 et al., 2018; Faust et al., 2018). By sampling sequences
+satisfaction, and optimality. Most other works possess two
+                                                                 of subgoals and using a goal-oriented policy to navigate
+of these properties at the cost of the other.
+                                                                 between them, these algorithms can travel much longer dis-
+Not Composable: The previous work most similar to ours           tances than a policy can travel on its own. Although these
+is Icarte et al. (2018), which introduces a framework to         algorithms are “composable” in that they can navigate to
+solve tasks defned by automata called Reward Machines.           far-away goals without further training, they are not able to
+Their algorithm, Q-Learning for Reward Machines, learns a        solve tasks. Andreas et al. (2017) present an algorithm for
+sub-policy for every state of the automaton that achieves sat-   solving simple policy “sketches” which is also composable;
+isfaction and optimality. However, the learned sub-policies      however, sketches are considerably less expressive than au-
+have limited composability because they end up learning a        tomata and linear temporal logic, which we use. Unlike the
+specifc path through the automaton, and if the structure of      above methods, LOF is satisfying because it has a hierar-
+the automaton is changed, there is no guarantee that the sub-    chical state space with low-level MDP states and high-level
+policies will be able to satisfy the new automaton without       FSA states. Therefore LOF can satisfy tasks by learning
+re-training. By contrast, LOF learns a sub-policy for every      policies that reach the FSA goal state.
+subgoal, independent of the automaton, and therefore the
+                                                                 Not Optimal: In HRL, there are at least three types of opti-
+sub-policies can be arranged to satisfy arbitrary tasks. An-
+                                                                 mality – hierarchical, recursive, and overall. As defned in
+other similar work is Logical Value Iteration (LVI) (Araki
+                                                                 Dietterich (2000), the hierarchically optimal policy is the
+et al., 2019; 2020). LVI defnes a hierarchical MDP and
+                                                                 optimal policy given the constraints of the hierarchy, and
+value iteration equations that fnd satisfying and optimal
+                                                                 recursive optimality is when a policy is optimal given the
+policies; however, the algorithm is limited to discrete do-
+                                                                 policies of its children. For example, the options frame-
+mains and has limited composability. A number of HRL
+                                                                 work is hierarchically optimal, while MAXQ and abstract
+algorithms use reward shaping to guide the agent through
+                                                                 MDPs (Gopalan et al., 2017) are recursively optimal. Icarte
+the states of an automaton (Li et al., 2017; 2019; Cama-
+                                                                 et al. (2019) introduce a composable method for learning
+cho et al., 2019; Hasanbeig et al., 2018; Jothimurugan et al.,
+                                                                 Reward Machines, but their approach is focused on the rein-
+2019; Shah et al., 2020; Yuan et al., 2019; De Giacomo et al.,
+                                                                 forcement learning setting and is only guaranteed to learn
+2019). While these algorithms can guarantee satisfaction
+                                                                 hierarchically optimal policies. Leon et al. (2020) introduce
+and sometimes optimality, they cannot be composed be-
+                                                                 a neurosymbolic method for generating policies for satis-
+cause their policies are not hierarchical. Another approach
+                                                                 fying logical specifcations that can zero-shot generalize to
+is to use a symbolic planner to fnd a satisfying sequence
+                                                                 new specifcations. However, the “symbolic module” of
+of tasks and use an RL agent to learn and execute that se-
+                                                                 their network has no guarantees on being able to optimally
+quence of tasks (Gordon et al., 2019; Illanes et al., 2020;
+                                                                 satisfy specifcations. The method described in Kuo et al.
+Lyu et al., 2019). However, the meta-controllers of Gor-
+                                                                 (2020) is fully composable, but not optimal as it uses a re-
+don et al. (2019) and Lyu et al. (2019) are not composable
+                                                                 current neural network to generate a sequence of high-level
+as they are trained together with the low-level controllers.
+                                                                 actions and is therefore not guaranteed to fnd optimal poli-
+Although the work of Illanes et al. (2020) is amenable to
+                                                                 cies. The approach in Kuo et al. (2020) has some advantages
+transfer learning, it is not composable. Paxton et al. (2017);
+                                                                 in terms of scalability versus our approach, since they use
+                                                 The Logical Options Framework
+
+a single deep model to learn policies for all operators and         References
+propositions. However, for LOF, a single deep goal-oriented
+                                                                    Abel, D. and Winder, J. The expected-length model of
+policy could be trained to reach all subgoals, as is done in
+                                                                      options. In IJCAI, 2019.
+Leon et al. (2020). We therefore believe that LOF could be
+made equally scalable as Kuo et al. (2020), although this           Alpern, B. and Schneider, F. B. Recognizing safety and
+would be at the cost of losing most of the guarantees of the          liveness. Distributed computing, 2(3):117–126, 1987.
+framework. However, one guarantee that LOF would keep
+is the hierarchical optimality of the meta-policy, which is a       Andreas, J., Klein, D., and Levine, S. Modular multitask
+result of fnding the meta-policy using value iteration. We            reinforcement learning with policy sketches. In Interna-
+therefore believe that LOF should have better performance             tional Conference on Machine Learning, pp. 166–175,
+on unseen specifcations than Kuo et al. (2020), because               2017.
+Kuo et al. (2020) has no guarantees for satisfying specif-
+cations. LOF is hierarchically optimal because it fnds an           Araki, B., Vodrahalli, K., Leech, T., Vasile, C. I., Don-
+optimal meta-policy over the high-level options, and as we            ahue, M., and Rus, D. Learning to plan with logical
+state in the paper, there are also conditions under which the         automata. In Proceedings of Robotics: Science and Sys-
+overall policy is optimal.                                            tems, FreiburgimBreisgau, Germany, June 2019. doi:
+                                                                      10.15607/RSS.2019.XV.064.
+
+6. Discussion and Conclusion                                        Araki, B., Vodrahalli, K., Leech, T., Vasile, C. I., Donahue,
+                                                                      M., and Rus, D. Deep bayesian nonparametric learning
+In this work, we claim that LOF has a unique combination
+                                                                      of rules and plans from demonstrations with a learned
+of three properties: satisfaction, optimality, and composabil-
+                                                                      automaton prior. In AAAI, pp. 10026–10034, 2020.
+ity. We state and prove the conditions for satisfaction and
+optimality in Sec. 3.1. The experimental results confrm our         Baier, C. and Katoen, J. Principles of model checking. MIT
+claims while also pointing out some weaknesses. LOF-VI                Press, 2008. ISBN 978-0-262-02649-9.
+achieves optimal or near-optimal policies and trains an order
+of magnitude faster than the existing work most similar to          Bhatia, A., Kavraki, L. E., and Vardi, M. Y. Sampling-based
+it, RM. However, the optimality condition that each subgoal           motion planning with temporal goals. In 2010 IEEE
+be associated with one state cannot be met for continuous             International Conference on Robotics and Automation,
+domains, and therefore RM eventually outperforms LOF-VI.              pp. 2689–2696. IEEE, 2010.
+But even when optimality is not guaranteed, LOF-VI is hi-
+erarchically optimal, which is why it outperforms Greedy            Camacho, A., Icarte, R. T., Klassen, T. Q., Valenzano, R. A.,
+in the composite and OR tasks. Next, the composability                and McIlraith, S. A. Ltl and beyond: Formal languages
+experiments show that LOF-VI can compose its learned                  for reward function specifcation in reinforcement learn-
+options to perform new tasks in about 10-50 iterations on             ing. In IJCAI, volume 19, pp. 6065–6073, 2019.
+the benchmarks. Although Greedy requires no retraining              Clarke, E. M., Grumberg, O., and Peled, D. Model Checking.
+steps, 10-50 retraining iterations is a tiny fraction of the tens     MIT Press, 2001. ISBN 978-0-262-03270-4.
+of thousands of steps required to learn the original policy.
+Lastly, we have shown that LOF learns policies effciently,          Dayan, P. and Hinton, G. E. Feudal reinforcement learning.
+and that it can be used with a variety of domains and policy-         In Advances in neural information processing systems,
+learning algorithms.                                                  pp. 271–278, 1993.
+
+                                                                    De Giacomo, G., Iocchi, L., Favorito, M., and Patrizi, F.
+Acknowledgments                                                       Foundations for restraining bolts: Reinforcement learning
+This material is supported by the Toyota Research Insti-              with ltlf/ldlf restraining specifcations. In Proceedings of
+tute within the Toyota-CSAIL joint research center, NSF               the International Conference on Automated Planning and
+grant IIS-1723943, ONR N00014-18-1-2830, the Under                    Scheduling, volume 29, pp. 128–136, 2019.
+Secretary of Defense for Research and Engineering under
+Air Force Contract No. FA8702-15-D-0001, and SUTD                   Dietterich, T. G. Hierarchical reinforcement learning with
+Project Astralis. Any opinions, fndings, conclusions or               the maxq value function decomposition. Journal of artif-
+recommendations expressed in this material are those of               cial intelligence research, 13:227–303, 2000.
+the authors and do not necessarily refect the views of the          Diuk, C., Cohen, A., and Littman, M. L. An object-oriented
+funding agencies.                                                     representation for effcient reinforcement learning. In Pro-
+                                                                      ceedings of the 25th international conference on Machine
+                                                                      learning, pp. 240–247, 2008.
+                                               The Logical Options Framework
+
+Duret-Lutz, A., Lewkowicz, A., Fauchille, A., Michaud, T.,       Jothimurugan, K., Alur, R., and Bastani, O. A composable
+  Renault, E., and Xu, L. Spot 2.0 — a framework for LTL           specifcation language for reinforcement learning tasks.
+  and ω-automata manipulation. In Proceedings of the 14th          In Advances in Neural Information Processing Systems,
+  International Symposium on Automated Technology for              pp. 13041–13051, 2019.
+ Verifcation and Analysis (ATVA’16), volume 9938 of Lec-
+  ture Notes in Computer Science, pp. 122–129. Springer,         Kansou, B. K. A. Converting asubset of ltl formula to buchi
+  October 2016. doi: 10.1007/978-3-319-46520-3 8.                  automata. International Journal of Software Engineering
+                                                                   & Applications (IJSEA), 10(2), 2019.
+Eysenbach, B., Salakhutdinov, R. R., and Levine, S. Search
+  on the replay buffer: Bridging planning and reinforce-         Kuo, Y.-L., Katz, B., and Barbu, A. Encoding formulas as
+  ment learning. In Advances in Neural Information Pro-            deep networks: Reinforcement learning for zero-shot ex-
+  cessing Systems, pp. 15220–15231, 2019.                          ecution of ltl formulas. arXiv preprint arXiv:2006.01110,
+                                                                   2020.
+Faust, A., Oslund, K., Ramirez, O., Francis, A., Tapia, L.,
+  Fiser, M., and Davidson, J. Prm-rl: Long-range robotic         Leon, B. G., Shanahan, M., and Belardinelli, F. Systematic
+  navigation tasks by combining reinforcement learning             generalisation through task temporal logic and deep re-
+  and sampling-based planning. In 2018 IEEE Interna-               inforcement learning. arXiv preprint arXiv:2006.08767,
+  tional Conference on Robotics and Automation (ICRA),             2020.
+  pp. 5113–5120. IEEE, 2018.
+                                                                 Li, X., Vasile, C.-I., and Belta, C. Reinforcement learning
+Ghosh, D., Gupta, A., and Levine, S. Learning actionable
+                                                                   with temporal logic rewards. In 2017 IEEE/RSJ Inter-
+  representations with goal-conditioned policies. arXiv
+                                                                   national Conference on Intelligent Robots and Systems
+  preprint arXiv:1811.07819, 2018.
+                                                                   (IROS), pp. 3834–3839. IEEE, 2017.
+Gopalan, N., Littman, M. L., MacGlashan, J., Squire, S.,
+ Tellex, S., Winder, J., Wong, L. L., et al. Planning with       Li, X., Serlin, Z., Yang, G., and Belta, C. A formal meth-
+  abstract markov decision processes. In Twenty-Seventh            ods approach to interpretable reinforcement learning for
+ International Conference on Automated Planning and                robotic planning. Science Robotics, 4(37), 2019.
+ Scheduling, 2017.
+                                                                 Lyu, D., Yang, F., Liu, B., and Gustafson, S. Sdrl: inter-
+Gordon, D., Fox, D., and Farhadi, A. What should i do now?         pretable and data-effcient deep reinforcement learning
+  marrying reinforcement learning and symbolic planning.           leveraging symbolic planning. In Proceedings of the
+  arXiv preprint arXiv:1901.01492, 2019.                           AAAI Conference on Artifcial Intelligence, volume 33,
+                                                                   pp. 2970–2977, 2019.
+Hasanbeig, M., Abate, A., and Kroening, D. Logically-
+  constrained reinforcement learning. arXiv preprint             Mason, G. R., Calinescu, R. C., Kudenko, D., and Banks,
+  arXiv:1801.08099, 2018.                                         A. Assured reinforcement learning with formally verifed
+                                                                  abstract policies. In 9th International Conference on
+Icarte, R. T., Klassen, T., Valenzano, R., and McIlraith, S.
+                                                                  Agents and Artifcial Intelligence (ICAART). York, 2017.
+  Using reward machines for high-level task specifcation
+  and decomposition in reinforcement learning. In Interna-       Oh, Y., Patel, R., Nguyen, T., Huang, B., Pavlick, E.,
+  tional Conference on Machine Learning, pp. 2107–2116,            and Tellex, S. Planning with state abstractions for
+  2018.                                                            non-markovian task specifcations. arXiv preprint
+Icarte, R. T., Waldie, E., Klassen, T., Valenzano, R., Castro,     arXiv:1905.12096, 2019.
+   M., and McIlraith, S. Learning reward machines for
+                                                                 Parr, R. and Russell, S. J. Reinforcement learning with hier-
+   partially observable reinforcement learning. In Advances
+                                                                   archies of machines. In Advances in neural information
+   in Neural Information Processing Systems, pp. 15523–
+                                                                   processing systems, pp. 1043–1049, 1998.
+  15534, 2019.
+Illanes, L., Yan, X., Icarte, R. T., and McIlraith, S. A. Sym-   Paxton, C., Raman, V., Hager, G. D., and Kobilarov, M.
+   bolic plans as high-level instructions for reinforcement        Combining neural networks and tree search for task and
+   learning. In Proceedings of the International Conference        motion planning in challenging environments. In 2017
+   on Automated Planning and Scheduling, volume 30, pp.            IEEE/RSJ International Conference on Intelligent Robots
+   540–550, 2020.                                                  and Systems (IROS), pp. 6059–6066. IEEE, 2017.
+
+James, S., Freese, M., and Davison, A. J. Pyrep: Bring-          Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and
+  ing v-rep to deep robot learning. arXiv preprint                 Klimov, O. Proximal policy optimization algorithms.
+  arXiv:1906.11176, 2019.                                          arXiv preprint arXiv:1707.06347, 2017.
+                                             The Logical Options Framework
+
+Shah, A., Li, S., and Shah, J. Planning with uncertain
+  specifcations (puns). IEEE Robotics and Automation
+  Letters, 5(2):3414–3421, 2020.
+Sutton, R. S., Precup, D., and Singh, S. Between mdps
+  and semi-mdps: A framework for temporal abstraction in
+  reinforcement learning. Artifcial intelligence, 112(1-2):
+  181–211, 1999.
+
+Yuan, L. Z., Hasanbeig, M., Abate, A., and Kroening, D.
+  Modular deep reinforcement learning with temporal logic
+  specifcations. arXiv preprint arXiv:1909.11591, 2019.
+Zhang, S. and Sridharan, M. A survey of knowledge-based
+  sequential decision making under uncertainty. arXiv
+  preprint arXiv:2008.08548, 2020.
+

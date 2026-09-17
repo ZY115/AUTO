@@ -1,0 +1,26 @@
+{
+  "runner": "src/run_p3b.py",
+  "domain": "OfficeWorld-derived protocol",
+  "tasks": 15,
+  "arms": [
+    "arrival",
+    "novel",
+    "truestate_cache"
+  ],
+  "levels": [
+    0,
+    4,
+    8,
+    16,
+    32,
+    64,
+    160
+  ],
+  "seeds": 6,
+  "seed0": 10400,
+  "budget": 400000,
+  "runs": 1890,
+  "source_sha256": "5b8d454d7a9afce8f84fc597102aa4abdc82e9d8ca9e536ca73d6da17f887061",
+  "data_sha256": "6e4545066a65818b3f81f07e5b60add5b5851e94a403b20f0a7647050a2b8c0e",
+  "written": "2026-09-11"
+}

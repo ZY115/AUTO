@@ -1,0 +1,1695 @@
+                                                  Joint Learning of Reward Machines and Policies in
+                                                    Environments with Partially Known Semantics
+                                                Christos K. Verginis, Cevahir Koprulu, Sandeep Chinchali, Ufuk Topcu
+
+
+                                                                                         Abstract
+                                                 We study the problem of reinforcement learning for a task encoded by a reward machine.
+                                             The task is defined over a set of properties in the environment, called atomic propositions, and
+
+
+
+
+arXiv:2204.11833v2 [cs.LG] 5 Feb 2023
+                                             represented by Boolean variables. One unrealistic assumption commonly used in the literature is
+                                             that the truth values of these propositions are accurately known. In real situations, however, these
+                                             truth values are uncertain since they come from sensors that suffer from imperfections. At the same
+                                             time, reward machines can be difficult to model explicitly, especially when they encode complicated
+                                             tasks. We develop a reinforcement-learning algorithm that infers a reward machine that encodes
+                                             the underlying task while learning how to execute it, despite the uncertainties of the propositions’
+                                             truth values. In order to address such uncertainties, the algorithm maintains a probabilistic
+                                             estimate about the truth value of the atomic propositions; it updates this estimate according
+                                             to new sensory measurements that arrive from exploration of the environment. Additionally, the
+                                             algorithm maintains a hypothesis reward machine, which acts as an estimate of the reward machine
+                                             that encodes the task to be learned. As the agent explores the environment, the algorithm updates
+                                             the hypothesis reward machine according to the obtained rewards and the estimate of the atomic
+                                             propositions’ truth value. Finally, the algorithm uses a Q-learning procedure for the states of the
+                                             hypothesis reward machine to determine an optimal policy that accomplishes the task. We prove
+                                             that the algorithm successfully infers the reward machine and asymptotically learns a policy that
+                                             accomplishes the respective task.
+
+
+                                        1    Introduction
+                                        Reinforcement learning (RL) studies the problem of learning an optimal behavior for agents with
+                                        unknown dynamics in potentially unknown environments. When the task assigned to the agent admits
+                                        a certain form of compositionality, such as decomposition to temporally dependent sub-tasks, a variety
+                                        of methods incorporate high-level knowledge that can help the agent explore the environment more
+                                        efficiently [1]. This high-level knowledge is usually expressed through abstractions of the environment
+                                        and sub-task sequences [2, 3, 4] or in linear temporal logic [5, 6]. Intuitively, such methodologies
+                                        inform the agent about the compositionality of the task, including its decomposition to sub-tasks as
+                                        well as the sub-task execution sequences that lead to its completion. Consequently, the agent learns
+                                        sub-task policies to execute such sequences and accomplish the overall task. Recently, the authors
+                                        in [7] proposed the concept of reward machines in order to provide high-level information to the
+                                        agent in the form of rewards. Reward machines are finite-state structures that encode a possibly non-
+                                        Markovian reward function. They decompose a task into several temporally related subtasks, such
+                                        as “get coffee and bring it to the office without encountering obstacles”. Reward machines allow the
+                                        composition of such subtasks in flexible ways, including concatenations, loops, and conditional rules,
+                                        providing the agent access to high-level temporal relationships among the subtasks. These subtasks
+                                        are defined over a set of properties in the environment, called atomic propositions, and represented
+                                        by Boolean variables, such as “office” and “obstacle” in the aforementioned example. Intuitively, as
+                                        the agent navigates in the environment, it transits between the states within a reward machine; such
+                                        transitions are triggered by the truth values of the atomic propositions. After every such transition,
+                                        the reward machine outputs the reward the agent should obtain according to the encoded reward
+                                        function. Furthermore, [7] develops a q-learning method that learns the optimal policy associated
+                                        with the reward function that is encoded by the reward machine.
+                                             In many practical situations, the reward machines encode complex temporal relationships among
+                                        the subtasks and are hence too difficulty to construct. Therefore, the need emerges for the learning
+
+
+                                                                                              1
+agent to learn how to accomplish the underlying task without having a priori access to the respective
+reward machine. The work [8] develops an algorithm that infers both the reward machine and an
+optimal RL policy from the trajectories of the system.
+    The procedure of inferring and using a reward machine is tightly connected to the values of the
+atomic propositions; such values trigger the reward machine’s transitions, which output the reward the
+agent should obtain. In related literature, there are two main methods to encode the learning agent’s
+access to the truth values of the atomic propositions. First, the agent has access to a so-called labelling
+function, a map that provides which atomic propositions are true in which areas of the environment,
+e.g., which room of an indoor environment has an office. Second, the agent accurately detects the
+truth values of the atomic propositions from sensors as it navigates in the environment.
+    The aforementioned methods rely on assumptions that are unrealistic in practical scenarios. Firstly,
+many situations involve agents operating in a priori unknown environments, and hence accurate knowl-
+edge of a labelling function cannot be obtained a priori. Secondly, autonomous agents are endowed
+with sensors that naturally suffer from imperfections, such as misclassifications or missed object de-
+tections. Consequently, the truth values of the atomic propositions are uncertain. When the reward
+machine that encodes the task is a priori unknown, uncertainties in such values complicate significantly
+the RL problem since they interfere with the estimation of the reward machine and, consequently, the
+learning of a suitable policy. Therefore, it is necessary to develop RL algorithms that are robust to
+such uncertainties.
+    In this paper, we investigate an RL problem for a task encoded by a reward machine over a set
+of atomic propositions. The reward machine and the labelling function associated with the atomic
+propositions are a priori unknown. The agent obtains the truth values of the atomic propositions
+via measurements from sensors that suffer from imperfections, leading to uncertainties in the atomic
+propositions’ truth values. Our main contribution lies in the development of an RL algorithm that
+learns a policy that achieves the given task despite the a priori unknown reward machine and the
+atomic proposition uncertainties. In order to account for such uncertainties, the algorithm holds a
+probabilistic belief over the truth values of the atomic propositions and it updates this belief according
+to new sensory measurements that arrive from the exploration of the environment. Furthermore, the
+algorithm maintains a so-called hypothesis reward machine to estimate the unknown reward machine
+that encodes the task. It uses the rewards the agent obtains as it explores the environment and the
+aforementioned belief on the atomic propositions to update this hypothesis reward machine. Finally,
+the algorithm deploys a q-learning procedure that is based on the hypothesis reward machine and the
+probabilistic belief to learn an optimal policy that accomplishes the underlying task. An illustrative
+diagram of the proposed algorithm is depicted in Fig. 1.
+    We establish theoretical guarantees on the algorithm’s convergence to a policy that accomplishes
+the underlying task. Our guarantees rely on the following sufficient conditions. First, the belief updates
+lead to better estimation of the truth values of the atomic propositions. That is, there exists a finite
+time instant after which the probability that the estimated propositions’ values match the actual ones
+is more than 0.5. Second, the learning agent explores the environment sufficiently well in each episode
+of the proposed RL algorithm. More specifically, the length of each episode is larger than a pre-
+defined constant associated with the size of the operating environment and of the reward machine that
+encodes the task to be accomplished. Based on the aforementioned assumptions, we prove that the
+proposed algorithm 1) asymptotically infers a reward machine that is equivalent to the one encoding
+the underlying task, and 2) asymptotically learns a policy that accomplishes this task.
+    Finally, we carry out experiments comparing the proposed algorithm with a baseline version that
+does not update the beliefs of the propositions’ truth values as well as with nominal q-learning and
+double deep q-network (DDQN) algorithms. The experiments show that the proposed algorithm
+outperforms the baseline version and the nominal algorithm in terms of convergence. The experiments
+further show the robustness of the proposed algorithm to inaccurate sensor measurements.
+
+
+2    Related Work
+Previous RL works on providing higher-level structure and knowledge about the reward function focus
+mostly on abstractions and hierarchical RL; in such cases, a meta-controller decides which subtasks
+to perform, and a controller decides which actions to take within a subtask (e.g., [9, 3, 10]). Other
+works use temporal logic languages to express a specification, and then generate the corresponding
+
+
+                                                    2
+Figure 1: Overview of the proposed reinforcement-learning algorithm, consisting of perception updates,
+inference of the reward machine, and q-learning.
+
+
+reward functions, typically using deterministic automata (DA) [11, 5, 12, 6, 13, 14, 15, 16, 17, 18].
+Inspired by [7], we use in this work the concept of reward machines, which encode more compactly
+and expressively high-level information on the reward function of the agent. In particular and unlike
+DA, reward machines offer the ability of assigning separate state-action reward functions to each of
+their states; the learning agent obtains rewards depending on the transitions of the reward machine
+and hence each transition can be viewed as a separate sub-task. Therefore, the reward machine gives
+a certain structure to the agent in the sense that it informs it about the decomposition of the task
+into sub-tasks and the sequence these sub-tasks must be executed. Consequently, the agent learns
+how and in what sequence to execute the different sub-tasks towards the completion of the overall
+task. Additionally, unlike the works in the related literature, we consider that the reward machine
+that encodes the task at hand is a priori unknown.
+    There exists a large variety of works dealing with perception uncertainty [19, 20, 21, 22, 23, 24, 25,
+26, 27, 28]. However, most of these works consider the planning problem, which consists of computing
+an optimal policy by explicitly employing the underlying agent model. Furthermore, the considered
+uncertainty usually arises from probabilistic dynamics, which is resolved either by active-perception
+procedures, belief-state propagation, or analysis with partially observable Markov decision processes
+(POMDPs). Besides, the works that consider high-level reward structure (like temporal logic [19, 20,
+22, 24]), assume full availability of the respective reward models, unlike the problem setting considered
+in this paper.
+    Several recent works consider tasks encoded by Non-Markovian reward functions that are a priori
+unknown, using both automata [29, 30, 31, 32] as well as reward machines [33, 34, 8]. In such works,
+the agents infers the reward function from the executed trajectories in the environment. Similarly, [35]
+develops an algorithm that infers probabilistic reward machines. The aforementioned works, however,
+do not consider uncertainty in the truth values of the atomic propositions; [29] and [33] assume partial
+environment state observability by employing POMDP models, while considering the truth values of
+atomic propositions in the environment known. In contrast, in this work we consider uncertainty in
+the semantic representation of the environment, i.e., the truth value of the environment properties
+that define the agent’s task is a priori unknown.
+
+
+
+
+                                                    3
+3         Problem Formulation
+This section formulates the considered problem. We first describe the model of the learning agent and
+the environment, the reward machine that encodes the task to be accomplished, and the observation
+model of the sensor the agent uses to detect the values of atomic propositions.
+
+3.1         Agent Model
+We model the interaction between the agent and the environment by a Markov decision process (MDP)
+[36, 37], formally defined below.
+Definition 1. A labelled MDP (l-MDP) is a tuple M = (S, sI , A, T , R, AP, LG , L̂, γ) consisting of the
+following: S is a finite state space, resembling the operating environment; sI ∈ S is an initial state1 ;
+A is a finite set of actions; T : S × A × S → [0, 1] is a probabilistic transition function, modelling
+the agent dynamics in the environment; R : S ∗ × A × S → R is a reward function, specifying payoffs
+to the agent; γ ∈ [0, 1) is a discount factor; AP is a finite set of Boolean atomic propositions, each
+one taking values in {True, False}; LG : S → 2AP is the ground-truth labelling function, assigning to
+each state s ∈ S the atomic propositions that are true in that state; L̂ : S → 2AP is an estimate of
+the ground-truth labelling function LG . We define the size of M, denoted as |M|, to be |S| (i.e., the
+cardinality of the set S).
+
+     The atomic propositions AP are Boolean-valued properties of the environment; we denote by
+s |= p if an atomic proposition p ∈ AP is true at state s ∈ S. The ground-truth labelling function LG
+provides which atomic propositions are true in the states of the environment, i.e., LG (s) = P ⊆ AP is
+equivalent to s |= p, for all p ∈ P . We consider the setting where LG is unknown to the agent, which
+detects the truth values of AP through sensor units such as cameras or range sensors. Since such
+sensors suffer from imperfections (e.g., noise), the agent maintains a time-varying probabilistic belief
+L̂i : S × 2AP → [0, 1] about the truth values of AP, where i denotes a time index. More specifically,
+for a state s ∈ S and a subset of atomic propositions T P ⊆ AP, L̂i (s, P ) represents the probability of
+the event that P is true at s, i.e., L̂i (s, P ) = Pr( p∈P s |= p). Notice that at each time index i and
+                                        P
+for every state s ∈ S, it holds that P ⊂AP L̂i (s, P ) = 1. The prior belief of the agent might be an
+uninformative prior distribution. We assume that the truth values of the propositions are mutually
+independent in each state, i.e.,
+                              \            Y
+                          Pr        s |= P =         P r(s |= p), ∀s ∈ S, P ⊂ AP
+                                        p∈P                p∈P
+
+and also between every pair,
+
+                       P r s |= P ∧ s0 |= P 0 = P r(s |= P )P r(s0 |= P 0 ), ∀s, s0 ∈ S, P, P 0 ⊂ AP
+                                             
+
+
+   The agent’s belief L̂i , for some time index i ≥ 0, determines the agent’s inference of the environment
+configuration, and hence the estimate L̂ of the labelling function. More specifically, we define L̂ :
+(S × 2AP → [0, 1]) × S → 2AP , with
+
+                                            L̂(L̂i , s) = {p ∈ AP : L̂i (s, p) ≥ 0.5},                 (1)
+
+i.e, the most probable outcomes. The following example illustrates the relation between LG and L̂.
+Example 1. Let the 10-state office workspace be shown in Fig. 2. The set of atomic propositions
+is AP = {c,o,X}, corresponding to “coffee”, “office”, and “obstacle”, respectively. The ground-truth
+labelling function, shown at the top of Fig. 2, is defined as LG (s12 ) = {c}, LG (s22 ) = LG (s23 ) =
+{X}, LG (s24 ) = {o}, and ∅ in the rest of the states. Imperfect sensory measurements might lead to
+a distribution L̂ and an estimate L̂(L̂, ·) as shown at the bottom of Fig. 2, i.e., L̂(s12 ) = {c,X},
+L̂(s22 ) = {c}, L̂(s14 ) = L̂(s24 ) = {o}, L̂(s23 ) = {o, X}, and ∅ in the rest of the states.
+    1s
+         I can also be a distribution of initial states.
+
+
+
+
+                                                                 4
+Figure 2: Top: A workspace with 10 states sij illustrating the ground-truth labelling function LG :
+S → 2{c,o,X} , were {c,o,X} stand for {“coffee”, “office”, “obstacle”}, respectively; Bottom: Perception
+uncertainty leads to the estimate L̂(L̂, s) : S → 2{c,o,X} , according to which the truth values of several
+properties are incorrect (e.g. X in s12 or the absence of X in s22 ).
+
+
+    A policy is a function that maps states in S to a probability distribution over actions in A. At
+state s ∈ S, an agent, using policy π, picks an action a with probability π(s, a), and the new state s0
+is chosen with probability T (s, a, s0 ), defined in Def. 1. A policy π and the initial state sI together
+determine a stochastic process; we write S0 A0 S1 ...for the random trajectory of states and actions.
+    A trajectory is a realization of the agent’s stochastic process S0 A0 S1 : a sequence of states and
+actions s0 a0 s1 . . . sk ak sk+1 with s0 = sI . Its corresponding label sequence is `0 `1 . . . `k with `j =
+LG (sj ), for all j ≤ k. Similarly, the reward sequence is r0 r1 . . . rk , where rj = R(s0 . . . sj aj sj+1 ), for
+                                                                              Pk
+all j ≤ k. A trajectory s0 a0 s1 . . . sk ak sk+1 achieves a reward j=0 γ j R(s0 . . . sj aj sj+1 ), where γ is
+the discount factor defined in Def. 1. Note that the definition of the reward function assumes that the
+reward is a function of the whole trajectory; this allows the reward function to be non-Markovian [7].
+Given a trajectory s0 a0 s1 . . . sk+1 and a belief L̂i , we naturally define then the observed label sequence
+by `ˆ0 `ˆ1 . . . `ˆk , with `ˆj = L̂(L̂i , sj ) for all j ≤ k and some i ≥ 0.
+Example 2 (Continued). Let the 10-state office workspace be shown in Fig. 2. Assume that the
+agent receives award 1 if it brings coffee to the office without encountering states with obstacles, and
+zero otherwise. Let us now consider a state sequence s11 s12 s13 s14 s24 of a trajectory. According to the
+ground-truth labelling function (see top of Fig. 2), such a trajectory would would produce the label and
+reward sequence (∅, 0)(c, 0)(∅, 0)(∅, 0)(o, 1). However, the observed label and reward sequence, based on
+the estimate L̂ (see bottom of Fig. 2), is (∅, 0) ((c,X), 0) (∅, 0)(o, 0)(o, 1).
+
+3.2     Reward Machines
+Encoding a (non-Markovian) reward in a type of finite state-machine is achieved by reward machines,
+introduced in [7] and formally defined below.
+Definition 2. A reward machine is a tuple A = (V, vI , 2AP , R, δ, σ) that consists of the following: V
+is a finite set of states; vI ∈ V is an initial state; R is an input alphabet; δ : V × 2AP → V is a
+deterministic transition function; σ : V × 2AP → R is an output function. We define the size of A,
+denoted by |A|, to be |V | (i.e., the cardinality of the set V ).
+      The run of a reward machine A on a sequence of labels `0 . . . `k ∈ (2AP )∗ is a sequence v0 (`0 , r0 )v1 (`1 , v1 )
+. . . vk (`k , vk ) of states and label-reward pairs such that v0 = vI and for all j ∈ {0, . . . , k}, we have
+
+
+                                                          5
+                                                     (¬c ∧ ¬X, 0)
+
+
+                                                            v0
+
+                                                                       (X, 0)
+                                                   (c ∧ ¬X, 0)
+                                                      (¬o ∧ X, 0)
+                                       v1                                       v2
+
+                                                   (o, 1)
+                                 (¬o ∧ ¬X, 0)                              (True, 0)
+
+
+                                                            v3
+
+
+                                                       (True, 0)
+
+                             Figure 3: Reward machine for the task of Fig. 2.
+
+
+δ(vj , `j ) = vj+1 and σ(vj , `j ) = rj . We write A(`0 . . . `k ) = r0 . . . rk to connect the input label sequence
+to the sequence of rewards produced by the reward machine A. We say that a reward machine A en-
+codes the reward function R of an l-MDP on the ground truth if, for every trajectory s0 a0 . . . sk ak sk+1
+and the corresponding label sequence `0 . . . `k , the sequence of rewards equals A(`0 . . . `k ). Moreover,
+given a fixed i ≥ 0, we say that a reward machine A encodes the reward function R on L̂i if for every
+trajectory s0 a0 . . . sk ak sk+1 and the corresponding observed label sequence `ˆ0 . . . `ˆk the sequence of
+rewards equals A(`ˆ0 . . . `ˆk ). Note, however, that there might not exist a reward machine that encodes
+the reward function on L̂i , as the next example shows.
+Example 3 (Continued). Let the 10-state office workspace be shown in Fig. 2. Assume that the agent
+receives award 1 if it brings coffee to the office without encountering states with obstacles, and zero
+otherwise. Such a task is encoded by the reward machine shown in Fig. 3. Let also the state sequence
+of a given trajectory be s11 s12 s13 s14 s24 . As stated before, the trajectory produces, via the ground-truth
+labelling function, the label and reward sequence (∅, 0)(c, 0)(∅, 0)(∅, 0) (o, 1). Such a label sequence
+produces the run of the reward machine
+
+                                   v0 (∅, 0)v0 (c, 0)v1 (∅, 0)v1 (∅, 0)v1 (o, 1)v3 .
+
+   The observed label and reward sequence, based on the estimate L̂, is (∅, 0) ((c,X), 0) (∅, 0)(o, 0)(o, 1),
+which produces the reward-machine run
+
+                                 v0 (∅, 0)v0 ((c,X), 0)v2 (∅, 0)v2 (o, 0)v2 (o, 0)v2 ,
+
+which clearly does not comply with the observed reward sequence. Hence, we conclude that the reward
+machine does not encode the reward function on L̂. In fact, note that we cannot construct a reward
+machine that encodes the reward function on L̂. The actual reward function of bringing coffee from
+s12 to the office in s24 cannot be expressed via the set AP with this specific L̂, because of the ambiguity
+in the states satisfying “ o” and “ c”; a single accepting trajectory does not correspond to a unique
+observed label sequence.
+
+3.3     Observation Model
+The probabilistic belief is updated based on an observation model O. More specifically, at each time
+step, the agent’s perception module processes a set of sensory measurements regarding the atomic
+propositions AP. In the Bayesian framework, the observation model is used for the update of the
+agent’s belief, as specified in the following definition.
+
+
+                                                            6
+Definition 3. Let Z(s1 , s2 , p) ∈ {True, False} denote the perception output of the agent, when the
+agent is at state s1 , for the atomic proposition p ∈ AP at s2 . The joint observation model of the
+agent is O : S × S × AP × {True, False} → [0, 1], where O(s1 , s2 , p, b) represents the probability that
+Z(s1 , s2 , p) = True if the truth value of p is identical to b.
+                                                                                                
+   More specifically, the joint observation describes the likelihoods O(s1 , s2 , p, True) = P r Z(s1 , s2 , p) =
+                                                                             
+True s2 |= p and O(s1 , s2 , p, False) = P r Z(s1 , s2 , p) = True s2 6|= p . An accurate observation
+model is the one for which O(s1 , s2 , p, b) = 1 for b = True and O(s1 , s2 , p, b) = 0 for b = False. In the
+Bayesian framework, the observation model is used for the update of the agent’s belief. Nevertheless,
+in the absence of such observation model, one can perform the update in a frequentist way.
+
+3.4    Problem Statement
+We consider an l-MDP-modeled autonomous agent, whose task is encoded by a reward machine that
+is unknown to the agent. The ground-truth labelling function LG , providing the truth values of the
+atomic propositions, is also unknown to the agent. The formal definition of the problem statement is
+as follows.
+
+Problem 1. Let an l-MDP agent model be M = (S, sI , A, T , R, AP, LG , L̂, γ) with unknown ground-
+truth labelling function LG and transition function T . Let also an unknown reward machine that
+encodes the reward function R on the ground truth be A, representing    Pa∞ task to be accomplished.
+Develop an algorithm that learns a policy π that maximizes Z(sI ) = Eπ [ i=0 γ i R(S0 , A0 . . . Si+1 )].
+
+
+
+Remark 1. We note that the problem of unknown ground-truth labelling function LG and uncertain
+sensor observations does not apply only to cases with reward machines, but also to more general RL
+frameworks that employ labelling-function mappings to identify properties of the environment (e.g.,
+[7, 42, 31, 35]). However, reward machines [7] constitute state-of-the-art tools when it comes to
+symbolic RL with task decomposition. Additionally, reward machines naturally depend on the atomic
+propositions of the environment and hence on the respective labelling function. Therefore, inference
+of an unknown reward machine poses a unique challenge when such a labelling function is uncertain.
+For the aforementioned reasons, we focus on the problem of RL with unknown reward machines. Nev-
+ertheless, we illustrate how the proposed algorithm, given in the next section, applies to more general
+RL frameworks.
+
+
+
+
+4     Joint Inference of Reward machines and Policies for RL
+    The main results of the paper consist of the development of a methodology that accommodates
+the uncertainty in the ground-truth labelling function LG and the environmental observations. One
+can incorporate such a methodology to standard RL algorithms to account for the aforementioned
+uncertainty. For the sake of presentation, we illustrate the incorporation of our methodology to the
+JIRP algorithm [8], which considers the joint inference of reward machines and policies with perfect
+knowledge of the environment semantics. Consequently, we provide in this section an overview of JIRP,
+before proceeding to the main results of the paper.
+    The JIRP algorithm [8] (see Algorithm 1) aims at learning the optimal policy for maximizing
+Z(sI ) by maintaining a hypothesis reward machine (RM) H (initialized with a set of states V in line
+1). Its main component is the QRM episode() (shown in Algorithm 2), originally proposed in [7] for
+accurately known reward machines. The QRM episode outputs a set (λ, ρ), called trace, and a set Q
+of q-functions q v (initialized in line 2), one for each state v ∈ V of the hypothesis reward machine;
+recall that a reward machine decomposes the overall task into sub-tasks, one for each one of its states.
+The current state v of the hypothesis reward machine guides the exploration by determining which
+q-function is used to choose the next action (line 3 of Alg. 2). However, in each single exploration step,
+the algorithm updates the q-functions that correspond to all reward-machine states (lines 7 and 11 of
+
+
+                                                      7
+Algorithm 1 JIRP Algorithm
+ 1: H ← Initialize(V )
+ 2: Q = {q v |v ∈ V } ← Initialize()
+ 3: X ← ∅
+ 4: for episode n = 1, 2, . . . do
+ 5:    (λ, ρ, Q) ← QRM episode(H, Q, L)
+ 6:    if H(λ) 6= ρ then            // The trace (λ, ρ) is inconsistent with H
+ 7:        Add(X, (λ, ρ))          // Append the set X with the trace (λ, ρ)
+ 8:        H ← Infer(X)            // Infer a new reward machine from X
+ 9:       Q ← Initialize()
+10:    end if
+11: end for
+
+
+Algorithm 2 QRM episode(H, Q, L)
+Input: A reward machine H = (V, vI , 2P , R, δ, σ), a set of q-functions Q = {q v |v ∈ V }, a labelling
+    function L.
+ 1: s ← InitialState(); v ← vI , λ ← []; ρ ← []
+ 2: for 0 ≤ t < eplength do
+ 3:    a ← GetEpsilonGreedyAction(q v , s)
+ 4:    s0 ← ExecuteAction(s, a)          // Transition in l-MDP M based on T (s0 , a, s)
+         0                    0
+ 5:    v ← δ(v, L(s, a, s ))              // Transition in H
+ 6:    r ← ObserveReward()
+ 7:    q v (s, a) ← Update(r, s0 )        // Update of q-function for state v of H
+ 8:    for v̂ ∈ V \v do
+ 9:         v̂ 0 ← δ(v̂, L(s, a, s0 ))     // Transition in H
+10:         r̂ ← σ(v̂, L(s, a, s0 ))       // Reward calculation from H
+11:         q v̂ (s, a) ← Update(r̂, s0 ) // Update of q-function for state v̂ of H
+12:    end for
+13:    Append(λ, L(s, a, s0 )); Append(ρ, r)
+14:    s ← s0 ; v ← v 0
+15: end for
+16: return (λ, ρ, Q)
+
+
+
+Alg. 2). Furthermore, the algorithm uses the sets λ and ρ to collect the labelling and reward sequences
+L(s, a, s0 ) and r, respectively, from the agent trajectory (line 13 of Alg. 2)). Note that the returned
+rewards in ρ are observed (line 6 of Alg. 2), since the reward machine encoding the actual reward
+function is not known. Instead, JIRP operates with a hypothesis reward machine, which is updated
+using the traces of QRM episode(). In particular, the episodes of QRM are used to collect traces and
+update q-functions. As long as the traces are consistent with the current hypothesis reward machine,
+QRM explores more of the environment using the reward machine to guide the search. However, if a
+trace (λ, ρ) is detected that is inconsistent with the hypothesis reward machine (i.e., H(λ) 6= ρ, line 6
+of Alg. 1), JIRP stores it in a set X (line 7 of Alg. 1) - the trace (λ, ρ) is called a counterexample
+and the set X a sample. Once the sample is updated, the algorithm re-learns a new hypothesis reward
+machine (line 8 of Alg. 1) and proceeds. More information can be found in [8, 7]. We further detail the
+various functions used in Alg. 2: The function GetEpsilonGreedyAction(q v , s) chooses an action based
+on an εa -greedy method, i.e., it chooses the action argmaxa∈A (q v (s, a)) with probability 1 − εa and a
+random action a ∈ A with probability εa for a small positive constant εa . The function Update(r, s0 )
+updates q v (s, a) based on
+                                                                                   
+                          v           v                         v 0 0        v
+                         q (s, a) ← q (s, a) + αlr r + γ max
+                                                          0
+                                                               q (s , a ) − q (s, a)
+                                                         a ∈A
+
+for a constant αlr representing the learning rate.
+
+
+
+
+                                                     8
+5     Joint Learning of Reward Machines and Policies with Par-
+      tially Known Semantics
+     This section gives the main results of this paper, which is joint perception and inference of policies
+and reward machines. In particular, we extend the JIRP algorithm, presented in Section 4, to take
+into account the uncertainty in the labelling function. More specifically, our algorithm tries to infer
+the reward machine A that encodes the reward function on the most probable outcomes, L̂(L̂j , ·), i.e.,
+A(`ˆ0 , . . . , `ˆk ) = r0 . . . rk for some j ≥ 0. At the same time, the agent’s belief is updated at every time
+step based on the observation model of Definition 3. Similarly to [19], if the agent’s knowledge about
+the environment has changed significantly, the agent then updates its belief L̂ and aims to infer a new
+reward machine.
+     Algorithms 3 and 4 illustrate the aforementioned procedure. The algorithms are similar to 1 and
+2, respectively, with three main differences: first, Alg. 3 aims to approximate a reward machine A
+that encodes the reward functions on the “current” belief L̂(L̂h , ·); second, Alg. 4 updates this belief
+using the observation obtained by the agent in its state (line 14 of Alg. 4); third, Alg. 3 updates the
+belief L̂(L̂h , ·), and consequently the reward machine H, if it is different enough from what is dictated
+by the obtained observations (lines 13-18 of Alg. 3). We present next the reasoning of Alg. 3 and 4 in
+more detail.
+     Algorithm 3 uses a hypothesis reward machine H (line 1 of Alg. 3) to guide the learning process.
+Similarly to [8], it runs multiple QRM episodes to update the Q functions, and uses the collected
+traces to update the counterexamples in the set X and H (lines 7-12 of Alg. 3). Nevertheless, in our
+case, H aims to approximate the reward machine A that encodes the reward function on the most
+probable outcomes, L̂(L̂h , ·), since that is the available information to the agent; L̂h is the “current”
+belief that the agent uses in its policy learning and reward-machine inference. This is illustrated via
+a modified version of the QRM episode algorithm (QRM episode mod invoked in line 7 of Alg. 3),
+shown in Algorithm 4. In particular, QRM episode mod uses the probabilistic belief L̂h in order to
+navigate in the hypothesis reward machine H (lines 5, 9 of Alg. 4). Moreover, L̂h is used to update the
+counterexample set X with the inconsistent traces (line 15 of Alg. 4 and lines 8-12 of Alg. 3). Hence,
+Alg. 3 aims to infer the reward machine that encodes the reward function on the belief L̂h . Of course,
+as illustrated in Example 1, there might not exist a reward machine that encodes the reward function on
+L̂h . In that case, the algorithm cannot infer the “correct” reward machine. For this reason, the modified
+QRM-episode algorithm updates a recurring probabilistic belief L̂j (line 14) in a Bayesian manner and
+based on the observation model of Def. 3; we provide the function BayesUpdate() in Section 5.1. The
+environment probabilistic belief L̂h used in the policy- and reward-machine-learning is updated with
+the current belief L̂j only if the two are significantly different (lines 13-18 of Algorithm 3), which is
+evaluated by the function SignifChange(). More specifically, if L̂j is significantly changed with respect
+to the estimate L̂h , the algorithm updates L̂h accordingly, re-initializes the Q functions, the hypothesis
+reward machine Hh , and the counterexample set X. We provide the function SignifChange(), which
+evaluates the difference among L̂h and L̂j using a divergence test, in Section 5.2.
+5.1    Information Processing
+This section provides the BayesUpdate(L̂j−1 , s0 ) function (line 14 of Alg. 4) that updates the probability
+distribution L̂j based on the observation made by the agent at state s0 .
+    When at state s0 , the agent will receive new perception outputs according to the observation model
+O(s0 , . . . ) for all states and atomic propositions. The agent then employs the observations to update
+its learned model of the environment in a Bayesian approach. For ease of notation, let L̂j = L̂j (s, p)
+and O(b) = O(s0 , s, p, b). Given the prior belief of the agent L̂j−1 and the received observations Z, the
+posterior belief follows
+
+                                                            L̂j−1 O(True)
+             P r s |= p|Z(s0 , s, p) = True =
+                                           
+                                                                                                            (2a)
+                                                L̂j−1 O(True) + (1 − L̂j−1 )O(False)
+                                                               L̂j−1 (1 − O(True))
+            P r s |= p|Z(s0 , s, p) = False =
+                                           
+                                                                                                            (2b)
+                                                L̂j−1 (1 − O(True)) + (1 − L̂j−1 )(1 − O(False))
+
+
+
+                                                       9
+Algorithm 3 Joint Perception and Learning Algorithm
+ 1: H ← Initialize(V )
+ 2: Q = {q v |v ∈ V } ← Initialize(V )
+ 3: X ← ∅
+ 4: j ← 0
+ 5: L̂h ← L̂0 ;
+ 6: for episode n = 1, 2, . . . do
+ 7:     (λ, ρ, Q, L̂j ) ← QRM episode mod(H, Q, L̂h , L̂j )
+ 8:     if H(λ) 6= ρ then          // The trace (λ, ρ) is inconsistent with H
+ 9:       add (λ, ρ) to X             // Append the set X with the trace (λ, ρ)
+10:       H ← Infer(X)              // Infer a new reward machine from X
+11:       Q ← Initialize()
+12:    end if
+13:    if SignifChange(L̂h , L̂j ) then         // L̂j has changed significantly with respect to L̂h
+14:       H ← Initialize(V )
+15:       Q ← Initialize(V )
+16:       X←∅
+17:       L̂h ← L̂j
+18:    end if
+19: end for
+
+
+Algorithm 4 QRM episode mod(H, Q, L̂h , L̂j )
+Input: A reward machine H = (V, vI , 2P , R, δ, σ), a set of q-functions Q = {q v |v ∈ V }, two proba-
+    bilistic beliefs L̂h , L̂j .
+ 1: s ← InitialState(); v ← vI , λ ← []; ρ ← []
+ 2: for 1 ≤ t < eplength do
+ 3:     a ← GetEpsilonGreedyAction(q v , s)
+ 4:     s0 ← ExecuteAction(s, a)          // Transition in l-MDP M based on T (s0 , a, s)
+          0                    0
+ 5:     v ← δ(v, L̂(L̂h , s ))             // Transition in H based on L̂h
+ 6:     r ← ObserveReward()
+ 7:     q v (s, a) ← Update(r, s0 )         // Update of q-function for state v of H
+ 8:     for v̂ ∈ V \v do
+ 9:          v̂ 0 ← δ(v̂, L̂(L̂h , s0 ))    // Transition in H based on L̂h
+10:          r̂ ← σ(v̂, L̂(L̂h , s0 ))     // Reward calculation from H based on L̂h
+11:          q v̂ (s, a) ← Update(r̂, s0 ) // Update of q-function for state v̂ of H
+12:     end for
+13:     j ← (n − 1) · eplength + t
+14:     L̂j ← BayesUpdate(L̂j−1 , s0 )             // Update probabilistic belief Lj
+                                 0
+15:     Append(λ, L̂(L̂h , s )); Append(ρ, r)
+16:     s ← s0 ; v ← v 0
+17: end for
+18: return (λ, ρ, Q, L̂j )
+
+
+
+for all s ∈ S and p ∈ AP. Depending on the truth value observed for p, BayesUpdate(L̂j−1 , s0 )
+updates L̂j according to one of the aforementioned expressions. Besides, for any P ⊆ AP, L̂j (s, P ) =
+Q
+  p∈P L̂j (s, p).
+
+
+5.2    Divergence Test on the Belief
+This section provides the SignifChange(L̂h , L̂j ) function (line 13 of Alg. 3) that compares the distribu-
+tions L̂h and L̂j .
+    As mentioned before, if the agent’s current estimate about the atomic propositions, encoded by the
+current belief L̂j , has not changed significantly from its previous estimate (encoded by L̂h ), then the
+agent will continue executing the algorithm using the current L̂h . However, if its estimate has changed
+
+
+                                                    10
+significantly, the agent will update its belief and aim to infer a new reward machine (lines 13-18 of
+Alg. 3). The algorithm compares the two distributions, L̂h and L̂j via the function SignifChange().
+  The function uses the Jensen-Shannon divergence to quantify the change in the belief distribution
+between two consecutive time steps. We note here that alternative divergence methods would also work
+without altering the correctness of the algorithm (proven in Sec. 5.4). We choose the Jensen-Shannon
+divergence due to its symmetry, finite value, and its efficiency for generic distributions over atomic
+propositions. The cumulative Jensen-Shannon divergence over the states and the propositions can be
+expressed as
+                            1                     1
+                              DKL (L̂h ||L̂m ) + DKL (L̂j ||L̂m ) =
+             DJ SD (L̂h ||L̂j ) =
+                            2                     2
+                        1 X X                 L̂h (s, p)                        1 − L̂c (s, p)
+                               L̂h (s, p) log            + (1 − L̂h (s, p)) log
+                        2                     L̂m (s, p)                        1 − L̂m (s, p)
+                           s∈S p∈AP
+
+                             1X X                L̂j (s, p)                        1 − L̂j (s, p)
+                         +        L̂j (s, p) log            + (1 − L̂j (s, p)) log
+                             2                   L̂m (s, p)                        1 − L̂m (s, p)
+                              s∈S p∈AP
+
+
+where L̂m = 12 (L̂h + L̂j ) is the average distribution. One of the input parameters to the algorithm is
+a threshold γd on the above divergence; SignifChange(L̂h , L̂j ) returns False if DJ SD (L̂h ||L̂j ) < γd and
+True if DJ SD (L̂h ||L̂j ) ≥ γd , determining whether the agent will use its previous estimate L̂(L̂h , ·) or
+update L̂h to guide the learning and reward machine inference.
+
+5.3    Inference of Reward Machines
+The goal of reward-machine inference is to find a reward machine H that is consistent with all the
+counterexamples in the sample set X, i.e., such that H(λ) = ρ for all (λ, ρ) ∈ X, for the current belief
+L̂h . Unfortunately, such a task is computationally hard in the sense that the corresponding decision
+problem “given a sample X and a natural number k > 0, does a consistent Mealy machine with at most
+k states exist?” is NP-complete [8, 38]. In this paper we follow the approach of [8], which is to learn
+minimal consistent reward machines with the help of highly-optimized SAT solvers [39, 40, 41]. The
+underlying idea is to generate a sequence of formulas φXk in propositional logic for increasing values of
+k ∈ N (starting with k = 1) that satisfy the following two properties:
+   • φX
+      k is satisfiable if and only if there exists a reward machine with k states that is consistent with
+     X;
+
+   • a satisfying assignment of the variables in φX
+                                                  k contains sufficient information to derive such a
+     reward machine.
+     By increasing k by one and stopping once φX    k becomes satisfiable (or by using a binary search), we
+construct an algorithm that learns a minimal reward machine that is consistent with the given sample.
+     As stressed in Example 1, a reward machine that encodes R on L̂h might not exist and the
+inference procedure might end up creating an arbitrarily large Mealy machine and yielding very high
+computation times (trying to compute a Mealy machine that does not exist). To prevent such cases,
+one can limit the maximum allowable number of states of the Mealy machine and the maximum number
+of episodes used to generate the counterexamples, and use the last valid inferred Mealy machine (or
+the initial estimate if there is no valid one). We note that such a technique requires knowledge of
+an upper bound on the number of states of the reward machine. Practically, this bound could be a
+conservatively large number that could be derived from the total number of atomic propositions AP.
+Nevertheless, large bounds could lead to high computational times in cases the algorithm is trying to
+infer a reward machine that does not exist due to inaccuracies in L̂h . Such complexity stems from the
+inherent scalability issues of the employed SAT-based optimizers and can be alleviated by modifying
+the underlying algorithms to obtain polynomial-time heuristics [8, Sec. 4.3] . In the experimental
+results, the proposed algorithm, such cases did not prevent the successful convergence of the proposed
+algorithm.
+     A sufficient condition for a reward machine that encodes R on L̂h to exist is sufficient accuracy of
+L̂h , i.e., L̂(L̂h , s) = {p ∈ AP : L̂h (s, p) ≥ 0.5} = LG (s), for all s ∈ S (see (1)). Intuitively, such a
+
+
+                                                      11
+property implies that the most probably atomic-proposition estimates are the correct ones. We show
+later that such a property can be achieved with an unambiguous observation model and sufficient
+exploration of the environment. In case L̂(L̂h , s) 6= LG , it is not straightforward to derive conditions
+for the existence of a reward machine that encodes R on L̂h . Based on intuition, one could argue that
+small inaccuracies in L̂h , such as wrong labels in just one of the environment states, could lead to such a
+property. Consider, however, the grid example of Fig. 2 and the case where L̂(L̂h , sij ) = LG (sij ) for all
+i ∈ {1, 2}, j ∈ {1, . . . , 5}, except for L̂(L̂h , s14 ) = {“X”} 6= LG (s14 ) = {}, i.e., the sensor falsely detects
+an obstacle at state s14 . In that case, there is no reward machine that encodes R on L̂h : if such a reward
+machine A existed, its reward sequence A(`ˆ0 , . . . , `ˆk ), given an input label sequence from any trajectory
+s0 a0 . . . ak sk+1 and based on L̂h , would need to match the observed reward sequence. Consider,
+however, the trajectory s11 s12 s13 s14 s24 , which gives the observed label sequence {“c”}, {“X”}, {“o”}.
+In order for A({“c”}, {“X”}, {“o”}) to match the observed reward sequence, which is 0, 0, 0, 1, A would
+have to neglect the obstacle label “X”. In that case, however, the reward machine would output a
+reward sequence of 0, 0, 0, 1 also for the trajectory s11 s12 s22 s23 s24 , which gives the observed label
+sequence {“c”}, {“X”}, {“X”}, {“o”}, i.e., A({“c”}, {“X”}, {“X”}, {“o”}) = 0, 0, 0, 1. The observed
+reward sequence, however, is a sequence of zeros due to encounter of obstacles. Hence, there is no
+reward machine that encodes R on L̂h .
+     Similarly, one might argue that if L̂(L̂h , s) is not equal to LG , then there is no reward machine that
+encodes R on L̂h . Consider, however, the scenario where the task is to bring coffee or water to the
+office without encountering any obstacles and the extra atomic proposition “water” is found in s14 ,
+i.e., LG (s14 ) = {“w”}. Further assume that L̂(L̂h , sij ) = LG for all i ∈ {1, 2}, j ∈ {1, . . . , 5}, except
+for L̂(L̂, s14 ) = {“c”} 6= LG (s14 ) = {“w”}, i.e., the sensor falsely detects “coffee” instead of “water”
+in s14 . In that case, it can be verified that the observed reward sequence of any trajectory matches
+the sequence A(`ˆ0 , . . . , `ˆk ), where A is a reward machine similar to the one Fig. 3. Therefore, the
+existence of a reward machine that encodes R on L̂h depends on the underlying task and its relation
+to the atomic propositions.
+
+5.4     Convergence in the limit
+In this section, we establish the correctness of Algorithm 3. More specifically, we provide theoretical
+guarantees on (i) the convergence of the hypothesis reward machine H to the actual reward machine
+A, and (ii) the asymptotic learning of the optimal policy that achieves accomplishment of the task
+encoded by A.
+    The aforementioned guarantees are based on two sufficient conditions. First, the estimate L̂(L̂h , ·)
+becomes identical with the ground-truth labelling function LG after a finite number of episodes. Sec-
+ond, the length of each episode is larger than 2|M|+1 (|A| + 1) − 1, where A is the unknown reward
+machine that encodes the task to be accomplished. The first condition is tightly connected to the
+observation model O of the agent (see Def. 3) and its effect on the Bayesian updates (2). Intuitively,
+when there is unambiguity in the observation model, i.e., it is sufficiently accurate or inaccurate, the
+Bayesian updates (2), along with consistent observations, lead to accurate estimation of LG . In the
+next section, we show that such unambiguity implies O(s1 , s2 , p, True) = P r(Z(s1 , s2 , p) = True|s2 |=
+p) > O(s1 , s2 , p, False) = P r(Z(s1 , s2 , p) = False|s2 6|= p) or O(s1 , s2 , p, True) = P r(Z(s1 , s2 , p) =
+True|s2 |= p) < O(s1 , s2 , p, False) = P r(Z(s1 , s2 , p) = False|s2 6|= p) and we illustrate that, in such
+cases, observations that are consistent with the truth values of AP and the observation model lead
+to convergence of L̂(L̂i , ·) to LG (·). Nevertheless, such conditions are only sufficient for accurate
+estimation of LG . The experiments of Section 6 illustrate that the proposed algorithm learns how to
+accomplish the underlying task even with random observation models.
+    The convergence results are given in the following Theorem, whose proof can be found in the
+Appendix:
+Theorem 1. Let M = (S, sI , A, T , R, AP, L̂, γ) be an l-MDP and A be a reward machine that encodes
+the reward function R on the ground truth. Further, assume that there exists a constant nf > 0 such
+that L̂(L̂h , ·) = LG (·), for all episodes n > nf of Algorithm 32 . Then, Algorithm 3, with eplength ≥
+2|M|+1 (|A| + 1) − 1, converges almost surely to an optimal policy in the limit.
+
+
+  2 Note that this implies that {p ∈ AP : L̂ (s, p) ≥ 0.5} = L (s) for all s ∈ S.
+                                            h                 G
+
+
+
+                                                          12
+Remark 2. It can be concluded that the main differences of the proposed algorithm with respect to JIRP
+[8] consist of the updates of the labelling-function estimate (Sec. 5.1) and the divergence test (Sec. 5.2).
+As mentioned before, however, these techniques can be applied to more general RL frameworks that
+rely on labelling functions [42, 31]. Such an application follows a procedure similar to the extension of
+the JIRP algorithm in the proposed methodology. More specifically, all the operations of the respective
+algorithms can be implemented based on a labelling-function estimate L̂h . Since the algorithms in
+these works rely on exploration of the environment by the agents, as commonly done in RL, sensor
+observations can be used to update a running estimate L̂i based on an observation model, as done in
+Sec. 5.1. Then, a divergence test can determine the update of L̂h with L̂i , as done in Sec. 5.2.
+
+
+
+5.5    Accurate estimation of LG
+    This section provides further insights on the relation of the Bayesian updates (2) and the observation
+model O towards the accurate estimation of LG by L̂ given in (1). For ease of exposition, we assume
+that the agent receives observations about atomic proposition p ∈ AP in a state s ∈ S only when it is
+located at that state. In the following, we use O(s, s, p, True) = OT and O(s, s, p, False) = OF .
+    We derive a closed-form expression for the probabilistic belief L̂N (s, p) regarding an atomic propo-
+sition p ∈ AP in a state s ∈ S after N observations. From these N observations, we consider that
+NT observations correspond to the detection Z(s, s, p) = True and NF observations correspond to
+Z(s, s, p) = False, with N = NT + NF . We first show that L̂N (s, p) will be the same regardless of the
+order of the observations. Indeed, let L̂i (s, p) be the belief at the ith iteration, with i ≥ 0. Assume that
+the agent then obtains first an observation Z(s, s, p) = True followed by Z(s, s, p) = False. According
+to (2), it holds that
+                                               L̂i OT
+                             L̂i+1 =
+                                       L̂i OT + (1 − L̂i )OF
+                                                    L̂i+1 (1 − OT )
+                             L̂i+2 =
+                                       L̂i+1 (1 − OT ) + (1 − L̂i+1 )(1 − OF )
+                                                    L̂i OT (1 − OT )
+                                   =                                                                     (3)
+                                       L̂i OT (1 − OT ) + OF (1 − L̂i )(1 − OF )
+where we omit the argument (s, p) for brevity. On the contrary, assume that the agent obtains first
+an observation Z(s, s, p) = False followed by Z(s, s, p) = True. According to (2), it holds that
+                                                  L̂i (1 − OT )
+                             L̂i+1 =
+                                       L̂i (1 − OT ) + (1 − L̂i )(1 − OF )
+                                                L̂i+1 OT
+                             L̂i+2 =
+                                       L̂i+1 OT + (1 − L̂i+1 )OF
+                                                    L̂i OT (1 − OT )
+                                   =                                               ,                     (4)
+                                       L̂i OT (1 − OT ) + OF (1 − L̂i )(1 − OF )
+from which we conclude that L̂i+2 is the same in both cases. By induction, after N = NT + NF
+observations, L̂N will be the same regardless of the sequence of NT and NF observations.
+    We now proceed to derive a general closed-form expression for L̂N . Since the sequence of observa-
+tions does not alter such an expression, we assume, without loss of generality, that the agent obtains
+first NT observations followed by NF observations. After NT observations Z(s, s, p) = True, iterative
+application of (2a) yields
+                                                             α NT
+                                    L̂NT =                          PNT −1
+                                              L̂−1
+                                                0 + (α − 1)          i=0     αi
+                    OT
+where we denote α = O F
+                        . After another NF observations Z(s, s, p) = False, iterative application of
+(2b) yields
+                                                    (1 − αOF )NF
+                                            L̂N =
+                                                         DF
+
+
+                                                        13
+where
+
+                     DF =(1 − OF )NF L̂−1
+                                       NT + OF (1 − α)(1 − αOF )
+                                                                 NF −1
+
+                                                     F −2
+                                                    NX
+                            + OF (1 − OF )(1 − α)             (1 − αOF )i (1 − OF )NF −2−i
+                                                        i=0
+
+Substituting L̂NT in L̂N yields
+
+                                                 αNT (1 − αOF )NF
+                                         L̂N =                                                             (5)
+                                                        DN
+where
+                                                                                             −1
+                                                                                          NT
+                                                                                                       !
+                                                                                           X
+            DN =αNT OF (1 − α)(1 − αOF )NF −1 + (1 − OF )NF               L̂−1
+                                                                            0 + (α − 1)           αi
+                                                                                           i=0
+                                                 NF
+                                                  X −2
+                   + aNT OF (1 − OF )(1 − α)            (1 − αOF )i (1 − OF )NF −2−i
+                                                  i=0
+
+Note that, the case OT = OF , i.e., α = 1, leads to L̂N = L̂0 for all N > 0. Such cases entail an
+ambiguous observation model and are equivalent to cases without the updates (2); the probability of
+observing Z(s, s, p) = True is the same regardless of whether s |= p or s 6|= p and the updates (2)
+fail to estimate LG . In cases of an unambiguous observation model, however, satisfying OT > OF
+or OT < OF , observations that are consistent with O and the truth value of p in s lead to accurate
+estimation of LG . By consistent observations, we mean observations satisfying NT = OT N and
+NF = (1 − OT )N in case s |= p and NT = OF N and NF = (1 − OF )N in case s 6|= p.
+    In order to formally prove the aforementioned conjecture, one would ideally need to show that
+L̂N +1 > L̂N in case s |= p and L̂N +1 < L̂N in case s 6|= p. The complexity of the expression (5),
+however, renders such a procedure significantly difficult. Instead, we plot L̂N in (5) as a function of
+N for different values of the observation model satisfying OT > OF and OT < OF . In particular, we
+consider four different cases formed by OT > OF , OT < OF and s |= p, s 6|= p. In each of these cases,
+we generate 500 different combinations of OT and OF randomly from a uniform distribution. In the
+cases where OT > OF , we choose OT randomly in the interval (0, 1) and OF in the interval (0, OF ).
+Reversely, in the cases where OT < OF , we choose OF randomly in the interval (0, 1) and OT in the
+interval (0, OT ). In all cases we choose L̂0 randomly from a uniform distribution in (0, 1). To obtain
+observations consistent with the observation model, we further choose NT = OT N , NF = (1 − OT )N
+when s |= p and NT = OF N , NF = (1 − OF )N when s 6|= p. The results for the four different cases
+are depicted in Fig. 4. One can conclude from the figure that the L̂N (s, p) converges to 1 and 0 for
+when s |= p and s 6|= p, respectively.
+
+5.6     Extension to continuous spaces
+    In cases where the state S or action space A is continuous, the tabular q-updates of the QRM
+algorithm (Alg. 4) cannot be implemented. In such cases, one can employ a parametrization θq ∈ R` ,
+for some ` ∈ N, in order to approximate the q function for each state of the hypothesis reward
+machine. In particular, we define q v (s, a|θq ) : S × A × V̄ × R` → R as a parametric approximation
+of q v (s, a) for each state-action pair (s, a) ∈ S × A and reward-machine state v ∈ V̄ ; V̄ is defined
+as V̄ = {1, . . . , V̄ }, where V̄ is an upper bound on the number of reward-machine states. Such an
+approximation is typically modelled using deep neural networks. The q-learning update of Alg. 4
+(lines 7 and 11) is then performed by minimizing the loss function Es∼prβ [(q v (s, a|θq ) − y)2 ] [31],
+where prβ is the probability distribution of state-visit over S under an arbitrary stochastic policy β
+and y = R(s0 . . . s0 ) + γ maxa0 ∈A q v (s0 , a0 |θq ). One could also append an intrinsic reward rin to the
+aforementioned update; such an intrinsic reward takes positive values when the agent observes a new
+label during exploration in an episode and zero otherwise and has been shown to aid with learning
+[31, 42].
+    We note that, although the underlying spaces are continuous, the atomic propositions naturally in-
+duce a discrete abstraction SA = {SA1 , . . . , SAM } of the continuous state space S. Such an abstraction
+
+
+                                                        14
+ 1                                                                      1
+
+
+0.9                                                                    0.9
+
+
+0.8                                                                    0.8
+
+
+0.7                                                                    0.7
+
+
+0.6                                                                    0.6
+
+
+0.5                                                                    0.5
+
+
+0.4                                                                    0.4
+
+
+0.3                                                                    0.3
+
+
+0.2                                                                    0.2
+
+
+0.1                                                                    0.1
+
+
+ 0                                                                      0
+      0   50   100     150   200   250   300   350   400   450   500         0   50   100   150   200   250   300   350   400   450   500
+
+
+
+
+(a) Evolution of L̂N (s, p) when s |= p, OT > OF                       (b) Evolution of L̂N (s, p) when s |= p, OT < OF
+ 1                                                                      1
+
+
+0.9                                                                    0.9
+
+
+0.8                                                                    0.8
+
+
+0.7                                                                    0.7
+
+
+0.6                                                                    0.6
+
+
+0.5                                                                    0.5
+
+
+0.4                                                                    0.4
+
+
+0.3                                                                    0.3
+
+
+0.2                                                                    0.2
+
+
+0.1                                                                    0.1
+
+
+ 0                                                                      0
+      0   50   100     150   200   250   300   350   400   450   500         0   50   100   150   200   250   300   350   400   450   500
+
+
+
+
+(c) Evolution of L̂N (s, p) when s 6|= p, OT > OF                      (d) Evolution of L̂N (s, p) when s 6|= p, OT < OF
+
+                     Figure 4: Evolution of L̂N (s, p) according to the Bayesian updates (2).
+
+
+
+
+                                                                  15
+is formed by grouping states where the same atomic propositions hold true. That is, given s, s0 ∈ S
+and SAi ∈ SA a discrete state, it holds s, s0 ∈ SAi if and only if there exists a subset P ⊂ AP of
+atomic propositions satisfying s |= p and s0 |= p for all p ∈ P . Therefore, the ground-truth labelling
+function LG : S → 2AP is naturally extended from S to SA , i.e., LG : SA → 2AP . Finally, we note
+that one could use appropriate tools, such as the options framework [42], to abstract the continuous
+state and action spaces to discrete ones and apply the proposed algorithm.
+6     Experimental Results
+We test the proposed algorithm in three different environments, described in the following. In all
+environments, we employ the RC2 SAT solver [44] from the PySAT library [45] towards reward-
+machine inference. All experiments were conducted on a Lenovo laptop with 2.70-GHz Intel i7 CPU
+and 8-GB RAM.
+
+6.1     HouseExpo floor plans
+We first test the algorithm in floor plan environments based on the indoor layouts collected in the
+HouseExpo dataset [43]. HouseExpo consists of indoor layouts, built from 35,126 houses with a total
+of 252,550 rooms. There are 25 room categories, such as bedroom, garage, office, boiler room, etc.
+The dataset provides bounding boxes for the rooms with their corresponding categories, along with 2D
+images of layouts. We pre-process these layouts to generate grid-world-like floor plans, where every grid
+is labelled with the type of the room it is in (see Fig. 5). We use these labels as atomic propositions
+to define tasks encoded as reward machines. In particular, we use the set of atomic propositions
+AP = {kitchen, bathroom, bedroom, office, indoor}.
+    In the experiments, an episode terminates when the agents receives a non-zero reward or the
+maximum number of steps allowed in one episode is exceeded. This maximum number of steps per
+episode is 1000, whereas the maximum number of total training steps is 500,000. Furthermore, we set
+the Jensen-Shannon divergence threshold γd of Section 5.2 to 10−5 , and Algorithm 4 selects a random
+action with probability εa = 0.3.
+    We compare the following experimental settings regarding the observation model and the belief
+updates:
+    1. Time-varying Bayesian Observation Model (TvBNN): We use a number of training HouseExpo
+       layouts to train a Bayesian neural network, which the algorithm uses as an observation model in
+       test layouts for the experiments. The algorithm samples observation probabilities of the atomic
+       propositions’ truth value from the neural network at the beginning of every training episode.
+    2. Fixed Bayesian Observation Model (FiBNN): We use a number of training HouseExpo layouts to
+       train a Bayesian neural network, which the algorithm uses as an observation model in test layouts
+       for the experiments. The algorithm samples observation probabilities of the atomic propositions’
+       truth value from the neural network only once, at the beginning of training.
+    3. Random Observation Model: The algorithm uses an observation model whose observation prob-
+       abilities are uniformly sampled from the interval [0.1,0.9].
+    4. Random Observation Model-2: The algorithm uses an observation model whose observation
+       probabilities are uniformly sampled from the interval [0.4,0.5].
+    5. No Belief Updates: The algorithm uses a belief function that is randomly initialized, without
+       updating it.
+   The Bayesian observation model in the first two settings is a neural network of three densely
+connected layers with flipout estimators [46]. The loss function is the expected lower-bound loss, and
+a combination of Kullback-Leibler divergence and categorical cross entropy. Given the information
+about a grid in a floor plan, the Bayesian neural network (BNN) predicts category probabilities of
+the room where the grid is located. The input vector consists of the 2D coordinates of the grid,
+the size and the number of neighbours of the room. The output is the predicted probabilities of the
+room type. The training set consists of 3,000 pre-processed layouts from the HouseExpo dataset,
+which we select based on the floor plan size and the number of different room categories. After
+pre-processing, to eliminate variance with respect to the initial position of grids, we rotate every
+
+
+                                                   16
+ Figure 5: Left: Sample indoor layout from HouseExpo dataset; Right: Pre-processed sample layout
+
+                                                       (¬bedroom ∧ ¬office, 0)
+
+
+                                                                    v0
+
+
+
+                                                             (bedroom ∨ office, 0)
+
+                           (¬kitchen, 0)          v1
+
+
+                                             (kitchen, 1)       (True, 0)
+
+
+                                                                    v2
+
+
+                         Figure 6: Ground truth reward machine of the task φ1 .
+
+
+training layout 3 times by 90 degrees, and then add each rotated version to the training set. In all
+aforementioned cases, we simulate the observations to be consistent with the respective observation
+model, i.e., observe that Z(s1 , s2 , p) = True and Z(s1 , s2 , p) = False with probabilities O(s1 , s2 , p, True)
+and 1 − O(s1 , s2 , p, True), respectively, when s2 |= p, and with probabilities O(s1 , s2 , p, False) and
+1 − O(s1 , s2 , p, False), respectively, when s2 6|= p.
+    For the reward-machine-inference part of the algorithm, we limit the maximum allowable number
+of states for the hypothesis reward machine to 4. Similarly, we limit the maximum allowable size of
+the trace sets, which is the number of episodes whose traces are recorded, to 20. In case the inference
+exceeds the allowed number of states, the process is stopped and the training continues with the last
+valid hypothesis reward machine until the next inference step.
+    We first specify the following task to the agent: φ1 = “Go to bedroom or office, and then to the
+kitchen”, which is encoded by the reward machine shown in Fig. 6.
+    We execute the proposed algorithm in 75 test floor plans. For each one of the first four experimental
+settings, where updates according to an observation model are performed, the learning agent is trained
+5 times in each test floor plan, each one corresponding to a different random seed, leading to a total of
+375 runs. For the last setting that does not include belief updates, we removed 12 test floor plans where
+the inference procedure took unreasonably long time to finish, resulting in 63 test floor plans. This is
+attributed to the fact that the belief functions are randomly initialized and not updated throughout
+the training. For this last setting, the learning agent is also trained 5 times in each test floor plan,
+
+
+                                                       17
+each one corresponding to a different random seed, leading to a total of 290 runs. In each one of
+the aforementioned runs, we perform an evaluation episode every 100 training steps and register the
+obtained rewards. Figure 7 and Table 1 show the results. In particular, Fig. 7a depicts the progression
+of the rewards during training for the time-varying BNN (TvBNN), separated in the ones belonging to
+the 25th and 75th percentiles, and the ones belonging to the 10th and 90th percentiles; The figure also
+depicts the median values with solid line. We omit the plots for the other observation models since they
+converge after a similar amount of steps, as can be verified by Table 1. In particular, Table 1 shows the
+training steps required for convergence for the 25th (Q1), 50th (Q2), and 75th (Q3) percentiles of the
+attained rewards for all cases of observation models. More specifically, we compute the z th percentile
+as follows: for each training step, we write the obtained rewards for all the 375 runs in increasing order
+and calculate the z th position; subsequently, the training steps for the z th percentile are the training
+steps required for this position to become 1. The table also depicts the ratio of successful inferences of
+reward machines (RS), and the average number of belief updates (BU) of L̂h after the JSD divergence
+test.
+    Figures 7b-7d demonstrate the progression of belief updates throughout the training; Fig. 7b shows
+the number of training runs (y-axis) in which the belief function L̂h is updated for the k th time (x-
+axis). For instance, in the time-varying BNN (“TvBNN”) setting, the learning agent updates its belief
+for the third time in around 20 runs out of 375 training runs (5 runs per every floor plan where a
+reward machine is successfully inferred). Fig. 7c shows the number of the step (y-axis) in which the
+belief function is updated for the k th time on average (x-axis), and Fig. 7d displays the average Jensen-
+Shannon divergence value that led to the k th belief update. The time-varying BNN (“TvBNN”) setting
+allows the learning agent to obtain a belief function that represents the environment well in a couple of
+steps. When sampling observation probabilities once, as in the fixed BNN (“FiBNN”) setting, it slows
+down the process since the sampled observation might not be informative. Regarding the random
+observation model, due to the wide uniform distribution range, the agent samples probabilities that
+are close to zero or one, resulting to a more unambiguous observation model; that is, the agent is more
+“certain” that an atomic proposition won’t or will be observed, respectively. This is the reason why
+the second random observation model performs more belief updates until the divergence score drops
+below the threshold. Overall, it is expected to see that, in the BNN settings, the algorithm performs
+fewer belief updates compared to the random settings.
+    In view of the aforementioned results, one concludes that the labelling-function belief converges
+after much fewer steps than the ones needed for the learning of the optimal policy. Therefore, the
+different observation models used do not affect significantly the inference of the reward machine or the
+speed of the q-learning’s convergence to the optimal policy, as long as such observation models lead to
+accurate estimation of the ground-truth labelling function. This fact can be verified by the experiments
+of Sec. 5.4, where the labelling-function estimate converges after approximately 500 updates (training
+steps), which is much fewer than the thousands of steps needed for learning the optimal policy (see
+Fig. 7 and Table 1).
+
+
+Table 1: Convergence results of the proposed algorithm under different observation models in 5 inde-
+pendent runs for 75 test indoor layouts in the first HouseExpo floorplan experiment.
+
+                  Settings   TvBNN      FiBNN      Random      Random2      No Update
+                    Q1       95,800     109,600    103,000      107,800      500,000
+                    Q2       44,400      48,900     40,100       45,700      189,900
+                    Q3        9,900     22,700      11,200       17,200       35,000
+                    RS        75/75      75/75      75/75        75/75        63/75
+                    BU         1.6        2.79       3.73         6.64           -
+
+    To test the capabilities of our method in a more complicated scenario, we set a second task as
+φ2 = “Go to kitchen while avoiding the bathroom, and then go to the bathroom while avoiding the
+bedroom”, which is encoded by the reward machine shown in Fig. 8.
+    For this second task, we execute the proposed algorithm in 7 test floor plans with 5 different random
+seeds, resulting to a total of 35 runs. Figure 9 and Table 2 show the convergence results and belief
+updates, similar to the ones for φ1 , for the first four settings; we omit the last one (no belief updates)
+since training fails to yield an inferred reward machine. We conclude that all observation models
+
+
+                                                    18
+                                                            350
+                                                            300
+                                                            250
+                                                            200
+                                                            150
+                                                            100
+                                                                50
+                                                                0
+                                                                     2     4     6    8     10   12 14       16
+
+                (a) Time-varying BNN                     (b) Average number of runs for the kth belief update.
+   x106
+  1.4
+  1.1                                                       0.20
+  1.0
+                                                            0.15
+  0.8
+  0.6                                                       0.10
+  0.4
+                                                            0.05
+  0.2
+  0.0                                                       0.00
+           2     4     6      8    10   12    14    16               2     4     6     8    10    12   14    16
+
+(c) Training step for the kth belief update, on average. (d) Average value of the JSD that led to the kth update.
+
+
+Figure 7: (a): Attained rewards of 5 independent runs for every 100 training steps in 75 test indoor
+layouts for task φ1 using TvBNN: The darker region is bounded by 25th and 75th percentiles, while the
+lighter region is bounded by 10th and 90th . The solid line represents the median. (b)-(d): Progression
+of belief updates during training for task φ1 .
+
+                                             (¬kitchen ∧ ¬bathroom, 0)
+
+
+                                                           v0
+
+                                                                     (bathroom, 0)
+                     (kitchen ∧ ¬bathroom, 0)
+
+                                                    (bedroom, 0)
+                 (¬bathroom, 0)         v1                                  v2       (True, 0)
+
+
+                     (bathroom ∧ ¬bedroom, 1)         (True, 0)
+
+
+                                                           v3
+
+
+                           Figure 8: Ground truth reward machine of the task φ2 .
+
+
+                                                      19
+                                                                   35
+                                                                   30
+                                                                   25
+                                                                   20
+                                                                   15
+                                                                   10
+                                                                   5
+                                                                   0
+                                                                            2       4       6   8    10       12      14
+
+                                                              (b) Average number of runs for the kth belief update.
+                  (a) Time-varying BNN
+   x105
+  2.5
+                                                            0.20
+  2.0
+                                                            0.15
+  1.5
+                                                            0.10
+  1.0
+
+  0.5                                                       0.05
+
+  0.0                                                       0.00
+           2     4      6      8    10     12     14                    2       4       6   8   10     12      14
+
+                                                                                                       th
+(c) Average number of runs for the kth belief update. (d) Average value of the JSD that led to the k        update.
+
+Figure 9: (a): Attained rewards of 5 independent runs for every 100 training steps in 7 test indoor
+layouts for task φ2 using TvBNN: The darker region is bounded by 25th and 75th percentiles, while the
+lighter region is bounded by 10th and 90th . The solid line represents the median. (b)-(d): Progression
+of belief update during training for task φ2 .
+
+
+lead to accurate estimation of the ground-truth labelling function and hence to successful inference
+of the reward machine and learning of the optimal policy. According to Table 2, the belief update
+patterns are similar to the ones observed for φ1 . The average number of belief updates is smaller
+for the BNN observation settings compared to the random observation settings. The TvBNN setting
+requires the fewest number of belief updates on average, whereas the Random-2 setting requires the
+highest number of updates. Finally, one can still conclude that the proposed algorithm outperforms
+the nominal setting, where no belief updates are performed.
+
+Table 2: Convergence results of the proposed algorithm under different observation models in 5 inde-
+pendent runs for 7 test indoor layouts in the second HouseExpo floorplan experiment.
+
+                         Settings    TvBNN      FiBNN        Random         Random2
+                              Q1     255,500    263,100      341,100         231,100
+                              Q2     146,700    141,800      137,100         122,200
+                              Q3      81,500     80,000       74,200          91,100
+                              BU       1.57       2.85         3.45            6.22
+
+
+
+
+                                                       20
+                                                            (¬a ∧ ¬c, 0)             (¬b ∧ ¬c, 0)            (¬c ∧ ¬d, 0)
+
+                                                                            (a, 0)                  (b, 0)
+                                                                 v0                      v1                      v3
+
+
+                                                                   (c, 0)                                          (d, 0)
+                                                                               (c, 0)
+                                                                                        (c ∧ ¬d, 0)
+                                                                 v2                                              v4
+
+
+                                                               (>, 0)
+                                                       (b) Reward machine for the office-world environment.
+(a) Office world with four atomic propositions: coffee The task is to fetch coffee a, then mail b, and eventually
+a, mail b, obstacle c, and office d. The blue triangle arrive at the office d without encountering the obstacle
+indicates the initial state of an episode.             c.
+
+                                    Figure 10: Office-world environment
+
+
+6.2    Office world
+    We next test the proposed algorithm in the office-world environment shown in Fig. 10a. The
+environment is a 12 × 9 grid world with four atomic propositions AP = {a, b, c, d} corresponding to
+coffee a, mail b, obstacle c, and office d. The task assigned to the agent is to get coffee, then mail, and
+eventually arrive at the office without encountering the obstacle. The reward machine that encodes
+the aforementioned task is given in Figure 10b. In the experiments, an episode terminates when the
+agent reaches the accepting state or it exceeds the maximum number of 2000 steps per episode. The
+maximum number of training steps is 1,500,000. We set the Jensen-Shannon divergence threshold γd
+to γd = 10−5 and Algorithm 4 selects a random action with probability εa = 0.3.
+    We consider the following experimental settings, where we compare different observation models
+as well as with standard learning-algorithms of the related literature. In what follows, we use the
+acronym JPL (Joint Perception and Learning) for the proposed algorithm.
+
+   1. True Observation model (JPL-true): The proposed algorithm uses an accurate and unambiguous
+      observation model that gives the ground-truth probability of observing an atomic proposition at
+      a state, i.e., O(s1 , s2 , p, True) = 1 and O(s1 , s2 , p, False) = 0.
+   2. False Observation model (JPL-false): The proposed algorithm uses an inaccurate and unambigu-
+      ous observation model that gives false probabilities of observing an atomic proposition at a state,
+      i.e., O(s1 , s2 , p, True) = 0 and O(s1 , s2 , p, False) = 1.
+   3. Random Observation model (JPL-random): The algorithm uses an observation model whose
+      observation probabilities are uniformly sampled from the interval [0.1, 0.9].
+   4. Random Observation model-2 (JPL-random2): The algorithm uses an observation model whose
+      observation probabilities are uniformly sampled from the interval [0.4, 0.6].
+   5. Q-learning: We test the traditional Q-learning algorithm [47] with a randomly initialized labelling-
+      function belief, without updating it or inferring a reward machine. Our implementation extends
+      the original algorithm by providing a vector of binary values indicating whether each atomic
+      proposition is observed by the agent (1) or not (0) according to its belief function.
+
+   6. DDQN: We test the double deep Q-learning (DDQN) algorithm [?], with a randomly initialized
+      labelling-function belief, without updating it or inferring a reward machine. Our implementation
+      augments the state space with the sequence of the last 200 labels observed according to the agent’s
+      belief function. We use a neural network of 6 hidden layers, each consisting of 64 neurons.
+
+
+
+                                                      21
+    In all aforementioned cases, we simulate the observations to be consistent with the respective
+observation model, i.e., observe that Z(s1 , s2 , p) = True and Z(s1 , s2 , p) = False with probabili-
+ties O(s1 , s2 , p, True) and 1 − O(s1 , s2 , p, True), respectively, when s2 |= p, and with probabilities
+O(s1 , s2 , p, False) and 1 − O(s1 , s2 , p, False), respectively, when s2 6|= p.
+    We run the aforementioned cases in the office environment for 10 independent runs, each corre-
+sponding to a different random seed. In each one of the aforementioned runs, we perform an evaluation
+episode every 100 training steps and register the obtained rewards. The results are shown in Fig. 11
+and Table 3. In particular, Fig. 11a shows the progression of rewards collected in test episodes for
+the random observation model (JPL-random) as well as for the Q-learning and DDQN algorithms.
+One concludes that the proposed algorithm successfully learns the optimal policy, whereas Q-learning
+and DDQN fail to learn a policy that accomplishes the task; such a result demonstrates that simply
+augmenting the state space with observed labels is not sufficient neither with a Q-table nor with a Q-
+function approximated by a neural network. We omit the reward-progression plots for the other cases
+of observation models, since they yield similar convergence results with the first random observation
+model. Table 3 shows the training steps required for convergence for the 25th (Q1), 50th (Q2), and
+75th (Q3) percentiles of the attained rewards for the aforementioned cases, as in Sec. 6.1. The table
+also depicts the average number of belief updates (BU) of L̂h .
+    Figures 11b-11d further show how the information-processing mechanism of the proposed algorithm
+handles the belief updates. On average, JPL-true and JPL-false obtain a belief function that satisfies
+the JSD constraint, γd = 10−5 , in one episode, hence Figs. 11b, 11c, and 11d have only one data
+point for these algorithms; JPL-random2 satisfies the JSD threshold in 6 episodes, 3 more than what
+JPL-random, since the observation model is more ambiguous; i.e., it carries less information due to a
+narrow range of values used to draw probabilities ([0.4, 0.6] vs [0.1, 0.9]).
+
+
+Table 3: Convergence results of the proposed algorithm under different observation models in 10
+independent runs in the office-world environment.
+
+                   Setting    JPL-true    JPL-false     JPL-random     JPL-random2
+                       Q1     1,029,000   1,019,800       958,500        1,003,700
+                       Q2      776,000     776,000        818,300         737,600
+                       Q3      412,100     423,300        315,600         412,100
+                       BU         1           1             2.8              5
+
+
+
+
+6.3    Craft-world Environment
+    Finally, we test the proposed algorithm in the craft-world environment shown in Fig. 12a. The
+environment is a 12 × 9 grid world with five atomic propositions AP = {w, i, t, h, f } corresponding to
+wood w, iron i, toolshed t, workbench h, and factory f . The task assigned to the agent is to build
+stairs by following the instructions below:
+   1. Get wood w (toolshed t cannot be used before getting wood),
+  2. Use toolshed t (using workbench h before toolshed resets again),
+  3. Use workbench h,
+  4. Get iron i (using factory f before collecting iron resets task), and
+  5. Use factory f .
+The reward machine for such a task is shown in Fig. 12b. In the experiments, an episode terminates
+when the agent reaches the accepting state or it exceeds the maximum number of 400 steps per episode.
+The maximum number of training steps is 2,000,000. We set the Jensen-Shannon divergence threshold
+γd to γd = 10−5 and Algorithm 4 selects a random action with probability εa = 0.3. We evaluate the
+same algorithmic observation-model cases as in the office-world case of Sec. 6.2.
+   The results for 10 independent runs, each corresponding to a different random seed, are shown in
+Fig. 13. Figure 13a show the progression of rewards obtained in test episodes for the first random
+
+
+                                                   22
+                          1.0           JPL-random
+                                        Q-learning                                                                         10
+                          0.8           DDQN
+
+
+
+
+                                                                                                   number of occurrences
+                          0.6                                                                                              8                                   JPL-random2
+                                                                                                                                                               JPL-random
+reward                                                                                                                     6
+                                                                                                                                                               JPL-false
+                          0.4                                                                                                                                  JPL-true
+
+                          0.2                                                                                              4
+                          0.0
+                                                                                                                           2
+                            0.0       0.2    0.4 0.6 0.8 1.0 1.2 1.4 6                                                          1      2     3        4       5         6
+                                              number of training steps ×10                                                             number of belief updates
+    (a) Progression of reward using (i) the proposed algorithm (b) Average number of runs for the kth belief update.
+    with a random observation model, (ii) a Q-learning algo-
+    rithm, and a (iii) DDQN algorithm.
+                          6000
+
+
+
+
+average occurrence step
+                          5000                                                                    0.20
+                                                                                                                                                        JPL-random2
+
+
+
+                                                                              average JSD value
+                                                                JPL-random2
+                                                                JPL-random                        0.15                                                  JPL-random
+                          4000                                  JPL-false                                                                               JPL-false
+                                                                JPL-true                                                                                JPL-true
+                          3000                                                                    0.10
+                          2000                                                                    0.05
+                          1000                                                                    0.00
+                                  1         2     3        4       5     6                                                 1        2     3        4       5        6
+                                            number of belief updates                                                                number of belief updates
+        (c) Average number of runs for the kth belief update. (d) Average value of the JSD that led to the kth update.
+
+    Figure 11: (a): Attained rewards of 10 independent runs for every 100 training steps for the office-
+    world task using the first random observation model: The darker region is bounded by 25th and 75th
+    percentiles, while the lighter region is bounded by 10th and 90th . The solid line represents the median.
+    (b)-(d): Progression of belief update during training for the office-world task.
+
+
+
+
+                                                                              23
+                                                             (¬w ∧ ¬t, 0)      (¬h ∧ ¬t, 0)        (¬h, 0)
+                                                                         (h, 0)
+                                                                                        (t ∧ ¬h, 0)
+                                                                 v0                v1                v2
+
+                                                                       (w ∧ ¬t, 0)
+                                                             (t, 0)                                        (t, 0)
+                                                                                   (f, 0)
+                                                                  v6       (>, 0)                         v3
+
+
+                                                                                      (I ∧ ¬f, 0)   (¬i ∧ ¬f, 0)
+
+
+                                                                  v5                    v4      (¬f, 1)
+                                                                          (f, 0)
+                                                          (b) Reward machine for the craft-world environment.
+                                                          The task is to build stairs by getting wood w (toolshed
+                                                          t cannot be used before getting wood), then using tool-
+(a) Craft world with five atomic propositions: wood w, shed t (using workbench h before toolshed resets) and
+iron i, toolshed t, workbench h, and factory f . The blue workbench h consecutively. Finally, the agent should
+triangle indicates the initial state of an episode.       obtain iron i (using factory f before collecting iron re-
+                                                          sets task) and process all items in the factory f .
+
+                                    Figure 12: Craft-world environment.
+
+
+observation model of the proposed algorithm as well as the Q-learning and DDQN algorithms. We
+omit the reward-progression plots for other observation models since they achieve similar speed of
+convergence. We observe that, since the craft-world scenario involves a more complicated task and
+larger state space than the office-world scenario, the proposed algorithm requires more than 1.2 million
+training steps, in median values, to converge. Additionally, as in the office-world case, the Q-learning
+and DDQN algorithms fail to learn the policy that achieves the task. Furthermore, Table 4 shows the
+training steps required for convergence for the 25th (Q1), 50th (Q2), and 75th (Q3) percentiles of the
+attained rewards for the aforementioned cases, as in the previous cases. The table also depicts the av-
+erage number of belief updates (BU) of L̂h . Finally, Fig. 13b-13d show how the information-processing
+mechanism of the proposed algorithm handles the belief updates, where we observe a behaviour similar
+to the previous cases in Sec. 6.1 and 6.2.
+
+Table 4: Convergence results of the proposed algorithm under different observation models in 10
+independent runs in the craft-world environment.
+
+                     Setting    JPL-true      JPL-false     JPL-random       JPL-random2
+                         Q1     1,937,600     1,907,600      1,950,800         1,985,800
+                         Q2     1,435,600     1,242,800      1,531,200         1,825,600
+                         Q3     1,196,400     1,129,600      1,256,000         1,484,400
+                         BU         1             1             3.6               6.83
+
+
+
+
+7     Conclusion and Discussion
+We develop a reinforcement algorithm subject to reward-machine-encoded tasks and perceptual limi-
+tations. The algorithm holds probabilistic beliefs over the truth value of the atomic propositions and
+uses a hypothesis reward machine to estimate the reward machine that encodes the task to be accom-
+
+
+                                                       24
+                          1.0      JPL-random
+                                   Q-learning                                                                          10
+                          0.8      DDQN
+
+
+
+
+                                                                                               number of occurrences
+                                                                                                                       8                                   JPL-random2
+                          0.6                                                                                                                              JPL-random
+reward                                                                                                                 6
+                                                                                                                                                           JPL-false
+                          0.4                                                                                                                              JPL-true
+                          0.2                                                                                          4
+                          0.0
+                                                                                                                       2
+                            0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00                                                         2           4           6          8
+                                        number of training steps  ×106                                                               number of belief updates
+    (a) Progression of reward using (i) the proposed algorithm (b) Average number of runs for the kth belief update.
+    with a random observation model, (ii) a Q-learning algo-
+    rithm, and a (iii) DDQN algorithm.
+
+                          3000
+
+
+
+
+average occurrence step
+                                                                                              0.20
+                          2500                                                                                                                       JPL-random2
+
+
+
+                                                                          average JSD value
+                                                            JPL-random2
+                                                            JPL-random                        0.15                                                   JPL-random
+                          2000                              JPL-false                                                                                JPL-false
+                                                            JPL-true                                                                                 JPL-true
+                          1500                                                                0.10
+                          1000                                                                0.05
+                           500                                                                0.00
+                                    2           4           6        8                                                      2           4           6           8
+                                        number of belief updates                                                                number of belief updates
+        (c) Average number of runs for the kth belief update. (d) Average value of the JSD that led to the kth update.
+
+    Figure 13: (a): Attained rewards of 10 independent runs for every 100 training steps for the craft-
+    world task using the first random observation model: The darker region is bounded by 25th and 75th
+    percentiles, while the lighter region is bounded by 10th and 90th . The solid line represents the median.
+    (b)-(d): Progression of belief update during training for the office-world task.
+
+
+
+
+                                                                          25
+plished. Both the beliefs and the hypothesis reward machine are updated by using the agent’s sensor
+measurements and the obtained rewards from the agent’s trajectories. The algorithm uses the afore-
+mentioned beliefs and the hypothesis reward machine in a q-learning procedure to learn an optimal
+policy that accomplishes this task.
+    Currently, the theoretical guarantees, provided by Theorem 1, presuppose that the algorithm ob-
+tains a good enough estimate of the atomic propositions’ value, as encoded in the ground truth labelling
+function LG , i.e., L̂(L̂h , ·) = LG (·). The definition of L̂(L̂h , ·) in (1), based on the most probable atomic
+propositions p for state s, i.e., L̂h (s, p) ≥ 0.5, mildens such an assumption, which is further verified
+to hold by the experimental results. Additionally, Sec. 5.4 illustrates that unambiguous observation
+models, i.e., when then probability of observing an atomic proposition when it is true is different
+than then probability of observing it when it is false, lead to accurate estimation of the ground-truth
+labelling function when the obtained observations are consistent with these observation models. Such
+an estimation is achieved even by the time-varying observation models used in Sec. 6, illustrating
+the robustness of the proposed approach to the choice of observation model. Along the same lines,
+the experimental results show that the proposed algorithm, used with a large variety of unambiguous
+observation models, achieves estimation of the ground-truth labelling function in much fewer steps
+than the ones needed for inferring the reward machine and learning an optimal policy. Therefore, we
+conclude that the selection of observation model does not practically affect the convergence of the algo-
+rithm to the optimal policy. Larger sets of atomic propositions would naturally lead to more complex
+reward machines and a proportional increase in convergence is expected both in the labelling-function
+estimation as well as the reward-machine inference and learning of the optimal policy.
+    We further note that larger reward machines, possibly describing more complex tasks yield higher
+computational times. In our implementation, inference of reward machines with more than 7 states
+resulted in unreasonably high computation times. As mentioned in Sec. 5.3, modification of the
+inference algorithm would be able to alleviate such issues. We argue, however, that reward machines
+up to 7 states can describe significantly complicated tasks, such as Minecraft [31] or Atari tasks [42].
+In the future, we will consider uncertain observation models that are not consistent with the obtained
+observations and cases where the ground-truth values of the atomic propositions change with time.
+
+
+8     Acknowledgements
+This work was supported in part by ONR N00014-22-1-2254 and NSF 1652113.
+
+
+References
+ [1] M. E. Taylor, P. Stone, Cross-domain transfer for reinforcement learning, Proceedings of the 24th
+     international conference on Machine learning (2007) 879–886.
+ [2] S. P. Singh, Reinforcement learning with a hierarchy of abstract models, in: Proceedings of the
+     National Conference on Artificial Intelligence, no. 10, Citeseer, 1992, p. 202.
+ [3] T. D. Kulkarni, K. Narasimhan, A. Saeedi, J. Tenenbaum, Hierarchical deep reinforcement learn-
+     ing: Integrating temporal abstraction and intrinsic motivation, Advances in neural information
+     processing systems 29 (2016) 3675–3683.
+ [4] D. Abel, D. Arumugam, L. Lehnert, M. Littman, State abstractions for lifelong reinforcement
+     learning, International Conference on Machine Learning (2018) 10–19.
+ [5] X. Li, C.-I. Vasile, C. Belta, Reinforcement learning with temporal logic rewards, IEEE/RSJ
+     International Conference on Intelligent Robots and Systems (IROS) (2017) 3834–3839.
+ [6] D. Aksaray, A. Jones, Z. Kong, M. Schwager, C. Belta, Q-learning for robust satisfaction of signal
+     temporal logic specifications, IEEE 55th Conference on Decision and Control (CDC) (2016) 6565–
+     6570.
+ [7] R. T. Icarte, T. Klassen, R. Valenzano, S. McIlraith, Using reward machines for high-level task
+     specification and decomposition in reinforcement learning, International Conference on Machine
+     Learning (2018) 2107–2116.
+
+
+                                                       26
+ [8] Z. Xu, I. Gavran, Y. Ahmad, R. Majumdar, D. Neider, U. Topcu, B. Wu, Joint inference of reward
+     machines and policies for reinforcement learning, Proceedings of the International Conference on
+     Automated Planning and Scheduling 30 (2020) 590–598.
+ [9] G. Konidaris, On the necessity of abstraction, Current opinion in behavioral sciences 29 (2019)
+     1–7.
+[10] J. Andreas, D. Klein, S. Levine, Modular multitask reinforcement learning with policy sketches,
+     International Conference on Machine Learning (2017) 166–175.
+[11] M. Wen, R. Ehlers, U. Topcu, Correct-by-synthesis reinforcement learning with temporal logic
+     constraints, IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) (2015)
+     4983–4990.
+[12] D. Sadigh, E. S. Kim, S. Coogan, S. S. Sastry, S. A. Seshia, A learning based approach to control
+     synthesis of markov decision processes for linear temporal logic specifications, IEEE Conference
+     on Decision and Control (2014) 1091–1096.
+[13] M. Hasanbeig, A. Abate, D. Kroening, Logically-constrained reinforcement learning, arXiv
+     preprint arXiv:1801.08099.
+[14] R. Toro Icarte, T. Q. Klassen, R. Valenzano, S. A. McIlraith, Teaching multiple tasks to an rl
+     agent using ltl, Proceedings of the 17th International Conference on Autonomous Agents and
+     MultiAgent Systems (2018) 452–461.
+[15] Y. Wang, A. K. Bozkurt, M. Pajic, Reinforcement learning with temporal logic constraints for
+     partially-observable markov decision processes, arXiv preprint arXiv:2104.01612.
+[16] A. K. Bozkurt, Y. Wang, M. M. Zavlanos, M. Pajic, Control synthesis from linear temporal logic
+     specifications using model-free reinforcement learning, IEEE International Conference on Robotics
+     and Automation (ICRA) (2020) 10349–10355.
+[17] E. M. Hahn, M. Perez, S. Schewe, F. Somenzi, A. Trivedi, D. Wojtczak, Omega-regular objectives
+     in model-free reinforcement learning, International Conference on Tools and Algorithms for the
+     Construction and Analysis of Systems (2019) 395–412.
+[18] S. Carr, N. Jansen, U. Topcu, Verifiable rnn-based policies for pomdps under temporal logic
+     constraints, arXiv preprint arXiv:2002.05615.
+[19] M. Ghasemi, E. Bulgur, U. Topcu, Task-oriented active perception and planning in environments
+     with partially known semantics, International Conference on Machine Learning (2020) 3484–3493.
+[20] R. R. da Silva, V. Kurtz, H. Lin, Active perception and control from temporal logic specifications,
+     IEEE Control Systems Letters 3 (4) (2019) 1068–1073.
+[21] A.-A. Agha-Mohammadi, S. Chakravorty, N. M. Amato, Firm: Sampling-based feedback motion-
+     planning under motion uncertainty and imperfect measurements, The International Journal of
+     Robotics Research 33 (2) (2014) 268–304.
+[22] M. Guo, K. H. Johansson, D. V. Dimarogonas, Revising motion planning under linear tempo-
+     ral logic specifications in partially known workspaces, 2013 IEEE International Conference on
+     Robotics and Automation (2013) 5025–5032.
+[23] M. Lahijanian, M. R. Maly, D. Fried, L. E. Kavraki, H. Kress-Gazit, M. Y. Vardi, Iterative tem-
+     poral planning in uncertain environments with partial satisfaction guarantees, IEEE Transactions
+     on Robotics 32 (3) (2016) 583–599.
+[24] S. C. Livingston, R. M. Murray, J. W. Burdick, Backtracking temporal logic synthesis for uncertain
+     environments, IEEE International Conference on Robotics and Automation (2012) 5163–5170.
+[25] F. J. Montana, J. Liu, T. J. Dodd, Sampling-based reactive motion planning with temporal logic
+     constraints and imperfect state information, Critical Systems: Formal Methods and Automated
+     Verification (2017) 134–149.
+
+
+                                                  27
+[26] A. M. Ayala, S. B. Andersson, C. Belta, Temporal logic motion planning in unknown environ-
+     ments, IEEE/RSJ International Conference on Intelligent Robots and Systems (2013) 5279–5284.
+[27] A. Camacho, O. Chen, S. Sanner, S. A. McIlraith, Non-markovian rewards expressed in ltl: guiding
+     search via reward shaping, Tenth Annual Symposium on Combinatorial Search.
+[28] B. Ramasubramanian, A. Clark, L. Bushnell, R. Poovendran, Secure control under partial observ-
+     ability with temporal logic constraints, American Control Conference (ACC) (2019) 1181–1188.
+[29] X. Zhang, B. Wu, H. Lin, Learning based supervisor synthesis of pomdp for pctl specifications,
+     54th IEEE Conference on Decision and Control (CDC) (2015) 7470–7475.
+[30] D. Furelos-Blanco, M. Law, A. Russo, K. Broda, A. Jonsson, Induction of subgoal automata for
+     reinforcement learning, in: Proceedings of the AAAI Conference on Artificial Intelligence, Vol. 34,
+     2020, pp. 3890–3897.
+[31] M. Hasanbeig, N. Y. Jeppu, A. Abate, T. Melham, D. Kroening, Deepsynth: Automata synthesis
+     for automatic task segmentation in deep reinforcement learning, in: Proceedings of the AAAI
+     Conference on Artificial Intelligence, Vol. 35, 2021, pp. 7647–7656.
+
+[32] A. Abate, Y. Almulla, J. Fox, D. Hyland, M. Wooldridge, Learning task automata for reinforce-
+     ment learning using hidden markov models, arXiv preprint arXiv:2208.11838.
+[33] R. Toro Icarte, E. Waldie, T. Klassen, R. Valenzano, M. Castro, S. McIlraith, Learning reward ma-
+     chines for partially observable reinforcement learning, Advances in Neural Information Processing
+     Systems 32 (2019) 15523–15534.
+
+[34] G. Rens, J.-F. Raskin, R. Reynouad, G. Marra, Online learning of non-markovian reward models,
+     arXiv preprint arXiv:2009.12600.
+[35] T. Dohmen, N. Topper, G. Atia, A. Beckus, A. Trivedi, A. Velasquez, Inferring probabilistic
+     reward machines from non-markovian reward signals for reinforcement learning, in: Proceedings
+     of the International Conference on Automated Planning and Scheduling, Vol. 32, 2022, pp. 574–
+     582.
+[36] R. Bellman, A markovian decision process, Journal of mathematics and mechanics (1957) 679–684.
+[37] M. L. Puterman, Markov decision processes: discrete stochastic dynamic programming, John
+     Wiley & Sons, 2014.
+
+[38] E. M. Gold, Complexity of automaton identification from given data, Information and control
+     37 (3) (1978) 302–320.
+[39] D. Neider, N. Jansen, Regular model checking using solver technologies and automata learning,
+     NASA Formal Methods Symposium (2013) 16–31.
+
+[40] M. J. Heule, S. Verwer, Exact dfa identification using sat solvers, International Colloquium on
+     Grammatical Inference (2010) 66–79.
+[41] D. Neider, Applications of automata learning in verification and synthesis, Ph.D. thesis,
+     Hochschulbibliothek der Rheinisch-Westfälischen Technischen Hochschule Aachen (2014).
+[42] M. Jin, Z. Ma, K. Jin, H. H. Zhuo, C. Chen, C. Yu, Creativity of ai: Automatic symbolic option
+     discovery for facilitating deep reinforcement learning, in: Proceedings of the AAAI Conference on
+     Artificial Intelligence, Vol. 36, 2022, pp. 7042–7050.
+[43] L. Tingguang, H. Danny, L. Chenming, Z. Delong, W. Chaoqun, M. Q.-H. Meng, Houseexpo: A
+     large-scale 2d indoor layout dataset for learning-based algorithms on mobile robots, arXiv preprint
+     arXiv:1903.09845.
+
+[44] A. Morgado, C. Dodaro, J. Marques-Silva, Core-guided maxsat with soft cardinality constraints
+     (2014) 564–573.
+
+
+
+                                                  28
+[45] A. Ignatiev, A. Morgado, J. Marques-Silva, PySAT: A Python toolkit for prototyping with SAT
+     oracles (2018) 428–437doi:10.1007/978-3-319-94144-8_26.
+     URL https://doi.org/10.1007/978-3-319-94144-8_26
+[46] Y. Wen, P. Vicol, J. Ba, D. Tran, R. Grosse, Flipout: Efficient pseudo-independent weight per-
+     turbations on mini-batches.
+     URL https://openreview.net/forum?id=rJNpifWAb
+[47] C. J. Watkins, P. Dayan, Q-learning, Machine learning 8 (3-4) (1992) 279–292.
+
+
+
+
+A
+    We provide here the proof of Theorem 1. We first need some necessary concepts, starting with the
+attainable trajectory:
+Definition 4. Let M = (S, sI , A, T , R, AP, L̂, γ) be an l-MDP and m ∈ N a natural number. We call
+a trajectory ζ = s0 a0 s1 . . . sk ak sk+1 ∈ (S ×A)∗ ×S m-attainable if (i) k ≤ m and (ii) T (si , ai , si+1 ) > 0
+for each i ∈ {0, . . . , k}. Moreover, we say that a trajectory ζ is attainable if there exists an m ∈ N
+such that ζ is m-attainable.
+
+     Since the function GetEpsilonGreedyAction() (line 3 of Algorithm 4) follows an εa -greedy policy, we
+can show that the proposed algorithm almost surely explores every attainable trajectory in the limit,
+i.e., with probability 1 as the number of episodes goes to infinity.
+Lemma 1. [8, Lemma 1] Let m ∈ N be a natural number. Then, Algorithm 3, with eplength ≥ m,
+almost surely explores every m-attainable trajectory at least once in the limit.
+
+    Similar to Def. 4, we call an observed label sequence λ̂ = `ˆ0 , . . . , `ˆk (m-)attainable on L̂h if there
+exists an (m-)attainable trajectory s0 a0 s1 . . . sk ak sk+1 such that `ˆj = L̂(L̂h , s) for each j ∈ {0, . . . , k}.
+    Consider now Algorithm 3 and assume that the condition of SignifChange(L̂h , L̂j ) (line 13) is not
+satisfied after a certain number of episodes, i.e., L̂h remains fixed. Then, Lemma 1 implies that
+Algorithm 3 almost surely explores every m-attainable label sequences on L̂h in the limit, formalized
+in the following corollary.
+
+Corollary 1. Assume that there exists an nr > 0 such that SignifChange(L̂h , L̂j ) = False (line 13 of
+Algorithm 3), for all episodes n > nr . Then Algorithm 3, with eplength ≥ m, explores almost surely
+every m-attainable label sequence on L̂h in the limit.
+    Therefore, if Algorithm 3 explores sufficiently many m-attainable label sequences on some distri-
+bution L̂h and for a large enough value of m, it is guaranteed to infer a reward machine that is “good
+enough” in the sense that it is equivalent to the reward machine encoding the reward function R on L̂h
+and on all attainable label sequences on L̂h , assuming that such a reward machine exists (see Example
+1). This is formalized in the next lemma.
+Lemma 2. [8, Lemma 2] Let M = (S, sI , A, T , R, AP, L̂, γ) be an l-MDP and assume that there exists
+a reward machine Ah that encodes the reward function R on L̂(L̂h , ·) for some belief L̂h . Assume that
+there exists an nr > 0 such that SignifChange(L̂h , L̂j ) = False (line 13 of Alg. 3), for all episodes
+n > nr . Then, Algorithm 3, with eplength ≥ 2|M|+1 (|Ah | + 1) − 1, almost surely learns a reward
+machine in the limit that is equivalent to Ah on all attainable label sequences on L̂h .
+    Following Lemma 2, Algorithm 3 will eventually learn the reward machine encoding the reward
+function on L̂h , when L̂h is fixed. Intuitively, Lemma 2 suggests that, eventually, the algorithm is
+able to learn a reward machine that encodes the reward function on a fixed estimate L̂(L̂h , ·), i.e.,
+without the updates from the new observations. Nevertheless, the potential perception updates (line
+14 of Algorithm 4) might prevent the algorithm from learning a reward machine, since L̂h might
+be changing after a finite number of episodes. However, if the observation model is accurate (or
+inaccurate) enough and the agent explores sufficiently many label sequences, intuition suggests that
+L̂j will be constantly improving, leading to less frequent updates with respect to the divergence test
+
+
+                                                         29
+(line 13 of Algorithm 3). Therefore, there exists a finite number of episodes, after which L̂h will be
+fixed to some belief L̂f and L̂(L̂f , ·) will be “close” to the ground-truth function LG . By applying
+then Lemma 2, we conclude that Algorithm 3 will learn the reward machine that encodes the reward
+function on L̂f , and consequently converge to the q-function that defines an optimal policy. This is
+used in the proof of Theorem 1 that follows.
+
+Proof of Theorem 1. Note first that the εa -greedy action policy, imposed by the function GetEpsilonGreedyAction(),
+and eplength ≥ |M| imply that every action-pair of M will be visited infinitely often. Moreover,
+SignifChange(L̂h , L̂j ) will be always false for all episodes n > nf , since L̂h will be an accurate enough
+estimate. By definition, the reward machine A that encodes the reward function on the ground truth
+encodes the reward function on L̂h as well. Therefore, Lemma 2 guarantees that Algorithm 3 eventually
+learns a reward machine H that is equivalent to A on all attainable label sequences.
+    According to Observation 1 of [7], given the l-MDP M = (S, sI , A, T , R, AP, L̂, γ) and the reward
+machine A = (V, vI , 2AP , R, δ, σ), one can construct an l-MDP MH = (S×V, (sI , vI ), A, T 0 , R0 , AP, L̂, γ)
+with
+                                                            T (s, a, s0 ), if v 0 = δ(v, L(s0 ))
+                                                          
+                           T 0 ((s, v), a, (s0 , v 0 )) =
+                                                                 0               otherwise
+                        R0 ((s, v), a, (s0 , v 0 )) = σ(v, L(s0 ))
+
+and a Markovian reward function such that every attainable label sequence of MH receives the same
+reward as in M. Thus, an optimal policy for MH will be also optimal for M. Due to the εa -greedy
+action policy, the episode length being eplength ≥ |M|, and the fact that the updates are done in
+parallel for all states of the reward machine H, every state-action pair of the l-MDP MH will be
+visited infinitely often. Therefore, convergence of q-learning for MH is guaranteed [47]. Finally, since
+an optimal policy for MH is optimal for M, Algorithm 3 converges to an optimal policy too.
+
+
+
+
+                                                         30
+

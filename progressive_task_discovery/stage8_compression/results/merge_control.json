@@ -1,0 +1,242 @@
+[
+  {
+    "tag": "rung_1.3",
+    "keep": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "classes": 20,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.3",
+    "keep": 0.9,
+    "precision": 0.13333333333333333,
+    "recall": 0.2222222222222222,
+    "classes": 19,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.3",
+    "keep": 0.8,
+    "precision": 0.13333333333333333,
+    "recall": 0.6666666666666666,
+    "classes": 10,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.3",
+    "keep": 0.65,
+    "precision": 0.04081632653061224,
+    "recall": 0.2222222222222222,
+    "classes": 10,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.3",
+    "keep": 0.5,
+    "precision": 0.006944444444444444,
+    "recall": 0.1111111111111111,
+    "classes": 4,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.6",
+    "keep": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "classes": 15,
+    "true_classes": 15
+  },
+  {
+    "tag": "rung_1.6",
+    "keep": 0.9,
+    "precision": 0.26666666666666666,
+    "recall": 0.3333333333333333,
+    "classes": 15,
+    "true_classes": 15
+  },
+  {
+    "tag": "rung_1.6",
+    "keep": 0.8,
+    "precision": 0.3333333333333333,
+    "recall": 0.4166666666666667,
+    "classes": 14,
+    "true_classes": 15
+  },
+  {
+    "tag": "rung_1.6",
+    "keep": 0.65,
+    "precision": 0.09523809523809523,
+    "recall": 0.16666666666666666,
+    "classes": 12,
+    "true_classes": 15
+  },
+  {
+    "tag": "rung_1.6",
+    "keep": 0.5,
+    "precision": 0.036585365853658534,
+    "recall": 0.25,
+    "classes": 6,
+    "true_classes": 15
+  },
+  {
+    "tag": "rung_1.8",
+    "keep": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "classes": 20,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.8",
+    "keep": 0.9,
+    "precision": 0.6944444444444444,
+    "recall": 0.8333333333333334,
+    "classes": 18,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.8",
+    "keep": 0.8,
+    "precision": 0.08771929824561403,
+    "recall": 0.3333333333333333,
+    "classes": 13,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.8",
+    "keep": 0.65,
+    "precision": 0.07960199004975124,
+    "recall": 0.5333333333333333,
+    "classes": 8,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_1.8",
+    "keep": 0.5,
+    "precision": 0.061068702290076333,
+    "recall": 0.5333333333333333,
+    "classes": 6,
+    "true_classes": 20
+  },
+  {
+    "tag": "rung_2",
+    "keep": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "classes": 19,
+    "true_classes": 19
+  },
+  {
+    "tag": "rung_2",
+    "keep": 0.9,
+    "precision": 0.4489795918367347,
+    "recall": 0.7096774193548387,
+    "classes": 16,
+    "true_classes": 19
+  },
+  {
+    "tag": "rung_2",
+    "keep": 0.8,
+    "precision": 0.09836065573770492,
+    "recall": 0.1935483870967742,
+    "classes": 17,
+    "true_classes": 19
+  },
+  {
+    "tag": "rung_2",
+    "keep": 0.65,
+    "precision": 0.05333333333333334,
+    "recall": 0.12903225806451613,
+    "classes": 15,
+    "true_classes": 19
+  },
+  {
+    "tag": "rung_2",
+    "keep": 0.5,
+    "precision": 0.04693140794223827,
+    "recall": 0.41935483870967744,
+    "classes": 6,
+    "true_classes": 19
+  },
+  {
+    "tag": "rung_2.2",
+    "keep": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "classes": 29,
+    "true_classes": 29
+  },
+  {
+    "tag": "rung_2.2",
+    "keep": 0.9,
+    "precision": 0.1254125412541254,
+    "recall": 0.6440677966101694,
+    "classes": 17,
+    "true_classes": 29
+  },
+  {
+    "tag": "rung_2.2",
+    "keep": 0.8,
+    "precision": 0.08709677419354839,
+    "recall": 0.4576271186440678,
+    "classes": 17,
+    "true_classes": 29
+  },
+  {
+    "tag": "rung_2.2",
+    "keep": 0.65,
+    "precision": 0.05597964376590331,
+    "recall": 0.3728813559322034,
+    "classes": 15,
+    "true_classes": 29
+  },
+  {
+    "tag": "rung_2.2",
+    "keep": 0.5,
+    "precision": 0.06218487394957983,
+    "recall": 0.6271186440677966,
+    "classes": 6,
+    "true_classes": 29
+  },
+  {
+    "tag": "rung_2.6",
+    "keep": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "classes": 27,
+    "true_classes": 27
+  },
+  {
+    "tag": "rung_2.6",
+    "keep": 0.9,
+    "precision": 0.1289198606271777,
+    "recall": 0.3274336283185841,
+    "classes": 29,
+    "true_classes": 27
+  },
+  {
+    "tag": "rung_2.6",
+    "keep": 0.8,
+    "precision": 0.09536784741144415,
+    "recall": 0.30973451327433627,
+    "classes": 19,
+    "true_classes": 27
+  },
+  {
+    "tag": "rung_2.6",
+    "keep": 0.65,
+    "precision": 0.06976744186046512,
+    "recall": 0.26548672566371684,
+    "classes": 20,
+    "true_classes": 27
+  },
+  {
+    "tag": "rung_2.6",
+    "keep": 0.5,
+    "precision": 0.05789473684210526,
+    "recall": 0.2920353982300885,
+    "classes": 9,
+    "true_classes": 27
+  }
+]

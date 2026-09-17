@@ -1,0 +1,2519 @@
+[
+  {
+    "task": "taskQ",
+    "band": "high",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 1.0,
+    "source_seed": 80001,
+    "target_seed": 80208,
+    "source_orders": [
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_high0A",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_high0B",
+      "seed": 80208,
+      "orders": 4,
+      "horizon": 46,
+      "lengths": [
+        16,
+        23,
+        17,
+        20
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p10_safeA",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "safeB": {
+      "tag": "p10_safeB",
+      "seed": 80208,
+      "orders": 4,
+      "horizon": 46,
+      "lengths": [
+        16,
+        23,
+        17,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 20
+    },
+    "fatalA": {
+      "tag": "p10_fatalA",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    },
+    "fatalB": {
+      "tag": "p10_fatalB",
+      "seed": 80208,
+      "orders": 4,
+      "horizon": 46,
+      "lengths": [
+        16,
+        23,
+        17,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 20
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "high",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 1.0,
+    "source_seed": 80006,
+    "target_seed": 80002,
+    "source_orders": [
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        1,
+        3,
+        0
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_high1A",
+      "seed": 80006,
+      "orders": 6,
+      "horizon": 52,
+      "lengths": [
+        23,
+        19,
+        26,
+        24,
+        15,
+        17
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_high1B",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p11_safeA",
+      "seed": 80006,
+      "orders": 6,
+      "horizon": 52,
+      "lengths": [
+        23,
+        19,
+        26,
+        24,
+        15,
+        17
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "safeB": {
+      "tag": "p11_safeB",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "fatalA": {
+      "tag": "p11_fatalA",
+      "seed": 80006,
+      "orders": 6,
+      "horizon": 52,
+      "lengths": [
+        23,
+        19,
+        26,
+        24,
+        15,
+        17
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    },
+    "fatalB": {
+      "tag": "p11_fatalB",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "high",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 1.0,
+    "source_seed": 80012,
+    "target_seed": 80180,
+    "source_orders": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        1,
+        3,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        3,
+        1,
+        0,
+        2
+      ],
+      [
+        3,
+        2,
+        1,
+        0
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        1,
+        3,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        3,
+        1,
+        0,
+        2
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_high2A",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_high2B",
+      "seed": 80180,
+      "orders": 4,
+      "horizon": 64,
+      "lengths": [
+        29,
+        32,
+        27,
+        30
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p12_safeA",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "safeB": {
+      "tag": "p12_safeB",
+      "seed": 80180,
+      "orders": 4,
+      "horizon": 64,
+      "lengths": [
+        29,
+        32,
+        27,
+        30
+      ],
+      "failing_states": 0,
+      "minimal_states": 19
+    },
+    "fatalA": {
+      "tag": "p12_fatalA",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    },
+    "fatalB": {
+      "tag": "p12_fatalB",
+      "seed": 80180,
+      "orders": 4,
+      "horizon": 64,
+      "lengths": [
+        29,
+        32,
+        27,
+        30
+      ],
+      "failing_states": 1,
+      "minimal_states": 19
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "high",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 1.0,
+    "source_seed": 80022,
+    "target_seed": 80177,
+    "source_orders": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_high3A",
+      "seed": 80022,
+      "orders": 4,
+      "horizon": 46,
+      "lengths": [
+        15,
+        23,
+        15,
+        15
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_high3B",
+      "seed": 80177,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        27,
+        30,
+        30,
+        27
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p13_safeA",
+      "seed": 80022,
+      "orders": 4,
+      "horizon": 46,
+      "lengths": [
+        15,
+        23,
+        15,
+        15
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "safeB": {
+      "tag": "p13_safeB",
+      "seed": 80177,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        27,
+        30,
+        30,
+        27
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "fatalA": {
+      "tag": "p13_fatalA",
+      "seed": 80022,
+      "orders": 4,
+      "horizon": 46,
+      "lengths": [
+        15,
+        23,
+        15,
+        15
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    },
+    "fatalB": {
+      "tag": "p13_fatalB",
+      "seed": 80177,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        27,
+        30,
+        30,
+        27
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "high",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 1.0,
+    "source_seed": 80023,
+    "target_seed": 80043,
+    "source_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_high4A",
+      "seed": 80023,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        14,
+        15,
+        23,
+        15,
+        17,
+        20
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_high4B",
+      "seed": 80043,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        30,
+        29,
+        17,
+        19
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p14_safeA",
+      "seed": 80023,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        14,
+        15,
+        23,
+        15,
+        17,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "safeB": {
+      "tag": "p14_safeB",
+      "seed": 80043,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        30,
+        29,
+        17,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "fatalA": {
+      "tag": "p14_fatalA",
+      "seed": 80023,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        14,
+        15,
+        23,
+        15,
+        17,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    },
+    "fatalB": {
+      "tag": "p14_fatalB",
+      "seed": 80043,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        30,
+        29,
+        17,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "mid",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.3333333333333333,
+    "source_seed": 80001,
+    "target_seed": 80028,
+    "source_orders": [
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        1,
+        2,
+        0,
+        3
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        1,
+        3,
+        0
+      ],
+      [
+        3,
+        1,
+        2,
+        0
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_mid0A",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_mid0B",
+      "seed": 80028,
+      "orders": 6,
+      "horizon": 60,
+      "lengths": [
+        17,
+        24,
+        28,
+        18,
+        30,
+        25
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p15_safeA",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "safeB": {
+      "tag": "p15_safeB",
+      "seed": 80028,
+      "orders": 6,
+      "horizon": 60,
+      "lengths": [
+        17,
+        24,
+        28,
+        18,
+        30,
+        25
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "fatalA": {
+      "tag": "p15_fatalA",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    },
+    "fatalB": {
+      "tag": "p15_fatalB",
+      "seed": 80028,
+      "orders": 6,
+      "horizon": 60,
+      "lengths": [
+        17,
+        24,
+        28,
+        18,
+        30,
+        25
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "mid",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.3333333333333333,
+    "source_seed": 80002,
+    "target_seed": 80023,
+    "source_orders": [
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_mid1A",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_mid1B",
+      "seed": 80023,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        14,
+        15,
+        23,
+        15,
+        17,
+        20
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p16_safeA",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "safeB": {
+      "tag": "p16_safeB",
+      "seed": 80023,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        14,
+        15,
+        23,
+        15,
+        17,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "fatalA": {
+      "tag": "p16_fatalA",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    },
+    "fatalB": {
+      "tag": "p16_fatalB",
+      "seed": 80023,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        14,
+        15,
+        23,
+        15,
+        17,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "mid",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.3333333333333333,
+    "source_seed": 80003,
+    "target_seed": 80110,
+    "source_orders": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        2,
+        1,
+        0,
+        3
+      ],
+      [
+        3,
+        0,
+        2,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_mid2A",
+      "seed": 80003,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        24,
+        23,
+        30,
+        20
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_mid2B",
+      "seed": 80110,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        20,
+        15,
+        18,
+        23,
+        14,
+        20
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p17_safeA",
+      "seed": 80003,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        24,
+        23,
+        30,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "safeB": {
+      "tag": "p17_safeB",
+      "seed": 80110,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        20,
+        15,
+        18,
+        23,
+        14,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "fatalA": {
+      "tag": "p17_fatalA",
+      "seed": 80003,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        24,
+        23,
+        30,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    },
+    "fatalB": {
+      "tag": "p17_fatalB",
+      "seed": 80110,
+      "orders": 6,
+      "horizon": 46,
+      "lengths": [
+        20,
+        15,
+        18,
+        23,
+        14,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "mid",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.3333333333333333,
+    "source_seed": 80004,
+    "target_seed": 80012,
+    "source_orders": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        3,
+        1,
+        0
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        1,
+        3,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        3,
+        1,
+        0,
+        2
+      ],
+      [
+        3,
+        2,
+        1,
+        0
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_mid3A",
+      "seed": 80004,
+      "orders": 4,
+      "horizon": 50,
+      "lengths": [
+        19,
+        25,
+        14,
+        22
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_mid3B",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p18_safeA",
+      "seed": 80004,
+      "orders": 4,
+      "horizon": 50,
+      "lengths": [
+        19,
+        25,
+        14,
+        22
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "safeB": {
+      "tag": "p18_safeB",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "fatalA": {
+      "tag": "p18_fatalA",
+      "seed": 80004,
+      "orders": 4,
+      "horizon": 50,
+      "lengths": [
+        19,
+        25,
+        14,
+        22
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    },
+    "fatalB": {
+      "tag": "p18_fatalB",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "mid",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.3333333333333333,
+    "source_seed": 80005,
+    "target_seed": 80050,
+    "source_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        0,
+        3
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        1,
+        3,
+        0
+      ],
+      [
+        3,
+        0,
+        1,
+        2
+      ],
+      [
+        3,
+        1,
+        2,
+        0
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_mid4A",
+      "seed": 80005,
+      "orders": 4,
+      "horizon": 58,
+      "lengths": [
+        17,
+        13,
+        29,
+        23
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_mid4B",
+      "seed": 80050,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        26,
+        23,
+        16,
+        28,
+        27,
+        25
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p19_safeA",
+      "seed": 80005,
+      "orders": 4,
+      "horizon": 58,
+      "lengths": [
+        17,
+        13,
+        29,
+        23
+      ],
+      "failing_states": 0,
+      "minimal_states": 20
+    },
+    "safeB": {
+      "tag": "p19_safeB",
+      "seed": 80050,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        26,
+        23,
+        16,
+        28,
+        27,
+        25
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "fatalA": {
+      "tag": "p19_fatalA",
+      "seed": 80005,
+      "orders": 4,
+      "horizon": 58,
+      "lengths": [
+        17,
+        13,
+        29,
+        23
+      ],
+      "failing_states": 1,
+      "minimal_states": 20
+    },
+    "fatalB": {
+      "tag": "p19_fatalB",
+      "seed": 80050,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        26,
+        23,
+        16,
+        28,
+        27,
+        25
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "low",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.0,
+    "source_seed": 80001,
+    "target_seed": 80010,
+    "source_orders": [
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        0,
+        3
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        0,
+        1,
+        2
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_low0A",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_low0B",
+      "seed": 80010,
+      "orders": 5,
+      "horizon": 56,
+      "lengths": [
+        26,
+        27,
+        26,
+        26,
+        28
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p20_safeA",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "safeB": {
+      "tag": "p20_safeB",
+      "seed": 80010,
+      "orders": 5,
+      "horizon": 56,
+      "lengths": [
+        26,
+        27,
+        26,
+        26,
+        28
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "fatalA": {
+      "tag": "p20_fatalA",
+      "seed": 80001,
+      "orders": 6,
+      "horizon": 54,
+      "lengths": [
+        18,
+        23,
+        27,
+        15,
+        19,
+        22
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    },
+    "fatalB": {
+      "tag": "p20_fatalB",
+      "seed": 80010,
+      "orders": 5,
+      "horizon": 56,
+      "lengths": [
+        26,
+        27,
+        26,
+        26,
+        28
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "low",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.0,
+    "source_seed": 80002,
+    "target_seed": 80012,
+    "source_orders": [
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        1,
+        3,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        3,
+        1,
+        0,
+        2
+      ],
+      [
+        3,
+        2,
+        1,
+        0
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_low1A",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_low1B",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p21_safeA",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "safeB": {
+      "tag": "p21_safeB",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "fatalA": {
+      "tag": "p21_fatalA",
+      "seed": 80002,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        26,
+        25,
+        17,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    },
+    "fatalB": {
+      "tag": "p21_fatalB",
+      "seed": 80012,
+      "orders": 6,
+      "horizon": 56,
+      "lengths": [
+        27,
+        17,
+        27,
+        15,
+        24,
+        28
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "low",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.0,
+    "source_seed": 80003,
+    "target_seed": 80004,
+    "source_orders": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        1,
+        3,
+        2
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ],
+      [
+        2,
+        3,
+        1,
+        0
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_low2A",
+      "seed": 80003,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        24,
+        23,
+        30,
+        20
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_low2B",
+      "seed": 80004,
+      "orders": 4,
+      "horizon": 50,
+      "lengths": [
+        19,
+        25,
+        14,
+        22
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p22_safeA",
+      "seed": 80003,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        24,
+        23,
+        30,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "safeB": {
+      "tag": "p22_safeB",
+      "seed": 80004,
+      "orders": 4,
+      "horizon": 50,
+      "lengths": [
+        19,
+        25,
+        14,
+        22
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "fatalA": {
+      "tag": "p22_fatalA",
+      "seed": 80003,
+      "orders": 4,
+      "horizon": 60,
+      "lengths": [
+        24,
+        23,
+        30,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    },
+    "fatalB": {
+      "tag": "p22_fatalB",
+      "seed": 80004,
+      "orders": 4,
+      "horizon": 50,
+      "lengths": [
+        19,
+        25,
+        14,
+        22
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "low",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.0,
+    "source_seed": 80005,
+    "target_seed": 80016,
+    "source_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3,
+        0
+      ],
+      [
+        2,
+        0,
+        1,
+        3
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        2,
+        3,
+        1
+      ],
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_low3A",
+      "seed": 80005,
+      "orders": 4,
+      "horizon": 58,
+      "lengths": [
+        17,
+        13,
+        29,
+        23
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_low3B",
+      "seed": 80016,
+      "orders": 5,
+      "horizon": 62,
+      "lengths": [
+        26,
+        27,
+        31,
+        31,
+        30
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p23_safeA",
+      "seed": 80005,
+      "orders": 4,
+      "horizon": 58,
+      "lengths": [
+        17,
+        13,
+        29,
+        23
+      ],
+      "failing_states": 0,
+      "minimal_states": 20
+    },
+    "safeB": {
+      "tag": "p23_safeB",
+      "seed": 80016,
+      "orders": 5,
+      "horizon": 62,
+      "lengths": [
+        26,
+        27,
+        31,
+        31,
+        30
+      ],
+      "failing_states": 0,
+      "minimal_states": 20
+    },
+    "fatalA": {
+      "tag": "p23_fatalA",
+      "seed": 80005,
+      "orders": 4,
+      "horizon": 58,
+      "lengths": [
+        17,
+        13,
+        29,
+        23
+      ],
+      "failing_states": 1,
+      "minimal_states": 20
+    },
+    "fatalB": {
+      "tag": "p23_fatalB",
+      "seed": 80016,
+      "orders": 5,
+      "horizon": 62,
+      "lengths": [
+        26,
+        27,
+        31,
+        31,
+        30
+      ],
+      "failing_states": 1,
+      "minimal_states": 20
+    }
+  },
+  {
+    "task": "taskQ",
+    "band": "low",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "overlap": 0.0,
+    "source_seed": 80006,
+    "target_seed": 80014,
+    "source_orders": [
+      [
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        2,
+        1,
+        3,
+        0
+      ],
+      [
+        2,
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        2,
+        0,
+        1
+      ]
+    ],
+    "target_orders": [
+      [
+        0,
+        2,
+        1,
+        3
+      ],
+      [
+        1,
+        0,
+        2,
+        3
+      ],
+      [
+        2,
+        0,
+        3,
+        1
+      ],
+      [
+        3,
+        1,
+        2,
+        0
+      ]
+    ],
+    "mapA": {
+      "tag": "taskQ_low4A",
+      "seed": 80006,
+      "orders": 6,
+      "horizon": 52,
+      "lengths": [
+        23,
+        19,
+        26,
+        24,
+        15,
+        17
+      ],
+      "cells": 31
+    },
+    "mapB": {
+      "tag": "taskQ_low4B",
+      "seed": 80014,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        18,
+        26,
+        19,
+        18
+      ],
+      "cells": 31
+    },
+    "safeA": {
+      "tag": "p24_safeA",
+      "seed": 80006,
+      "orders": 6,
+      "horizon": 52,
+      "lengths": [
+        23,
+        19,
+        26,
+        24,
+        15,
+        17
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "safeB": {
+      "tag": "p24_safeB",
+      "seed": 80014,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        18,
+        26,
+        19,
+        18
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "fatalA": {
+      "tag": "p24_fatalA",
+      "seed": 80006,
+      "orders": 6,
+      "horizon": 52,
+      "lengths": [
+        23,
+        19,
+        26,
+        24,
+        15,
+        17
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    },
+    "fatalB": {
+      "tag": "p24_fatalB",
+      "seed": 80014,
+      "orders": 4,
+      "horizon": 52,
+      "lengths": [
+        18,
+        26,
+        19,
+        18
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    }
+  }
+]

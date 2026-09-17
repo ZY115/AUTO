@@ -1,0 +1,15 @@
+{
+  "runs": 1920,
+  "tasks": 12,
+  "seeds": "1400-1431",
+  "scales": {
+    "none": 0.05,
+    "frontier": 0.07,
+    "learned": 0.07,
+    "oracle": 0.07,
+    "product": 0.02
+  },
+  "budget": 200000,
+  "source_sha256": "61f0517be9283711501ba1a402faa566c83788be8b21dcf3e37c9afdf6b2d1c0",
+  "binary_sha256": "c292fdb3225bfff0a19572064da1086b84133f097d7d6481ed9110404f448610"
+}

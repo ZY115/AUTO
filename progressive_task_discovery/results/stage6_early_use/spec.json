@@ -1,0 +1,99 @@
+{
+  "name": "stage6_early_use",
+  "defaults": {
+    "budget": 100000,
+    "every": 1000
+  },
+  "conditions": [
+    {
+      "name": "benign",
+      "args": {
+        "slip": 0,
+        "hfactor": 24
+      }
+    },
+    {
+      "name": "deadline",
+      "args": {
+        "slip": 0,
+        "hfactor": 16
+      }
+    },
+    {
+      "name": "noisy",
+      "args": {
+        "slip": 0.2,
+        "hfactor": 20
+      }
+    }
+  ],
+  "lengths": [
+    4,
+    8,
+    16
+  ],
+  "seeds": [
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231
+  ],
+  "variants": [
+    {
+      "name": "goal_reuse",
+      "args": {
+        "method": "goal_reuse",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "delayed_goal",
+      "args": {
+        "method": "delayed_goal",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "known_goal",
+      "args": {
+        "method": "known_goal",
+        "epsilon": 0.005
+      }
+    },
+    {
+      "name": "count_replay",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.05
+      }
+    }
+  ]
+}

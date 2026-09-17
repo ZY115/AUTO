@@ -1,0 +1,57 @@
+[
+  {
+    "task": "c_n3d2m1_4L2a7",
+    "ktrue": 19,
+    "kmin": 8,
+    "n": 55,
+    "redundant": 11,
+    "stats": {
+      "0": {
+        "queries": 55,
+        "redundant": 11,
+        "reuse": 11,
+        "reuse_redundant": 3,
+        "verdict_ok": 6,
+        "identity_ok": 2
+      },
+      "1": {
+        "queries": 55,
+        "redundant": 11
+      },
+      "2": {
+        "queries": 55,
+        "redundant": 11
+      }
+    }
+  },
+  {
+    "task": "c_n3d2m1_4L3a11",
+    "ktrue": 19,
+    "kmin": 12,
+    "n": 99,
+    "redundant": 41,
+    "stats": {
+      "0": {
+        "queries": 99,
+        "redundant": 41,
+        "reuse": 39,
+        "reuse_redundant": 25,
+        "verdict_ok": 33,
+        "identity_ok": 14,
+        "unknown": 24
+      },
+      "1": {
+        "queries": 99,
+        "redundant": 41,
+        "reuse": 2,
+        "reuse_redundant": 0,
+        "verdict_ok": 1,
+        "unknown": 16
+      },
+      "2": {
+        "queries": 99,
+        "redundant": 41
+      }
+    }
+  }
+]

@@ -1,0 +1,126 @@
+{
+  "ratio": 1.3,
+  "orders": 3,
+  "max_length": 25,
+  "n": 4,
+  "d": 4,
+  "m": 1,
+  "L": 2,
+  "arm": 7,
+  "seed": 73464,
+  "pair": [
+    1,
+    3
+  ],
+  "H": 28,
+  "Q": 20,
+  "denom": "window5",
+  "D": 26,
+  "minw": 5,
+  "cells": 28,
+  "target": "rung_1.3",
+  "tag": "rung_1.3",
+  "horizon": 50,
+  "lengths": [
+    21,
+    21,
+    25
+  ],
+  "starts": [
+    2,
+    15,
+    22
+  ],
+  "history_states": 28,
+  "minimal_states": 20,
+  "denominator": "window5",
+  "denominator_states": 26,
+  "min_sufficient_window": 5,
+  "honest_ratio": 1.3,
+  "feature_sizes": {
+    "count": 10,
+    "bag": 16,
+    "window1": 17,
+    "window2": 20,
+    "window3": 22,
+    "window4": 24,
+    "window5": 26,
+    "window6": 27,
+    "window7": 28,
+    "window8": 28,
+    "window9": 28,
+    "history": 28
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": false,
+    "window4": false,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "window8": true,
+    "window9": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      2,
+      3,
+      1,
+      4,
+      5,
+      6,
+      4,
+      6
+    ],
+    [
+      1,
+      3,
+      2,
+      0,
+      4,
+      5,
+      6,
+      4,
+      5
+    ],
+    [
+      2,
+      1,
+      3,
+      0,
+      4,
+      5,
+      6,
+      4,
+      5
+    ]
+  ],
+  "task_states": 30,
+  "minimal_total": 29,
+  "bridge": [
+    4,
+    5,
+    6,
+    4
+  ],
+  "tails": [
+    [
+      5
+    ],
+    [
+      6
+    ]
+  ],
+  "m2": 1,
+  "tail_lengths": [
+    1,
+    1
+  ],
+  "fatal": false,
+  "failing_states": 0
+}

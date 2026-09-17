@@ -1,0 +1,21 @@
+{
+  "name": "full",
+  "budget": 200000,
+  "seeds": 32,
+  "seed0": 500,
+  "arms": [
+    "history",
+    "history+random",
+    "history+scarcest",
+    "history+shape",
+    "history+shape+scarcest",
+    "automaton",
+    "automaton+random",
+    "automaton+scarcest",
+    "automaton+shape+scarcest",
+    "history+shape_oracle",
+    "merged+scarcest"
+  ],
+  "jobs": 2112,
+  "source_sha256": "c5c3b28e561cf004f65e42133b6d8d3d2f4b099f6b4a2ac18877ddd34b729223"
+}

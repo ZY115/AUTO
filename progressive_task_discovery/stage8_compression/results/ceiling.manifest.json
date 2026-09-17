@@ -1,0 +1,19 @@
+{
+  "runner": "src/ceiling_probe.py",
+  "families": 24,
+  "seeds": 8,
+  "budget": 300000,
+  "every": 250,
+  "grid": "n in 3,4,5 x d in 2,4 x (m,m2) in (1,4),(3,6) x (L,arm) in (2,7),(3,11)",
+  "arms": [
+    "goal_oracle",
+    "goal_scratch",
+    "index_oracle",
+    "index_scratch"
+  ],
+  "runs": 960,
+  "source_sha256": "8d171de54408533e0d53780d85eb74691a5ff57dce7ea905ffc8b2b132122000",
+  "data_sha256": "9fb9860b63bdff09ec01f33f36e7c6af8b9dfb413570bb085af4376c10049d2d",
+  "written": "2026-09-10",
+  "note": "re-run with a matched oracle (value_ranked) alongside the old one"
+}

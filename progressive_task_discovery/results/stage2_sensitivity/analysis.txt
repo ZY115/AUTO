@@ -1,0 +1,52 @@
+Unattainable 90% thresholds: 5 / 72
+benign       count_e0.05                    cost=   15750 solved=12/12 AUC=0.744 final=1.000
+benign       count_e0.2                     cost=   16667 solved=12/12 AUC=0.724 final=1.000
+benign       count_e0.5                     cost=   24500 solved=12/12 AUC=0.592 final=1.000
+benign       learned_qrm_e0.05              cost=    7333 solved=12/12 AUC=0.886 final=1.000
+benign       learned_qrm_e0.2               cost=    7750 solved=12/12 AUC=0.879 final=1.000
+benign       learned_qrm_e0.5               cost=   10333 solved=12/12 AUC=0.836 final=1.000
+benign       progressive_h0.2               cost=   15583 solved=12/12 AUC=0.749 final=1.000
+benign       progressive_h0.5               cost=   16583 solved=12/12 AUC=0.731 final=1.000
+benign       progressive_h0.8               cost=   19583 solved=12/12 AUC=0.679 final=1.000
+benign       progressive_low0               cost=   15833 solved=12/12 AUC=0.742 final=1.000
+benign       progressive_fastgate           cost=   16417 solved=12/12 AUC=0.735 final=1.000
+benign       progressive_qrm_h0.2           cost=    7417 solved=12/12 AUC=0.885 final=1.000
+benign       progressive_qrm_h0.5           cost=    8167 solved=12/12 AUC=0.872 final=1.000
+benign       progressive_qrm_h0.8           cost=   11083 solved=12/12 AUC=0.824 final=1.000
+benign       progressive_qrm_low0           cost=    8167 solved=12/12 AUC=0.872 final=1.000
+benign       progressive_qrm_fastgate       cost=    8000 solved=12/12 AUC=0.875 final=1.000
+benign       oracle_qrm                     cost=    4500 solved=12/12 AUC=0.933 final=1.000
+tight        count_e0.05                    cost=   20250 solved=12/12 AUC=0.671 final=1.000
+tight        count_e0.2                     cost=   27750 solved=10/12 AUC=0.540 final=0.833
+tight        count_e0.5                     cost=   54917 solved= 3/12 AUC=0.086 final=0.167
+tight        learned_qrm_e0.05              cost=   11083 solved=12/12 AUC=0.815 final=1.000
+tight        learned_qrm_e0.2               cost=   17333 solved=12/12 AUC=0.719 final=1.000
+tight        learned_qrm_e0.5               cost=   47583 solved= 4/12 AUC=0.164 final=0.333
+tight        progressive_h0.2               cost=   19750 solved=12/12 AUC=0.668 final=1.000
+tight        progressive_h0.5               cost=   22000 solved=12/12 AUC=0.636 final=1.000
+tight        progressive_h0.8               cost=   39333 solved= 9/12 AUC=0.322 final=0.667
+tight        progressive_low0               cost=   20583 solved=12/12 AUC=0.664 final=1.000
+tight        progressive_fastgate           cost=   23333 solved=11/12 AUC=0.616 final=0.917
+tight        progressive_qrm_h0.2           cost=   13000 solved=12/12 AUC=0.792 final=1.000
+tight        progressive_qrm_h0.5           cost=   15667 solved=12/12 AUC=0.746 final=1.000
+tight        progressive_qrm_h0.8           cost=   33500 solved=10/12 AUC=0.443 final=0.833
+tight        progressive_qrm_low0           cost=   13667 solved=12/12 AUC=0.779 final=1.000
+tight        progressive_qrm_fastgate       cost=   14917 solved=12/12 AUC=0.758 final=1.000
+tight        oracle_qrm                     cost=    4583 solved=12/12 AUC=0.932 final=1.000
+noisy_tight  count_e0.05                    cost=   33250 solved= 9/12 AUC=0.478 final=0.835
+noisy_tight  count_e0.2                     cost=   44667 solved= 5/12 AUC=0.267 final=0.501
+noisy_tight  count_e0.5                     cost=   58583 solved= 1/12 AUC=0.030 final=0.083
+noisy_tight  learned_qrm_e0.05              cost=   29833 solved= 9/12 AUC=0.538 final=0.791
+noisy_tight  learned_qrm_e0.2               cost=   33833 solved= 9/12 AUC=0.419 final=0.735
+noisy_tight  learned_qrm_e0.5               cost=   55667 solved= 2/12 AUC=0.092 final=0.216
+noisy_tight  progressive_h0.2               cost=   35917 solved= 8/12 AUC=0.500 final=0.824
+noisy_tight  progressive_h0.5               cost=   34833 solved= 9/12 AUC=0.438 final=0.784
+noisy_tight  progressive_h0.8               cost=   50000 solved= 5/12 AUC=0.179 final=0.414
+noisy_tight  progressive_low0               cost=   36750 solved= 9/12 AUC=0.429 final=0.773
+noisy_tight  progressive_fastgate           cost=   34500 solved= 9/12 AUC=0.440 final=0.789
+noisy_tight  progressive_qrm_h0.2           cost=   33583 solved= 7/12 AUC=0.547 final=0.776
+noisy_tight  progressive_qrm_h0.5           cost=   31333 solved= 8/12 AUC=0.523 final=0.674
+noisy_tight  progressive_qrm_h0.8           cost=   46833 solved= 5/12 AUC=0.234 final=0.439
+noisy_tight  progressive_qrm_low0           cost=   31000 solved= 8/12 AUC=0.524 final=0.759
+noisy_tight  progressive_qrm_fastgate       cost=   31000 solved= 8/12 AUC=0.528 final=0.680
+noisy_tight  oracle_qrm                     cost=   22083 solved= 9/12 AUC=0.735 final=0.734

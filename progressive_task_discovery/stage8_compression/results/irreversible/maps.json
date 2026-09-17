@@ -1,0 +1,625 @@
+[
+  {
+    "task": "taskR",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82005,
+    "orders": 5,
+    "cells": 33,
+    "forked": true,
+    "safe": {
+      "tag": "taskR_00_safe",
+      "horizon": 52,
+      "lengths": [
+        22,
+        18,
+        26,
+        17,
+        21
+      ],
+      "failing_states": 0,
+      "minimal_states": 20
+    },
+    "fatal": {
+      "tag": "taskR_00_fatal",
+      "horizon": 52,
+      "lengths": [
+        22,
+        18,
+        26,
+        17,
+        21
+      ],
+      "failing_states": 1,
+      "minimal_states": 20
+    }
+  },
+  {
+    "task": "taskR",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82008,
+    "orders": 4,
+    "cells": 33,
+    "forked": true,
+    "safe": {
+      "tag": "taskR_01_safe",
+      "horizon": 38,
+      "lengths": [
+        13,
+        16,
+        12,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 19
+    },
+    "fatal": {
+      "tag": "taskR_01_fatal",
+      "horizon": 38,
+      "lengths": [
+        13,
+        16,
+        12,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 19
+    }
+  },
+  {
+    "task": "taskR",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82009,
+    "orders": 4,
+    "cells": 33,
+    "forked": true,
+    "safe": {
+      "tag": "taskR_02_safe",
+      "horizon": 38,
+      "lengths": [
+        16,
+        19,
+        18,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 19
+    },
+    "fatal": {
+      "tag": "taskR_02_fatal",
+      "horizon": 38,
+      "lengths": [
+        16,
+        19,
+        18,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 19
+    }
+  },
+  {
+    "task": "taskR",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82010,
+    "orders": 4,
+    "cells": 33,
+    "forked": true,
+    "safe": {
+      "tag": "taskR_03_safe",
+      "horizon": 34,
+      "lengths": [
+        17,
+        13,
+        16,
+        17
+      ],
+      "failing_states": 0,
+      "minimal_states": 19
+    },
+    "fatal": {
+      "tag": "taskR_03_fatal",
+      "horizon": 34,
+      "lengths": [
+        17,
+        13,
+        16,
+        17
+      ],
+      "failing_states": 1,
+      "minimal_states": 19
+    }
+  },
+  {
+    "task": "taskR",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82012,
+    "orders": 4,
+    "cells": 33,
+    "forked": true,
+    "safe": {
+      "tag": "taskR_04_safe",
+      "horizon": 42,
+      "lengths": [
+        14,
+        18,
+        13,
+        21
+      ],
+      "failing_states": 0,
+      "minimal_states": 19
+    },
+    "fatal": {
+      "tag": "taskR_04_fatal",
+      "horizon": 42,
+      "lengths": [
+        14,
+        18,
+        13,
+        21
+      ],
+      "failing_states": 1,
+      "minimal_states": 19
+    }
+  },
+  {
+    "task": "taskS",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "seed": 82000,
+    "orders": 4,
+    "cells": 35,
+    "forked": true,
+    "safe": {
+      "tag": "taskS_00_safe",
+      "horizon": 40,
+      "lengths": [
+        20,
+        19,
+        19,
+        20
+      ],
+      "failing_states": 0,
+      "minimal_states": 19
+    },
+    "fatal": {
+      "tag": "taskS_00_fatal",
+      "horizon": 40,
+      "lengths": [
+        20,
+        19,
+        19,
+        20
+      ],
+      "failing_states": 1,
+      "minimal_states": 19
+    }
+  },
+  {
+    "task": "taskS",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "seed": 82003,
+    "orders": 4,
+    "cells": 35,
+    "forked": true,
+    "safe": {
+      "tag": "taskS_01_safe",
+      "horizon": 42,
+      "lengths": [
+        19,
+        21,
+        17,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 20
+    },
+    "fatal": {
+      "tag": "taskS_01_fatal",
+      "horizon": 42,
+      "lengths": [
+        19,
+        21,
+        17,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 20
+    }
+  },
+  {
+    "task": "taskS",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "seed": 82005,
+    "orders": 6,
+    "cells": 35,
+    "forked": true,
+    "safe": {
+      "tag": "taskS_02_safe",
+      "horizon": 50,
+      "lengths": [
+        25,
+        21,
+        14,
+        24,
+        16,
+        25
+      ],
+      "failing_states": 0,
+      "minimal_states": 23
+    },
+    "fatal": {
+      "tag": "taskS_02_fatal",
+      "horizon": 50,
+      "lengths": [
+        25,
+        21,
+        14,
+        24,
+        16,
+        25
+      ],
+      "failing_states": 1,
+      "minimal_states": 23
+    }
+  },
+  {
+    "task": "taskS",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "seed": 82006,
+    "orders": 4,
+    "cells": 35,
+    "forked": true,
+    "safe": {
+      "tag": "taskS_03_safe",
+      "horizon": 46,
+      "lengths": [
+        22,
+        23,
+        20,
+        22
+      ],
+      "failing_states": 0,
+      "minimal_states": 21
+    },
+    "fatal": {
+      "tag": "taskS_03_fatal",
+      "horizon": 46,
+      "lengths": [
+        22,
+        23,
+        20,
+        22
+      ],
+      "failing_states": 1,
+      "minimal_states": 21
+    }
+  },
+  {
+    "task": "taskS",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "seed": 82007,
+    "orders": 4,
+    "cells": 35,
+    "forked": true,
+    "safe": {
+      "tag": "taskS_04_safe",
+      "horizon": 58,
+      "lengths": [
+        25,
+        27,
+        26,
+        29
+      ],
+      "failing_states": 0,
+      "minimal_states": 22
+    },
+    "fatal": {
+      "tag": "taskS_04_fatal",
+      "horizon": 58,
+      "lengths": [
+        25,
+        27,
+        26,
+        29
+      ],
+      "failing_states": 1,
+      "minimal_states": 22
+    }
+  },
+  {
+    "task": "taskT",
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "m2": 3,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82005,
+    "orders": 5,
+    "cells": 31,
+    "forked": true,
+    "safe": {
+      "tag": "taskT_00_safe",
+      "horizon": 48,
+      "lengths": [
+        21,
+        17,
+        24,
+        16,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 17
+    },
+    "fatal": {
+      "tag": "taskT_00_fatal",
+      "horizon": 48,
+      "lengths": [
+        21,
+        17,
+        24,
+        16,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 17
+    }
+  },
+  {
+    "task": "taskT",
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "m2": 3,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82008,
+    "orders": 4,
+    "cells": 31,
+    "forked": true,
+    "safe": {
+      "tag": "taskT_01_safe",
+      "horizon": 34,
+      "lengths": [
+        12,
+        14,
+        11,
+        17
+      ],
+      "failing_states": 0,
+      "minimal_states": 16
+    },
+    "fatal": {
+      "tag": "taskT_01_fatal",
+      "horizon": 34,
+      "lengths": [
+        12,
+        14,
+        11,
+        17
+      ],
+      "failing_states": 1,
+      "minimal_states": 16
+    }
+  },
+  {
+    "task": "taskT",
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "m2": 3,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82009,
+    "orders": 4,
+    "cells": 31,
+    "forked": true,
+    "safe": {
+      "tag": "taskT_02_safe",
+      "horizon": 36,
+      "lengths": [
+        15,
+        18,
+        16,
+        18
+      ],
+      "failing_states": 0,
+      "minimal_states": 16
+    },
+    "fatal": {
+      "tag": "taskT_02_fatal",
+      "horizon": 36,
+      "lengths": [
+        15,
+        18,
+        16,
+        18
+      ],
+      "failing_states": 1,
+      "minimal_states": 16
+    }
+  },
+  {
+    "task": "taskT",
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "m2": 3,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82010,
+    "orders": 4,
+    "cells": 31,
+    "forked": true,
+    "safe": {
+      "tag": "taskT_03_safe",
+      "horizon": 32,
+      "lengths": [
+        16,
+        12,
+        14,
+        16
+      ],
+      "failing_states": 0,
+      "minimal_states": 16
+    },
+    "fatal": {
+      "tag": "taskT_03_fatal",
+      "horizon": 32,
+      "lengths": [
+        16,
+        12,
+        14,
+        16
+      ],
+      "failing_states": 1,
+      "minimal_states": 16
+    }
+  },
+  {
+    "task": "taskT",
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "m2": 3,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "seed": 82012,
+    "orders": 4,
+    "cells": 31,
+    "forked": true,
+    "safe": {
+      "tag": "taskT_04_safe",
+      "horizon": 38,
+      "lengths": [
+        13,
+        16,
+        12,
+        19
+      ],
+      "failing_states": 0,
+      "minimal_states": 16
+    },
+    "fatal": {
+      "tag": "taskT_04_fatal",
+      "horizon": 38,
+      "lengths": [
+        13,
+        16,
+        12,
+        19
+      ],
+      "failing_states": 1,
+      "minimal_states": 16
+    }
+  }
+]

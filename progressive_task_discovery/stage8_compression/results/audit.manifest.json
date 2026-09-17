@@ -1,0 +1,37 @@
+{
+  "runner": "src/run_audit.py",
+  "families": 24,
+  "levels": [
+    160,
+    320
+  ],
+  "policies": [
+    "arrival",
+    "random",
+    "decision",
+    "novel"
+  ],
+  "caches": [
+    [
+      "node",
+      1
+    ],
+    [
+      "node",
+      0
+    ],
+    [
+      "truestate",
+      1
+    ]
+  ],
+  "seeds": 4,
+  "seed0": 10000,
+  "budget": 200000,
+  "merge_rule": "edsm",
+  "runs": 2304,
+  "note": "truestate cache is privileged and exists only as an attribution ceiling",
+  "source_sha256": "688e44663e8e935a14dffe2d925c91cd930053e9e48901345a064ff9895cc90b",
+  "data_sha256": "630632129c1095c13bf781410a8e60d0d0b5962747852fda10a39482573e7819",
+  "written": "2026-09-11"
+}

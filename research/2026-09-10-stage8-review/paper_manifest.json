@@ -1,0 +1,232 @@
+[
+  {
+    "id": "P23_FutureOptions_2024",
+    "title": "Generalization of Temporal Logic Tasks via Future Dependent Options",
+    "landing_url": "https://easychair.org/publications/preprint/FJpq",
+    "pdf_url": "https://easychair.org/publications/preprint/FJpq/download",
+    "file": "papers/P23_FutureOptions_2024.pdf",
+    "status": "downloaded",
+    "bytes": 2016201,
+    "sha256": "b021ab39016ab50124bc1407713115b51960cc0a6959a62920087eb226ca8984"
+  },
+  {
+    "id": "P19_FORM_AAMAS2025",
+    "title": "FORM: Learning Expressive and Transferable First-Order Logic Reward Machines",
+    "landing_url": "https://arxiv.org/abs/2501.00364",
+    "pdf_url": "https://arxiv.org/pdf/2501.00364",
+    "file": "papers/P19_FORM_AAMAS2025.pdf",
+    "status": "downloaded",
+    "bytes": 1475453,
+    "sha256": "c9c561312dd8117d6765c1f7de0171ef3c240f989012ed2da1a6244653d44562"
+  },
+  {
+    "id": "P20_RewardTranslation_ICML2025",
+    "title": "Reward Translation via Reward Machine in Semi-Alignable MDPs",
+    "landing_url": "https://proceedings.mlr.press/v267/hua25a.html",
+    "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/hua25a/hua25a.pdf",
+    "file": "papers/P20_RewardTranslation_ICML2025.pdf",
+    "status": "downloaded",
+    "bytes": 3257331,
+    "sha256": "2ef5c3970856ce951d146a76becb6a9e3fe32e39b4899177ec6875a0ab945002"
+  },
+  {
+    "id": "P21_SpatialOptions_2025",
+    "title": "Learning Spatially Refined Sub-Policies for Temporal Task Composition in Continuous RL",
+    "landing_url": "https://openreview.net/pdf/c33d0d4c87e2287631c3d7012fb4eaf5cddf5eb5.pdf",
+    "pdf_url": "https://bnaic2025.unamur.be/accepted-submissions/accepted_oral/007%20-%20Learning%20Spatially%20Refined%20Sub-Policies%20for%20%20Temporal%20Task%20Composition%20in%20Continuous%20RL.pdf",
+    "file": "papers/P21_SpatialOptions_2025.pdf",
+    "status": "downloaded",
+    "bytes": 2829756,
+    "sha256": "beda48a66a53bbf311572479a350d19b015a50562da001339412ff44df3d7cd9"
+  },
+  {
+    "id": "P22_TemporalCausality_2025",
+    "title": "Expediting Reinforcement Learning by Incorporating Knowledge About Temporal Causality in the Environment",
+    "landing_url": "https://arxiv.org/abs/2510.15456",
+    "pdf_url": "https://arxiv.org/pdf/2510.15456",
+    "file": "papers/P22_TemporalCausality_2025.pdf",
+    "status": "downloaded",
+    "bytes": 483460,
+    "sha256": "9638d978e84e092d51e434c95a92eba412ff43795eb57237f607995523ae3a7e"
+  },
+  {
+    "id": "P16_LOF_ICML2021",
+    "title": "The Logical Options Framework",
+    "landing_url": "https://proceedings.mlr.press/v139/araki21a.html",
+    "pdf_url": "https://proceedings.mlr.press/v139/araki21a/araki21a.pdf",
+    "file": "papers/P16_LOF_ICML2021.pdf",
+    "status": "downloaded",
+    "bytes": 1460921,
+    "sha256": "57341129da3ee100524b5ebad5e672c15cd53fc08ade8b845594e87f27f96ee1"
+  },
+  {
+    "id": "P17_PyCRM_SoftwareX2026",
+    "title": "PyCRM: A Python library for reward machine-based reinforcement learning",
+    "landing_url": "https://www.raillab.org/publication/bester-2026-pycrm/",
+    "pdf_url": "https://www.raillab.org/publication/bester-2026-pycrm/bester-2026-pycrm.pdf",
+    "file": "papers/P17_PyCRM_SoftwareX2026.pdf",
+    "status": "downloaded",
+    "bytes": 2216737,
+    "sha256": "3eed25093ffdcd4f2fb9a08ee40409dc31e0bb134d60c9d69a769ed84d8ce086"
+  },
+  {
+    "id": "P18_LearningRM_POMDP",
+    "title": "Learning Reward Machines: A Study in Partially Observable Reinforcement Learning",
+    "landing_url": "https://arxiv.org/abs/2112.09477",
+    "pdf_url": "https://arxiv.org/pdf/2112.09477",
+    "file": "papers/P18_LearningRM_POMDP.pdf",
+    "status": "downloaded",
+    "bytes": 951637,
+    "sha256": "60baa832cebaba4106c0f16e4ec10099f36d2cb7270583475aaadea5b86307c5"
+  },
+  {
+    "id": "P01_ISA_JAIR2021",
+    "title": "Induction and Exploitation of Subgoal Automata for Reinforcement Learning",
+    "landing_url": "https://arxiv.org/abs/2009.03855",
+    "pdf_url": "https://arxiv.org/pdf/2009.03855",
+    "file": "papers/P01_ISA_JAIR2021.pdf",
+    "status": "downloaded",
+    "bytes": 3799466,
+    "sha256": "7993070057ef9427e4628778f2cbe9a535adaa00c83b2f2c4c5500c471fd3581"
+  },
+  {
+    "id": "P02_RewardMachines_JAIR2022",
+    "title": "Reward Machines: Exploiting Reward Function Structure in Reinforcement Learning",
+    "landing_url": "https://arxiv.org/abs/2010.03950",
+    "pdf_url": "https://arxiv.org/pdf/2010.03950",
+    "file": "papers/P02_RewardMachines_JAIR2022.pdf",
+    "status": "downloaded",
+    "bytes": 994322,
+    "sha256": "29e1f287a6927fbda24d63b8593870ff3399f9af6fdbb3151656f79ba4980eea"
+  },
+  {
+    "id": "P03_JIRP_ICAPS2020",
+    "title": "Joint Inference of Reward Machines and Policies for Reinforcement Learning",
+    "landing_url": "https://arxiv.org/abs/1909.05912",
+    "pdf_url": "https://arxiv.org/pdf/1909.05912",
+    "file": "papers/P03_JIRP_ICAPS2020.pdf",
+    "status": "downloaded",
+    "bytes": 6044490,
+    "sha256": "3a6048773fd9181755b2ced4ecf00f2285bf2fad76f928806c86f80f9c2f32c7"
+  },
+  {
+    "id": "P04_HRM_ICML2023",
+    "title": "Hierarchies of Reward Machines",
+    "landing_url": "https://proceedings.mlr.press/v202/furelos-blanco23a.html",
+    "pdf_url": "https://proceedings.mlr.press/v202/furelos-blanco23a/furelos-blanco23a.pdf",
+    "file": "papers/P04_HRM_ICML2023.pdf",
+    "status": "downloaded",
+    "bytes": 2209459,
+    "sha256": "5d3d55f029c3c31e5910678e4b02420b8300435b4dd9b368c26ebba163cf2efb"
+  },
+  {
+    "id": "P05_TALearner_ECAI2023",
+    "title": "Learning Task Automata for Reinforcement Learning using Hidden Markov Models",
+    "landing_url": "https://arxiv.org/abs/2208.11838",
+    "pdf_url": "https://arxiv.org/pdf/2208.11838",
+    "file": "papers/P05_TALearner_ECAI2023.pdf",
+    "status": "downloaded",
+    "bytes": 494444,
+    "sha256": "10277bd3b517cccacc120aaecad3d780f003476aadc73ca5b28ffd6e6abb7f41"
+  },
+  {
+    "id": "P06_CPREP",
+    "title": "Contextual Pre-planning on Reward Machine Abstractions for Enhanced Transfer in Deep Reinforcement Learning",
+    "landing_url": "https://arxiv.org/abs/2307.05209",
+    "pdf_url": "https://arxiv.org/pdf/2307.05209",
+    "file": "papers/P06_CPREP.pdf",
+    "status": "downloaded",
+    "bytes": 836823,
+    "sha256": "ebae85051719f878d1d3c90dab3cf3d0825cfbd43d4ff757861bd05c7e97801f"
+  },
+  {
+    "id": "P07_HER_NeurIPS2017",
+    "title": "Hindsight Experience Replay",
+    "landing_url": "https://arxiv.org/abs/1707.01495",
+    "pdf_url": "https://arxiv.org/pdf/1707.01495",
+    "file": "papers/P07_HER_NeurIPS2017.pdf",
+    "status": "downloaded",
+    "bytes": 2464277,
+    "sha256": "89db330bb254d9c8818c61f2749cbe8f0535e8b487333409c5dc8cd8b3c89a04"
+  },
+  {
+    "id": "P08_PolicySketches_ICML2017",
+    "title": "Modular Multitask Reinforcement Learning with Policy Sketches",
+    "landing_url": "https://proceedings.mlr.press/v70/andreas17a.html",
+    "pdf_url": "https://proceedings.mlr.press/v70/andreas17a/andreas17a.pdf",
+    "file": "papers/P08_PolicySketches_ICML2017.pdf",
+    "status": "downloaded",
+    "bytes": 2597200,
+    "sha256": "1f4ffb3ea26cdb0341760121342351115c4a8682cc54ed58ff0abfd62b59708e"
+  },
+  {
+    "id": "P09_UVFA_ICML2015",
+    "title": "Universal Value Function Approximators",
+    "landing_url": "https://proceedings.mlr.press/v37/schaul15.html",
+    "pdf_url": "https://proceedings.mlr.press/v37/schaul15.pdf",
+    "file": "papers/P09_UVFA_ICML2015.pdf",
+    "status": "downloaded",
+    "bytes": 860963,
+    "sha256": "f2cbf7b9e07f54cf04d70e221ce0b068fe397550799c164fd7e74c5a2918a00f"
+  },
+  {
+    "id": "P10_NoisyRM_NeurIPS2024",
+    "title": "Reward Machines for Deep RL in Noisy and Uncertain Environments",
+    "landing_url": "https://arxiv.org/abs/2406.00120",
+    "pdf_url": "https://arxiv.org/pdf/2406.00120",
+    "file": "papers/P10_NoisyRM_NeurIPS2024.pdf",
+    "status": "downloaded",
+    "bytes": 1633428,
+    "sha256": "6f00c593af8c4e2fe6cee953db66dbffc984b5439784844f0a8cf0fea724282e"
+  },
+  {
+    "id": "P11_PartialSemantics_AI2024",
+    "title": "Joint Learning of Reward Machines and Policies in Environments with Partially Known Semantics",
+    "landing_url": "https://arxiv.org/abs/2204.11833",
+    "pdf_url": "https://arxiv.org/pdf/2204.11833",
+    "file": "papers/P11_PartialSemantics_AI2024.pdf",
+    "status": "downloaded",
+    "bytes": 8163068,
+    "sha256": "9e9c0dade9f0d41e922a8688dcdcf52ea4da614cb7104c1fb18a4ea29c8bb4df"
+  },
+  {
+    "id": "P12_AFRAI",
+    "title": "Active Finite Reward Automaton Inference and Reinforcement Learning Using Queries and Counterexamples",
+    "landing_url": "https://arxiv.org/abs/2006.15714",
+    "pdf_url": "https://arxiv.org/pdf/2006.15714",
+    "file": "papers/P12_AFRAI.pdf",
+    "status": "downloaded",
+    "bytes": 1530456,
+    "sha256": "1d417a2eb220d0824cf20e02d06be666234332ef14db785042bccdf7dea380fa"
+  },
+  {
+    "id": "P13_Shielding_AAAI2018",
+    "title": "Safe Reinforcement Learning via Shielding",
+    "landing_url": "https://ojs.aaai.org/index.php/AAAI/article/view/11797",
+    "pdf_url": "https://cdn.aaai.org/ojs/11797/11797-13-15325-1-2-20201228.pdf",
+    "file": "papers/P13_Shielding_AAAI2018.pdf",
+    "status": "downloaded",
+    "bytes": 583042,
+    "sha256": "857bc20e72106caa7910b0ec00087b72d800a1c2f7c70c3932bdf4d158bf798e"
+  },
+  {
+    "id": "P14_RawTrajectoryRM_2026",
+    "title": "Active Reward Machine Inference From Raw State Trajectories",
+    "landing_url": "https://arxiv.org/abs/2604.07480",
+    "pdf_url": "https://arxiv.org/pdf/2604.07480",
+    "file": "papers/P14_RawTrajectoryRM_2026.pdf",
+    "status": "downloaded",
+    "bytes": 759394,
+    "sha256": "51b4402c7b4974aa26a5b17d6f1aa36793948463b98fc5bd85c1a9c775ac55a6"
+  },
+  {
+    "id": "P15_SymbolicRM_2026",
+    "title": "Reinforcement Learning with Symbolic Reward Machines",
+    "landing_url": "https://arxiv.org/abs/2603.03068",
+    "pdf_url": "https://arxiv.org/pdf/2603.03068",
+    "file": "papers/P15_SymbolicRM_2026.pdf",
+    "status": "downloaded",
+    "bytes": 1108844,
+    "sha256": "fe4d2a995155368e9e5843c0fc25e3a5fa6d507594b56b1447cd5310102f3e72"
+  }
+]

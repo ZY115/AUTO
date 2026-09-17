@@ -1,0 +1,1355 @@
+                                        Joint Inference of Reward Machines and Policies for Reinforcement
+                                                                    Learning
+                                         Zhe Xu,* Ivan Gavran,* Yousef Ahmad, Rupak Majumdar, Daniel Neider, Ufuk Topcu and Bo Wu
+
+
+                                                                                                          Abstract
+
+
+
+
+arXiv:1909.05912v2 [cs.AI] 8 Feb 2022
+                                                     Incorporating high-level knowledge is an effective way to expedite reinforcement learning (RL), especially for
+                                                 complex tasks with sparse rewards. We investigate an RL problem where the high-level knowledge is in the form of
+                                                 reward machines, i.e., a type of Mealy machine that encodes the reward functions. We focus on a setting in which
+                                                 this knowledge is a priori not available to the learning agent. We develop an iterative algorithm that performs joint
+                                                 inference of reward machines and policies for RL (more specifically, q-learning). In each iteration, the algorithm
+                                                 maintains a hypothesis reward machine and a sample of RL episodes. It derives q-functions from the current hy-
+                                                 pothesis reward machine, and performs RL to update the q-functions. While performing RL, the algorithm updates
+                                                 the sample by adding RL episodes along which the obtained rewards are inconsistent with the rewards based on the
+                                                 current hypothesis reward machine. In the next iteration, the algorithm infers a new hypothesis reward machine from
+                                                 the updated sample. Based on an equivalence relationship we defined between states of reward machines, we transfer
+                                                 the q-functions between the hypothesis reward machines in consecutive iterations. We prove that the proposed algo-
+                                                 rithm converges almost surely to an optimal policy in the limit if a minimal reward machine can be inferred and the
+                                                 maximal length of each RL episode is sufficiently long. The experiments show that learning high-level knowledge in
+                                                 the form of reward machines can lead to fast convergence to optimal policies in RL, while standard RL methods such
+                                                 as q-learning and hierarchical RL methods fail to converge to optimal policies after a substantial number of training
+                                                 steps in many tasks.
+
+
+                                        1       Introduction
+                                        In many reinforcement learning (RL) tasks, agents only obtain sparse rewards for complex behaviors over a long
+                                        period of time. In such a setting, learning is very challenging and incorporating high-level knowledge can help the
+                                        agent explore the environment in a more efficient manner [1]. This high-level knowledge may be expressed as different
+                                        levels of temporal or behavioral abstractions, or a hierarchy of abstractions [2–4].
+                                            The existing RL work exploiting the hierarchy of abstractions often falls into the category of hierarchical RL
+                                        [5–7]. Generally speaking, hierarchical RL decomposes an RL problem into a hierarchy of subtasks, and uses a meta-
+                                        controller to decide which subtask to perform and a controller to decide which action to take within a subtask [8].
+                                            For many complex tasks with sparse rewards, there exist high-level structural relationships among the subtasks
+                                        [9–12]. Recently, the authors in [13] propose reward machines, i.e., a type of Mealy machines, to compactly encode
+                                        high-level structural relationships. They develop a method called q-learning for reward machines (QRM) and show
+                                        that QRM can converge almost surely to an optimal policy in the tabular case. Furthermore, QRM outperforms both
+                                        q-learning and hierarchical RL for tasks where the high-level structural relationships can be encoded by a reward
+                                        machine.
+                                            Despite the attractive performance of QRM, the assumption that the reward machine is explicitly known by the
+                                        learning agent is unrealistic in many practical situations. The reward machines are not straightforward to encode, and
+                                        more importantly, the high-level structural relationships among the subtasks are often implicit and unknown to the
+                                        learning agent.
+                                             * These two authors have contributed equally; the rest of the authors are ordered alphabetically.
+                                            ∗ Zhe Xu and Bo Wu are with the Oden Institute for Computational Engineering and Sciences, University of Texas, Austin, Austin, TX 78712,
+
+                                        Ivan Gavran, Rupak Majumdar and Daniel Neider are with the Max Planck Institute for Software Systems, 67663 Kaiserslautern, Germany, Ufuk
+                                        Topcu is with the Department of Aerospace Engineering and Engineering Mechanics, and the Oden Institute for Computational Engineering and
+                                        Sciences, University of Texas, Austin, Austin, TX 78712, e-mail: zhexu@utexas.edu, gavran@mpi-sws.org, ysa6549@gmail.com, rupak@mpi-
+                                        sws.org, neider@mpi-sws.org, utopcu@utexas.edu, bwu3@utexas.edu.
+
+
+
+                                                                                                              1
+    In this paper, we investigate the RL problem where the high-level knowledge in the form of reward machines
+is a priori not available to the learning agent. We develop an iterative algorithm that performs joint inference of
+reward machines and policies (JIRP) for RL (more specifically, q-learning [14]). In each iteration, the JIRP algorithm
+maintains a hypothesis reward machine and a sample of RL episodes. It derives q-functions from the current hypothesis
+reward machine, and performs RL to update the q-functions. While performing RL, the algorithm updates the sample
+by adding counterexamples (i.e., RL episodes in which the obtained rewards are inconsistent with the rewards based
+on the current hypothesis reward machine). The updated sample is used to infers a new hypothesis reward machine,
+using automata learning techniques [15, 16]. The algorithm converges almost surely to an optimal policy in the limit if
+a minimal reward machine can be inferred and the maximal length of each RL episode is sufficiently long.
+    We use three optimization techniques in the proposed algorithm for its practical and efficient implementation. First,
+we periodically add batches of counterexamples to the sample for inferring a new hypothesis reward machine. In this
+way, we can adjust the frequency of inferring new hypothesis reward machines. Second, we utilize the experiences
+from previous iterations by transferring the q-functions between equivalent states of two hypothesis reward machines.
+Lastly, we adopt a polynomial-time learning algorithm for inferring the hypothesis reward machines.
+    We implement the proposed approach and two baseline methods (q-learning in augmented state space and deep hi-
+erarchical RL [17]) in three scenarios: an autonomous vehicle scenario, an office world scenario and a Minecraft world
+scenario. In the autonomous vehicle scenario, the proposed approach converges to optimal policies within 100,000
+training steps, while the baseline methods are stuck with near-zero average cumulative reward for up to two million
+training steps. In each of the office world scenario and the Minecraft world scenario, over the number of training
+steps within which the proposed approach converges to optimal policies, the baseline methods reach only 60% of the
+optimal average cumulative reward.
+
+1.1     Motivating Example
+As a motivating example, let us consider an autonomous vehicle navigating a residential area, as sketched in Figure 1.
+As is common in many countries, some of the roads are priority roads. While traveling on a priority road, a car has the
+right-of-way and does not need to stop at intersections. In the example of Figure 1, all the horizontal roads are priority
+roads (indicated by gray shading), whereas the vertical roads are ordinary roads.
+
+
+
+                                          A
+
+
+
+
+                                                                                     B
+
+
+
+                                              Figure 1: Map of a residential area.
+
+    Let us assume that the task of the autonomous vehicle is to drive from position “A” (a start position) on the map
+to position “B” while obeying the traffic rules. To simplify matters, we are here only interested in the traffic rules
+concerning the right-of-way and how the vehicle acts at intersections with respect to the traffic from the intersecting
+roads. Moreover, we make the following two further simplifications: (1) the vehicle correctly senses whether it is on a
+priority road and (2) the vehicle always stays in the road and goes straight forward while not at the intersections.
+    The vehicle is obeying the traffic rules if and only if
+
+      • it is traveling on an ordinary road and stops for exactly one time unit at the intersections;
+      • it is traveling on a priority road and does not stop at the intersections.
+After a period of time (e.g., 100 time units), the vehicle receives a reward of 1 if it reaches B while obeying the traffic
+rules, otherwise it receives a reward of 0.
+
+
+                                                               2
+2     Preliminaries
+In this section we introduce necessary background on reinforcement learning and reward machines.
+
+2.1     Markov Decision Processes and Reward Machines
+Definition 1 A labeled Markov decision process is a tuple M = (S, sI , A, p, R, γ, P, L) consisting of a finite state
+space S, an agent’s initial state sI ∈ S, a finite set of actions A, and a probabilistic transition function p : S ×A×S →
+[0, 1]. A reward function R : (S × A)+ × S → R and a discount factor γ ∈ [0, 1) together specify payoffs to the agent.
+Finally, a finite set P of propositional variables, and a labeling function L : S × A × S → 2P determine the set of
+relevant high-level events that the agent detects in the environment. We define the size of M, denoted as |M|, to be |S|
+(i.e., the cardinality of the set S).
+
+     A policy is a function mapping states in S to a probability distribution over actions in A. At state s ∈ S, an agent
+using policy π picks an action a with probability π(s, a), and the new state s0 is chosen with probability p(s, a, s0 ).
+A policy π and the initial state sI together determine a stochastic process and we write S0 A0 S1 . . . for the random
+trajectory of states and actions.
+     A trajectory is a realization of this stochastic process: a sequence of states and actions s0 a0 s1 . . . sk ak sk+1 , with
+s0 = sI . Its corresponding label sequence is `0 `1 . . . `k where L(si , ai , si+1 ) = `i for each i ≤ k. Similarly, the
+corresponding reward sequence is r1 . . . rk , where ri = R(s0 a0 . . . si ai si+1 ), for each i ≤ k. We call the pair
+(λ, ρ) := (`1 . . . `k , r1 . . . rk ) a trace.
+                                                                    Pk
+     A trajectory s0 a0 s1 a1 . . . sk ak sk+1 achieves a reward i=0 γ i R(s0 a0 . .P  . si ai si+1 ). In reinforcement learning,
+                                                                                          ∞
+the objective of the agent is to maximize the expected cumulative reward, Eπ [ i=0 γ i R(S0 A0 . . . Si+1 )].
+     Note that the definition of the reward function assumes that the reward is a function of the whole trajectory. A
+special, often used, case of this is a so-called Markovian reward function, which depends only on the last transition
+(i.e., R(ζ · (s, a)s0 ) = R(ζ 0 · (s, a)s0 ) for all ζ, ζ 0 ∈ (S × A)∗ , where we use · to denote concatenation).
+     Our definition of MDPs corresponds to the “usual” definition of MDPs (e.g., [18]), except that we have introduced
+a set of high-level propositions P and a labeling function L assigning sets of propositions (labels) to each transition
+(s, a, s0 ) of an MDP. We use these labels to define (general) reward functions through reward machines. Reward
+machines [13, 19] are a type of finite-state machines—when in one of its finitely many states, upon reading a symbol,
+such a machine outputs a reward and transitions into a next state.1
+
+Definition 2 A reward machine A = (V, vI , 2P , R, δ, σ) consists of a finite, nonempty set V of states, an initial state
+vI ∈ V , an input alphabet 2P , an output alphabet R, a (deterministic) transition function δ : V × 2P → V , and an
+output function σ : V × 2P → R. We define the size of A, denoted as |A|, to be |V | (i.e., the cardinality of the set V ).
+
+    Technically, a reward machine is a special instance of a Mealy machine [20]: the one that has real numbers as its
+output alphabet and subsets of propositional variables (originating from an underlying MDP) as its input alphabet. (To
+accentuate this connection, a defining tuple of a reward machine explicitly mentions both the input alphabet 2P and
+the output alphabet R.)
+    The run of a reward machine A on a sequence of labels `1 . . . `k ∈ (2P )∗ is a sequence v0 (`1 , r1 )v1 (`2 , r2 ) . . . (`k , rk )vk+1
+of states and label-reward pairs such that v0 = vI and for all i ∈ {0, . . . , k}, we have δ(vi , `i ) = vi+1 and
+σ(vi , `i ) = ri . We write A(`1 . . . `k ) = r1 . . . rk to connect the input label sequence to the sequence of rewards
+produced by the machine A. We say that a reward machine A encodes the reward function R of an MDP if for every
+trajectory s0 a0 . . . sk ak sk+1 and the corresponding label sequence `1 . . . `k , the reward sequence equals A(`1 . . . `k ).
+2
+
+     An interesting (and practically relevant) subclass of reward machines is given by Mealy machines with a specially
+marked subset of final states, the output alphabet {0, 1}, and the output function mapping a transition to 1 if and only
+if the end-state is a final state and the transition is not a self-loop. Additionally, final states must not be a part of any
+    1 The reward machines we are using are the so-called simple reward machines in the parlance of [13], where every output symbol is a real
+
+number.
+    2 In general, there can be multiple reward machines that encode the reward function of an MDP: all such machines agree on the label sequences
+
+that arise from trajectories of the underlying MDP, but they might differ on label sequences that the MDP does not permit. For clarity of exposition
+and without loss of generality, we assume throughout this paper that there is a unique reward machine encoding the reward function of the MDP
+under consideration. However, our algorithm also works in the general case.
+
+
+
+                                                                         3
+                                     v4                   (sp, 0)        v3          (sp, 0)
+
+                                                               (¬sp, 0)       (¬sp ∧ ¬pr , 0)
+                               (B, 1)
+                                                   (¬sp ∧ ¬pr , 0)
+                                 start        v0                         v1                     v2
+
+                                                                                     (sp, 0)
+                                         (¬sp ∧ pr , 0)             (¬sp ∧ pr , 0)
+
+
+Figure 2: Reward machine for the autonomous vehicle. sp: stop at an intersection; ¬sp: not stop at an intersection; pr:
+end in a priority road; ¬pr: end in an ordinary road. An edge (sp, 0) between v0 and v3 means that the reward machine
+will transition from v0 to v3 if the proposition (label) sp becomes true and output a reward equal to zero.
+
+  Algorithm 1: QRM episode
+ 1 Hyperparameter: episode length eplength
+ 2 Input: a reward machine (V, vI , 2P , R, δ, σ), a set of q-functions Q = {q v |v ∈ V }
+ 3 s ← InitialState(); v ← vI ; λ ← []; ρ ← []
+ 4 for 0 ≤ t < eplength do
+ 5     a ← GetEpsilonGreedyAction(q v , s)
+ 6     s0 ← ExecuteAction(s, a)
+ 7     v 0 ← δ(v, L(s, a, s0 ))
+ 8     r ← σ(v, L(s, a, s0 )) or observe reward in JIRP
+ 9     update q v (s, a) using reward r
+10     for v̂ ∈ V \ {v} do
+11         v̂ 0 ← δ(v̂, L(s, a, s0 ))
+12         r̂ ← σ(v̂, L(s, a, s0 ))
+13         update q v̂ (s, a) using reward r̂
+14       append L(s, a, s0 ) to λ; append r to ρ
+15       s ← s0 ; v ← v 0
+16    return (λ, ρ, Q)
+
+
+cycle, except for a self-loop. This special case can be used in reinforcement learning scenarios with sparse reward
+functions (e.g., see the reward machines used in the case studies in [13]).
+     For example, Figure 2 shows a reward machine for our motivating example. Intuitively, state v0 corresponds to the
+vehicle traveling on a priority road, while v1 and v2 correspond to the vehicle traveling and stopped on an ordinary
+road, respectively. While in v0 , the vehicle ends up in a sink state v3 (representing violation of the traffic rules) if it
+stops at an intersection (sp). While in state v1 , the vehicle gets to the sink state v3 if it does not stop at an intersection
+(¬sp), and gets to state v2 if it stops at an intersection (sp). While in state v2 , the vehicle gets to the sink state v3 if
+it stops again at the same intersection (sp), gets back to state v0 if it turns left or turns right (thus ending in a priority
+road, i.e., ¬sp ∧ pr), and gets back to state v0 if it goes straight (thus ending in an ordinary road, i.e., ¬sp ∧ ¬pr). The
+reward machine switches among states v0 , v1 and v2 if the vehicle is obeying the traffic rules. Finally, the reward 1 is
+obtained if from v0 the goal position B is reached. (Transitions not shown in Figure 2 are self-loops with reward 0.)
+
+2.2     Reinforcement Learning With Reward Machines
+In reinforcement learning, an agent explores the environment modeled by an MDP, receiving occasional rewards
+according to the underlying reward function [21]. One possible way to learn an optimal policy is tabular q-learning
+[14]. There, the value of the function q(s, a), that represents the expected future reward for the agent taking action a
+
+
+                                                                    4
+in state s, is iteratively updated. Provided that all state-action pairs are seen infinitely often, q-learning converges to an
+optimal policy in the limit, for MDPs with a Markovian reward function [14].
+    The q-learning algorithm can be modified to learn an optimal policy when the general reward function is encoded
+by a reward machine [13]. Algorithm 1 shows one episode of the QRM algorithm. It maintains a set Q of q-functions,
+denoted as q v for each state v of the reward machine.
+    The current state v of the reward machine guides the exploration by determining which q-function is used to choose
+the next action (line 5). However, in each single exploration step, the q-functions corresponding to all reward machine
+states are updated (lines 9 and 13).
+    The modeling hypothesis of QRM is that the rewards are known, but the transition probabilities are unknown.
+Later, we shall relax the assumption that rewards are known and we shall instead observe the rewards (in line 8).
+During the execution of the episode, traces (λ, ρ) of the reward machine are collected (line 14) and returned in the
+end. While not necessary for q-learning, the traces will be useful in our algorithm to check the consistency of an
+inferred reward machine with rewards received from the environment (see Section 3).
+
+
+3      Joint Inference of Reward Machines and Policies (JIRP)
+Given a reward machine, the QRM algorithm learns an optimal policy. However, in many situations, assuming the
+knowledge of the reward function (and thus the reward machine) is unrealistic. Even if the reward function is known,
+encoding it in terms of a reward machine can be non-trivial. In this section, we describe an RL algorithm that iteratively
+infers (i.e., learns) the reward machine and the optimal policy for the reward machine.
+    Our algorithm combines an automaton learning algorithm to infer hypothesis reward machines and the QRM
+algorithm for RL on the current candidate. Inconsistencies between the hypothesis machine and the observed traces
+are used to trigger re-learning of the reward machine. We show that the resulting iterative algorithm converges in
+the limit almost surely to the reward machine encoding the reward function and to an optimal policy for this reward
+machine.
+
+3.1     JIRP Algorithm
+Algorithm 2 describes our JIRP algorithm. It starts with an initial hypothesis reward machine H and runs the QRM
+algorithm to learn an optimal policy. The episodes of QRM are used to collect traces and update q-functions. As long
+as the traces are consistent with the current hypothesis reward machine, QRM explores more of the environment using
+the reward machine to guide the search. However, if a trace (λ, ρ) is detected that is inconsistent with the hypothesis
+reward machine (i.e., H(λ) 6= ρ, Line 6), our algorithm stores it in a set X (Line 7)—we call the trace (λ, ρ) a
+counterexample and the set X a sample. Once the sample is updated, the algorithm re-learns a new hypothesis reward
+machine (Line 8) and proceeds. Note that we require the new hypothesis reward machine to be minimal (we discuss
+this requirement shortly).
+
+    Algorithm 2: JIRP
+ 1 Initialize the hypothesis reward machine H with a set of states V
+ 2 Initialize a set of q-functions Q = {q v |v ∈ V }
+ 3 Initialize X = ∅
+ 4 for episode n = 1, 2, . . . do
+ 5      (λ, ρ, Q) = QRM episode(H, Q)
+ 6      if H(λ) 6= ρ then
+ 7          add (λ, ρ) to X
+ 8          infer a new, minimal hypothesis reward machine H based on the traces in X
+ 9          re-initialize Q
+
+
+
+
+                                                              5
+3.2     Passive Inference of Minimal Reward Machines
+Intuitively, a sample X ⊂ (2P )+ × R+ contains a finite number of counterexamples. Consequently, we would like to
+construct a new reward machine H that is (a) consistent with X in the sense that H(λ) = ρ for each (λ, ρ) ∈ X and
+(b) minimal. We call this task passive learning of reward machines. The phrase “passive” here refers to the fact that
+the learning algorithm is not allowed to query for additional information, as opposed to Angluin’s famous “active”
+learning framework [22].
+
+Task 1 Given a finite set X ⊂ (2P )+ × R+ , passive learning of reward machines refers to the task of constructing a
+minimal reward machine H that is consistent with X (i.e., that satisfies H(λ) = ρ for each (λ, ρ) ∈ X).
+
+    Note that this learning task asks to infer not an arbitrary reward machine but a minimal one (i.e., a consistent
+reward machine with the fewest number of states among all consistent reward machines). This additional requirement
+can be seen as an Occam’s razor strategy [23] and is crucial in that it guarantees JIRP to converge to the optimal policy
+in the limit. Unfortunately, Task 1 is computationally hard in the sense that the corresponding decision problem
+        “given a sample X and a natural number k > 0, does a consistent Mealy machine with at most k states
+        exist?”
+is NP-complete. This is a direct consequence of Gold’s (in)famous result for regular languages [24].
+    Since this problem is computationally hard, a promising approach is to learn minimal consistent reward machines
+with the help of highly-optimized SAT solvers ( [25], [15], and [26] describe similar learning algorithms for inferring
+minimal deterministic finite automata from examples). The underlying idea is to generate a sequence of formulas ϕX     k
+in propositional logic for increasing values of k ∈ N (starting with k = 1) that satisfy the following two properties:
+      • ϕX
+         k is satisfiable if and only if there exists a reward machine with k states that is consistent with X; and
+
+      • a satisfying assignment of the variables in ϕX
+                                                     k contains sufficient information to derive such a reward machine.
+
+By increasing k by one and stopping once ϕX  k becomes satisfiable (or by using a binary search), an algorithm that
+learns a minimal reward machine that is consistent with the given sample is obtained.
+    Despite the advances in the performance of SAT solvers, this approach still does not scale to large problems.
+Therefore, one often must resort to polynomial-time heuristics.
+
+3.3     Convergence in the Limit
+Tabular q-learning and QRM both eventually converge to a q-function defining an optimal policy almost surely. We
+show that the same desirable property holds for JIRP. More specifically, in the following sequence of lemmas we show
+that—given a long enough exploration—JIRP will converge to the reward machine that encodes the reward function
+of the underlying MDP. We then use this fact to show that overall learning process converges to an optimal policy (see
+Theorem 1).
+    We begin by defining attainable trajectories—trajectories that can possibly appear in the exploration of an agent.
+
+Definition 3 Let M = (S, sI , A, p, R, γ, P, L) be a labeled MDP and m ∈ N a natural number. We call a trajectory
+ζ = s0 a0 s1 . . . sk ak sk+1 ∈ (S×A)∗ ×S m-attainable if (i) k ≤ m and (ii) p(si , ai , si+1 ) > 0 for each i ∈ {0, . . . , k}.
+Moreover, we say that a trajectory ζ is attainable if there exists an m ∈ N such that ζ is m-attainable.
+
+   An induction shows that JIRP almost surely explores every attainable trajectory in the limit (i.e., with probability
+1 when the number of episodes goes to infinity).
+
+Lemma 1 Let m ∈ N be a natural number. Then, JIRP with eplength ≥ m almost surely explores every m-attainable
+trajectory at least once in the limit.
+
+    Analogous to Definition 3, we call a label sequence λ = `0 . . . `k (m-)attainable if there exists an (m-)attainable
+trajectory s0 a0 s1 . . . sk ak sk+1 such that `i = L(si , ai , si+1 ) for each i ∈ {0, . . . , k}. An immediate consequence of
+Lemma 1 is that JIRP almost surely explores every m-attainable label sequence in the limit.
+
+Corollary 1 JIRP with eplength ≥ m almost surely explores every m-attainable label sequence at least once in the
+limit.
+
+
+                                                               6
+    Algorithm 3: JIRP with algorithmic optimizations
+ 1 Initialize the hypothesis reward machine H with a set of states V
+ 2 Initialize a set of q-functions Q = {q v |v ∈ V }
+ 3 Initialize X = ∅ and Xnew = ∅
+ 4 for episode n = 1, 2, . . . do
+ 5      (λ, ρ, Q) = QRM episode(H, Q)
+ 6      if H(λ) 6= ρ then
+ 7          add (λ, ρ) to Xnew
+                                          
+ 8      if mod(n, N ) = 0 and Xnew 6= ∅ then
+ 9          X ← X ∪ Xnew
+10          infer Hnew using X
+11          Qnew ← Transferq (Q, H, Hnew )
+12          H ← Hnew , Q ← Qnew , Xnew ← ∅
+
+
+
+    If JIRP explores sufficiently many m-attainable label sequences for a large enough value of m, it is guaranteed
+to infer a reward machine that is “good enough” in the sense that it is equivalent to the reward machine encoding the
+reward function R on all attainable label sequences. This is formalized in the next lemma.
+
+Lemma 2 Let M be a labeled MDP and A the reward machine encoding the reward function of M. Then, JIRP with
+eplength ≥ 2|M|+1 (|A| + 1) − 1 almost surely learns a reward machine in the limit that is equivalent to A on all
+attainable label sequences.
+
+    Lemma 2 guarantees that JIRP will eventually learn the reward machine encoding the reward function of an un-
+derlying MDP. This is the key ingredient in proving that JIRP learns an optimal policy in the limit almost surely.
+
+Theorem 1 Let M be a labeled MDP and A the reward machine encoding the reward function of M. Then, JIRP
+with eplength ≥ 2|M|+1 (|A| + 1) − 1 almost surely converges to an optimal policy in the limit.
+
+
+4      Algorithmic Optimizations
+Section 3 provides the base algorithm with theoretical guarantees for convergence to an optimal policy. In this section,
+we present an improved algorithm (Algorithm 3) that includes three algorithmic optimizations:
+Optimization 1: batching of counterexamples (Section 4.1);
+Optimization 2: transfer of q-functions (Section 4.2);
+Optimization 3: polynomial time learning algorithm for inferring the reward machines (Section 4.3).
+   The following theorem claims that Optimizations 1 and 2 retain the convergence guarantee of Theorem 1.
+
+Theorem 2 Let M be a labeled MDP and A the reward machine encoding the rewards of M. Then, JIRP with
+Optimizations 1 and 2 with eplength ≥ 2|M|+1 (|A| + 1) − 1 converges to an optimal policy in the limit.
+
+   It should be noted that although such guarantee fails for Optimization 3, in practice the policies usually still
+converge to the optimal policies (see the case studies in Section 5).
+
+4.1     Batching of Counterexamples
+Algorithm 2 infers a new hypothesis reward machine whenever a counterexample is encountered. This could incur a
+high computational cost. In order to adjust the frequency of inferring new reward machines, Algorithm 3 stores each
+counterexample in a set Xnew . After each period of N episodes (where N ∈ Z>0 is a user-defined hyperparameter),
+if Xnew is non-empty, we add Xnew to the sample X and infer a new hypothesis reward machine Hnew (lines 8 to 10).
+Then, Algorithm 3 proceeds with the QRM algorithm for Hnew . The same procedure repeats until the policy converges.
+
+
+
+
+                                                           7
+4.2     Transfer of Q-functions
+In Algorithm 2, after a new hypothesis reward machine is inferred, the q-functions are re-initialized and the experiences
+from the previous iteration of RL are not utilized. To utilize experiences in previous iterations, we provide a method to
+transfer the q-functions from the previously inferred reward machine to the newly inferred reward machine (inspired
+by the curriculum learning implementation in [13]). The transfer of q-functions is based on equivalent states of two
+reward machines as defined below.
+
+Definition 4 For a reward machine A and a state v ∈ V , let A[v] be the machine with v as the initial state. Then,
+for two reward machines A and Â, two states v ∈ V and v̂ ∈ V̂ are equivalent, denoted by v ∼ v̂, if and only if
+A[v](λ) = A[v̂](λ) for all label sequences λ.
+
+    With Definition 4, we provide the following theorem claiming equality of optimal q-functions for equivalent states
+of two reward machines. We use q ∗v (s, a) to denote the optimal q-function for state v of the reward machine.
+
+Theorem 3 Let A = (V, vI , 2P , R, δ, σ) and Â = (V̂ , v̂I , 2P , R, δ̂, σ̂) be two reward machines encoding the rewards
+of a labeled MDP M = (S, sI , A, p, R, γ, P, L). For states v ∈ V and v̂ ∈ V̂ , if v ∼ v̂, then for every s ∈ S and
+a ∈ A, q ∗v (s, a) = q ∗v̂ (s, a).
+
+    Algorithm 4 shows the procedure to transfer the q-functions between the hypothesis reward machines in consec-
+utive iterations. For any state of the hypothesis reward machine in the current iteration, we check if there exists an
+equivalent state of the hypothesis reward machine in the previous iteration. If so, the corresponding q-functions are
+transferred (line 5). As shown in Theorem 3, the optimal q-functions for two equivalent states are the same.
+
+ Algorithm 4: Transferq
+ 1 Input: a set of q-functions Q = {q v |v ∈ V }, hypothesis reward machines H = (V, vI , 2P , R, δ, σ),
+   Hnew = (Vnew , vI new , 2P , R, δnew , σnew )
+                         vnew    vnew
+ 2 Initialize Qnew = {qnew    | qnew  ∈ Vnew }
+ 3 for vnew ∈ Vnew , v ∈ V do
+ 4      if v ∼ vnew then
+              vnew
+ 5           qnew  ← qv
+ 6    Return Qnew
+
+
+
+4.3     A Polynomial Time Learning Algorithm for Reward Machines
+In order to tackle scalability issues of the SAT-based machine learning algorithm, we propose to use a modification
+of the popular Regular Positive Negative Inference (RPNI) algorithm [16] adapted for learning reward machines. This
+algorithm, which we name RPNI-RM, proceeds in two steps.
+    In the first step, RPNI-RM constructs a partial, tree-like reward machine A from a sample X where
+      • each prefix `1 . . . `i of a trace (`1 . . . `k , r1 . . . rk ) ∈ X (i ≤ k) corresponds to a unique state v`1 ...`i of A; and
+      • for each trace (`1 . . . `k , r1 . . . rk ) ∈ X and i ∈ {0, . . . , k − 1}, a transition leads from state v`1 ...`i to state
+        v`1 ...`i+1 with input `i+1 and output ri+1 .
+Note that A fits the sample X perfectly in that A(λ) = ρ for each (λ, ρ) ∈ X and the output of all other inputs is
+undefined (since the reward machine is partial). In particular, this means that A is consistent with X.
+    In the second step, RPNI-RM successively tries to merge the states of A. The overall goal is to construct a reward
+machine with fewer states but more input-output behaviors. For every candidate merge (which might trigger additional
+state merges to restore determinism), the algorithm checks whether the resulting machine is still consistent with X.
+Should the current merge result in an inconsistent reward machine, it is reverted and RPNI-RM proceeds with the next
+candidate merge; otherwise, RPNI-RM keeps the current merge and proceeds with the merged reward machine. This
+procedure stops if no more states can be merged. Once this is the case, any missing transition is directed to a sink state,
+where the output is fixed but arbitrary.
+
+
+                                                                   8
+                  (a)                                        (b)                                        (c)
+
+Figure 3: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps in (a) autonomous
+vehicle scenario; (b) office world scenario (averaged for four tasks); and (c) Minecraft world scenario (averaged for
+four tasks).
+
+
+    Since RPNI-RM starts with a consistent reward machine and keeps intermediate results only if they remain con-
+sistent, its final output is clearly consistent as well. Moreover, merging of states increases the input-output behaviors,
+hence generalizing from the (finite) sample. Finally, let us note that the overall runtime of RPNI-RM is polynomial in
+the number of symbols in the given sample because the size of the initial reward machine A corresponds to the number
+of symbols in the sample X and each operation of RPNI-RM can be performed in polynomial time.
+
+
+5      Case Studies
+In this section, we apply the proposed approach to three different scenarios: 1) autonomous vehicle scenario; 2) office
+world scenario adapted from [13], and 3) Minecraft world scenario adapted from [10]. We use the libalf [27] imple-
+mentation of RPNI [16] as the algorithm to infer reward machines. The detailed description of the tasks in the three
+different scenarios can be found in the supplementary material.
+    We compare JIRP (with algorithmic optimizations) with the two following baseline methods:
+      • QAS (q-learning in augmented state space): to incorporate the extra information of the labels (i.e., high-level
+        events in the environment), we perform q-learning [14] in an augmented state space with an extra binary vector
+        representing whether each label has been encountered or not.
+      • HRL (hierarchical reinforcement learning): we use a meta-controller for deciding the subtasks (represented by
+        encountering each label) and use the low-level controllers expressed by neural networks [17] for deciding the
+        actions at each state for each subtask.
+
+5.1     Autonomous Vehicle Scenario
+We consider the autonomous vehicle scenario as introduced in the motivating example in Section 1.1. The set of
+actions is A = {Straight, Lef t, Right, Stay}, corresponding to going straight, turning left, turning right and staying
+in place. For simplicity, we assume that the labeled MDP is deterministic (i.e, the slip rate is zero for each action). The
+vehicle will make a U-turn if it reaches the end of any road.
+    The set of labels is {sp, pr , B} and the labeling function L is defined by
+
+                                      sp ∈ L(s, a, s0 ) ⇔ a = stay ∧ s ∈ J ,
+                                     pr ∈ L(s, a, s0 ) ⇔ s0 .priority = > ∧ s ∈ J ,
+                                      B ∈ L(s, a, s0 ) ⇔ s0 .x = xB ∧ s0 .y = yB ,
+
+where s0 .priority is a Boolean variable that is true (>) if and only if s0 is on the priority roads, J represents the set of
+locations where the vehicle is entering an intersection, s0 .x and s0 .y are the x and y coordinate values at state s, and
+xB and yB are x and y coordinate values at B (see Figure 1).
+    We set eplength = 100 and N = 100. Figure 4 shows the inferred hypothesis reward machine in the last iteration
+of JIRP in one typical run. The inferred hypothesis reward machine is different from the true reward machine in
+Figure 2, but it can be shown that these two reward machines are equivalent on all attainable label sequences.
+                                                              9
+                                                                   pr, 0)              (¬pr , 0)
+                                                        (sp ∧ ¬
+                                       v2
+                                                                                        )
+                                                  (sp ∧ pr, 0)                     pr, 0 v3
+                              (B, 1)                                            p∧
+                                                 (¬sp ∧ ¬pr , 0)            (¬s
+                             start          v0                        v1
+                                                                                             0)
+                                                                                       pr,
+                                                  (sp ∧ ¬pr , 0)                ∧¬
+                                                                           (¬sp
+                                     (¬sp ∧ pr , 0)             (pr ∨ B, 0)
+
+Figure 4: Inferred hypothesis reward machine in the last iteration of JIRP in one typical run in the autonomous vehicle
+scenario.
+
+
+    Figure 3 (a) shows the cumulative rewards with the three different methods in the autonomous vehicle scenario.
+The JIRP approach converges to optimal policies within 100,000 training steps, while QAS and HRL are stuck with
+near-zero cumulative reward for up to two million training steps (with the first 200,000 training steps shown in Figure
+3 (a)).
+
+5.2   Office World Scenario
+We consider the office world scenario in the 9×12 grid-world. The agent has four possible actions at each time step:
+move north, move south, move east and move west. After each action, the robot may slip to each of the two adjacent
+cells with probability of 0.05. We use four tasks with different high-level structural relationships among subtasks such
+as getting the coffee, getting mails and going to the office (see Appendix G for details).
+    We set eplength = 1000 and N = 30. Figure 3 (b) shows the cumulative rewards with the three different methods
+in the office world scenario. The JIRP approach converges to the optimal policy within 150,000 training steps, while
+QAS and HRL reach only 60% of the optimal average cumulative reward within 200,000 training steps.
+
+5.3   Minecraft World Scenario
+We consider the Minecraft example in a 21×21 gridworld. The four actions and the slip rates are the same as in the
+office world scenario. We use four tasks including making plank, making stick, making bow and making bridge (see
+Appendix H for details).
+    We set eplength = 400 and N = 30. Figure 3 (c) shows the cumulative rewards with the three different methods
+in the Minecraft world scenario. The JIRP approach converges to the optimal policy within 400,000 training steps,
+while QAS and HRL reach only 50% of the optimal average cumulative reward within 600,000 training steps.
+
+
+6     Conclusion
+We proposed an iterative approach that alternates between reward machine inference and reinforcement learning (RL)
+for the inferred reward machine. We have shown the improvement of RL performances using the proposed method.
+     This work opens the door for utilizing automata learning in RL. First, the same methodology can be applied to
+other forms of RL, such as model-based RL, or actor-critic methods. Second, we will explore methods that can infer
+the reward machines incrementally (based on inferred reward machines in the previous iteration). Finally, the method
+to transfer the q-functions between equivalent states of reward machines can be also used for transfer learning between
+different tasks where the reward functions are encoded by reward machines.
+
+
+
+
+                                                            10
+References
+ [1] M. E. Taylor and P. Stone, “Cross-domain transfer for reinforcement learning,” in Proc. ICML’07. New York,
+     NY, USA: ACM, 2007, pp. 879–886. [Online]. Available: http://doi.acm.org/10.1145/1273496.1273607
+
+ [2] O. Nachum, S. S. Gu, H. Lee, and S. Levine, “Data-efficient hierarchical reinforcement learning,” in
+     Advances in Neural Information Processing Systems 31, S. Bengio, H. Wallach, H. Larochelle, K. Grauman,
+     N. Cesa-Bianchi, and R. Garnett, Eds. Curran Associates, Inc., 2018, pp. 3303–3313. [Online]. Available:
+     http://papers.nips.cc/paper/7591-data-efficient-hierarchical-reinforcement-learning.pdf
+ [3] D. Abel, D. Arumugam, L. Lehnert, and M. Littman, “State abstractions for lifelong reinforcement learning,” in
+     Proceedings of the 35th International Conference on Machine Learning, ser. Proceedings of Machine Learning
+     Research, J. Dy and A. Krause, Eds., vol. 80. Stockholmsmässan, Stockholm Sweden: PMLR, 10–15 Jul 2018,
+     pp. 10–19. [Online]. Available: http://proceedings.mlr.press/v80/abel18a.html
+ [4] R. Akrour, F. Veiga, J. Peters, and G. Neumann, “Regularizing reinforcement learning with state abstraction,” 10
+     2018, pp. 534–539.
+
+ [5] R. S. Sutton, D. Precup, and S. Singh, “Between mdps and semi-mdps: A framework for temporal abstraction in
+     reinforcement learning,” Artificial intelligence, vol. 112, no. 1-2, pp. 181–211, 1999.
+ [6] T. G. Dietterich, “Hierarchical reinforcement learning with the maxq value function decomposition,” J. Artif. Int.
+     Res., vol. 13, no. 1, pp. 227–303, Nov. 2000. [Online]. Available: http://dl.acm.org/citation.cfm?id=1622262.
+     1622268
+
+ [7] R. Parr and S. J. Russell, “Reinforcement learning with hierarchies of machines,” in Advances in neural infor-
+     mation processing systems, 1998, pp. 1043–1049.
+ [8] A. G. Barto and S. Mahadevan, “Recent advances in hierarchical reinforcement learning,” Discrete event dynamic
+     systems, vol. 13, no. 1-2, pp. 41–77, 2003.
+
+ [9] D. Aksaray, A. Jones, Z. Kong, M. Schwager, and C. Belta, “Q-learning for robust satisfaction of signal temporal
+     logic specifications,” in 2016 IEEE 55th Conference on Decision and Control (CDC). IEEE, 2016, pp. 6565–
+     6570.
+[10] J. Andreas, D. Klein, and S. Levine, “Modular multitask reinforcement learning with policy sketches,” in Pro-
+     ceedings of the 34th International Conference on Machine Learning-Volume 70. JMLR. org, 2017, pp. 166–175.
+
+[11] X. Li, C.-I. Vasile, and C. Belta, “Reinforcement learning with temporal logic rewards,” in 2017 IEEE/RSJ
+     International Conference on Intelligent Robots and Systems (IROS). IEEE, 2017, pp. 3834–3839.
+[12] Z. Xu and U. Topcu, “Transfer of temporal logic formulas in reinforcement learning,” in IJCAI-19.
+     International Joint Conferences on Artificial Intelligence Organization, 7 2019, pp. 4010–4018. [Online].
+     Available: https://doi.org/10.24963/ijcai.2019/557
+[13] R. T. Icarte, T. Q. Klassen, R. A. Valenzano, and S. A. McIlraith, “Using reward machines for high-level
+     task specification and decomposition in reinforcement learning,” in Proceedings of the 35th International
+     Conference on Machine Learning, ICML 2018, Stockholmsmässan, Stockholm, Sweden, July 10-15, 2018, 2018,
+     pp. 2112–2121. [Online]. Available: http://proceedings.mlr.press/v80/icarte18a.html
+
+[14] C. J. C. H. Watkins and P. Dayan, “Q-learning,” Machine Learning, vol. 8, no. 3, pp. 279–292, May 1992.
+     [Online]. Available: https://doi.org/10.1007/BF00992698
+[15] D. Neider and N. Jansen, “Regular model checking using solver technologies and automata learning,” in NASA
+     Formal Methods, 5th International Symposium, NFM 2013, Moffett Field, CA, USA, May 14-16, 2013. Proceed-
+     ings, ser. Lecture Notes in Computer Science, vol. 7871. Springer, 2013, pp. 16–31.
+
+[16] J. Oncina and P. Garcia, “Inferring regular languages in polynomial updated time,” in Pattern recognition and
+     image analysis: selected papers from the IVth Spanish Symposium. World Scientific, 1992, pp. 49–61.
+
+
+                                                          11
+[17] T. D. Kulkarni, K. Narasimhan, A. Saeedi, and J. Tenenbaum, “Hierarchical deep reinforcement learning: In-
+     tegrating temporal abstraction and intrinsic motivation,” in Advances in neural information processing systems,
+     2016, pp. 3675–3683.
+[18] M. L. Puterman, Markov Decision Processes: Discrete Stochastic Dynamic Programming, 1st ed.                 New York,
+     NY, USA: John Wiley & Sons, Inc., 1994.
+
+[19] A. Camacho, R. Toro Icarte, T. Q. Klassen, R. Valenzano, and S. A. McIlraith, “LTL and beyond:
+     Formal languages for reward function specification in reinforcement learning,” in IJCAI’19. International
+     Joint Conferences on Artificial Intelligence Organization, 7 2019, pp. 6065–6073. [Online]. Available:
+     https://doi.org/10.24963/ijcai.2019/840
+
+[20] J. O. Shallit, A Second Course in Formal Languages and Automata Theory. Cambridge University Press, 2008.
+     [Online]. Available: http://www.cambridge.org/gb/knowledge/isbn/item1173872/?site locale=en GB
+[21] R. S. Sutton and A. G. Barto, Reinforcement learning: An introduction.         MIT press, 2018.
+[22] D. Angluin, “Learning regular sets from queries and counterexamples,” Inf. Comput., vol. 75, no. 2, pp. 87–106,
+     1987. [Online]. Available: https://doi.org/10.1016/0890-5401(87)90052-6
+
+[23] C. Löding, P. Madhusudan, and D. Neider, “Abstract learning frameworks for synthesis,” in Tools and Algorithms
+     for the Construction and Analysis of Systems - 22nd International Conference, TACAS 2016, Held as Part of the
+     European Joint Conferences on Theory and Practice of Software, ETAPS 2016, Eindhoven, The Netherlands,
+     April 2-8, 2016, Proceedings, ser. Lecture Notes in Computer Science, vol. 9636. Springer, 2016, pp. 167–185.
+[24] E. M. Gold, “Complexity of automaton identification from given data,” Information and Control, vol. 37, no. 3,
+     pp. 302–320, 1978.
+[25] M. Heule and S. Verwer, “Exact DFA identification using SAT solvers,” in Grammatical Inference: Theoretical
+     Results and Applications, 10th International Colloquium, ICGI 2010, Valencia, Spain, September 13-16, 2010.
+     Proceedings, ser. Lecture Notes in Computer Science, vol. 6339. Springer, 2010, pp. 66–79.
+
+[26] D. Neider, “Applications of automata learning in verification and synthesis,” Ph.D. dissertation, RWTH Aachen
+     University, 2014. [Online]. Available: http://darwin.bth.rwth-aachen.de/opus3/volltexte/2014/5169
+[27] B. Bollig, J. Katoen, C. Kern, M. Leucker, D. Neider, and D. R. Piegdon, “libalf: The automata learning
+     framework,” in Computer Aided Verification, 22nd International Conference, CAV 2010, Edinburgh, UK, July 15-
+     19, 2010. Proceedings, 2010, pp. 360–364. [Online]. Available: https://doi.org/10.1007/978-3-642-14295-6 32
+
+[28] R. Givan, T. Dean, and M. Greig, “Equivalence notions and model minimization in markov decision processes,”
+     Artificial Intelligence, vol. 147, no. 1, pp. 163 – 223, 2003, planning with Uncertainty and Incomplete
+     Information. [Online]. Available: http://www.sciencedirect.com/science/article/pii/S0004370202003764
+
+
+A     Proof of Lemma 1
+Proof 1 We first prove that JIRP with eplength ≥ m explores every m-attainable trajectory with a positive (non-zero)
+probability. We show this claim by induction over the length i of trajectories.
+
+Base case: The only trajectory of length i = 0, sI , is always explored because it is the initial state of every exploration.
+Induction step: Let i = i0 + 1 and ζ = s0 a0 s1 . . . si0 ai0 si be an m-attainable trajectory of length i ≤ m. Then, the
+     induction hypothesis yields that JIRP explores each m-attainable trajectory s0 a0 s1 . . . si0 (of length i0 = i − 1).
+     Moreover JIRP continues its exploration because eplength ≥ m > i0 . At this point, every action ai0 will be
+     chosen with probability at least  × |A1s | , where Asi0 ⊆ A denotes the set of available actions in the state si0
+                                                  i0
+     (this lower bound is due to the -greedy strategy used in the exploration). Having chosen action ai0 , the state si
+     is reached with probability p(si0 , ai0 , si ) > 0 because ζ is m-attainable. Thus, the trajectory ζ is explored with
+     a positive probability.
+
+
+                                                             12
+    Since JIRP with eplength ≥ m explores every m-attainable trajectory with a positive probability, the probability
+of an m-attainable trajectory not being explored becomes 0 in the limit (i.e., when the number of episodes goes to
+infinity). Thus, JIRP almost surely (i.e., with probability 1) explores every m-attainable trajectory in the limit.
+
+
+B     Proof of Lemma 2
+In order to prove Lemma 2, we require a few (basic) definitions from automata and formal language theory.
+     An alphabet Σ is a nonempty, finite set of symbols b ∈ Σ. A word ω = b0 . . . bn is a finite sequence of symbols.
+The empty sequence is called empty word and denoted by ε. The length of a word ω, denoted by |ω| is the number of
+its symbols. We denote the set of all words over the alphabet Σ by Σ∗ .
+     Next, we recapitulate the definition of deterministic finite automata.
+
+Definition 5 A deterministic finite automaton (DFA) is a five-tuple A = (V, vI , Σ, δ, F ) consisting of a nonempty,
+finite set V of states, an initial state vI ∈ V , an input alphabet Σ, a transition function δ : V × Σ → V , and a set
+F ⊆ V of final states. The size of a DFA, denoted by |A|, is the number |V | of its states.
+
+    A run of a DFA A = (V, vI , Σ, δ, F ) on an input word ω = b0 . . . bk is a sequence v0 . . . vk+1 of states such that
+v0 = vI and vi+1 = δ(vi , bi ) for each i ∈ {0, . . . , k}. A run v0 . . . vk+1 of A on a word ω is accepting if vk+1 ∈ F , and
+ω is accepted if there exists an accepting run. The language of a DFA A is the set L(A) = {ω ∈ Σ∗ | A accepts ω}.
+As usual, we call two DFAs A1 and A2 equivalent if L(A1 ) = L(A2 ). Moreover, let us recapitulate the well-known
+fact that two non-equivalent DFAs have a “short” word that witnesses their non-equivalence.
+
+Theorem 4 ( [20], Theorem 3.10.5) Let A1 and A2 be two DFAs with L(A1 ) 6= L(A2 ). Then, there exists a word ω
+of length at most |A1 | + |A2 | − 1 such that ω ∈ L(A1 ) if and only if ω ∈
+                                                                          / L(A2 ).
+
+     As the next step towards the proof of Lemma 2, we remark that every reward machine over the input alphabet
+2P and output alphabet R can be translated into an “equivalent” DFA as defined below. This DFA operates over the
+combined alphabet 2P × R and accepts a word (`0 , r0 ) . . . (`k , rk ) if and only if A outputs the reward sequence
+r0 . . . rk on reading the label sequence `0 . . . `k .
+
+Lemma 3 Given a reward machine A = (V, vI , 2P , R, δ, σ), one can construct a DFA AA with |A| + 1 states such
+that
+                  L(AA ) = (`0 , r0 ) . . . (`k , rk ) ∈ (2P × R)∗ | A(`0 . . . `k ) = r0 . . . rk .
+                           
+                                                                                                            (1)
+
+Proof 2 (Proof of Lemma 3) Let A = (VA , vI,A , 2P , R, δA , σA ) be a reward machine. Then, we define a DFA AA =
+(V, vI , Σ, δ, F ) over the combined alphabet 2P × R by
+
+    • V = VA ∪ {⊥} with ⊥ ∈
+                          / VA ;
+    • vI = vI,A ;
+    • Σ = 2P × R;
+                      (
+                      v0    if δA (v, `) = v 0 and σA (v, `) = r;
+    • δ v, (`, r) =
+                       ⊥     otherwise;
+
+    • F = VA .
+    In this definition, ⊥ is a new sink state to which AA moves if its input does not correspond to a valid input-output
+pair produced by A. A straightforward induction over the length of inputs to AA shows that it indeed accepts the
+desired language. In total, AA has |A| + 1 states.
+
+    Similarly, one can construct a DFA AM that accepts exactly the attainable traces of an MDP M. First, viewing
+labels L(s, a, s0 ) as input symbols, marking every state as an accepting state, and keeping only those transitions
+for which p(s, a, s0 ) > 0, M can be viewed as a non-deterministic finite automaton. Second, using the standard
+determinization algorithm [20], one can create an equivalent DFA with an exponential blowup in the number of states.
+
+
+                                                              13
+Remark 1 Given a labeled MDP M, one can construct a DFA AM with at most 2|M| states that accepts exactly the
+admissible label sequences of M.
+
+    Next, we show that if two reward machines disagree on an attainable label sequence, then we can provide a bound
+on the length of such a sequence.
+
+Lemma 4 Let M = (S, sI , A, p, R, γ, P, L) be a labeled MDP and A1 , A2 two reward machines with input alphabet
+2P . If there exists an attainable label sequence λ such that A1 (λ) 6= A2 (λ), then there also exists an m-attainable
+label sequence λ? with m ≤ 2|M| (|A1 | + |A2 | + 2) − 1 such that A1 (λ? ) 6= A2 (λ? ).
+
+Proof 3 (Proof of Lemma 4) Let M = (S, sI , A, p, R, γ, P, L) be a labeled MDP and A1 , A2 two reward machines
+with input alphabet 2P . As a first step, we construct the DFAs AM = (V 0 , vI0 , 2P , δ 0 , F 0 ) according to Remark 1 and
+the DFAs AAi = (Vi00 , vI,i
+                         00
+                            , 2P × R, δi00 , Fi00 ) for i ∈ {1, 2} according to Lemma 3.
+    Next, we construct the input-synchronized product AM×Ai = (V 000 , vI000 , 2P , δ 000 , F 000 ) of a AM and AAi by
+
+    • V 000 = V 0 × Vi00 ;
+    • vI000 = (vI0 , vI,i
+                      00
+                          );
+
+    • δ 000 (v 0 , vi00 ), (`, r) = δ 0 (v 0 , `), δi00 (vi00 , (`, r)) ; and
+                                                                      
+
+    • F 000 = F 0 × Fi00 ,
+which synchronizes AM and the input-component of AAi . A straightforward induction over the lengths of inputs to
+AM×Ai shows that (`0 , r0 ) . . . (`k , rk ) ∈ L(AM×Ai ) if and only if `0 . . . `k is an attainable label sequence such that
+Ai (`0 . . . `k ) = r0 . . . rk . Moreover, note that AM×Ai has 2|M| (|Ai | + 1) states.
+    If there exists an attainable label sequence λ such that A1 (λ) 6= A2 (λ), then L(AM×A1 ) 6= L(AM×A2 ) by
+construction of the DFAs AM×A1 and AM×A2 . In this situation, Theorem 4 guarantees the existence of a word
+ω = (`0 , r0 ) . . . (`m−1 , rm−1 ) ∈ (2P × R)∗ of size
+
+                                               m ≤ 2|M| (|A1 | + 1) + 2|M| (|A2 | + 1) − 1
+                                                   = 2|M| (|A1 | + |A2 | + 2) − 1
+
+such that ω ∈ L(AM×A1 ) if and only if ω ∈/ L(AM×A2 ).
+   Let now λ? = `0 . . . `m−1 . By construction of the DFAs AM×A1 and AM×A2 , we know that A1 (λ? ) 6= A2 (λ? )
+holds. Moreover, λ? is an m-attainable label sequence with the desired bound on m.
+
+   We are now ready to prove Lemma 2.
+
+Proof 4 (Proof of Lemma 2) Let X0 , X1 , . . . be the sequence of samples that arise in the run of JIRP whenever new
+counterexamples are added to X (in Line 7 of Algorithm 2). We now make two observations about this sequence, which
+help us prove Lemma 2.
+   1. The sequence X0 , X1 , . . . grows strictly monotonically (i.e., X0 ( X1 ( · · · ). The reasons for this are twofold.
+      First, JIRP always adds counterexamples to X and never removes them (which establishes X0 ⊆ X1 ⊆ · · · ).
+      Second, whenever a counterexample (λi , ρi ) is added to Xi to form Xi+1 , then (λi , ρi ) ∈/ Xi . To see why this is
+      the case, remember that JIRP always constructs hypothesis reward machines that are consistent with the current
+      sample. Thus, the reward machine Hi is consistent with Xi . However, (λi , ρi ) was added because Hi (λi ) 6= ρi .
+      Hence, (λi , ρi ) cannot have been an element of Xi .
+   2. The true reward machine A, the one that encodes the reward function R, is by definition consistent with all
+      samples Xi that are generated during the run of JIRP.
+
+   Once a new counterexample is added, JIRP learns a new reward machine. Let H0 , H1 , . . . be the sequence of these
+reward machines, where Hi is computed based on the sample Xi . As above, we make two observations about this
+sequence.
+
+
+
+                                                                          14
+    3. We have |Hi | ≤ |Hi+1 |. Towards a contradiction, assume that |Hi | > |Hi+1 |. Since JIRP always computes
+       consistent reward machines and Xi ( Xi+1 (see Observation 1), we know that Hi+1 is not only consistent
+       with Xi+1 but also with Xi (by definition of consistency). Moreover, JIRP always computes consistent reward
+       machines of minimal size. Thus, since Hi+1 is consistent with Xi and |Hi+1 | < |Hi |, the reward machine Hi is
+       not minimal, which yields the desired contradiction.
+
+    4. We have Hi 6= Hj for each j ∈ {0, . . . , i − 1}; in other words, the reward machines generated during the run of
+       JIRP are semantically distinct. This is a consequence of the facts that (λj , ρj ) was a counterexample to Hj (i.e.,
+       Hj (λj ) 6= ρj ) and the learning algorithm for reward machines always constructs consistent reward machines
+       (which implies Hi (λj ) = ρj ).
+
+    Observations 2 and 3 now provide |A| as an upper bound on the size of the hypothesis reward machines constructed
+in the run of JIRP. Since there are only finite many reward machines of size |A| or less, Observation 4 then implies
+that there exists an i? ∈ N after which no new reward machine is inferred. Thus, it is left to show that Hi? (λ) = A(λ)
+for all attainable label sequences λ.
+    Towards a contradiction, assume that there exists an attainable label sequence λ such that Hi? (λ) 6= A(λ).
+Lemma 4 then guarantees the existence of an m-attainable label sequence λ? with
+
+                                               m ≤ 2|M| (|Hi? | + |A| + 2) − 1
+                                                      ≤ 2|M| (2|A| + 2) − 1
+                                                      = 2|M|+1 (|A| + 1) − 1
+
+such that Hi? (λ? ) 6= A(λ? ). By Corollary 1, JIRP almost surely explores the label sequence λ? in the limit because we
+assume eplength ≥ 2|M|+1 (|A| + 1) − 1 = m. Thus, the trace (λ? , ρ? ), where ρ? = A(λ? ), is almost surely returned
+as a new counterexample, resulting in a new sample Xi? +1 . This triggers the construction of a new reward machine
+Hi? +1 (which will then be different from all previous reward machines). However, this contradicts the assumption that
+no new reward machine is constructed after Hi? . Thus, Hi? (λ) = A(λ) holds for all attainable input sequences λ.
+
+
+C      Proof of Theorem 1
+To prove Theorem 1, we use the fact that JIRP will eventually learn a reward machine equivalent to the reward machine
+A on all attainable label sequences (see Lemma 2). Then, closely following the proof of Theorem 4.1 from [13], we
+construct an MDP MA , show that using the same policy for M and MA yields same rewards, and, due to conver-
+gence of q-learning for MA , conlcude that JIRP converges towards an optimal policy for M. Lemma 5 describes the
+construction of the mentioned MDP MA .
+
+Lemma 5 Given an MDP M = (S, sI , A, p, R, γ, P, L) with a non-Markovian reward function defined by a reward
+machine A = (V, vI , 2P , R, δ, σ), one can construct an MDP MA whose reward function is Markovian such that
+every attainable label sequence of MA gets the same reward as in M. Furthermore, any policy for MA achieves the
+same expected reward in M.
+
+Proof 5 Let M = (S, sI , A, p, R, γ, P, L) be a labeled MDP and A = (V, vI , 2P , R, δ, σ) a reward machine encod-
+ing its reward function. We define the product MDP MA = (S 0 , s0I , A, p0 , R0 , γ 0 , P 0 , L0 ) by
+     • S0 = S × V ;
+     • s0I = (sI , vI );
+     • A = A;
+
+          (s, v), a, (s0 , v 0 )
+     • p0 (
+                                
+
+             p(s, a, s0 ) v 0 = δ(v, L(s, a, s0 ));
+       =
+             0            otherwise;
+
+     • P 0 = P; L0 = L;
+
+
+                                                                 15
+    • R0 (s, v), a, (s0 , v 0 ) = σ v, L(s, a, s0 ) ; and
+                                                  
+
+    • γ 0 = γ.
+    The described MDP has a Markovian reward function that matches R, the (non-Markovian) reward function of
+M defined by the reward machine A (Definition 2). Since the reward functions and discount factors are the same, the
+claims follow.
+
+    Lemma 2 shows that eventually H, the reward machine learned by JIRP, will be equivalent to A on all attainable
+label sequences. Thus, using Lemma 5, an optimal policy for MDP MH will also be optimal for M.
+    When running episodes of QRM (Algorithm 1) under the reward machine H, an update of a q-function connected
+to a state of a reward machine corresponds to updating the q function for MH . Because eplength ≥ |M|, the fact that
+QRM uses -greedy strategy and that updates are done in parallel for all states of the reward machine H, we know that
+every state-action pair of the MDP MH will be seen infinitely often. Hence, convergence of q-learning for MH to an
+optimal policy is guaranteed [14]. Finally, because of Lemma 5, JIRP converges to an optimal policy, too.
+    We have proved that if the number of episodes goes to infinity, and the length of an episode is at least 2|M|+1 (|A|+
+1) − 1, then JIRP converges towards an optimal policy.
+
+
+D       Proof of Theorem 2
+In order to prove Theorem 2, we first need to prove the following lemma.
+Lemma 6 Let M be a labeled MDP and A the reward machine encoding the rewards of M. Then, JIRP with Op-
+timizations 1 and 2 with eplength ≥ 2|M|+1 (|A| + 1) − 1 learns a reward machine that is equivalent to A on all
+attainable traces in the limit (i.e., when the number of episodes goes to infinity).
+
+Proof 6 With Optimizations 1 and 2, let X0 , X1 , . . . (with slight abuse of notation from the proof of Lemma 2) be the
+sequence of sets that arise in the run of JIRP with the algorithmic optimizations whenever the non-empty set of new
+counterexamples Xnew are added to the set X. Then, it can be shown that Observation 1, 2, 3 and 4 in the proof of
+Lemma 2 still hold and thus Lemma 6 holds.
+
+    With Lemma 6 and following the analysis in the proofs of Theorem 1, Theorem 2 holds.
+
+
+E     Proof of Theorem 3
+To prove Theorem 3, we first recapitulate the definition of k-horizon optimal discounted action value functions [28].
+
+Definition 6 Let A = (V, vI , 2P , R, δ, σ) be a reward machine encoding the rewards of a labeled MDP M =
+(S, sI , A, p, R, γ, P, L). We define the k-horizon optimal discounted action value function qk∗v (s, a) recursively as
+follows:
+                                               X X
+                                 qk∗v (s, a) =        T (s, v, a, s0 , v 0 )
+                                               v 0 ∈V s0 ∈S
+                                                                                      0
+                                                   × [σ(v, L(s, a, s0 )) + γ max
+                                                                              0
+                                                                                  ∗v
+                                                                                 qk−1 (s0 , a0 )],
+                                                                             a ∈A
+
+where                                                (
+                                           0   0      p(s, a, s0 ), if v 0 = δ(v, L(s, a, s0 ));
+                               T (s, v, a, s , v ) =
+                                                      0,             otherwise,
+and q0∗v (s, a) = 0 for every v ∈ V , s ∈ S and a ∈ A.
+
+    We then give the following lemma based on the equivalent relationship formalized in Definition 4.
+Lemma 7 Let A = (V, vI , 2P , R, δ, σ) and Â = (V̂ , v̂I , 2P , R, δ̂, σ̂) be two reward machines encoding the rewards
+of a labeled MDP M = (S, sI , A, p, R, γ, P, L). For state v ∈ V and state v̂ ∈ V̂ , if v ∼ v̂, then for every u ∈ 2P ,
+we have δ(v, u) ∼ δ̂(v̂, u).
+
+
+                                                                  16
+Proof 7 For a Mealy machine A = (V, vI , 2P , R, δ, σ), we extend the output function σ to an output function σ + : V ×
+(2P )+ → σ + over (nonempty) words: σ + (v, u) = σ(v, u) and σ + (v, u·λ) = σ(v, u)·σ + (δ(v, u), λ), for every v ∈ V ,
+u ∈ 2P , and λ ∈ (2P )+ , where we use · to denote concatenation.
+      For two Mealy machines A = (V, vI , 2P , R, δ, σ), and Â = (V̂ , v̂I , 2P , R, δ̂, σ̂) (over the same input and output
+alphabet), two states v ∈ V, v̂ ∈ V̂ and any label sequence λ, we have A[v](λ) = Â[v̂](λ), if and only if σ + (v, λ) =
+σ̂ + (v̂, λ). Therefore, from Definition 4 we have v ∼ v̂ if and only if σ + (v, λ) = σ̂ + (v̂, λ) for all λ ∈ (2P )+ .
+      Thus, we have
+
+                                                  σ + (δ(v, u), λ) = σ + (v, u · λ)
+                                                                         (a)
+                                                                         = σ̂ + (v̂, u · λ)                              (2)
+                                                                         = σ̂ + (δ̂(v̂, u), λ),
+
+where (a) follows from the equivalence of v and v̂. Therefore, for every u ∈ 2P , we have A[δ(v, u)](λ) = Â[δ̂(v̂, u)](λ)
+holds for all label sequences λ.
+
+    With Definition 6 and Lemma 7, we proceed to prove that for two equivalent states, the corresponding k-horizon
+optimal discounted action value functions are the same (as formalized in the following lemma).
+
+Lemma 8 Let A = (V, vI , 2P , R, δ, σ) and Â = (V̂ , v̂I , 2P , R, δ̂, σ̂) be two reward machines encoding the rewards
+of a labeled MDP M = (S, sI , A, p, R, γ, P, L). For states v ∈ V and v̂ ∈ V̂ , if v ∼ v̂, then for every s ∈ S and
+a ∈ A, qk∗v (s, a) = qk∗v̂ (s, a) for every k.
+
+Proof 8 We use induction to prove Lemma 8. For k = 1, we have for every s ∈ S and a ∈ A,
+                                        X X
+                          q1∗v (s, a) =       T (s, v, a, s0 , v 0 )σ(v, L(s, a, s0 ))
+                                               v 0 ∈V s0 ∈S
+                                               X
+                                           =           T (s, v, a, s0 , δ(v, L(s, a, s0 )))σ(v, L(s, a, s0 ))
+                                               s0 ∈S
+                                               X
+                                           =           p(s, a, s0 )σ(v, L(s, a, s0 ))
+                                               s0 ∈S
+                                           (b) X
+                                           =           p(s, a, s0 )σ̂(v̂, L(s, a, s0 ))
+                                               s0 ∈S
+                                               X
+                                           =           T̂ (s, v̂, a, s0 , δ̂(v̂, L(s, a, s0 )))σ̂(v̂, L(s, a, s0 ))
+                                               s0 ∈S
+                                               X X
+                                           =                  T̂ (s, v̂, a, s0 , v̂ 0 )σ̂(v̂, L(s, a, s0 ))
+                                                        0
+                                             v̂ 0 ∈V̂ s ∈S
+
+                                           = q1∗v̂ (s, a)
+
+where the equality (b) comes from the fact that v ∼ v̂, and
+                                                     (
+                                           0 0         p(s, a, s0 ), if v̂ 0 = δ̂(v̂, L(s, a, s0 ));
+                            T̂ (s, v̂, a, s , v̂ ) =
+                                                      0,              otherwise.
+
+                                                                                              ∗v               ∗v̂
+   Now we assume that for every state v ∈ V and state v̂ ∈ V̂ , if v ∼ v̂, then we have that qk−1 (s, a) = qk−1    (s, a)
+holds for every s ∈ S and every a ∈ A. We proceed to prove that for every state v ∈ V and state v̂ ∈ V̂ , if v ∼ v̂, then
+we have that qk∗v (s, a) = qk∗v̂ (s, a) holds for every s ∈ S and every a ∈ A.
+
+
+
+
+                                                                         17
+    For every s ∈ S and every a ∈ A, we have
+                                         X X
+                           qk∗v (s, a) =     T (s, v, a, s0 , v 0 )
+                                              v 0 ∈V s0 ∈S
+                                                                                    0
+                                          × [σ(v, L(s, a, s0 )) + γ max      ∗v
+                                                                            qk−1  (s0 , a0 )]
+                                                                      a0 ∈A
+                                             X
+                                          =      T (s, v, a, s0 , δ(v, L(s, a, s0 )))
+                                              s0 ∈S
+                                                                                  ∗δ(v,L(s,a,s0 ))
+                                          × [σ(v, L(s, a, s0 )) + γ max  q                             (s0 , a0 )]
+                                                                    a0 ∈A k−1
+                                             X
+                                          =      p(s, a, s0 )
+                                              s0 ∈S
+                                                                                  ∗δ(v,L(s,a,s0 ))
+                                          × [σ(v, L(s, a, s0 )) + γ max  q                             (s0 , a0 )]
+                                                                    a0 ∈A k−1
+                                          (c) X                                                                               (3)
+                                          =      p(s, a, s0 )
+                                              s0 ∈S
+                                                                                  ∗δ̂(v̂,L(s,a,s0 ))
+                                          × [σ̂(v̂, L(s, a, s0 )) + γ max        q                     (s0 , a0 )]
+                                                                            a0 ∈A k−1
+                                             X
+                                          =        T̂ (s, v̂, a, s0 , δ̂(v̂, L(s, a, s0 )))
+                                              s0 ∈S
+                                                                                  ∗δ̂(v̂,L(s,a,s0 ))
+                                          × [σ(v̂, L(s, a, s0 )) + γ max         q                     (s0 , a0 )]
+                                                                       a0 ∈A k−1
+                                             X X
+                                          =            T̂ (s, v̂, a, s0 , v̂ 0 )
+                                                      0
+                                              v̂ 0 ∈V̂ s ∈S
+                                                                                  ∗δ̂(v̂,L(s,a,s0 ))
+                                          × [σ(v̂, L(s, a, s0 )) + γ max
+                                                                      0
+                                                                         qk−1                          (s0 , a0 )]
+                                                                         a ∈A
+
+                                          = qk∗v̂ (s, a)
+
+where the equality (c) comes from the fact that v ∼ v̂ and δ(v, L(s, a, s0 )) ∼ δ̂(v̂, L(s, a, s0 )) (according to Lemma 7).
+   Therefore, it is proven by induction that Lemma 8 holds.
+
+    With Lemma 8, we now proceed to prove Theorem 3. According to Lemma 8, if v ∼ v̂, then for every s ∈ S and
+a ∈ A, qk∗v (s, a) = qk∗v̂ (s, a) for every k. When k → ∞, qk∗ (v, s, a) and qk∗ (v̂, s, a) converge to the fixed points as
+follows.
+                                                 X X
+                                   q ∗v (s, a) =      T (s, v, a, s0 , v 0 )
+                                                  v 0 ∈V s0 ∈S
+                                                                                              0
+                                                  × [σ(v, L(s, a, s0 )) + γ max        q ∗v (s0 , a0 )],
+                                                                                 a0 ∈A
+                                                  X X
+                                   q ∗v̂ (s, a) =          T (s, v̂, a, s0 , v̂ 0 )
+                                                           0
+                                                  v̂ 0 ∈V̂ s ∈S
+                                                                                              0
+                                                  × [σ̂(v̂, L(s, a, s0 )) + γ max
+                                                                               0
+                                                                                  q ∗v̂ (s0 , a0 )].
+                                                                                 a ∈A
+
+    Therefore, for every s ∈ S and a ∈ A, q ∗v (s, a) = q ∗v̂ (s, a).
+
+
+F     Details in Autonomous Vehicle Scenario
+We provide the detailed results in autonomous vehicle scenario. Figure 5 shows the gridded map of the roads in a
+residential area. The set of actions is A = {Straight, Lef t, Right, Stay}, corresponding to going straight, turning
+left, turning right and staying in place. We use a simplified version of transitions at the intersections. For example, at
+(1,7), if the vehicle stays, then it ends at (1, 7); if the vehicle goes straight, then it ends at (4, 7) at the next step; if the
+vehicle turns left, then it ends at (3, 9) at the next step; and if the vehicle turns right, then it ends at (2, 6) at the next
+
+
+                                                                   18
+step. The vehicle will make a U-turn if it reaches the end of any road. For example, if the vehicle reaches (10, 7), then
+it will reach (10, 8) at the next step.
+
+
+
+
+                     Figure 5: Gridded map of a residential area in autonomous vehicle scenario.
+
+    Figure 6 shows the cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for
+the autonomous vehicle scenario.
+
+
+G     Details in Office World Scenario
+We provide the detailed results in the office world scenario. Figure 7 shows the map in the office world scenario. We
+use the triangle to denote the initial position of the agent. We consider the following four tasks:
+Task 2.1: get coffee at c and deliver the coffee to the office o;
+Task 2.2: get mail at m and deliver the coffee to the office o;
+Task 2.3: go to the office o, then get coffee at c and go back to the office o, finally go to mail at m;
+Task 2.4: get coffee at c and deliver the coffee to the office o, then come to get coffee at c and deliver the coffee to the
+frontdesk d.
+
+G.1     Task 2.1
+For task 2.1, Figure 8 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 9 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.1.
+
+                                                (¬c, 0)            (¬o, 0)
+
+                                                          (c, 0)             (o, 1)
+                                       start      v0                 v1               v2
+
+
+              Figure 8: The inferred hypothesis reward machine for task 2.1 in the last iteration of JIRP.
+
+
+
+G.2     Task 2.2
+For task 2.2, Figure 10 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 11 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.2.
+
+
+
+
+                                                              19
+                     (a)                                       (b)                              (c)
+
+Figure 6: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps in the autonomous
+vehicle scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+
+                                                                                       d
+                                                     c
+                                                           o           m
+
+                                             a                                         b
+
+                                   Figure 7: The map in the office world scenario.
+
+
+                                                 (¬m, 0)            (¬o, 0)
+
+                                                           (m, 0)             (o, 1)
+                                     start         v0                 v1                   v2
+
+
+            Figure 10: The inferred hypothesis reward machine for task 2.2 in the last iteration of JIRP.
+
+
+
+G.3    Task 2.3
+For task 2.3, Figure 12 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 13 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.3.
+
+
+
+
+                                                               20
+                     (a)                                         (b)                                      (c)
+
+Figure 9: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.1 in
+the office world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+
+
+                     (a)                                         (b)                                      (c)
+
+Figure 11: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.2 in
+the office world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+                                                            v4
+
+                                  (b ∨ c ∨ o, 0)
+                                                      )
+                                                     ,1
+                                                 (m
+                                                              (o, 0)
+                                        v3                                                  v2
+
+                                                          (¬o, 0)
+                                                                                   ,   0)
+                                                                                ∨m
+                                                                           (c
+                                             start          v0
+                                                                       ∨
+                                     (a                             (m                           (c,
+                                       ∨                    (o,             )                        0)
+                                          d, 0                0)       o, 0
+                                             )
+                                                                       v1
+
+             Figure 12: The inferred hypothesis reward machine for task 2.3 in the last iteration of JIRP.
+
+
+
+G.4    Task 2.4
+For task 2.4, Figure 15 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 15 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.4.
+
+
+
+                                                                 21
+                     (a)                                       (b)                                            (c)
+
+Figure 13: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.3 in
+the office world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+
+
+                     (a)                                       (b)                                            (c)
+
+Figure 15: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 2.4 in
+the office world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+                                                            (c, 0)
+                             (a ∨ b ∨ o, 0)                                              (a ∨ m ∨ o, 0)
+                                                   (d, 1)
+                                                (a, 0
+                                                     )
+                                  v3                                         v5                 v2
+                                            (c, 0                       1)
+                                                  )       v4      (d,
+
+                                                                                    )
+                                                                                                     (o, 0)
+                                                      (¬a ∨ ¬d, 0)                d, 0
+                                   (m ,                                       ∨
+                                                                             (b
+                                       0)
+                                                        (¬c, 0)                          (¬o, 0)
+
+
+                                            start         v0                               v1
+                                                                        (c, 0)
+
+            Figure 14: The inferred hypothesis reward machine for task 2.4 in the last iteration of JIRP.
+
+
+
+
+                                                               22
+                                                                                             h
+                                                                       i
+                                     f
+                                                                       h                     f
+
+
+
+                                                     i
+                                         f                        t
+                                                                                             t
+
+                                                              t                              i
+                                                 w
+
+                                                              h                                    w
+
+                                             w                                               f
+                                 w                                                 w
+
+                                         h
+                                                                  w
+
+
+                                Figure 16: The map in the Minecraft world scenario.
+
+
+H     Details in Minecraft World Scenario
+We provide the detailed results in Minecraft world scenario. Figure 16 shows the map in the office world scenario. We
+use the triangle to denote the initial position of the agent. We consider the following four tasks:
+Task 3.1: make plank: get wood w, then use toolshed t (toolshed cannot be used before wood is gotten);
+Task 3.2: make stick: get wood w, then use workbench h (workbench can be used before wood is gotten);
+Task 3.3: make bow: go to workbench h, get wood w, then go to workbench h and use factory f (in the listed order);
+Task 3.4: make bridge: get wood w, get iron i, then get wood w and use factory f (in the listed order).
+
+H.1    Task 3.1
+For task 3.1, Figure 17 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 18 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.1.
+
+                                                 (¬w ∧ ¬t, 0)                   (¬t, 0)
+
+                                                                  (w, 0)                  (t, 1)
+                                         start           v0                       v1                   v2
+
+                                                              (t, 0)
+
+                                                                                  v3
+
+            Figure 17: The inferred hypothesis reward machine for task 3.1 in the last iteration of JIRP.
+
+
+
+H.2     Task 3.2
+For task 3.2, Figure 19 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 20 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.2.
+
+
+                                                                           23
+                     (a)                                   (b)                                (c)
+
+Figure 18: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.1 in
+the Minecraft world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+
+
+                     (a)                                   (b)                                (c)
+
+Figure 20: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.2 in
+the Minecraft world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+                                             (¬w, 0)            (¬h, 0)
+
+                                                       (w, 0)             (h, 1)
+                                     start      v0                v1               v2
+
+
+            Figure 19: The inferred hypothesis reward machine for task 3.2 in the last iteration of JIRP.
+
+
+
+H.3     Task 3.3
+For task 3.3, Figure 21 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 22 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.3.
+
+
+
+
+                                                           24
+                     (a)                                     (b)                                   (c)
+
+Figure 22: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.3 in
+the Minecraft world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+                                                                                (¬h, 0)
+                                                       (h, 0)
+                                                                                    v2
+
+                                  v3              v4
+                                         (f, 1)
+
+                               (¬f, 0)                                                    (w, 0)
+                                             0
+                                         (t,       (¬h, 0)                   (¬w, 0)
+                                            )                   (h ∨ f, 0)
+
+                                          start        v0                      v1
+                                                                   (h, 0)
+
+            Figure 21: The inferred hypothesis reward machine for task 3.3 in the last iteration of JIRP.
+
+
+
+H.4     Task 3.4
+For task 3.4, Figure 23 shows the inferred hypothesis reward machine in the last iteration of JIRP. Figure 24 shows the
+cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.4.
+
+
+
+
+                                                             25
+                     (a)                                         (b)                            (c)
+
+Figure 24: Cumulative rewards of 10 independent simulation runs averaged for every 10 training steps for task 3.4 in
+the Minecraft world scenario: (a) JIRP; (b) QAS; (c) HRL.
+
+
+                                                   (¬f, 0)
+
+                            (f ∨ t ∨ i, 0)
+                                                     v3                       v4
+                                              0)
+                                       (w,                           (f, 1)
+                                 v2
+                                                             (i,
+                                                                 0)
+
+                                          0
+                                      (h,          (¬w, 0)
+                                         )                     (h ∨ t, 0)
+
+                                      start          v0                       v1   (w ∨ f, 0)
+                                                                 (w, 0)
+
+            Figure 23: The inferred hypothesis reward machine for task 3.4 in the last iteration of JIRP.
+
+
+
+
+                                                                 26
+

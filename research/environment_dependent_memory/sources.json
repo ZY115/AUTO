@@ -1,0 +1,225 @@
+[
+  {
+    "id": "thiebaux2006",
+    "title": "Decision-Theoretic Planning with non-Markovian Rewards",
+    "url": "https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume25/thiebaux06a.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/thiebaux2006.pdf",
+    "bytes": 699124,
+    "sha256": "0326dbfea6e5a0e4c0cf335a527bdfb5a6ba0fdd5c49b0c5ccffebeec3a182a5",
+    "version_or_venue": "JAIR 25, 2006",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Sections 2.1, 3.8-3.10; definitions 6-7 and theorems 3-4; construction-cost discussion",
+    "relevant_pdf_pages_1_based": [
+      24,
+      25
+    ]
+  },
+  {
+    "id": "li2006",
+    "title": "Towards a Unified Theory of State Abstraction for MDPs",
+    "url": "https://thomasjwalsh.net/pub/aima06Towards.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/li2006.pdf",
+    "bytes": 307868,
+    "sha256": "647308a72fe5a2f692089f1672ce570722b0b51eb3f5f18a0420561b96628dcd",
+    "version_or_venue": "ISAIM 2006",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Sections 3.3-3.4; definition 3, theorems 3-4; figure 1 and explanation",
+    "relevant_pdf_pages_1_based": [
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  {
+    "id": "givan2003",
+    "title": "Equivalence Notions and Model Minimization in Markov Decision Processes",
+    "url": "https://cs.brown.edu/people/tdean/publications/archive/GivanetalAIJ-03.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/givan2003.pdf",
+    "bytes": 450913,
+    "sha256": "a771b95788a0d542c1a101fdaf0380bd759d02176f121af6af3b587ffea479ed",
+    "version_or_venue": "Artificial Intelligence 147, 2003",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Stochastic bisimulation definition, theorems 5 and 7; start of minimization section",
+    "relevant_pdf_pages_1_based": [
+      13,
+      14
+    ]
+  },
+  {
+    "id": "abel2016",
+    "title": "Near Optimal Behavior via Approximate State Abstraction",
+    "url": "https://proceedings.mlr.press/v48/abel16.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/abel2016.pdf",
+    "bytes": 724603,
+    "sha256": "066b12df96cc5ff7ded905808eeae0627a11ad0f52f8f1a0e08750d200379f3d",
+    "version_or_venue": "ICML 2016",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Section 5.1 lemma 1; section 6 oracle construction procedure",
+    "relevant_pdf_pages_1_based": [
+      4,
+      7
+    ]
+  },
+  {
+    "id": "hutter2016",
+    "title": "Extreme State Aggregation Beyond MDPs",
+    "url": "https://www.hutter1.net/publ/exsaggx.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/hutter2016.pdf",
+    "bytes": 435163,
+    "sha256": "8d94aadcf96620cabb9d4eeceb0f70fb2980d0217a1864ecabe50824f33a71d5",
+    "version_or_venue": "Theoretical Computer Science 650, 2016; author manuscript dated 2016-02-22",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Theorems 1-2 and 8; abstraction definition and practical identification discussion",
+    "relevant_pdf_pages_1_based": [
+      6,
+      7,
+      14
+    ]
+  },
+  {
+    "id": "majeed2018",
+    "title": "On Q-learning Convergence for Non-Markov Decision Processes",
+    "url": "https://www.ijcai.org/proceedings/2018/0353.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/majeed2018.pdf",
+    "bytes": 272671,
+    "sha256": "ccf0dcb43271e37e34758155badf4aec9439c1b99c556248481f27c765bd7cbe",
+    "version_or_venue": "IJCAI 2018",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Definition 3, assumptions 4-6, theorem 7, equation 5 and related-work discussion",
+    "relevant_pdf_pages_1_based": [
+      2,
+      3
+    ]
+  },
+  {
+    "id": "ronca2022",
+    "title": "Markov Abstractions for PAC Reinforcement Learning in Non-Markov Decision Processes",
+    "url": "https://www.ijcai.org/proceedings/2022/0473.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/ronca2022.pdf",
+    "bytes": 469415,
+    "sha256": "a215bcdb34c25ff7702b1dae2ce550eb6c28238506f0faa5e7a70fe64f6d17d1",
+    "version_or_venue": "IJCAI 2022",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Sections 2-4; definition 1, guarantees 1-2, theorem 3 and abstraction reset procedure",
+    "relevant_pdf_pages_1_based": [
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "id": "icarte2019",
+    "title": "Learning Reward Machines for Partially Observable Reinforcement Learning",
+    "url": "https://papers.nips.cc/paper/9685-learning-reward-machines-for-partially-observable-reinforcement-learning.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/icarte2019.pdf",
+    "bytes": 522204,
+    "sha256": "3bc77898b658d131a7b16e0f431debbb31d6da22b61a379018da52e8785b4792",
+    "version_or_venue": "NeurIPS 2019",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Sections 4.1-4.2 and 7; perfect-RM theorems and gravity counterexample",
+    "relevant_pdf_pages_1_based": [
+      5,
+      8
+    ]
+  },
+  {
+    "id": "brafman2018",
+    "title": "LTLf/LDLf Non-Markovian Rewards",
+    "url": "https://www.diag.uniroma1.it/degiacom/papers/2018/aaai18bdp.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/brafman2018.pdf",
+    "bytes": 403592,
+    "sha256": "79267abc506dce826ad0b45162d7cb7111b850d7ea3575f37853ef134c6d07e8",
+    "version_or_venue": "AAAI 2018",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Product construction and minimality proof discussion; scope not treated as environment-conditioned policy-minimality",
+    "relevant_pdf_pages_1_based": [
+      5,
+      6
+    ]
+  },
+  {
+    "id": "bourel2023",
+    "title": "Exploration in Reward Machines with Low Regret",
+    "url": "https://proceedings.mlr.press/v206/bourel23a/bourel23a.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/bourel2023.pdf",
+    "bytes": 1407358,
+    "sha256": "68875b4c040be775e5522d93843614e345c9a8715f77913467985a321bbe63da",
+    "version_or_venue": "AISTATS 2023",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Abstract/introduction, assumption 1, RM-restricted diameter, theorem statements and comparison to generic product baseline",
+    "relevant_pdf_pages_1_based": [
+      5,
+      7,
+      8
+    ]
+  },
+  {
+    "id": "wang2024",
+    "title": "Building Minimal and Reusable Causal State Abstractions for Reinforcement Learning",
+    "url": "https://people.cs.gmu.edu/~xiao/papers/cbm.pdf",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/wang2024.pdf",
+    "bytes": 2978597,
+    "sha256": "49445a2d955d1c44452fa8508bc9f703f3af72ba653b4b10048f406be84dd3d5",
+    "version_or_venue": "AAAI 2024; author-hosted proceedings PDF",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Abstract, causal reward/dynamics abstraction section, cited bisimulation theorem; cited causal assumptions not independently audited",
+    "relevant_pdf_pages_1_based": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "id": "trapasso2025",
+    "title": "Model-Based Reinforcement Learning in Discrete-Action Non-Markovian Reward Decision Processes",
+    "url": "https://arxiv.org/pdf/2512.14617",
+    "accessed": "2026-09-06",
+    "status": "downloaded",
+    "path": "papers/trapasso2025.pdf",
+    "bytes": 5024719,
+    "sha256": "6f3cb327b4d1a6a80016b5e9540def75414f71ee3644d3094acfa6e6b8d4d6de",
+    "version_or_venue": "arXiv:2512.14617v2, revised 2026-06-08; author metadata says accepted IJCAI-ECAI 2026",
+    "reading_depth": "selected_fulltext_sections",
+    "reading_scope": "Sections 4-4.2, theorem 3, factorized model counts, automaton-state observability requirement; full PAC appendix not audited",
+    "relevant_pdf_pages_1_based": [
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  {
+    "id": "partoviaria2025",
+    "title": "Learning Causal Dynamics and Reward Machines: A Framework for Faster Reinforcement Learning with Extended Temporal Tasks",
+    "url": "https://asu.elsevierpure.com/en/publications/learning-causal-dynamics-and-reward-machines-a-framework-for-fast-2/",
+    "doi": "10.1109/ICCCR65461.2025.11072560",
+    "accessed": "2026-09-06",
+    "status": "abstract_only",
+    "reading_depth": "official_institution_abstract_only",
+    "reading_scope": "Nearby work; no full-text theorem or experimental audit"
+  }
+]

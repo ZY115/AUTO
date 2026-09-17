@@ -1,0 +1,19 @@
+{
+  "step38_censored_counts": {
+    "Y00 flat history": 79,
+    "Y01 skill-only meta": 0,
+    "Y10 no-reuse readout": 0,
+    "Y11 goal readout": 0,
+    "QRM (CRM)": 0
+  },
+  "step38_ratio_interaction_from_map_upper_medians": {
+    "mean": 3.794729444214285,
+    "lo": 3.1108819128569056,
+    "hi": 4.588241551259837
+  },
+  "step36_reuse_from_map_medians": {
+    "mean": 3.2030924126881883,
+    "lo": 2.9315197270364357,
+    "hi": 3.5064593461420293
+  }
+}

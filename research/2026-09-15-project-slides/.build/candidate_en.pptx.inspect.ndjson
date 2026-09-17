@@ -1,0 +1,338 @@
+{"kind":"deck","id":"pr/9ojse6","name":"Deck"}
+{"kind":"layout","layoutId":"ddbc22f5-44a8-4218-a865-dd8ab49bff8e","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"2546df96-abd9-4e03-80e9-9c0a6695839d","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/w6vax4","slide":1,"title":"Online Discovery in Unknown Tasks","textShapes":16}
+{"kind":"textbox","id":"sh/yx0jat07","slide":1,"name":"text-1","text":"Online Discovery in Unknown Tasks","textPreview":"Online Discovery in Unknown Tasks","textChars":33,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/l0b2l8zy","slide":1,"name":"text-2","text":"The agent can identify events and is told whether each step advanced the task, but does not know the correct order","textPreview":"The agent can identify events and is told whether each step advanced the task, but does not know the correct order","textChars":114,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/0z21c3id","slide":1,"name":"text-3","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/n2tknih4","slide":1,"name":"text-4","text":"Events visible, progress feedback reliable","textPreview":"Events visible, progress feedback reliable","textChars":42,"textLines":1,"bbox":[80,125,485,40]}
+{"kind":"shape","id":"sh/m1kjed0j","slide":1,"bbox":[90,199,58,58]}
+{"kind":"shape","id":"sh/9ob2pszu","slide":1,"bbox":[148,199,58,58]}
+{"kind":"shape","id":"sh/8321gni9","slide":1,"bbox":[206,199,58,58]}
+{"kind":"shape","id":"sh/36p0be1k","slide":1,"bbox":[264,199,58,58]}
+{"kind":"shape","id":"sh/25gj290z","slide":1,"bbox":[322,199,58,58]}
+{"kind":"shape","id":"sh/s7ipobmd","slide":1,"bbox":[380,199,58,58]}
+{"kind":"shape","id":"sh/d8rqxgny","slide":1,"bbox":[90,257,58,58]}
+{"kind":"shape","id":"sh/q507m147","slide":1,"bbox":[148,257,58,58]}
+{"kind":"shape","id":"sh/r698v65s","slide":1,"bbox":[206,257,58,58]}
+{"kind":"shape","id":"sh/0v2psbm9","slide":1,"bbox":[264,257,58,58]}
+{"kind":"shape","id":"sh/1wbq1gnu","slide":1,"bbox":[322,257,58,58]}
+{"kind":"shape","id":"sh/et07q143","slide":1,"bbox":[380,257,58,58]}
+{"kind":"shape","id":"sh/fut8z65o","slide":1,"bbox":[90,315,58,58]}
+{"kind":"shape","id":"sh/gzypgrm5","slide":1,"bbox":[148,315,58,58]}
+{"kind":"shape","id":"sh/h076pcnq","slide":1,"bbox":[206,315,58,58]}
+{"kind":"shape","id":"sh/xwzmd8fe","slide":1,"bbox":[264,315,58,58]}
+{"kind":"shape","id":"sh/wvq5k3et","slide":1,"bbox":[322,315,58,58]}
+{"kind":"shape","id":"sh/buh4byx8","slide":1,"bbox":[380,315,58,58]}
+{"kind":"shape","id":"sh/at8nidwn","slide":1,"bbox":[90,373,58,58]}
+{"kind":"shape","id":"sh/l0j6hsfa","slide":1,"bbox":[148,373,58,58]}
+{"kind":"shape","id":"sh/kza5one5","slide":1,"bbox":[206,373,58,58]}
+{"kind":"shape","id":"sh/jyhofixk","slide":1,"bbox":[264,373,58,58]}
+{"kind":"shape","id":"sh/yx8nmdwz","slide":1,"bbox":[322,373,58,58]}
+{"kind":"shape","id":"sh/toj6lsfm","slide":1,"bbox":[380,373,58,58]}
+{"kind":"shape","id":"sh/8na5sne1","slide":1,"bbox":[90,431,58,58]}
+{"kind":"shape","id":"sh/q94jmpcj","slide":1,"bbox":[148,431,58,58]}
+{"kind":"shape","id":"sh/radkfud4","slide":1,"bbox":[206,431,58,58]}
+{"kind":"shape","id":"sh/cbmlozup","slide":1,"bbox":[264,431,58,58]}
+{"kind":"shape","id":"sh/dcv2h4va","slide":1,"bbox":[322,431,58,58]}
+{"kind":"shape","id":"sh/ex43q9cf","slide":1,"bbox":[380,431,58,58]}
+{"kind":"shape","id":"sh/zydkjed0","slide":1,"bbox":[90,489,58,58]}
+{"kind":"shape","id":"sh/0zmlszul","slide":1,"bbox":[148,489,58,58]}
+{"kind":"shape","id":"sh/10f2l4v6","slide":1,"bbox":[206,489,58,58]}
+{"kind":"shape","id":"sh/m1o3u9cr","slide":1,"bbox":[264,489,58,58]}
+{"kind":"shape","id":"sh/n2xknedc","slide":1,"bbox":[322,489,58,58]}
+{"kind":"shape","id":"sh/b69sra14","slide":1,"bbox":[380,489,58,58]}
+{"kind":"textbox","id":"sh/al0bi50j","slide":1,"name":"text-5","text":"agent","textPreview":"agent","textChars":5,"textLines":1,"bbox":[90,489,58,58]}
+{"kind":"textbox","id":"sh/x8rutkja","slide":1,"name":"text-6","text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[148,257,58,58]}
+{"kind":"textbox","id":"sh/w7itkfip","slide":1,"name":"text-7","text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[322,199,58,58]}
+{"kind":"textbox","id":"sh/jatcvu1g","slide":1,"name":"text-8","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[322,431,58,58]}
+{"kind":"textbox","id":"sh/y9kbmp0v","slide":1,"name":"text-9","text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[206,373,58,58]}
+{"kind":"textbox","id":"sh/lcbux4j6","slide":1,"name":"text-10","text":"A   ?   B   ?   C   ?   D","textPreview":"A   ?   B   ?   C   ?   D","textChars":25,"textLines":1,"bbox":[76,578,390,42]}
+{"kind":"textbox","id":"sh/kb2tozil","slide":1,"text":"Interaction feedback","textPreview":"Interaction feedback","textChars":20,"textLines":1,"bbox":[605,205,230,76]}
+{"kind":"textbox","id":"sh/zepsjq1w","slide":1,"text":"Partial task structure","textPreview":"Partial task structure","textChars":22,"textLines":1,"bbox":[930,205,230,76]}
+{"kind":"textbox","id":"sh/edgbal0b","slide":1,"text":"Keep exploring","textPreview":"Keep exploring","textChars":14,"textLines":1,"bbox":[605,435,230,76]}
+{"kind":"textbox","id":"sh/4jepkry9","slide":1,"text":"Invoke learned skill","textPreview":"Invoke learned skill","textChars":20,"textLines":1,"bbox":[930,435,230,76]}
+{"kind":"shape","id":"sh/pknqtwzu","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/2hc7i1g3","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/3i58rmho","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/gvupgryd","slide":1,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/hg3qpwzy","slide":1,"name":"text-11","text":"Unknown part","textPreview":"Unknown part","textChars":12,"textLines":1,"bbox":[632,520,190,36]}
+{"kind":"textbox","id":"sh/utc7ehg7","slide":1,"name":"text-12","text":"Known prefix","textPreview":"Known prefix","textChars":12,"textLines":1,"bbox":[955,520,185,36]}
+{"kind":"notes","id":"nt/w6vax4","slide":1,"text":"The problem is discovering a hidden task order or logic, not goal discovery with no task signal at all. Events are identifiable and the early experiments provide reliable step-by-step advance feedback. The grid drawing is a mechanism sketch only and does not correspond to any specific experimental map.\n\nSource: /Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/PROJECT_STATUS.md"}
+{"kind":"slide","id":"sl/4gdo05","slide":2,"title":"Discover and Use as You Go","textShapes":6}
+{"kind":"textbox","id":"sh/v6xwni9s","slide":2,"name":"text-13","text":"Discover and Use as You Go","textPreview":"Discover and Use as You Go","textChars":26,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/g76dg3ad","slide":2,"name":"text-14","text":"Length 16, 32 seeds; immediate vs delayed is a matched timing contrast; plain replay uses a different exploration rate and is a reference baseline only","textPreview":"Length 16, 32 seeds; immediate vs delayed is a matched timing contrast; plain replay uses a different exploration rate and is a reference...","textChars":151,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/h8fep8ry","slide":2,"name":"text-15","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/i9ovidsj","slide":2,"name":"text-16","text":"Steps to first 90%","textPreview":"Steps to first 90%","textChars":18,"textLines":1,"bbox":[80,137,620,38]}
+{"kind":"textbox","id":"sh/3axwri94","slide":2,"name":"text-17","text":"Before first full success: known prefix","textPreview":"Before first full success: known prefix","textChars":39,"textLines":1,"bbox":[816,137,400,38]}
+{"kind":"textbox","id":"sh/yd4v6tsz","slide":2,"name":"text-18","text":"Almost all of the saving is the cost of re-walking the known prefix, not smarter exploration","textPreview":"Almost all of the saving is the cost of re-walking the known prefix, not smarter exploration","textChars":92,"textLines":1,"bbox":[64,600,1150,40]}
+{"kind":"chart","id":"ch/cjqp8bqp","slide":2,"name":"","chartType":"bar","bbox":[65,198,705,380]}
+{"kind":"chart","id":"ch/dkz61g7a","slide":2,"name":"","chartType":"bar","bbox":[812,198,404,380]}
+{"kind":"notes","id":"nt/4gdo05","slide":2,"text":"Stage 6: length 16, action noise, a second batch of 32 fresh seeds. Left chart is the mean environment steps to first reach a 90% success rate. Right chart is the mean steps accumulated inside the already-confirmed goal prefix before the first full success; the two observation windows differ, so they must not be subtracted or read as an exact decomposition of total cost. All three methods do 9 Bellman updates per step; epsilon is 0.005 for immediate and delayed and 0.05 for plain replay (chosen on a dev set). No claim is made of beating ISA or other existing methods. Almost all of the saving comes from no longer re-walking the known prefix, not from exploration becoming smarter.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/REPORT.md"}
+{"kind":"slide","id":"sl/s2wwms","slide":3,"title":"Linear, Branching","textShapes":21}
+{"kind":"textbox","id":"sh/rmx4jy1w","slide":3,"name":"text-19","text":"Linear, Branching","textPreview":"Linear, Branching","textChars":17,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/snq5s3ih","slide":3,"name":"text-20","text":"Hot brew / cold brew: the same pour over grounds, different history, different continuation","textPreview":"Hot brew / cold brew: the same pour over grounds, different history, different continuation","textChars":91,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/tozml8j2","slide":3,"name":"text-21","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"shape","id":"sh/ep8nud0n","slide":3,"bbox":[640,128,0,468]}
+{"kind":"textbox","id":"sh/fqh4ni18","slide":3,"name":"text-22","text":"Linear task: progress is enough","textPreview":"Linear task: progress is enough","textChars":31,"textLines":1,"bbox":[72,130,520,42]}
+{"kind":"textbox","id":"sh/grq5wnit","slide":3,"name":"text-23","text":"progress","textPreview":"progress","textChars":8,"textLines":1,"bbox":[110,196,180,38]}
+{"kind":"textbox","id":"sh/1szmpsjy","slide":3,"name":"text-24","text":"goal","textPreview":"goal","textChars":4,"textLines":1,"bbox":[330,196,140,38]}
+{"kind":"shape","id":"sh/at43i90j","slide":3,"bbox":[104,238,380,0]}
+{"kind":"textbox","id":"sh/vud4be1o","slide":3,"name":"text-25","text":"0","textPreview":"0","textChars":1,"textLines":1,"bbox":[110,256,180,44]}
+{"kind":"textbox","id":"sh/7u143mps","slide":3,"name":"text-26","text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[330,256,140,44]}
+{"kind":"textbox","id":"sh/mtsnuh87","slide":3,"name":"text-27","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[110,314,180,44]}
+{"kind":"textbox","id":"sh/9wj65w7y","slide":3,"name":"text-28","text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[330,314,140,44]}
+{"kind":"textbox","id":"sh/8va5wrqd","slide":3,"name":"text-29","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[110,372,180,44]}
+{"kind":"textbox","id":"sh/zqh4z29w","slide":3,"name":"text-30","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[330,372,140,44]}
+{"kind":"textbox","id":"sh/yp8nqh8b","slide":3,"name":"text-31","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[110,430,180,44]}
+{"kind":"textbox","id":"sh/lszm1crm","slide":3,"name":"text-32","text":"?","textPreview":"?","textChars":1,"textLines":1,"bbox":[330,430,140,44]}
+{"kind":"textbox","id":"sh/krq5s7q1","slide":3,"name":"text-33","text":"Branching task: progress is not enough","textPreview":"Branching task: progress is not enough","textChars":38,"textLines":1,"bbox":[676,130,520,42]}
+{"kind":"textbox","id":"sh/b2h4v29k","slide":3,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[690,206,78,56]}
+{"kind":"textbox","id":"sh/a1onmx8z","slide":3,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[900,206,78,56]}
+{"kind":"textbox","id":"sh/exonyxsr","slide":3,"text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[1110,206,78,56]}
+{"kind":"textbox","id":"sh/fyxo72tc","slide":3,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[690,376,78,56]}
+{"kind":"textbox","id":"sh/0z6507ax","slide":3,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[900,376,78,56]}
+{"kind":"textbox","id":"sh/10f69cbi","slide":3,"text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[1110,376,78,56]}
+{"kind":"shape","id":"sh/2lo72xs3","slide":3,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/nmhob2to","slide":3,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/onqp47a9","slide":3,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/poz6dcbe","slide":3,"bbox":[0,0,0,0]}
+{"kind":"notes","id":"nt/s2wwms","slide":3,"text":"Left: in a linear sequence the progress count already identifies the current stage, so a stage-to-next-goal list suffices; the first positive result therefore cannot prove the value of general automaton learning. Right: A-then-E and B-then-E arrive at the same physical location with progress 2 and the same last event E, yet require different continuations; the two E boxes denote task states under different histories, not two physical locations. A prefix tree and a sufficient-history dictionary are identical action for action under matched inputs and random numbers, so the value does not come from the graph form. The coffee example is an isomorphic intuition aid, not a task used in any experiment: A and B are two different first steps (boil water / take cold water) and E is the one action both share (pour over grounds).\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/REPORT.md"}
+{"kind":"slide","id":"sl/dtlmb6","slide":4,"title":"State Abstraction","textShapes":16}
+{"kind":"textbox","id":"sh/j6l8nmdo","slide":4,"name":"text-34","text":"State Abstraction","textPreview":"State Abstraction","textChars":17,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/k7u9wru9","slide":4,"name":"text-35","text":"Different history does not mean different task state","textPreview":"Different history does not mean different task state","textChars":52,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/583qpcvu","slide":4,"name":"text-36","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/69cryhcf","slide":4,"name":"text-37","text":"Full history","textPreview":"Full history","textChars":12,"textLines":1,"bbox":[95,136,310,45]}
+{"kind":"textbox","id":"sh/7al8rmd0","slide":4,"name":"text-38","text":"Final task state","textPreview":"Final task state","textChars":16,"textLines":1,"bbox":[532,136,320,45]}
+{"kind":"textbox","id":"sh/sbu90rul","slide":4,"name":"text-39","text":"Shared action values","textPreview":"Shared action values","textChars":20,"textLines":1,"bbox":[954,136,280,45]}
+{"kind":"textbox","id":"sh/tcnqtwv6","slide":4,"text":"A before B","textPreview":"A before B","textChars":10,"textLines":1,"bbox":[540,264,230,80]}
+{"kind":"textbox","id":"sh/mds7mxcb","slide":4,"text":"B before A","textPreview":"B before A","textChars":10,"textLines":1,"bbox":[540,478,230,80]}
+{"kind":"textbox","id":"sh/ne18f2dw","slide":4,"text":"ABC","textPreview":"ABC","textChars":3,"textLines":1,"bbox":[112,211,126,50]}
+{"kind":"shape","id":"sh/7a1k3ad0","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/mps3upwf","slide":4,"text":"ACB","textPreview":"ACB","textChars":3,"textLines":1,"bbox":[112,284,126,50]}
+{"kind":"shape","id":"sh/9c325kv6","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/8balwfel","slide":4,"text":"CAB","textPreview":"CAB","textChars":3,"textLines":1,"bbox":[112,357,126,50]}
+{"kind":"shape","id":"sh/zm1kzad4","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/ylsjq5wj","slide":4,"text":"BAC","textPreview":"BAC","textChars":3,"textLines":1,"bbox":[112,425,126,50]}
+{"kind":"shape","id":"sh/loj21kvu","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/kna1sfep","slide":4,"text":"BCA","textPreview":"BCA","textChars":3,"textLines":1,"bbox":[112,498,126,50]}
+{"kind":"shape","id":"sh/bihkvqds","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/ah8jm5w7","slide":4,"text":"CBA","textPreview":"CBA","textChars":3,"textLines":1,"bbox":[112,571,126,50]}
+{"kind":"shape","id":"sh/ed83ylgf","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/fehk7qhk","slide":4,"text":"Q(state, X/Y)","textPreview":"Q(state, X/Y)","textChars":13,"textLines":1,"bbox":[970,264,240,80]}
+{"kind":"textbox","id":"sh/0fql0vy5","slide":4,"text":"Q(state, X/Y)","textPreview":"Q(state, X/Y)","textChars":13,"textLines":1,"bbox":[970,478,240,80]}
+{"kind":"shape","id":"sh/1gzm90zq","slide":4,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/2h8325gb","slide":4,"bbox":[0,0,0,0]}
+{"kind":"notes","id":"nt/dtlmb6","slide":4,"text":"Parts-task rule: if A comes before B choose X, otherwise choose Y; the positions of the other parts are irrelevant. The full order is supplied by the environment and the agent makes a single binary choice at the end. The figure states equivalence of that terminal decision; it does not claim every intermediate prefix is equivalent in environment state. The correct automaton and an equivalent hand-written program use the same state partition. What has to be learned is not remembering the procedure but which histories may share future experience.\n\nSource: /Users/yuhang/Downloads/why TL/AUTO/docs/MEMORY_COMPRESSION_PILOT.md"}
+{"kind":"slide","id":"sl/1sgihn","slide":5,"title":"Correct Compression","textShapes":7}
+{"kind":"textbox","id":"sh/ovepsvet","slide":5,"name":"text-40","text":"Correct Compression","textPreview":"Correct Compression","textChars":19,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/3u5ozqdo","slide":5,"name":"text-41","text":"Correct equivalence given; 400 paired seeds per size (not 400 tasks: the candidate family holds only 6 / 12 / 20 rules)","textPreview":"Correct equivalence given; 400 paired seeds per size (not 400 tasks: the candidate family holds only 6 / 12 / 20 rules)","textChars":119,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/2tw7qlw3","slide":5,"name":"text-42","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/czypwfe5","slide":5,"name":"text-43","text":"4.67×","textPreview":"4.67×","textChars":5,"textLines":1,"bbox":[185,568,200,46]}
+{"kind":"textbox","id":"sh/by583adk","slide":5,"name":"text-44","text":"18.55×","textPreview":"18.55×","textChars":6,"textLines":1,"bbox":[538,568,200,46]}
+{"kind":"textbox","id":"sh/qxw7u5wz","slide":5,"name":"text-45","text":"89.75×","textPreview":"89.75×","textChars":6,"textLines":1,"bbox":[891,568,200,46]}
+{"kind":"textbox","id":"sh/lo7q9kvm","slide":5,"name":"text-46","text":"The number of full histories grows as n!; correct compression always has just two classes","textPreview":"The number of full histories grows as n!; correct compression always has just two classes","textChars":89,"textLines":1,"bbox":[80,616,1120,34]}
+{"kind":"chart","id":"ch/psry5c3u","slide":5,"name":"","chartType":"bar","bbox":[75,149,1120,415]}
+{"kind":"notes","id":"nt/1sgihn","slide":5,"text":"400 paired seeds per size, 5000 episodes per method. T95 is the episode at which accuracy first reaches and then holds at least 95% at later checkpoints; the main comparisons in this batch have no censoring, so RMST equals mean T95. The compression equivalence was supplied by the designer. Full history and correct compression use the same Q-learning. The automaton and the equivalent hand-written program agree seed by seed and checkpoint by checkpoint. Ratios come from unrounded means. The magnitude has a closed-form account: Q for the wrong action stays 0 and the right action becomes 1 after its first positive reward, after which that state is always answered correctly; uncovered states tie at random and are right half the time, so accuracy = (H+c)/2H and reaching 95% needs c >= 0.9H. With i covered, the chance of covering one more is (H-i)/(2H) and the expected wait is 2H/(H-i); summing gives sum(2H/(H-i), i=0..ceil(0.9H)-1). H = 6/24/120 gives 29.40/109.25/543.76 episodes and H = 2 after compression gives 6.0, a theoretical factor of 90.63x against an observed 89.75x. The large factor comes from how many table entries must be filled and needs no extra mechanism.\n\nSource: /Users/yuhang/Downloads/why TL/AUTO/results/runs/memory_compression_pilot_5k.md"}
+{"kind":"slide","id":"sl/c8tsvx","slide":6,"title":"Deciding Online Which Histories Can Merge","textShapes":8}
+{"kind":"textbox","id":"sh/elwzyp0b","slide":6,"name":"text-47","text":"Deciding Online Which Histories Can Merge","textPreview":"Deciding Online Which Histories Can Merge","textChars":41,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/187i94j2","slide":6,"name":"text-48","text":"Replay audit on a fixed trajectory; these merges were never wired into the controller","textPreview":"Replay audit on a fixed trajectory; these merges were never wired into the controller","textChars":85,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/0nyh0zih","slide":6,"name":"text-49","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/ri5g3a10","slide":6,"text":"History A","textPreview":"History A","textChars":9,"textLines":1,"bbox":[86,250,150,66]}
+{"kind":"textbox","id":"sh/qhwzu50f","slide":6,"text":"History B","textPreview":"History B","textChars":9,"textLines":1,"bbox":[86,430,150,66]}
+{"kind":"textbox","id":"sh/dkny5kj6","slide":6,"text":"Same state","textPreview":"Same state","textChars":10,"textLines":1,"bbox":[330,340,160,72]}
+{"kind":"shape","id":"sh/sjehwfil","slide":6,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/3elgza1o","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/idczq503","slide":6,"name":"text-50","text":"Unseen suffixes may differ, so merging misapplies the experience","textPreview":"Unseen suffixes may differ, so merging misapplies the experience","textChars":64,"textLines":1,"bbox":[86,560,500,40]}
+{"kind":"shape","id":"sh/ozu947ad","slide":6,"bbox":[620,128,0,450]}
+{"kind":"textbox","id":"sh/9k3axcry","slide":6,"name":"text-51","text":"The current method shows a clear trade-off","textPreview":"The current method shows a clear trade-off","textChars":42,"textLines":1,"bbox":[668,136,540,45]}
+{"kind":"chart","id":"ch/i5kbm9sz","slide":6,"name":"","chartType":"bar","bbox":[650,196,566,368]}
+{"kind":"notes","id":"nt/c8tsvx","slide":6,"text":"Step 35: 8 task families at n=3, 792 queries. The baseline trajectory is fixed and each query is replayed using only the evidence available at that moment; these merges were never wired into a controller and there is no corresponding learning curve. k_min is the smallest machine state count the evidence at that moment allows, and +1 relaxes that bound. Savings count only the redundant part (134/792); a further 102 reuses landed on necessary queries, which is replacement rather than saving. The acceptance criteria were written before the run: query saving >= 20% and wrong sharing near zero. All three failed. Assigning all 53 solver timeouts to Occam raises the saving ceiling to 23.6%, still short. Online k_min is 8-12 while the true state count is 19-27, so with little evidence the minimum machine over-merges heavily; that is the whole reason the offline 97.6% precision does not reproduce online. Verdict accuracy of 80.1% / 77.3% is in the appendix: it exceeds attribution accuracy because many wrong attributions happen to give the same verdict.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP35.md"}
+{"kind":"slide","id":"sl/wcnkt1","slide":7,"title":"Why Recent Early Compression Did Not Reproduce the Early Gain","textShapes":14}
+{"kind":"textbox","id":"sh/oje9orih","slide":7,"name":"text-52","text":"Why Recent Early Compression Did Not Reproduce the Early Gain","textPreview":"Why Recent Early Compression Did Not Reproduce the Early Gain","textChars":61,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/ni5sfm1c","slide":7,"name":"text-53","text":"The two kinds of immediate use differ: in the early experiment behaviour changes the next evidence, in the parts experiment it does not","textPreview":"The two kinds of immediate use differ: in the early experiment behaviour changes the next evidence, in the parts experiment it does not","textChars":135,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/2xwrm10r","slide":7,"name":"text-54","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/xo7algje","slide":7,"name":"text-55","text":"Early navigation task: behaviour changes the evidence","textPreview":"Early navigation task: behaviour changes the evidence","textChars":53,"textLines":1,"bbox":[100,142,480,38]}
+{"kind":"textbox","id":"sh/cny9sbit","slide":7,"name":"text-56","text":"Latest parts experiment: evidence independent of behaviour","textPreview":"Latest parts experiment: evidence independent of behaviour","textChars":58,"textLines":1,"bbox":[700,142,500,38]}
+{"kind":"textbox","id":"sh/bmpsj618","slide":7,"text":"Partial procedure","textPreview":"Partial procedure","textChars":17,"textLines":1,"bbox":[89,220,172,62]}
+{"kind":"textbox","id":"sh/algrq10n","slide":7,"text":"Execute prefix","textPreview":"Execute prefix","textChars":14,"textLines":1,"bbox":[379,220,172,62]}
+{"kind":"textbox","id":"sh/ds3q9cju","slide":7,"text":"Suffix evidence","textPreview":"Suffix evidence","textChars":15,"textLines":1,"bbox":[238,355,172,62]}
+{"kind":"shape","id":"sh/sru9g7i9","slide":7,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/29sna5gn","slide":7,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/3a143ah8","slide":7,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/oba5cfyt","slide":7,"text":"Permutation","textPreview":"Permutation","textChars":11,"textLines":1,"bbox":[700,220,208,62]}
+{"kind":"textbox","id":"sh/pcjm5kze","slide":7,"text":"Choose X / Y","textPreview":"Choose X / Y","textChars":12,"textLines":1,"bbox":[993,220,188,62]}
+{"kind":"shape","id":"sh/qxcnepgz","slide":7,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/byl47uh4","slide":7,"name":"text-57","text":"The next episode is still sampled independently by the environment","textPreview":"The next episode is still sampled independently by the environment","textChars":66,"textLines":1,"bbox":[660,330,560,40]}
+{"kind":"textbox","id":"sh/czu5gzyp","slide":7,"name":"text-58","text":"Extra successes before identification","textPreview":"Extra successes before identification","textChars":37,"textLines":1,"bbox":[700,420,470,44]}
+{"kind":"textbox","id":"sh/y1cnipgv","slide":7,"name":"text-59","text":"A real closed loop forms only when","textPreview":"A real closed loop forms only when","textChars":34,"textLines":1,"bbox":[80,516,560,38]}
+{"kind":"textbox","id":"sh/z2l4buhg","slide":7,"name":"text-60","text":"behaviour changes the later evidence","textPreview":"behaviour changes the later evidence","textChars":36,"textLines":1,"bbox":[80,552,560,38]}
+{"kind":"chart","id":"ch/90zm54f6","slide":7,"name":"","chartType":"bar","bbox":[684,462,528,166]}
+{"kind":"notes","id":"nt/wcnkt1","slide":7,"text":"The latest parts pilot uses 400 seeds per size. During training and before the rule is uniquely identified, the immediate method achieves on average 0.1225, 0.4525 and 0.635 more successes than the delayed method. These are not the greedy-evaluation cumulative expectations of 0.137/0.533/0.696. Accuracy is below 95% before identification, and after identification the two arms are identical in this implementation, so T95 has no discriminating power; that necessity holds only for this rule family, deterministic feedback, and these update and threshold settings. In the active task, invoking skills early changes which suffixes are reached; in the passive task each episode presents an independently drawn permutation and the action does not affect the next piece of evidence. This does not establish that every early-use benefit must rest on active evidence acquisition, and it does not overturn the result on page 2.\n\nSource: /Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/REVIEW.md"}
+{"kind":"slide","id":"sl/ck1bis","slide":8,"title":"After the Structure","textShapes":16}
+{"kind":"textbox","id":"sh/twrmpw7y","slide":8,"name":"text-61","text":"After the Structure","textPreview":"After the Structure","textChars":19,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/6t03uh87","slide":8,"name":"text-62","text":"Task rules given; per-seed records of the hazard sweep are lost, so intervals cannot be recomputed","textPreview":"Task rules given; per-seed records of the hazard sweep are lost, so intervals cannot be recomputed","textChars":98,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/ru94nmps","slide":8,"name":"text-63","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/gj2l0rqp","slide":8,"name":"text-64","text":"Normal environment: all at the ceiling","textPreview":"Normal environment: all at the ceiling","textChars":38,"textLines":1,"bbox":[72,130,530,42]}
+{"kind":"textbox","id":"sh/1kbmtw7a","slide":8,"name":"text-65","text":"No reuse","textPreview":"No reuse","textChars":8,"textLines":1,"bbox":[232,214,150,36]}
+{"kind":"textbox","id":"sh/eh03y18j","slide":8,"name":"text-66","text":"Reuse","textPreview":"Reuse","textChars":5,"textLines":1,"bbox":[400,214,150,36]}
+{"kind":"textbox","id":"sh/fit4r6p4","slide":8,"name":"text-67","text":"No routing","textPreview":"No routing","textChars":10,"textLines":1,"bbox":[72,290,140,36]}
+{"kind":"textbox","id":"sh/on2l4bql","slide":8,"name":"text-68","text":"Routing","textPreview":"Routing","textChars":7,"textLines":1,"bbox":[72,420,140,36]}
+{"kind":"shape","id":"sh/pobmxg76","slide":8,"bbox":[232,262,150,112]}
+{"kind":"textbox","id":"sh/xwze9kjm","slide":8,"name":"text-69","text":"Y00","textPreview":"Y00","textChars":3,"textLines":1,"bbox":[232,296,150,44]}
+{"kind":"shape","id":"sh/wvqx0fih","slide":8,"bbox":[400,262,150,112]}
+{"kind":"textbox","id":"sh/buhw7a1w","slide":8,"name":"text-70","text":"Y01","textPreview":"Y01","textChars":3,"textLines":1,"bbox":[400,296,150,44]}
+{"kind":"shape","id":"sh/at8vy50b","slide":8,"bbox":[232,392,150,112]}
+{"kind":"textbox","id":"sh/l0jedkjy","slide":8,"name":"text-71","text":"Y10","textPreview":"Y10","textChars":3,"textLines":1,"bbox":[232,426,150,44]}
+{"kind":"shape","id":"sh/kzax4fid","slide":8,"bbox":[400,392,150,112]}
+{"kind":"textbox","id":"sh/jyhwbu1s","slide":8,"name":"text-72","text":"Y11","textPreview":"Y11","textChars":3,"textLines":1,"bbox":[400,426,150,44]}
+{"kind":"textbox","id":"sh/yx8f2p07","slide":8,"name":"text-73","text":"The four arms differ little; this cannot rank the mechanisms","textPreview":"The four arms differ little; this cannot rank the mechanisms","textChars":60,"textLines":1,"bbox":[72,530,530,36]}
+{"kind":"shape","id":"sh/14fe10ju","slide":8,"bbox":[610,128,0,450]}
+{"kind":"textbox","id":"sh/036dsvi9","slide":8,"name":"text-74","text":"Hazardous / irreversible environment: the gap widens","textPreview":"Hazardous / irreversible environment: the gap widens","textChars":52,"textLines":1,"bbox":[652,130,560,42]}
+{"kind":"textbox","id":"sh/d8jeh0ra","slide":8,"name":"text-75","text":"Skills without routing 0.882   >>   routing without skills 0.106","textPreview":"Skills without routing 0.882   >>   routing without skills 0.106","textChars":64,"textLines":1,"bbox":[640,538,580,36]}
+{"kind":"textbox","id":"sh/qlsf6l8z","slide":8,"name":"text-76","text":"Under this protocol, reuse-related differences are clearly amplified","textPreview":"Under this protocol, reuse-related differences are clearly amplified","textChars":68,"textLines":1,"bbox":[640,576,580,34]}
+{"kind":"chart","id":"ch/4belw3yl","slide":8,"name":"","chartType":"line","bbox":[640,186,580,340]}
+{"kind":"notes","id":"nt/ck1bis","slide":8,"text":"Spoken: once you have the structure a second question remains, namely whether it only tells you the current goal or can also let different stages share control experience. This group all has the task rules given and does not involve learning while building. Left 2x2: Y00 has neither mechanism, Y01 uses a learned meta-controller over shared skills (reuse without routing), Y10 routes by the true rules but keeps skills separate per task state (routing without reuse), and Y11 has both. 24 families x 30 seeds x 5 arms, budget 200000 steps. The original AUC reading that routing overwhelmingly beats reuse was withdrawn in Step 38 because of ceiling effects; this page ranks no mechanism, and full AUC and first90 are in the appendix. Right is the Step 38.5 dose sweep: expensive navigation, task rules given, training budget 1000000 environment steps, attainment rate being the fraction of runs reaching 90% success within budget. The per-seed raw data of that sweep was later confirmed lost, so intervals cannot be recomputed. The Step 40 grid shows that step cost changes the QRM ordering and shrinks the risk interaction, so this must not be read as a protocol-independent effect size. The bottom line is taken from REPORT_STEP38_5 lines 125-126.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP36.md"}
+{"kind":"slide","id":"sl/vxt3zt","slide":9,"title":"Three-Layer Research Map","textShapes":22}
+{"kind":"textbox","id":"sh/54ry9kja","slide":9,"name":"text-77","text":"Three-Layer Research Map","textPreview":"Three-Layer Research Map","textChars":24,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/ih0zep0z","slide":9,"name":"text-78","text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/ji9g7a1k","slide":9,"name":"text-79","text":"Verified","textPreview":"Verified","textChars":8,"textLines":1,"bbox":[820,142,200,42]}
+{"kind":"textbox","id":"sh/wfihcf2t","slide":9,"name":"text-80","text":"Open","textPreview":"Open","textChars":4,"textLines":1,"bbox":[1050,142,200,42]}
+{"kind":"textbox","id":"sh/hgry5kje","slide":9,"name":"text-81","text":"Structure discovery","textPreview":"Structure discovery","textChars":19,"textLines":1,"bbox":[77,237,200,50]}
+{"kind":"textbox","id":"sh/udgza5kn","slide":9,"name":"text-82","text":"Restricted online loop","textPreview":"Restricted online loop","textChars":22,"textLines":1,"bbox":[807,243,229,43]}
+{"kind":"textbox","id":"sh/ve9g3a18","slide":9,"name":"text-83","text":"General rule discovery","textPreview":"General rule discovery","textChars":22,"textLines":1,"bbox":[1045,243,231,43]}
+{"kind":"textbox","id":"sh/gb2hozix","slide":9,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[327,232,70,62]}
+{"kind":"textbox","id":"sh/1cbih4ji","slide":9,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[475,232,70,62]}
+{"kind":"textbox","id":"sh/98nmpk7y","slide":9,"text":"?","textPreview":"?","textChars":1,"textLines":1,"bbox":[623,232,70,62]}
+{"kind":"shape","id":"sh/o7e5wfqt","slide":9,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/n6l4nap8","slide":9,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/m5cnu58n","slide":9,"bbox":[76,342,1150,0]}
+{"kind":"textbox","id":"sh/143mlk72","slide":9,"name":"text-84","text":"State Abstraction","textPreview":"State Abstraction","textChars":17,"textLines":1,"bbox":[77,380,200,50]}
+{"kind":"textbox","id":"sh/0ju5sfqh","slide":9,"name":"text-85","text":"Gain from correct compression","textPreview":"Gain from correct compression","textChars":29,"textLines":1,"bbox":[807,386,229,43]}
+{"kind":"textbox","id":"sh/zil4japw","slide":9,"name":"text-86","text":"Reliable online merging","textPreview":"Reliable online merging","textChars":23,"textLines":1,"bbox":[1045,386,231,43]}
+{"kind":"textbox","id":"sh/ehcnq58b","slide":9,"text":"ABC","textPreview":"ABC","textChars":3,"textLines":1,"bbox":[327,358,100,49]}
+{"kind":"textbox","id":"sh/l076x476","slide":9,"text":"ACB","textPreview":"ACB","textChars":3,"textLines":1,"bbox":[327,425,100,49]}
+{"kind":"textbox","id":"sh/kzy54zql","slide":9,"text":"q","textPreview":"q","textChars":1,"textLines":1,"bbox":[581,390,110,58]}
+{"kind":"shape","id":"sh/4j6p03yx","slide":9,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/5kfq98fi","slide":9,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/ih47ydgr","slide":9,"bbox":[76,485,1150,0]}
+{"kind":"textbox","id":"sh/jid87ixc","slide":9,"name":"text-87","text":"Structure use","textPreview":"Structure use","textChars":13,"textLines":1,"bbox":[77,523,200,50]}
+{"kind":"textbox","id":"sh/wfmpw3y1","slide":9,"name":"text-88","text":"Conditional control gain","textPreview":"Conditional control gain","textChars":24,"textLines":1,"bbox":[807,529,229,43]}
+{"kind":"textbox","id":"sh/hgv658fm","slide":9,"name":"text-89","text":"Mechanism attribution and scope","textPreview":"Mechanism attribution and scope","textChars":31,"textLines":1,"bbox":[1045,529,231,43]}
+{"kind":"textbox","id":"sh/ud47utgv","slide":9,"text":"q","textPreview":"q","textChars":1,"textLines":1,"bbox":[327,518,70,62]}
+{"kind":"textbox","id":"sh/vedo3yxg","slide":9,"text":"goal","textPreview":"goal","textChars":4,"textLines":1,"bbox":[475,518,88,62]}
+{"kind":"textbox","id":"sh/8bmpsjyp","slide":9,"text":"skill","textPreview":"skill","textChars":5,"textLines":1,"bbox":[631,518,102,62]}
+{"kind":"shape","id":"sh/9cv61ofa","slide":9,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/bmt8behc","slide":9,"bbox":[0,0,0,0]}
+{"kind":"notes","id":"nt/vxt3zt","slide":9,"text":"These three layers are not one integrated general algorithm. Structure discovery has a positive result for a restricted unknown-order loop; state abstraction has a clear gain from known correct compression while reliable online merging is unsolved; structure use shows conditional gains for routing and sharing, but general mechanism attribution, protocol and task scope remain open. No general method beating ISA and others has been established, and no claim is made that automaton syntax beats an equivalent hand-written implementation.\n\nSource: /Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/PROJECT_STATUS.md"}
+{"kind":"slide","id":"sl/yu60tr","slide":10,"title":"Backup","textShapes":2}
+{"kind":"textbox","id":"sh/sbql4ze9","slide":10,"name":"text-90","text":"Backup","textPreview":"Backup","textChars":6,"textLines":1,"bbox":[64,300,600,70]}
+{"kind":"textbox","id":"sh/rah4vuxo","slide":10,"name":"text-91","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"notes","id":"nt/yu60tr","slide":10,"text":"The main line ends here. The six pages that follow cover the feedback budget, the equivalence of prefix tree and history dictionary, the closed-form account of the compression factor, the full definitions for the merge audit, the full five-arm numbers, and the complete hazard dose curve."}
+{"kind":"slide","id":"sl/iraeni","slide":11,"title":"Appendix · Budget for Reliable Task Feedback","textShapes":8}
+{"kind":"textbox","id":"sh/2l8fypon","slide":11,"name":"text-92","text":"Appendix · Budget for Reliable Task Feedback","textPreview":"Appendix · Budget for Reliable Task Feedback","textChars":44,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/pozy9k7y","slide":11,"name":"text-93","text":"24 task families x 6 seeds; reached 90% at some point within 200,000 environment steps; merging disabled","textPreview":"24 task families x 6 seeds; reached 90% at some point within 200,000 environment steps; merging disabled","textChars":104,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/onqx0z6d","slide":11,"name":"text-94","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/exofu5ob","slide":11,"name":"text-95","text":"1 / 144","textPreview":"1 / 144","textChars":7,"textLines":1,"bbox":[209,560,190,40]}
+{"kind":"textbox","id":"sh/1kfy5k72","slide":11,"name":"text-96","text":"61 / 144","textPreview":"61 / 144","textChars":8,"textLines":1,"bbox":[454,560,190,40]}
+{"kind":"textbox","id":"sh/0z6xwf6h","slide":11,"name":"text-97","text":"131 / 144","textPreview":"131 / 144","textChars":9,"textLines":1,"bbox":[699,560,190,40]}
+{"kind":"textbox","id":"sh/ruxwzap0","slide":11,"name":"text-98","text":"144 / 144","textPreview":"144 / 144","textChars":9,"textLines":1,"bbox":[944,560,190,40]}
+{"kind":"textbox","id":"sh/qt4fq5of","slide":11,"name":"text-99","text":"Shows only that more feedback makes learning easier; it does not imply the structure must be near-complete to be usable","textPreview":"Shows only that more feedback makes learning easier; it does not imply the structure must be near-complete to be usable","textChars":119,"textLines":1,"bbox":[80,608,1120,36]}
+{"kind":"chart","id":"ch/jmpknypw","slide":11,"name":"","chartType":"bar","bbox":[105,151,1080,400]}
+{"kind":"notes","id":"nt/iraeni","slide":11,"text":"Raw archive AUTO/discovery/results/verify.jsonl.gz: at budgets 40/80/160/320 the runs with first90 < 200000 are 1/61/131/144 out of 144. At budget 160 only 127/144 still hold at or above 90% at the end; this chart measures ever having attained, not final success rate. The controller reads local evidence by history node and merging is disabled. One must not infer from the final tree node count that a near-complete structure is required before it can be used: the nodes field records the size of the history prefix tree rather than the compressed state count, and it is written at the end of the run; the real compressed state count, classes, was never archived.\n\nSource: /Users/yuhang/Downloads/why TL/AUTO/discovery/src/run_verify.py"}
+{"kind":"slide","id":"sl/2box3a","slide":12,"title":"Appendix · Two Representations of the Same History","textShapes":19}
+{"kind":"textbox","id":"sh/vyhwvadc","slide":12,"name":"text-100","text":"Appendix · Two Representations of the Same History","textPreview":"Appendix · Two Representations of the Same History","textChars":50,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/wzqdofeh","slide":12,"name":"text-101","text":"Same information, two notations, identical action for action, so the value does not lie in the graph form","textPreview":"Same information, two notations, identical action for action, so the value does not lie in the graph form","textChars":105,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/x0zexkv2","slide":12,"name":"text-102","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/mtovilwf","slide":12,"name":"text-103","text":"Prefix tree","textPreview":"Prefix tree","textChars":11,"textLines":1,"bbox":[150,145,330,45]}
+{"kind":"textbox","id":"sh/nuxwrqd0","slide":12,"name":"text-104","text":"History dictionary","textPreview":"History dictionary","textChars":18,"textLines":1,"bbox":[780,145,400,45]}
+{"kind":"textbox","id":"sh/8vqdkvel","slide":12,"text":"∅","textPreview":"∅","textChars":1,"textLines":1,"bbox":[102,353,62,62]}
+{"kind":"textbox","id":"sh/9wzet0v6","slide":12,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[247,262,65,62]}
+{"kind":"textbox","id":"sh/6psvupwz","slide":12,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[247,457,65,62]}
+{"kind":"textbox","id":"sh/7q1w3ud4","slide":12,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[402,262,65,62]}
+{"kind":"textbox","id":"sh/jytgr6dc","slide":12,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[402,457,65,62]}
+{"kind":"textbox","id":"sh/yxkfi1cr","slide":12,"text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[548,262,65,62]}
+{"kind":"textbox","id":"sh/l0bytwv2","slide":12,"text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[548,457,65,62]}
+{"kind":"shape","id":"sh/kz2xkruh","slide":12,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/7mdgv6d8","slide":12,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/61kfm1cn","slide":12,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/tovyxgve","slide":12,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/8nmxobut","slide":12,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/vqdgzqdk","slide":12,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/up4fqlcz","slide":12,"name":"text-105","text":"≡","textPreview":"≡","textChars":1,"textLines":1,"bbox":[654,343,90,85]}
+{"kind":"textbox","id":"sh/ql8jypw7","slide":12,"name":"text-106","text":"History","textPreview":"History","textChars":7,"textLines":1,"bbox":[786,247,170,42]}
+{"kind":"textbox","id":"sh/rmh0ruxs","slide":12,"name":"text-107","text":"Next goal","textPreview":"Next goal","textChars":9,"textLines":1,"bbox":[1040,247,190,42]}
+{"kind":"shape","id":"sh/cnq10fex","slide":12,"bbox":[775,299,430,0]}
+{"kind":"textbox","id":"sh/dozitkfi","slide":12,"name":"text-108","text":"(A, E)","textPreview":"(A, E)","textChars":6,"textLines":1,"bbox":[800,327,180,55]}
+{"kind":"textbox","id":"sh/2hozu5wv","slide":12,"name":"text-109","text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[1088,327,80,55]}
+{"kind":"textbox","id":"sh/3ix0naxg","slide":12,"name":"text-110","text":"(B, E)","textPreview":"(B, E)","textChars":6,"textLines":1,"bbox":[800,445,180,55]}
+{"kind":"textbox","id":"sh/4j61wfe1","slide":12,"name":"text-111","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[1088,445,80,55]}
+{"kind":"notes","id":"nt/2box3a","slide":12,"text":"A prefix tree and a dictionary over full successful event histories are identical action for action under matched inputs and random numbers. The dictionary holds sufficient history and does not store only progress or the last event. This compares representations and does not involve merging different histories. The value of the automaton therefore does not come from drawing a graph but from whether equivalent histories can later be merged.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/REPORT.md"}
+{"kind":"slide","id":"sl/0ypdgd","slide":13,"title":"Appendix · Closed-Form Account of the Compression Factor","textShapes":14}
+{"kind":"textbox","id":"sh/ypcvy1wv","slide":13,"name":"text-112","text":"Appendix · Closed-Form Account of the Compression Factor","textPreview":"Appendix · Closed-Form Account of the Compression Factor","textChars":56,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/lsne9gv6","slide":13,"name":"text-113","text":"The large factor comes from how many table entries must be filled; no extra mechanism is needed","textPreview":"The large factor comes from how many table entries must be filled; no extra mechanism is needed","textChars":95,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/krud0bel","slide":13,"name":"text-114","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/bmlw36x4","slide":13,"name":"text-115","text":"Why this magnitude","textPreview":"Why this magnitude","textChars":18,"textLines":1,"bbox":[72,132,540,44]}
+{"kind":"textbox","id":"sh/alcvu1wj","slide":13,"name":"text-116","text":"Wrong action: Q stays 0","textPreview":"Wrong action: Q stays 0","textChars":23,"textLines":1,"bbox":[72,192,560,38]}
+{"kind":"textbox","id":"sh/xo3e5gfa","slide":13,"name":"text-117","text":"Right action: Q = 1 after its first positive reward,","textPreview":"Right action: Q = 1 after its first positive reward,","textChars":52,"textLines":1,"bbox":[72,234,560,38]}
+{"kind":"textbox","id":"sh/cnudwbep","slide":13,"name":"text-118","text":"and that state is answered correctly ever after","textPreview":"and that state is answered correctly ever after","textChars":47,"textLines":1,"bbox":[72,276,560,38]}
+{"kind":"textbox","id":"sh/ny1czmx8","slide":13,"name":"text-119","text":"Uncovered states tie at random, right half the time","textPreview":"Uncovered states tie at random, right half the time","textChars":51,"textLines":1,"bbox":[72,318,560,38]}
+{"kind":"textbox","id":"sh/2xsvqhwn","slide":13,"name":"text-120","text":"-> accuracy = (H + c) / 2H; 95% needs c >= 0.9H","textPreview":"-> accuracy = (H + c) / 2H; 95% needs c >= 0.9H","textChars":47,"textLines":1,"bbox":[72,360,560,38]}
+{"kind":"textbox","id":"sh/kzetg3y1","slide":13,"name":"text-121","text":"With i covered, P(cover one more) = (H - i) / 2H","textPreview":"With i covered, P(cover one more) = (H - i) / 2H","textChars":48,"textLines":1,"bbox":[72,402,560,38]}
+{"kind":"textbox","id":"sh/l0nup8zm","slide":13,"name":"text-122","text":"-> expected wait 2H / (H - i)","textPreview":"-> expected wait 2H / (H - i)","textChars":29,"textLines":1,"bbox":[72,444,560,38]}
+{"kind":"textbox","id":"sh/yxwbetgv","slide":13,"name":"text-123","text":"T95 = Σ 2H/(H - i), i = 0 … ceil(0.9H) - 1","textPreview":"T95 = Σ 2H/(H - i), i = 0 … ceil(0.9H) - 1","textChars":42,"textLines":1,"bbox":[72,486,560,38]}
+{"kind":"textbox","id":"sh/jy5cnyhg","slide":13,"name":"text-124","text":"H = n! = 6 / 24 / 120; compressed H = 2 -> 6.0 episodes","textPreview":"H = n! = 6 / 24 / 120; compressed H = 2 -> 6.0 episodes","textChars":55,"textLines":1,"bbox":[72,528,560,38]}
+{"kind":"textbox","id":"sh/xwnuloza","slide":13,"name":"text-125","text":"Theoretical factor 90.63x    observed 89.75x","textPreview":"Theoretical factor 90.63x    observed 89.75x","textChars":44,"textLines":1,"bbox":[650,578,566,40]}
+{"kind":"chart","id":"ch/gju9sna1","slide":13,"name":"","chartType":"bar","bbox":[650,180,566,380]}
+{"kind":"notes","id":"nt/0ypdgd","slide":13,"text":"Within these clean states Q for the wrong action stays 0 and the right action becomes 1 once it receives a single positive reward, after which greedy evaluation answers that state correctly; states with no positive reward remain tied at random. If the number of full histories is H then accuracy = (H+c)/2H and reaching 95% needs c >= ceil(0.9H). Under iid uniform permutations and the present initialisation, with i covered the chance of covering one more is (H-i)/(2H) and the expected wait is 2H/(H-i); summing gives sum(2H/(H-i), i=0..ceil(0.9H)-1). H = 6/24/120 gives 29.40/109.25/543.76 episodes and H = 2 after compression gives 6.0. Theoretical factor 90.63x against an observed 89.75x. Formal T95 is recorded at checkpoints and may land slightly later than the exact per-episode moment. This shows the large factor is explained by a clear repeated table-filling mechanism and needs no extra assumption.\n\nSource: /Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/REVIEW.md"}
+{"kind":"slide","id":"sl/9c7aya","slide":14,"title":"Appendix · Full Definitions for the Merge Audit","textShapes":8}
+{"kind":"textbox","id":"sh/8zml8fa9","slide":14,"name":"text-126","text":"Appendix · Full Definitions for the Merge Audit","textPreview":"Appendix · Full Definitions for the Merge Audit","textChars":47,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/7yd4fa94","slide":14,"name":"text-127","text":"Verdict correct = the borrowed answer matches the true verdict; attribution correct = the merged partner really is the same task state","textPreview":"Verdict correct = the borrowed answer matches the true verdict; attribution correct = the merged partner really is the same task state","textChars":134,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/mx4365sj","slide":14,"name":"text-128","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/lwvmd0by","slide":14,"name":"text-129","text":"Verdict accuracy","textPreview":"Verdict accuracy","textChars":16,"textLines":1,"bbox":[67,145,363,45]}
+{"kind":"textbox","id":"sh/kvml4fad","slide":14,"name":"text-130","text":"State-attribution accuracy","textPreview":"State-attribution accuracy","textChars":26,"textLines":1,"bbox":[469,145,363,45]}
+{"kind":"textbox","id":"sh/zud4bats","slide":14,"name":"text-131","text":"Queries saved","textPreview":"Queries saved","textChars":13,"textLines":1,"bbox":[871,145,363,45]}
+{"kind":"textbox","id":"sh/el8fqp4f","slide":14,"name":"text-132","text":"Of 236 forced merges, 140 proved histories of different true states to be the same; online k_min is 8-12 while the true state count is 19-27","textPreview":"Of 236 forced merges, 140 proved histories of different true states to be the same; online k_min is 8-12 while the true state count is 19-27","textChars":140,"textLines":1,"bbox":[80,586,1120,36]}
+{"kind":"textbox","id":"sh/f61gjul0","slide":14,"name":"text-133","text":"Pre-registered criteria 3 / 3 not met: saving 16.9% < 20%; 47 wrong verdicts; 140 wrong attributions; sensitivity ceiling 23.6% still short","textPreview":"Pre-registered criteria 3 / 3 not met: saving 16.9% < 20%; 47 wrong verdicts; 140 wrong attributions; sensitivity ceiling 23.6% still short","textChars":139,"textLines":1,"bbox":[80,624,1120,34]}
+{"kind":"chart","id":"ch/29g7m98j","slide":14,"name":"","chartType":"bar","bbox":[62,208,353,360]}
+{"kind":"chart","id":"ch/98bq98re","slide":14,"name":"","chartType":"bar","bbox":[464,208,353,360]}
+{"kind":"chart","id":"ch/o72p0nqt","slide":14,"name":"","chartType":"bar","bbox":[866,208,353,360]}
+{"kind":"notes","id":"nt/9c7aya","slide":14,"text":"Step 35: 8 task families at n=3, 792 queries, of which 313 (39.5%) were redundant. Under k_min, 236 merges were forced: 47 wrong verdicts give a verdict accuracy of 80.1%, 140 wrong attributions give an attribution accuracy of 40.7%, and the saving is 134/792 = 16.9%. Under k_min+1 there were 22 reuses with 5 wrong verdicts and 8 wrong attributions, saving 14/792 = 1.8%. Verdict accuracy exceeds attribution accuracy because many wrong attributions happen to give the same verdict, and that luck does not survive the next event. A further 102 reuses landed on necessary queries, which is replacement rather than saving and is not counted in the 16.9%.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP35.md"}
+{"kind":"slide","id":"sl/a690vd","slide":15,"title":"Appendix · Full Five-Arm Numbers for Structure Use","textShapes":22}
+{"kind":"textbox","id":"sh/ql8n6xkn","slide":15,"name":"text-134","text":"Appendix · Full Five-Arm Numbers for Structure Use","textPreview":"Appendix · Full Five-Arm Numbers for Structure Use","textChars":50,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/dozm1s3e","slide":15,"name":"text-135","text":"AUC sits near the ceiling and cannot rank the mechanisms","textPreview":"AUC sits near the ceiling and cannot rank the mechanisms","textChars":56,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/snq58n2t","slide":15,"name":"text-136","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/jyx4vilc","slide":15,"name":"text-137","text":"No reuse","textPreview":"No reuse","textChars":8,"textLines":1,"bbox":[266,144,185,40]}
+{"kind":"textbox","id":"sh/ixon2d4r","slide":15,"name":"text-138","text":"Reuse","textPreview":"Reuse","textChars":5,"textLines":1,"bbox":[463,144,185,40]}
+{"kind":"textbox","id":"sh/5kfmxs32","slide":15,"name":"text-139","text":"No routing","textPreview":"No routing","textChars":10,"textLines":1,"bbox":[61,260,140,40]}
+{"kind":"textbox","id":"sh/4z654n2h","slide":15,"name":"text-140","text":"Routing","textPreview":"Routing","textChars":7,"textLines":1,"bbox":[61,463,140,40]}
+{"kind":"shape","id":"sh/nu147mlg","slide":15,"bbox":[222,210,196,171]}
+{"kind":"textbox","id":"sh/2tsnehkv","slide":15,"name":"text-141","text":"Y00","textPreview":"Y00","textChars":3,"textLines":1,"bbox":[240,223,160,46]}
+{"kind":"textbox","id":"sh/0filcb2l","slide":15,"name":"text-142","text":"Flat history","textPreview":"Flat history","textChars":12,"textLines":1,"bbox":[240,272,172,40]}
+{"kind":"textbox","id":"sh/1gr2lwj6","slide":15,"name":"text-143","text":"AUC .821","textPreview":"AUC .821","textChars":8,"textLines":1,"bbox":[240,323,166,35]}
+{"kind":"shape","id":"sh/ed03a1kf","slide":15,"bbox":[438,210,196,171]}
+{"kind":"textbox","id":"sh/ze9kj610","slide":15,"name":"text-144","text":"Y01","textPreview":"Y01","textChars":3,"textLines":1,"bbox":[456,223,160,46]}
+{"kind":"textbox","id":"sh/cril8r29","slide":15,"name":"text-145","text":"Learned meta-controller","textPreview":"Learned meta-controller","textChars":23,"textLines":1,"bbox":[456,272,172,40]}
+{"kind":"textbox","id":"sh/dsr2hwju","slide":15,"name":"text-146","text":"AUC .883","textPreview":"AUC .883","textChars":8,"textLines":1,"bbox":[456,323,166,35]}
+{"kind":"shape","id":"sh/qpg36hkj","slide":15,"bbox":[222,411,196,171]}
+{"kind":"textbox","id":"sh/rq9kfm14","slide":15,"name":"text-147","text":"Y10","textPreview":"Y10","textChars":3,"textLines":1,"bbox":[240,424,160,46]}
+{"kind":"textbox","id":"sh/4nyl472d","slide":15,"name":"text-148","text":"Per-stage skills","textPreview":"Per-stage skills","textChars":16,"textLines":1,"bbox":[240,473,172,40]}
+{"kind":"textbox","id":"sh/po72dcjy","slide":15,"name":"text-149","text":"AUC .988","textPreview":"AUC .988","textChars":8,"textLines":1,"bbox":[240,524,166,35]}
+{"kind":"shape","id":"sh/5kzih8bm","slide":15,"bbox":[438,411,196,171]}
+{"kind":"textbox","id":"sh/kjq183u1","slide":15,"name":"text-150","text":"Y11","textPreview":"Y11","textChars":3,"textLines":1,"bbox":[456,424,160,46]}
+{"kind":"textbox","id":"sh/jih0fytg","slide":15,"name":"text-151","text":"Shared skills","textPreview":"Shared skills","textChars":13,"textLines":1,"bbox":[456,473,172,40]}
+{"kind":"textbox","id":"sh/ih8j6tcb","slide":15,"name":"text-152","text":"AUC .997","textPreview":"AUC .997","textChars":8,"textLines":1,"bbox":[456,524,166,35]}
+{"kind":"textbox","id":"sh/xgzid8bq","slide":15,"name":"text-153","text":"Median first90 / environment steps","textPreview":"Median first90 / environment steps","textChars":34,"textLines":1,"bbox":[754,140,425,42]}
+{"kind":"textbox","id":"sh/veh0bydk","slide":15,"name":"text-154","text":"QRM  AUC .972","textPreview":"QRM  AUC .972","textChars":13,"textLines":1,"bbox":[812,588,340,35]}
+{"kind":"textbox","id":"sh/adoz2tcz","slide":15,"name":"text-155","text":"Censoring: 30/720 runs of Y00 and 10/720 of Y01 never attained; medians are over attainers only","textPreview":"Censoring: 30/720 runs of Y00 and 10/720 of Y01 never attained; medians are over attainers only","textChars":95,"textLines":1,"bbox":[80,626,1120,32]}
+{"kind":"chart","id":"ch/0z2p4na9","slide":15,"name":"","chartType":"bar","bbox":[694,220,525,350]}
+{"kind":"notes","id":"nt/a690vd","slide":15,"text":"24 families x 30 seeds x 5 arms, budget 200000 steps. first90 is the median and AUC is the area under the success-rate curve. The original AUC reading that routing overwhelmingly beats reuse was withdrawn in Step 38 because of ceiling effects. Censoring: in the raw archive results/factorial.json there are 40 runs with first90 = -1, all in Y00 (30/720) and Y01 (10/720), with none in Y10, Y11 or QRM. The medians on this page are over attainers only; if -1 is recorded as the budget of 200000 the Y00 median becomes 41000 rather than 38500, so dropping them flatters Y00 and Y01 and makes the comparison conservative. The report once gave sample-complexity main effects of 6.39x for routing and 5.34x for reuse; these could not be reproduced from the archive this time (recording -1 as the budget gives 9.03x and 4.50x), so that reading is not shown.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP36.md"}
+{"kind":"slide","id":"sl/9qa60a","slide":16,"title":"Appendix · Hazard-Cell Dose Sweep","textShapes":5}
+{"kind":"textbox","id":"sh/sjqt07q1","slide":16,"name":"text-156","text":"Appendix · Hazard-Cell Dose Sweep","textPreview":"Appendix · Hazard-Cell Dose Sweep","textChars":33,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/rihcr2pg","slide":16,"name":"text-157","text":"Rules given; fixed step-cost protocol; 1,000,000-step budget; per-seed records lost, intervals cannot be recomputed","textPreview":"Rules given; fixed step-cost protocol; 1,000,000-step budget; per-seed records lost, intervals cannot be recomputed","textChars":115,"textLines":1,"bbox":[64,661,1152,28]}
+{"kind":"textbox","id":"sh/6h8byx8b","slide":16,"name":"text-158","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"shape","id":"sh/gnqt4r6d","slide":16,"bbox":[150,584,980,0]}
+{"kind":"textbox","id":"sh/fmhcvmps","slide":16,"name":"text-159","text":"Skills without routing 0.882   >>   routing without skills 0.106","textPreview":"Skills without routing 0.882   >>   routing without skills 0.106","textChars":64,"textLines":1,"bbox":[80,596,1120,38]}
+{"kind":"textbox","id":"sh/el8b2ho7","slide":16,"name":"text-160","text":"Irreversibility amplifies reuse, not routing (with no hazard cells both arms sit at 100%)","textPreview":"Irreversibility amplifies reuse, not routing (with no hazard cells both arms sit at 100%)","textChars":89,"textLines":1,"bbox":[80,631,1120,32]}
+{"kind":"chart","id":"ch/5wry5gfa","slide":16,"name":"","chartType":"line","bbox":[91,144,1105,424]}
+{"kind":"notes","id":"nt/9qa60a","slide":16,"text":"Step 38.5 dose sweep, expensive navigation, own derived simulator, task rules given, training budget 1000000 environment steps. Attainment rate is the fraction of runs reaching 90% success within budget. The per-seed raw data of this sweep was later confirmed lost, so confidence intervals cannot be recomputed. The Step 40 grid archives every run: step cost changes the QRM ordering and shrinks the risk interaction effect, so this page must not be taken as a protocol-independent effect size. Whatever graph-theoretic paths exist, hazard cells may force successful trajectories to detour, and no claim is made here that geometric difficulty is unchanged. The bottom line is taken from REPORT_STEP38_5 lines 125-126.\n\nSource: /Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP38_5.md"}

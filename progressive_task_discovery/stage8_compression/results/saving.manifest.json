@@ -1,0 +1,31 @@
+{
+  "runner": "src/run_saving.py",
+  "families": 24,
+  "levels": [
+    160,
+    320
+  ],
+  "policies": [
+    "arrival",
+    "novel",
+    "aligned",
+    "closed"
+  ],
+  "partitions": [
+    "sweep",
+    "aggressive",
+    "true"
+  ],
+  "supports": [
+    1,
+    3
+  ],
+  "seeds": 4,
+  "seed0": 9900,
+  "budget": 200000,
+  "merge_rule": "edsm",
+  "runs": 4608,
+  "source_sha256": "318fc390f970a5c7b6843646d1597d593a67bbe0fab25d98c858b5dc93993ba2",
+  "data_sha256": "d17b3f748be011db092457e7df86c1a82c0aa8c166b8043a06129ef0e248c96e",
+  "written": "2026-09-10"
+}

@@ -1,0 +1,24 @@
+{
+  "runner": "src/run_verify.py",
+  "families": 24,
+  "levels": [
+    0,
+    5,
+    10,
+    20,
+    40,
+    80,
+    160,
+    320,
+    640,
+    -1
+  ],
+  "seeds": 6,
+  "seed0": 9700,
+  "budget": 200000,
+  "every": 250,
+  "runs": 1584,
+  "source_sha256": "c30f0d4b33f8e5629295a3776f67ac6dbd7caca35ec40a294393e7e3e467ad54",
+  "data_sha256": "fa941c82c354357894fb743505aa8b62da1301f3d93711a25b9b6468717ebe31",
+  "written": "2026-09-10"
+}

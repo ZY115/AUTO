@@ -1,0 +1,720 @@
+                                          The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+
+
+                                  Building Minimal and Reusable
+                       Causal State Abstractions for Reinforcement Learning
+                  Zizhao Wang* 1 , Caroline Wang* 1 , Xuesu Xiao2 , Yuke Zhu1 , Peter Stone1, 3
+                                                      1
+                                           The University of Texas at Austin,
+                                             2
+                                               George Mason University,
+                                                      3
+                                                        Sony AI
+    zizhao.wang@utexas.edu, caroline.l.wang@utexas.edu, xiao@gmu.edu, yukez@cs.utexas.edu, pstone@cs.utexas.edu
+
+                            Abstract                                                       (a)                     task 1: move          when sunny
+
+  Two desiderata of reinforcement learning (RL) algorithms are                                                          𝟙     in goal region   &
+
+  the ability to learn from relatively little experience and the                                                   task 2: move
+  ability to learn policies that generalize to a range of problem
+  specifications. In factored state spaces, one approach towards
+                                                                                                                        𝟙     in goal region
+
+  achieving both goals is to learn state abstractions, which only                         What is the minimal state abstraction for each task?
+  keep the necessary variables for learning the tasks at hand.                                (b) CDL              (c) Denoised MDP, TIA
+  This paper introduces Causal Bisimulation Modeling (CBM),
+  a method that learns the causal relationships in the dynamics
+  and reward functions for each task to derive a minimal, task-
+  specific abstraction. CBM leverages and improves implicit
+  modeling to train a high-fidelity causal dynamics model that
+  can be reused for all tasks in the same environment. Empiri-
+  cal validation on manipulation environments and Deepmind                                  causal dynamics         fc dynamics        fc dynamics
+  Control Suite reveals that CBM’s learned implicit dynamics                                fully-connected          specific to          specific
+  models identify the underlying causal relationships and state                                (fc) reward         abstraction 1    to abstraction 2
+  abstractions more accurately than explicit ones. Furthermore,                           (d) Causal Bisimulation Modeling (ours)
+  the derived state abstractions allow a task learner to achieve
+                                                                                                                                       reusable
+  near-oracle levels of sample efficiency and outperform base-                                                                      causal dynamics
+  lines on all tasks.                                                                                                                causal reward
+
+
+                        Introduction
+Reinforcement learning (RL) is a general paradigm that
+enables autonomous decision-making in unknown environ-                           Figure 1: (a) Two tasks are defined by rewards R1 , R2 , and
+ments. A common deficiency of deep RL algorithms is their                        consist respectively of moving the blue and green blocks to
+sample inefficiency and lack of generalization to unseen                         their goal regions. Task 1 additionally requires moving the
+states, thus limiting their applicability in data-expensive or                   block only when it is sunny. Variables that are ignored by a
+safety-critical tasks. One way to improve sample efficiency                      state abstraction are semi-transparent. (b) CDL (Wang et al.
+and generalization is to learn a state abstraction which re-                     2022b) learns causal dependencies in the dynamics, but its
+duces the task learning space and eliminates unnecessary                         derived state abstraction keeps all controllable state variables
+information that may lead to spurious correlations. Determin-                    and ignores action-irrelevant ones, and thus the abstraction
+ing the optimal abstraction necessitates understanding which                     is non-minimal for task 2 and cannot learn task 1 due to its
+state variables affect the reward and how those variables are                    omission of the sun. (c) TIA and Denoised MDP (Fu et al.
+influenced by others during state transitions.                                   2021; Wang et al. 2022a) can learn more concise abstrac-
+   Prior methods obtain the desired abstractions by searching                    tions (minimal in this example), but they require training
+for the smallest subset of state variables that can predict the re-              fully-connected dynamics from scratch for each task. (d) In
+ward accurately while ensuring the subset is self-predictable                    addition to the implicit causal dynamics that can be reused
+in dynamics. Yet, their dense dynamics models are specific                       for all tasks, CBM identifies which variables affect the re-
+to the subset and thus have to be learned from scratch for                       ward and derives a minimal state abstraction from the causal
+each new task (Fu et al. 2021; Wang et al. 2022a; Zhang                          reward models.
+et al. 2020b), as shown in Fig. 1. Such approaches overlook                      a key characteristic of realistic problems: we often wish to
+   * These authors contributed equally.                                          build agents that solve multiple instances of tasks in the same
+Copyright © 2024, Association for the Advancement of Artificial                  environment, e.g. different cooking skills in a kitchen. To
+Intelligence (www.aaai.org). All rights reserved.                                learn multi-task dynamics models, recent works seek to learn
+
+
+
+
+                                                                         15778
+                                      The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+causal dynamical dependencies between state variables, from                                             Related Work
+which they derive a task-independent abstraction (Ding et al.                Model-based State Abstractions for Decision Making
+2022; Wang et al. 2021, 2022b). A notable example is Causal                  Learned dynamics and reward models can be used in var-
+Dynamics Learning (CDL) (Wang et al. 2022b) which identi-                    ious ways for downstream task learning. Some methods di-
+fies all state variables that can be affected by the action and              rectly use the learned models for planning (Williams et al.
+retains them in the abstraction.                                             2017; Chua et al. 2018; Nagabandi et al. 2018) or generate
+    While dynamics-based state abstractions only need to be                  synthetic rollouts for reinforcement learning (Kurutach et al.
+learned once for the environment and can then be applied to                  2018; Janner et al. 2019). Others use learned models to im-
+any downstream task, we observe three weaknesses. First,                     prove Q-value estimates (Feinberg et al. 2018; Amos et al.
+the abstraction may not be minimal for a significant number                  2021), or generate state abstractions (Li, Walsh, and Littman
+of downstream tasks, since many tasks require manipulating                   2006; Fu et al. 2021; Wang et al. 2022a, 2021; Zhang et al.
+only a subset of controllable variables. In such cases, CDL’s                2019). This work belongs to the last class of methods.
+abstraction could be further reduced to improve sample ef-                      The work closest to our CBM is Wang et al. (2022b)
+ficiency and generalization, as shown in Fig. 1(b). Second,                  (CDL), which also learns a causal dynamics model and then
+ignoring state variables that are action-irrelevant limits CDL’s             derives a state abstraction for downstream task learning. As
+application to many tasks. For example, for an autonomous                    discussed in the introduction, CDL’s abstraction is not mini-
+vehicle, CDL’s abstraction will ignore the traffic light, as the             mal because it does not consider task information. In contrast,
+traffic light cannot be affected by the vehicle. In such cases,              CBM considers causal reward relationships to derive a theo-
+CDL’s abstraction will cause the vehicle to be unable to fol-                retically minimal, task-specific state abstraction.
+low traffic rules. Third, CDL employs explicit modeling of dy-                  Among model-based methods that learn task-specific state
+namics, directly predicting the next state as ŝt+1 = f (st , at )           abstractions, the most closely related works are TIA (Fu
+where f is a generic function parameterized by neural net-                   et al. 2021), denoised MDP (Wang et al. 2022a), and ASR
+works. However, prior works have shown implicit modeling                     (Huang et al. 2022). Those methods learn dense, non-causal
+(ŝt+1 = arg maxst+1 ∈S g(sit+1 ; st , at ) where g is a critic              dynamics models from scratch for each task, which fails to
+function, see Sec. ) generally achieves higher accuracy in                   take advantage of shared structures between the tasks. In
+model learning, particularly for non-smooth dynamics in                      contrast, CBM learns underlying causal dynamics that are
+real-world physical systems (Florence et al. 2022; Song and                  shared between tasks in the same environment and applies
+Kingma 2021). For instance, in robot manipulation, the ob-                   the same dynamics model to all downstream tasks.
+ject cannot be moved by the robot until they are in contact.                 Implicit Models for Dynamics Learning Implicit models
+In such environments, we show that inaccuracies of explicit                  (Teh et al. 2003; Welling and Hinton 2002) have been widely
+modeling will lead to incorrect dynamical dependencies and                   used in many areas of machine learning, including image gen-
+thus non-minimal or incorrect state abstractions.                            eration (Du and Mordatch 2019), natural language processing
+                                                                             (Bakhtin et al. 2021; He et al. 2021), and density estimation
+   To address these weaknesses of CDL, we introduce Causal
+                                                                             (Saremi et al. 2018; Song et al. 2019). This is largely due
+Bisimulation Modeling (CBM), a method that (1) learns
+                                                                             to its ability to generalize probabilistic and deterministic ap-
+shared task-agnostic dynamics between tasks while recover-
+                                                                             proaches to classification, regression, and estimation (LeCun
+ing a minimal, task-specific state abstraction, and (2) models
+                                                                             et al. 2006; Song and Kingma 2021).
+causal dynamics dependencies with implicit models. Regard-
+ing the first contribution, in addition to dynamical relation-                  Implicit modeling approaches have also been applied to
+ships, CBM further infers which state variables affect the                   reinforcement learning and the closely related problem of im-
+reward function with a causal reward model. In this way,                     itation learning, for modeling policies (Florence et al. 2022),
+CBM identifies state variables relevant to each task to further              value functions (Haarnoja et al. 2017, 2018), and dynamics
+refine the state abstractions. The resultant causal abstraction              (Pfrommer, Halm, and Posa 2020; Wang, Lu, and Zhao 2020).
+is equivalent to bisimulation, a minimal abstraction that pre-               Multiple works have noted that implicit approaches are better
+serves the optimal value (Ferns, Panangaden, and Precup                      able to model discontinuous surfaces, which is particularly
+2011). Regarding the second contribution, to the best of our                 advantageous for modeling the discontinuous contact dynam-
+knowledge, CBM is the first work that recovers causal depen-                 ics common in robotics (Pfrommer, Halm, and Posa 2020;
+dencies with implicit models. To this end, CBM identifies                    Florence et al. 2022). For such dynamics, though explicit
+and addresses two key problems of estimating conditional                     models theoretically can capture such discontinuities through
+mutual information (CMI) with implicit models, allowing                      activation functions, empirically, they linearly interpolate be-
+them to surpass explicit ones in both predictive accuracy and                tween discontinuity boundaries when training data are finite,
+the identification of causal dependencies.                                   as found by Florence et al. (2022).
+
+   We validate CBM in robotic manipulation and Deepmind                                                  Background
+Control Suite, showing that (1) implicit models learn dy-                    We formulate our problem with Markov Decision Processes
+namical relationships and state abstractions more accurately                 and adopt key concepts from CDL (Wang et al. 2022b).
+compared to the explicit ones, and (2) CBM’s task-specific
+state abstractions significantly improve sample efficiency and               Factored Markov Decision Processes We model K tasks
+generalization compared to task-independent ones.                            in the same environment as a set of factored Markov decision
+
+
+
+
+                                                                     15779
+                                      The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+processes (MDPs), Mk = (S, A, T , Rk ). These MDPs have                                                            (a)           (b)
+the same (1) finite (bounded) state space, consisting of dS
+state variables (factors) denoted as S = S 1 × · · · × S dS ,
+where each variable S i is a scalar, (2) dA -dimensional action                                        0/1
+
+space, denoted as A ⊆ RdA , and (3) transition probability
+T (st+1 |st , at ) (i.e., dynamics). However, each MDP has its                                         0/1
+own reward function Rk : S × A → R.
+   Similar to prior model-based state abstraction learning
+                                                                                                       0/1
+methods, the goal of CBM is to learn the dynamics and
+reward functions from data, and to derive a task-specific
+abstraction for task learning. Following CDL, CBM as-                        Figure 2: (a) The reward predictor architecture which can
+sumes that the transitions of each state variable S i are in-                represent p(rtk |at , M ⊙st ) conditioning any subsets of inputs
+dependent, i.e., T can be decomposed as T (st+1 |st , at ) =                 by setting the binary mask M . (b) After CBM identifies the
+Qd S      i
+   i=1 p(st+1 |st , at ). Though the assumption does not hold                causal dependencies in dynamics and reward, its minimal
+for all variables—for instance, quaternion variables repre-                  state abstraction (marked by the red box) consists of (1) green
+senting object rotations in the manipulation environments—                   variables that affect the reward, and (2) orange variables that
+in practice, we find that our method can still learn dynam-                  influence green ones via dynamics. The semi-transparent
+ics accurately in such environments. For simplicity, we use                  state variables are ignored by the abstraction.
+xt to denote all state variables and the action at t, i.e.,
+xt = {s1t , · · · , sdt S , at } and x¬i
+                                      t to denote all those vari-            the state variable Stj and the reward R by learning two pre-
+ables except for sit , i.e., x¬i
+                               t  =  x       i
+                                       t \ {st }.                            dictive models for the reward: (1) p(rt |xt ), which uses all
+                                                                             variables for prediction, and (2) p(rt |x¬j
+                                                                                                                      t ), which ignores st
+                                                                                                                                           j
+Causal Dynamics Learning (CDL) Instead of using a                            when predicting. Intuitively, if the prediction performance
+dense model, CDL models the dynamics as a causal graph-
+                                                                             when ignoring sjt is significantly lower than when includ-
+ical model (Pearl 2009) and recovers the necessary depen-
+                                                   j                         ing it, then the causal dependency Stj → R exists. More
+dencies between each state variable pair (Sti , St+1  ) as well
+           j                                                                 precisely, CBM evaluates whether the Conditional Mutual
+as (At , St+1 ) using causal discovery methods (Mastakouri,                  Information (CMIh) is larger thani a predefined threshold, i.e.,
+Schölkopf, and Janzing 2021). Then, aiming at improving                                              p(rt |xt )
+                                                                             CMI jk :=     E     log p(r         ≥ ϵ.
+sample efficiency during task learning, CDL derives a task-                               st ,at ,rt     |x¬j )t   t
+independent state abstraction by keeping (1) controllable                       As shown in Fig. 2 (a), to make the method scalable, rather
+state variables, i.e., those that can be changed by the action               than training p(rt |x¬j
+                                                                                                   t ) for each j ∈ {1, . . . , dS }, CBM com-
+directly or indirectly, and (2) action-relevant state variables,             bines all predictive models into one network pθrew (rt |M ⊙xt );
+i.e., those that cannot be changed by the action but can affect              where θrew is the network parameters and M is a manually
+the action’s influence on controllable variables. However, this              defined binary mask used to ignore some input variables
+abstraction keeps all controllable variables, while many tasks               when predicting rt . During training, CBM maximizes the
+only need the agent to control one or a few of them, suggest-                prediction likelihood of both pθrew (rt |xt ) where M uses all
+ing some variables in CDL’s abstraction may be redundant.
+                                                                             inputs (i.e., all entries are set to 1), and pθrew (rt |x¬j
+                                                                                                                                      t ) where
+                                                                                             j
+                                                                             the entry for st is set to zero in M .
+      Causal Bisimulation Modeling (CBM)                                        After recovering causal parents of R, CBM derives a bisim-
+This section describes two main contributions of CBM: ob-                    ulation by combining the causal reward model with the causal
+taining a task-specific state abstraction by augmenting causal               dynamics model, following the theorem below (see the Ap-
+dynamics models with causal reward modeling, and recover-                    pendix for an explanation of how our setting satisfies the
+ing accurate causal dynamics when using implicit models.                     theorem’s assumptions):
+                                                                             Theorem 0.0.1 (Connecting Bisimulation to Causal Feature
+Causal Reward Model for Task-Specific Abstraction                            Set (Thm 1 in Zhang et al. (2020a))). Consider an MDP M
+Though CDL recovers the causal relationships in dynamics,                    that satisfies Assumptions 1-3 in Zhang et al. (2020a). Let
+it still uses a dense model for reward learning. Consequently,               PR ⊆ 1, ..., dS be the set of variables such that the reward
+without knowing which state variables are causal parents of                  R(s, a) is a function only of sPR (s restricted to the indices
+the reward (i.e., reward-relevant), there is no direct way to                in PR ). Let AR denote the ancestors of PR in the causal
+remove irrelevant variables to improve sample efficiency.                    graph corresponding to the transition dynamics of M. Then
+    To resolve these issues, CBM learns a causal reward model                the state abstraction ϕ(s) = sAR is a bisimulation abstraction
+following a similar strategy to what CDL uses to learn dy-                   for reward R.
+namics. Assuming that all state variables affect the reward                     As illustrated in Fig. 2 (b), CBM’s abstraction is selected
+for task Rkt independently (for notational simplicity, we omit               as the union of (1) all S j that R depends on, i.e., S PR , and
+the environment index k for the reminder of the paper) and                   (2) all other state variables that can affect S PR via dynamics
+there are no dependencies between state variables at the same                and not already included in S PR . In other words, this union
+timestep, CBM examines the causal relationship between                       corresponds to R’s causal ancestors (i.e., S AR ) in the learned
+
+
+
+
+                                                                     15780
+                                         The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+causal dynamics and reward graph, and thus being equiv-                           Since CMIij measures how using sjt could additionally con-
+alent to bisimulation — the minimal state abstraction that                        tribute to predicting sit+1 given the other state and action
+preserves the optimal values (Dean and Givan 1997; Ferns,                         variables, x¬j
+                                                                                              t , ϕ is a conditioned model trained to capture
+Panangaden, and Precup 2011).                                                     the additional information about sit+1 in sjt that is not present
+Causal Discovery with Implicit Dynamics Models                                    in x¬j                                                ij
+                                                                                       t . However, training ϕ and estimating CMI with Eq.
+                                                                                                                                        ¬j
+                                                                                  (2) both require negative samples from p(sit+1 |xt ), which
+Implicit models have been shown to learn dynamics more                            are not readily accessible, as the data can only be collected
+accurately than explicit models (Florence et al. 2022). Moti-                     from the full state transition distribution T (st+1 |xt ).
+vated by this finding, the goal of CBM’s dynamics learning
+module is to recover causal relationships between states and                      Observation 2 To tackle this issue, CBM uses the impor-
+action variables via an implicit modeling approach. As in                         tance sampling approximation proposed by Sordoni et al.
+CBM’s reward-learning approach, causal dependencies will                          (2021) to compute p(sit+1 |x¬j  t ) with samples from the
+also be detected by measuring the conditional mutual in-                          marginal distribution p(sit+1 ). Thus, CMIij may be approxi-
+formation CMIij between sjt and sit+1 for each i, j pair. In                      mated as,
+this section, first, we introduce the implicit dynamics model.                         "                             i    j ¬j
+                                                                                                                                         #
+Second, we describe how CBM estimates CMI from the im-                                                 (N + 1)eϕ(st+1 ;st |xt )
+                                                                                     E log ϕ(si ;sj |x¬j )        PN            i,n j ¬j   ,
+plicit dynamics with a prior method by Sordoni et al. (2021).                               e t+1 t t + N n=1 wn eϕ(s̃t+1 ;st |xt )
+Third, we discuss two CMI overestimation issues of the prior                                         i,n    ¬j
+method and how CBM solves them.                                                                 eψ(s̃t+1 ;xt )             p(sit+1 |x¬j
+                                                                                                                                     t )
+                                                                                    w n = PN                     ¬j    ≈         i
+                                                                                                                                         .       (3)
+                                                                                                       ψ(s̃i,k
+                                                                                                           t+1 ;xt )         p(st+1 )
+Implicit Dynamics Models For the transition of each state                                      k=1 e
+variable in S i , we would like an implicit model g i (sit+1 ; xt )               where s̃i,n         i
+                                                                                           t+1 ∼ p(st+1 ), and ψ is trained to extract informa-
+such that g i : S i × S × A → R to assign a high score to
+                                                                                  tion about sit+1 from x¬j                             i    ¬j
+                                                                                                           t by minimizing LNCE (ψ(st+1 ; xt ))
+the label sit+1 from the ground truth distribution, and low
+                                                                                  and is used to compute importance weights wn in a self-
+values to other labels. During dynamics prediction, the model
+                                                                                  normalized manner.
+selects the st+1 that maximizes the total score over all state
+                                      PdS i i                                        After learning ψ ∗ , one only needs ϕ to estimate CMI with
+variables: ŝit+1 = arg maxsit+1 ∈S i i=1    g (st+1 ; xt ). For                  Eq. (3). To this end, Sordoni et al. (2021) train ϕ by minimiz-
+notational simplicity, in the remainder of Sec. , we omit                         ing LNCE (ϕ(sit+1 ; sjt |x¬j      ∗ i      ¬j
+                                                                                                            t ) + ψ (st+1 ; xt )) while keeping
+the state variable index i on g as it is clear from the input                     ψ ∗ frozen, so ϕ learns to capture the additional information
+variable sit+1 . An implicit dynamics model can be trained by                     about sit+1 from sjt that is not present in x¬j
+                                                                                                                                t (i.e., absent in
+minimizing the contrastive InfoNCE loss,                                          ψ ∗ ). See pseudo-code in the Appendix for details.
+                                          i
+                                      eg(st+1 ;xt )                               Inaccurate CMI Estimation and Solutions In practice,
+    LNCE (g) = − log         i           PN         i,n     .       (1)           the method proposed by Sordoni et al. (2021) often yields
+                         eg(st+1 ;xt ) + n=1 eg(s̃t+1 ;xt )                       inaccurate CMI estimations and thus leads to incorrect causal
+   Minimizing the InfoNCE loss requires the ground truth                          dependencies. We discovered two reasons for the inaccuracy
+                                                                                  and proposed corresponding solutions.
+label sit+1 , as well as N negative examples {s̃i,n    N
+                                                  t+1 }n=1 ∼
+    i                               i                                             Reason 1 – Overfitted Conditional Models In theory,
+p(st+1 ) sampled the value range St+1 . This loss encourages
+g to distinguish the label sit+1 from negative samples, i.e.,                     when ϕ is trained as described above, it should condition on
+extract information about sit+1 from xt . The remainder of the                    ψ and capture the additional information only. However, in
+paper uses LNCE (F (x; y)) to denote the InfoNCE loss that                        practice, such trained ϕ still uses x¬j                i
+                                                                                                                        t to predict st+1 directly
+encourages a generic model F to extract information about x                       rather than conditioning on it to estimate the additional con-
+from y.                                                                           tribution of sjt . Fig. 3 top shows an example where knowing
+                                                                                  sjt does not provide any additional information about sit+1 .
+CMI Estimation with Implicit Dynamics Models                                      In such a case, the ground truth conditional model should
+Observation 1 Oord, Li, and Vinyals (2018) show that, for                         output the same score for all sit+1 values. In contrast, the
+a generic model F (x, y) that minimizes LNCE , the minimized                      scores output by ϕ are still peaked at the label of sit+1 , and
+LNCE approximates the mutual information between                 xiand            using such an overfitted model in Eq. (3) would overestimate
+                                                          h
+                                                            p(y|x)                CMI.
+y, i.e., E [log(N + 1) − LNCE (F (x; y))] ≈ E p(y)                   =                To solve this issue, rather than using a learned ϕ, we use
+I(x; y). Inspired by this, Sordoni et al. (2021) propose to                       the approximation ϕ = g − ψ. The motivation is as follows:
+estimate CMIij using a conditional implicit model:                                as g is trained to use xt to estimate the score of sit+1 and ψ es-
+              "
+                                       ϕ(sit+1 ;sjt |x¬j
+                                                                   #              timates with all variables except for sjt , the difference of their
+                           (N    + 1)e                t )
+      ij
+ CMI = E log                                                         ,            estimated scores should reflect the additional information
+                                                                                  from sjt . In practice, as shown in Fig. 3 top, the conditional
+                      i     j   ¬j    PN               i,n   j  ¬j
+                  eϕ(st+1 ;st |xt ) + n=1 eϕ(s̃t+1 ;st |xt )
+                        ¬j                                                        score estimated by this approximation is closer to the ground
+ where s̃i,n      i
+         t+1 ∼ p(st+1 |xt ).                                        (2)           truth than the score of ϕ learned by Sordoni et al. (2021),
+
+
+
+
+                                                                          15781
+                                                                                  The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+                                                                                    ground truth ϕ                           Algorithm 1: Causal Bisimulation Modeling (CBM)
+                                                                                    ϕ approximated
+
+
+
+
+          conditional score ϕ
+                                                                                    as g − ψ (ours)                           1: Initialize the dynamics model θdyn .
+                                                                                    ϕ learned by
+                                                                                    Sordoni et al.                            2: (Optional) Pretrain θdyn using Ldyn with offline data.
+                                                                                    sti + 1 label                             3: for K tasks do
+                                                                                                                              4:    Initialize the reward model θrew and the policy π.
+                                                                                                                              5:    for T training steps do
+                                                                                                                              6:       Collect (st , at , rt , st+1 ) with at ∼ π.
+                                                                                                                              7:       Update θdyn using Ldyn (optional) and θrew (Sec. ).
+                                                                    sti + 1                                                   8:       Evaluate dynamical and reward dependencies (Eq.
+                                                                                     ψw/o reg                                          3); Update the state abstraction for π (Fig. 2 (b)).
+                                                                                     wn of ψw/o reg                                    Update π using SAC losses.
+
+
+          p(sti + 1|xt¬j)/p(sti + 1)
+                                                                                                                              9:
+                                                        zoom in
+                                                                                     ψw/ reg (ours)
+
+
+
+                                       y in log scale
+                                                                                     wn of ψw/ reg
+
+                                                                                                                             The regularization is applied to both the label and all neg-
+                                                                                                                             ative samples (i.e., s̃it+1 ∈ {sit+1 , s̃i,n
+                                                                                                                                                                      t+1 }), and λ1 , λ2 are
+                                                                                                                             the weights of the regularization terms. As shown in Fig. 3
+                                                                                                                             bottom, with regularization, ψ is flatter. As a result, with
+                                                                    sti + 1                                                  the same number of samples, the importance weights wn
+Figure 3: Two sources of inaccurate CMI estimation: (top)                                                                    approximate the likelihood ratio computed by ψ much better,
+Overfitted conditional model: learned ϕ overestimate condi-                                                                  compared to approximating sharp ψ without regularization.
+tional information while the g − ψ approximation is closer                                                                       To make the dynamics model scalable, we use the same
+to the ground truth (0 for all sit+1 values), especially when                                                                masking technique as in Sec. to combine g and ψ for each j
+close to the ground truth label sit+1 = 0. (bottom) Inaccurate                                                               into one network. We use θdyn to denote the parameters of dS
+Importance Sampling: without regularization, the likelihood                                                                  such networks, each modeling the dynamics of state variable
+                                                                                                                               i
+ratio of p(sit+1 |x¬j     i                                                                                                  St+1  .
+                   t )/p(st+1 ) computed by ψ can be peaked
+              i
+at the label st+1 = 0 and is therefore challenging to approxi-                                                               CBM for Task Learning
+mate by self-normalized importance sampling. In comparison,
+regularized ψ has a flatter likelihood ratio landscape and is                                                                   As shown in Alg. 1, for tasks with the same dynamics,
+easier to approximate with samples.                                                                                          CBM’s dynamics model is shared across tasks. The dynamics
+                                                                                                                             model can either learn from offline data (line 2), or from
+especially in the neighbor of the ground truth label where the                                                               transitions collected during task learning (line 7), or both.
+accuracy of conditional scores significantly influences CMI.                                                                    When solving each task, CBM interweaves reward learn-
+Reason 2 – Inaccurate Importance Sampling Meanwhile,                                                                         ing (line 7) with policy learning. The policy is trained via Soft
+when sit+1 has an almost deterministic transition (which is                                                                  Actor Critic (SAC, Haarnoja et al. (2018)), an off-policy rein-
+common in many environments, e.g., objects will not move                                                                     forcement learning algorithm. The reward model is combined
+unless manipulated by the robot), the importance sampling                                                                    with the pre-trained dynamics to generate the task-specific
+approximation in Eq. (3) could be inaccurate.                                                                                abstraction (line 8). CBM applies the state abstraction to the
+   In detail, as shown in Fig. 3 bottom, for such transitions,                                                               policy π as a binary mask that zeros out ignored variables.
+the score estimated by ψ tends to have extremely sharp max-                                                                  During task learning, as the policy explores and learns, we
+ima — it is high only when sit+1 is very close to the ground                                                                 expect it to gradually expose causal relationships that are
+truth labels. As a result, even with many negative samples                                                                   necessary to solve the task, and, in return, the updated state
+from p(sit+1 ), it is likely that none of them are similar enough                                                            abstractions reduce the learning space of the policy, making
+                                                                                                                             its learning sample efficient.
+to samples from p(sit+1 |x¬j   t ). Then, since the importance
+weight wn in Eq. (3) is self-normalized among all negative
+samples, samples that are not from p(sit+1 |x¬j
+                                                                                                                                                     Experiments
+                                                    t ) still have
+large weights (rather than near-zero weights), thus leading to                                                               We examine the following hypotheses. First, implicit mod-
+inaccurate CMI estimation.                                                                                                   els recover dynamical dependencies more accurately than
+   To mitigate this issue, when training g and ψ for the dy-                                                                 explicit models (Sec. ). Second, compared to CDL’s task-
+namics of St+1 i
+                   , beyond the InfoNCE loss, we regularize                                                                  independent state abstraction and prior task-specific abstrac-
+them to have flatter score landscapes with L2 penalty on                                                                     tion works, CBM learns a more concise abstraction and im-
+their computed scores and the partial derivative of scores.                                                                  proves sample efficiency and generalization of task learning
+Specifically, Ldyn = Lreg (g) + Lreg (ψ) where for generic f ,                                                               over baselines (Sec. ).
+Lreg (f ) =LNCE (f (sit+1 ; ·))+                                                                                             Environments To test CBM, we use two manipulation en-
+                                                                                                           2
+                                                                                                             !               vironments implemented with Robosuite (Zhu et al. 2020),
+                        X                                                     2             ∂f (s̃it+1 ; ·)                  shown in Fig. 5 left, and two tasks from the DeepMind Con-
+                                                        λ1 f (s̃it+1 ; ·) 2 + λ2                                 .
+                                                                                              ∂s̃it+1       2
+                                                                                                                             trol Suite (DMC, Tunyasuvunakool et al. (2020)). In the block
+                       s̃it+1
+                                                                                                                             environment (b), there are multiple movable and unmovable
+
+
+
+
+                                                                                                                     15782
+                                          The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+                                                                block                                      tool-use
+                                            causal graph         pick             stack           causal graph      series
+                        explicit             87.5 ± 0.1       53.2 ± 4.6      59.6 ± 4.6           82.6 ± 0.2         80.0 ± 1.5
+                        implicit (ours)      90.5 ± 0.4       95.7 ± 6.0      95.7 ± 6.0           85.5 ± 0.1         98.8 ± 1.3
+
+               Table 1: Mean ± std. error of accuracy (↑) for learned dynamics causal graphs and task abstractions.
+
+blocks. The tasks in this environment include Pick and Stack.                         (a)                           (b)            (c)     (d)
+In the tool-use environment, we consider a challenging long-                                                        CBM                  denoised
+                                                                                     CDL                                           TIA
+horizon task Series: the agent needs to use an L-shaped tool                                                       (ours)                  MDP
+to move a faraway block within reach, pick it up, and place
+                                                                                  controllable
+it within the box. In the DMC, we consider the Cheetah and
+Walker tasks, two high-dimensional continuous control tasks.
+In all environments, as controllable distractors (cd), 20 vari-
+ables whose values are random projections of the action (i.e.,
+W T at where W ⊆ RdA are randomly sampled) are added
+                                                                                     action-                    reward-
+to the state space. We also add 20 uncontrollable distractors                       relevant                  influencing
+(ud) whose values are uniformly sampled from [−1, 1]. The
+distractors have no interaction with other state variables.
+Baselines For the dynamics learning experiments, we com-                         Figure 4: Object-level state abstractions for Stack learned
+pare the implicit dynamics model against the explicit model.                     by each method; semitransparent variables are excluded. (a)
+All methods are trained and evaluated with 3 random seeds.                       Though mov 2 , mov 3 , and controllable distractos cd are un-
+For the state abstraction and task learning experiments, we                      necessary, CDL still keeps them as they are controllable. (b)
+compare CBM against the closely related methods of CDL,                          Compared to CDL, CBM (ours) successfully learns the min-
+which uses a task-independent abstraction; TIA (Fu et al.                        imal abstraction by further reasoning which state variables
+2021) and Denoised MDP (Wang et al. 2022a), which both                           influence the reward. (c) TIA and (d) Denoised MDP fail to
+learn task-specific state abstractions. To contextualize these                   learn meaningful abstractions when their assumptions on the
+methods, we also compare against an Oracle that learns with                      dynamics do not hold.
+the ground-truth minimal abstractions, and reinforcement
+learning over the Full state space (no state abstraction). All                   in this experiment only to avoid the interference from re-
+methods are trained and evaluated with 5 random seeds. Fur-                      ward learning), implicit models derive more accurate state
+ther details are in the Appendix.                                                abstractions (≥ 20% difference in accuracy on all tasks) than
+                                                                                 explicit models. Note that the state abstraction accuracy is
+State Abstractions for Task Learning To fairly compare                           measured as the # of correctly classified state variables / total
+the effects of the various state abstractions for task learning,                 state variables. Implicit models also learn more generalizable
+all methods use implicit dynamics models, including CDL,                         dynamics (see Appendix).
+which originally used the inferior explicit models. All meth-
+ods learn tasks via Soft Actor Critic (Haarnoja et al. 2018).                    Task Learning with State Abstractions
+The dynamics model is pretrained in Pick and Stack tasks,                        This section compares policy learning with different state
+and it is learned jointly with the policy from scratch in all                    abstractions on various tasks in the DMC, the block environ-
+other tasks. Further details are in the Appendix.                                ment (b), and the tool-use environment (t).
+Dynamics and Causal Graph Learning                                               State Abstraction Accuracy Fig. 4 shows the abstraction
+This section compares implicit and explicit dynamics models,                     learned by each method for the Stack task. For simplicity,
+learned from the same offline data, in terms of how accurately                   abstractions are shown on the object level; state variable-
+they recover dynamics causal graphs and task abstractions.                       level abstractions are in the Appendix. Among all meth-
+Experiments are conducted on the Robosuite environments1 ,                       ods, only CBM learns minimal abstraction. CDL keeps all
+and results are shown in Table 1. For causal graphs, we com-                     controllable variables and thus uses a non-minimal abstrac-
+pare the learned dynamics dependencies with the ground                           tion. Meanwhile, TIA and Denoised MDP assume that state
+truth and measure the causal graph accuracy as the # cor-                        variables can be segregated into several dynamically inde-
+rectly learned edges / total edges in the graph. The accuracy                    pendent components, and their abstractions keep only the
+of implicit models is 3% higher than that of explicit ones,                      task-relevant component. However, though mov 2 and mov 3
+which corresponds to causal relationships between 67 pairs                       are task-irrelevant, their dynamics still depend on the task-
+of state variables in the block environment, and 48 pairs in                     relevant part (the end-effector and gripper). As a result, when
+tool-use. As a result, when being used to derive a task-specific                 their assumptions do not hold, TIA and Denoised MDP learn
+abstraction (we use the ground truth reward dependencies                         that (almost) all variables belong to the same component.
+                                                                                 Then, depending on their definitions of task relevance, all
+    1                                                                            such variables are either included (TIA) or ignored (Denoised
+      DMC tasks are not suitable for these experiments, as the ground
+truth causal graphs are not clear.                                               MDP) by the abstractions.
+
+
+
+
+                                                                         15783
+                                                                The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+                                                                     pick (b)                       stack (b)                                                                           pick (b)
+                                              1.00                                    1.00
+                                                                                                                                   oracle                                  94 94 91           94 94
+                                                                                                                                                                                    86
+
+
+
+
+                             mean success
+                                                                                      0.75
+
+
+
+                                                                                                                                                        success rate (%)
+                                              0.75                                                                                 cdl
+                                                                                                                                   full
+                                              0.50                                    0.50
+                                                                                                                                   cbm (ours)                                  oracle
+                                              0.25                                    0.25                                         tia                                         cbm (ours)
+                                                                                                                                   denoised mdp                                cdl
+                                              0.00                                    0.00                                                                                     full
+                                                                                                                                                                                                      0   0
+                                                           0k     10k    20k    30k           0k   20k    40k     60k
+                                                                                                                                                                               ID                   OOD
+                                                                 cheetah (dmc)                     walker (dmc)                     series (t)                                          stack (b)
+                                                                                                                        600
+
+
+
+
+                               mean episode reward
+                                                                                      1000
+                                                                                                                                                                           98 74              98 74
+                                                     800
+                                                                                        750
+                                                     600                                                                400
+                                                                                                                                                                                   41
+                                                                                        500
+                                                     400                                                                                                                                31
+                                                                                                                        200
+                                                     200                                250
+
+                                                       0                                  0
+                                                           0k      10k    20k     30k         0k   10k    20k     30k         0k       20k        40k                                                 0   0
+
+                                                                    episodes                        episodes                        episodes                                   ID                   OOD
+
+
+Figure 5: (left) top: Block environment with three movable blocks (mov 1∼3 ), and an unmovable (unm) block fixed on the table.
+bottom: Tool-Use environment with the block, the L-shaped tool, and the box. (middle) Learning curves of CBM (ours) compared
+to baseline methods and RL with the Oracle abstraction in five tasks. Each learning curve is generated from independent runs
+using 5 different random seeds, with mean and std. error computed across 50 test episodes per point on the learning curve. CBM
+is among the most sample-efficient methods, even approaching the efficiency of the Oracle on Pick, Cheetah, and Walker. (right)
+Performance of policies with different state abstractions on both ID and OOD states, in terms of mean and std. error of success
+rates (↑) in the block environment.
+
+
+CBM is Sample-Efficient The performance metric for Pick                                                     demonstrating the benefit of using implicit dynamics models.
+and Stack tasks is the mean success rate at accomplishing
+                                                                                                            CBM is Generalizable As shown in Fig. 5 right, we fur-
+the task, and the metric for Series and DMC tasks is the
+                                                                                                            ther measure each method’s generalizability to unseen states
+mean episode reward, evaluated over 50 test episodes and
+                                                                                                            on Pick and Stack (TIA and Denoised MDP fail to learn
+plotted with respect to the number of episodes.2 The learning
+                                                                                                            the tasks and thus are not evaluated). In addition to in-
+curves for all tasks are shown in Fig. 5 middle. Recall that
+Oracle learns with the ground-truth state abstraction, whereas                                              distribution (ID) states, we also evaluate the learned policies
+Full learns with no state abstraction. For all tasks, Oracle                                                on out-of-distribution (OOD) states where the values of all
+learns the fastest, demonstrating the possible gain in sample                                               task-irrelevant state variables are set to noise sampled from
+efficiency with an ideal state abstraction.                                                                 N (0, 1). For both tasks, only Oracle and CBM keep similar
+                                                                                                            performance across ID and OOD states, as their minimal
+   Overall, we find that CBM matches or improves in sample                                                  task-specific abstractions eliminate the influence of OOD
+efficiency over the CDL, TIA, and Denoised MDP baselines                                                    variables. In contrast, though CDL can be robust against vari-
+in all settings. In all tasks, CBM is among the closest to                                                  ables ignored by its abstraction, it still fails to generalize
+the Oracle in sample efficiency, showing the benefit of the                                                 when redundant variables in its non-minimal abstractions
+learned, near-minimal state abstraction. We observe that the                                                have unseen values.
+higher the difficulty level of the task, the greater the benefit
+of learning a small task abstraction. For instance, Walker is a
+simple task, where almost all methods converge rapidly to an
+                                                                                                                                                 Conclusion
+episode reward of 1000 by 20k episodes. The only exception                                                  This paper studies how to generate task-specific minimal state
+is Denoised MDP, where the learned abstraction masks out                                                    abstractions for task learning. It introduces Causal Bisimu-
+some key variables among robot joint angles and angular                                                     lation Modeling (CBM), an algorithm that (1) learns a min-
+velocities. On the other hand, the Series task is much more                                                 imal state abstraction via causal reward learning, and (2)
+challenging, requiring a sequence of successful behaviors                                                   learns an implicit causal dynamics model. The experiments
+(reach tool, use tool to move block closer, pick and place                                                  demonstrate that CBM learns more accurate and concise state
+block). Learning without any abstraction (Full) only learns                                                 abstractions, which lead to improved sample efficiency on
+to grasp the tool and achieves an episode reward of 200                                                     downstream tasks compared to related methods. Further, the
+over 40k training episodes, while CBM learns with much                                                      implicit dynamics model introduced by CBM improves over
+greater sample efficiency. We observe a similarly large gap                                                 explicit dynamics models in terms of prediction error and
+between CBM and other methods on Stack (B), another com-                                                    causal graph accuracy. Promising directions for future work
+plex manipulation task. An ablation of CBM with explicit                                                    include relaxing the assumption of having a pre-defined fac-
+dynamics models can be found in the Appendix; we find that                                                  tored state space to extend CBM to high-dimensional state
+the ablation has much worse sample efficiency than CBM,                                                     spaces, such as images.
+
+    2
+      As each episode is a fixed number of steps, episodes have a
+linear relationship with training steps.
+
+
+
+
+                                                                                                    15784
+                                    The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+                  Acknowledgements                                         He, T.; McCann, B.; Xiong, C.; and Hosseini-Asl, E.
+                                                                           2021. Joint Energy-based Model Training for Better Cal-
+This work has taken place in the Learning Agents Research
+                                                                           ibrated Natural Language Understanding Models. ArXiv,
+Group (LARG) at UT Austin. LARG research is supported in
+                                                                           abs/2101.06829.
+part by NSF (FAIN-2019844, NRT-2125858), ONR (N00014-
+18-2243), ARO (E2061621), Bosch, Lockheed Martin, and                      Huang, B.; Lu, C.; Leqi, L.; Hernández-Lobato, J. M.; Gly-
+UT Austin’s Good Systems grand challenge. Peter Stone                      mour, C.; Schölkopf, B.; and Zhang, K. 2022. Action-
+serves as the Executive Director of Sony AI America and                    sufficient state representation learning for control with struc-
+receives financial compensation for this work. The terms of                tural constraints. In International Conference on Machine
+this arrangement have been reviewed and approved by the                    Learning, 9260–9279. PMLR.
+University of Texas at Austin in accordance with its policy                Jang, E.; Gu, S.; and Poole, B. 2016.              Categorical
+on objectivity in research.                                                reparameterization with gumbel-softmax. arXiv preprint
+                                                                           arXiv:1611.01144.
+                       References                                          Janner, M.; Fu, J.; Zhang, M.; and Levine, S. 2019. When
+Amos, B.; Stanton, S.; Yarats, D.; and Wilson, A. G. 2021.                 to Trust Your Model: Model-Based Policy Optimization. In
+On the model-based stochastic value gradient for continu-                  Advances in Neural Information Processing Systems.
+ous reinforcement learning. In Learning for Dynamics and                   Kurutach, T.; Clavera, I.; Duan, Y.; Tamar, A.; and Abbeel,
+Control, 6–20. PMLR.                                                       P. 2018. Model-ensemble trust-region policy optimization.
+Bakhtin, A.; Deng, Y.; Gross, S.; Ott, M.; Ranzato, M.; and                arXiv preprint arXiv:1802.10592.
+Szlam, A. 2021. Residual Energy-Based Models for Text.                     LeCun, Y.; Chopra, S.; Hadsell, R.; Ranzato, A.; and Huang,
+Journal of Machine Learning Research, 22(40): 1–41.                        F. J. 2006. A Tutorial on Energy-Based Learning. Predicting
+Chua, K.; Calandra, R.; McAllister, R.; and Levine, S. 2018.               structured data, 1.
+Deep reinforcement learning in a handful of trials using prob-             Li, L.; Walsh, T. J.; and Littman, M. L. 2006. Towards a
+abilistic dynamics models. arXiv preprint arXiv:1805.12114.                unified theory of state abstraction for MDPs. In AI&M.
+Dean, T.; and Givan, R. 1997. Model minimization in Markov                 Mastakouri, A. A.; Schölkopf, B.; and Janzing, D. 2021. Nec-
+decision processes. In AAAI/IAAI, 106–111.                                 essary and sufficient conditions for causal feature selection
+Ding, W.; Lin, H.; Li, B.; and Zhao, D. 2022. Generalizing                 in time series with latent common causes. In International
+Goal-Conditioned Reinforcement Learning with Variational                   Conference on Machine Learning, 7502–7511. PMLR.
+Causal Reasoning. arXiv preprint arXiv:2207.09081.                         Nagabandi, A.; Kahn, G.; Fearing, R. S.; and Levine, S. 2018.
+Du, Y.; and Mordatch, I. 2019. Implicit Generation and Mod-                Neural network dynamics for model-based deep reinforce-
+eling with Energy Based Models. In Wallach, H.; Larochelle,                ment learning with model-free fine-tuning. In 2018 IEEE In-
+H.; Beygelzimer, A.; d'Alché-Buc, F.; Fox, E.; and Garnett,               ternational Conference on Robotics and Automation (ICRA),
+R., eds., Advances in Neural Information Processing Systems,               7559–7566. IEEE.
+volume 32. Curran Associates, Inc.                                         Nikishin, E.; Schwarzer, M.; D’Oro, P.; Bacon, P.-L.; and
+Feinberg, V.; Wan, A.; Stoica, I.; Jordan, M. I.; Gonzalez,                Courville, A. 2022. The Primacy Bias in Deep Reinforcement
+J. E.; and Levine, S. 2018. Model-based value estimation for               Learning. In Chaudhuri, K.; Jegelka, S.; Song, L.; Szepesvari,
+efficient model-free reinforcement learning. arXiv preprint                C.; Niu, G.; and Sabato, S., eds., Proceedings of the 39th
+arXiv:1803.00101.                                                          International Conference on Machine Learning, volume 162
+                                                                           of Proceedings of Machine Learning Research, 16828–16847.
+Ferns, N.; Panangaden, P.; and Precup, D. 2011. Bisimulation               PMLR.
+metrics for continuous Markov decision processes. SIAM
+Journal on Computing, 40(6): 1662–1714.                                    Oord, A. v. d.; Li, Y.; and Vinyals, O. 2018. Representation
+                                                                           learning with contrastive predictive coding. arXiv preprint
+Florence, P.; Lynch, C.; Zeng, A.; Ramirez, O. A.; Wahid, A.;              arXiv:1807.03748.
+Downs, L.; Wong, A.; Lee, J.; Mordatch, I.; and Tompson, J.
+2022. Implicit behavioral cloning. In Conference on Robot                  Pearl, J. 2009. Causality. Cambridge university press.
+Learning, 158–168. PMLR.                                                   Pfrommer, S.; Halm, M.; and Posa, M. 2020. ContactNets:
+Fu, X.; Yang, G.; Agrawal, P.; and Jaakkola, T. 2021. Learn-               Learning of Discontinuous Contact Dynamics with Smooth,
+ing task informed abstractions. In International Conference                Implicit Representations. In Conference on Robot Learning.
+on Machine Learning, 3480–3491. PMLR.                                      Saremi, S.; Mehrjou, A.; Schölkopf, B.; and Hyvärinen,
+Haarnoja, T.; Tang, H.; Abbeel, P.; and Levine, S. 2017. Re-               A. 2018. Deep Energy Estimator Networks. ArXiv,
+inforcement Learning with Deep Energy-Based Policies. In                   abs/1805.08306.
+International Conference on Machine Learning.                              Song, Y.; Garg, S.; Shi, J.; and Ermon, S. 2019. Sliced Score
+Haarnoja, T.; Zhou, A.; Abbeel, P.; and Levine, S. 2018. Soft              Matching: A Scalable Approach to Density and Score Estima-
+Actor-Critic: Off-Policy Maximum Entropy Deep Reinforce-                   tion. In Conference on Uncertainty in Artificial Intelligence.
+ment Learning with a Stochastic Actor. In International                    Song, Y.; and Kingma, D. P. 2021. How to Train Your Energy-
+Conference on Machine Learning.                                            Based Models. ArXiv, abs/2101.03288.
+
+
+
+
+                                                                   15785
+                                     The Thirty-Eighth AAAI Conference on Artificial Intelligence (AAAI-24)
+
+
+Sordoni, A.; Dziri, N.; Schulz, H.; Gordon, G.; Bachman,
+P.; and Des Combes, R. T. 2021. Decomposed mutual infor-
+mation estimation for contrastive representation learning. In
+International Conference on Machine Learning, 9859–9869.
+PMLR.
+Teh, Y. W.; Welling, M.; Osindero, S.; and Hinton, G. E. 2003.
+Energy-Based Models for Sparse Overcomplete Representa-
+tions. Journal of Machine Learning Research, 4: 1235–1260.
+Tunyasuvunakool, S.; Muldal, A.; Doron, Y.; Liu, S.; Bohez,
+S.; Merel, J.; Erez, T.; Lillicrap, T.; Heess, N.; and Tassa, Y.
+2020. dm control: Software and tasks for continuous control.
+Software Impacts, 6: 100022.
+Wang, J.; Lu, Y.; and Zhao, H. 2020. CLOUD: Contrastive
+Learning of Unsupervised Dynamics. In CoRL.
+Wang, T.; Du, S.; Torralba, A.; Isola, P.; Zhang, A.; and Tian,
+Y. 2022a. Denoised MDPs: Learning World Models Better
+Than the World Itself. In Chaudhuri, K.; Jegelka, S.; Song,
+L.; Szepesvari, C.; Niu, G.; and Sabato, S., eds., Proceedings
+of the 39th International Conference on Machine Learning,
+volume 162 of Proceedings of Machine Learning Research,
+22591–22612. PMLR.
+Wang, Z.; Xiao, X.; Zhu, Y.; and Stone, P. 2021. Task-
+Independent Causal State Abstraction. In Proceedings of
+the 35th International Conference on Neural Information
+Processing Systems, Robot Learning workshop.
+Wang, Z.; Xiao, X.; Zhu, Y.; and Stone, P. 2022b. Causal
+Dynamics Learning for Task-Independent State Abstraction.
+In Proceedings of the 39th International Conference on Ma-
+chine Learning.
+Welling, M.; and Hinton, G. E. 2002. A New Learning Algo-
+rithm for Mean Field Boltzmann Machines. In International
+Conference on Artificial Neural Networks.
+Weng, J.; Chen, H.; Yan, D.; You, K.; Duburcq, A.; Zhang,
+M.; Su, Y.; Su, H.; and Zhu, J. 2022. Tianshou: A Highly
+Modularized Deep Reinforcement Learning Library. Journal
+of Machine Learning Research, 23(267): 1–6.
+Williams, G.; Wagener, N.; Goldfain, B.; Drews, P.; Rehg,
+J. M.; Boots, B.; and Theodorou, E. A. 2017. Information the-
+oretic MPC for model-based reinforcement learning. In 2017
+IEEE International Conference on Robotics and Automation
+(ICRA), 1714–1721. IEEE.
+Zhang, A.; Lipton, Z. C.; Pineda, L.; Azizzadenesheli, K.;
+Anandkumar, A.; Itti, L.; Pineau, J.; and Furlanello, T. 2019.
+Learning causal state representations of partially observable
+environments. arXiv preprint arXiv:1906.10437.
+Zhang, A.; Lyle, C.; Sodhani, S.; Filos, A.; Kwiatkowska, M.;
+Pineau, J.; Gal, Y.; and Precup, D. 2020a. Invariant causal
+prediction for block mdps. In International Conference on
+Machine Learning, 11214–11224. PMLR.
+Zhang, A.; McAllister, R.; Calandra, R.; Gal, Y.; and Levine,
+S. 2020b. Learning invariant representations for rein-
+forcement learning without reconstruction. arXiv preprint
+arXiv:2006.10742.
+Zhu, Y.; Wong, J.; Mandlekar, A.; and Martı́n-Martı́n,
+R. 2020. robosuite: A Modular Simulation Framework
+and Benchmark for Robot Learning. In arXiv preprint
+arXiv:2009.12293.
+
+
+
+
+                                                                    15786
+

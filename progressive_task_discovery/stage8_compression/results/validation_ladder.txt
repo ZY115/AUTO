@@ -1,0 +1,6 @@
+OK
+
+  note: this rule is order-dependent, 2 distinct partitions
+budget audit irreversible: 1920 runs, exactly 6 task updates per environment step
+budget audit dose: 2160 runs, exactly 6 task updates per environment step
+regression after adding the failing-state vector: family_maps and overlap arms reproduce

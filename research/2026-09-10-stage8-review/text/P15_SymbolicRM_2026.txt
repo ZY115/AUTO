@@ -1,0 +1,1250 @@
+                                                                         Reinforcement Learning with
+                                                                         Symbolic Reward Machines
+
+                                                                              Thomas Krug1,2 and Daniel Neider1,2
+                                                                                    1
+                                                                                      TU Dortmund University
+                                                                    2
+                                                                        Research Center Trustworthy Data Science and Security
+
+
+
+                                              Abstract Reward Machines (RMs) are an established mechanism in Reinforcement Learning (RL)
+                                              to represent and learn sparse, temporally extended tasks with non-Markovian rewards. RMs rely on
+                                              high-level information in the form of labels that are emitted by the environment alongside the observation.
+
+
+
+
+arXiv:2603.03068v1 [cs.LG] 3 Mar 2026
+                                              However, this concept requires manual user input for each environment and task. The user has to create
+                                              a suitable labeling function that computes the labels. These limitations lead to poor applicability in
+                                              widely adopted RL frameworks. We propose Symbolic Reward Machines (SRMs) together with the
+                                              learning algorithms QSRM and LSRM to overcome the limitations of RMs. SRMs consume only the
+                                              standard output of the environment and process the observation directly through guards that are
+                                              represented by symbolic formulas. In our evaluation, our SRM methods outperform the baseline RL
+                                              approaches and generate the same results as the existing RM methods. At the same time, our methods
+                                              adhere to the widely used environment definition and provide interpretable representations of the task
+                                              to the user.
+
+                                              Keywords: Reinforcement Learning · Symbolic Reward Machines · Non-Markovian Reward Functions.
+
+
+                                        1   Introduction
+                                        Reinforcement Learning (RL) is an established mechanism to train agents to achieve a task in an environment
+                                        that only outputs a state, which is also called observation, and a reward. A function, which is called reward
+                                        function, is used to generate the reward. The reward indicates how good the last move of the agent was.
+                                        The reward function is Markovian in the classical definition of RL [13]. This means that the reward depends
+                                        only on the last state and the action taken by the agent. However, this is for many practical tasks a critical
+                                        restriction because real-world problems often consist of a sequence of steps to accomplish the task’s goal. As
+                                        an example, if an agent should fill a certain machine with wood, the agent has first to collect wood before
+                                        the agent can put it in the machine. To define these tasks, non-Markovian reward functions are required.
+                                        Non-Markovian reward functions map state histories to rewards. In other words, they include temporal
+                                        dependencies.
+                                            Reward Machines (RMs) [5,14] are one approach to represent non-Markovian reward functions. Icarte
+                                        et al. [5] developed QRM that uses RMs to train agents. The idea of QRM is to use one Q-table for each
+                                        RM state and to store the current RM state. Thus, QRM requires the assumption that the RMs are given a
+                                        priori. Furthermore, QRM accelerates the learning process by performing a multi-update step: QRM not only
+                                        updates the Q-value of the current RM state but also updates the Q-values for all RM states corresponding
+                                        to the observed environment state. This is possible because QRM has access to the RM and therefore knows
+                                        which reward the agent would receive if the RM were in any of its other RM states. JIRP [19] lifts this
+                                        assumption and infers the RM on the fly along with the policy.
+                                            However, RMs generally require an extended variant of the broadly used interaction scheme between
+                                        the agent and the environment. The environment has to output high-level events which are used as inputs
+                                        for the RM. These high-level events are generated by a labeling function. Aside from requiring external
+                                        expert knowledge, implementing the labeling function is a technical obstacle that prevents using most RL
+                                        environments out of the box. Furthermore, on the one hand, the labeling function has to be highly generic for
+                                        the environment to support a variety of tasks. On the other hand, it has to be specific enough for a concrete
+                                        task. Consequently, the labeling function either needs to be continuously extended, or it has to be designed
+to cover all possible tasks. However, both strategies result in poor usability. In addition, RMs cannot even
+represent Markovian tasks without an appropriate labeling function. As an example, if you get a reward at a
+specific state, the labeling function has to generate a specific high-level event for this state. Otherwise, it is
+not possible to design an RM that outputs the correct reward for this state.
+    We propose Symbolic Reward Machines (SRMs) to lift the requirement of the labeling function and the
+deviation from the broadly used interaction scheme between the agent and the environment. SRMs provide
+the ability to represent non-Markovian reward functions without an explicit labeling function. SRMs have
+internal states to represent specific information, e.g., the task completion. The agent can then make decisions
+based on these internal states. In contrast to RMs, SRMs do not require abstract high-level events from a
+labeling function. Instead, SRMs use symbolic formulas as guards at the transitions. These guards can directly
+process the environment state. On the basis of SRMs, we provide RL learning algorithms that support the
+usage of SRMs. We call them QSRM and LSRM. QSRM requires the SRM as input. LSRM is an extension of
+QSRM and learns the SRM in the training process. Thus, LSRM enables the possibility to learn an effective
+policy end-to-end again. In this context, end-to-end refers to the ability to train from a standard environment
+to an effective policy. The idea of LSRM is to learn the SRM from experiences. By learning the SRM, LSRM
+provides valuable and interpretable information about the reward structure. For example, from the learned
+SRM, the user gains insight into the structure of the task and obtains information about what the agent
+needs to do to accomplish the task’s goal. The learned SRM provides a step for step explanation for the
+task. In the evaluation part, we demonstrate the effectiveness of SRMs and our new algorithms in multiple
+experiments including finite (discrete) and infinite (continuous) state spaces. In addition, we compare the
+results to existing algorithms, e.g., QRM, to show the advantage of our novel methods. Furthermore, the
+results demonstrate that we can train effective policies end-to-end, and thus, respect the standard definition
+for RL in the case of non-Markovian reward functions.
+    Beside RMs, there is further related work in the area of non-Markovian reward functions in RL. Zhou and
+Li [20] introduced a concept that they also name ‘symbolic reward machines’. However, their formal definition
+differs to our definition of a Symbolic Reward Machine. First, they define the guards as a set of predicates on
+trajectories Ψ , where Ψ ⊆ (S × A)∗ → B. This means that a guard in a state of the SRM can access the whole
+trajectory seen so far. In addition, the reward, which the SRM outputs in a state, can also depend on the
+whole trajectory seen so far because they define the reward function as a set of λ-terms of type (S × A)∗ → R,
+which are basically functions from a state-action sequence to a real value. These definitions of the guards
+and the reward function give very strong possibilities to model the transition function and the generation of
+the reward. However, it also over-complicates the transition function and the reward calculation. In theory,
+they do not need the SRM if they have suitable lambda reward functions. Furthermore, they developed an
+algorithm that infers values for predefined holes of a fixed SRM. The user has to specify the structure of the
+SRM and the transitions with the holes. The learning algorithm does not learn the structure of the SRM, e.g.,
+how many states are needed or which transitions are used. Consequently, the method cannot learn a policy
+end-to-end because of the required user input. This complicates the usability of the concept and reduces
+the user-friendliness, as the user must make inputs for each environment and task in order to generate a
+well-suited SRM.
+    Furthermore, Ardon et al. [1] published recently ‘First-Order Reward Machines’ (FORMs). According to
+Ardon et al., FORMs are superior to RMs because they can generalize over object properties and can express
+conditions over whole sets of objects. Thus, FORMs often need less states than RMs. This results in smaller
+automatons and faster learning. However, they demonstrate the effectiveness of their method solely in small,
+discrete environments. In addition, FORMs also require a labeling function that maps a specific raw state to
+a so-called observable. Consequently, they are also not directly compatible to a standard environment. For
+example, if we consider a value x and want to express that this value is in a certain range, FORM requires
+an atom which is true if x is in the respective range. However, the specific interval has to be given a priori.
+It is not possible to define an interval with variables in it and FORM infers the specific values for these
+variables. Especially for infinite state space environments, e.g., continuous values for x, this is a big challenge
+because there are an infinite amount of intervals that could be used. These limitations also make FORMs
+
+
+                                                        2
+a suboptimal choice for standard environments with non-Markovian reward functions. This holds for finite
+environments, and even more for infinite ones.
+    There are also more approaches to represent non-Markovian reward functions and leverage the structured
+information of them [3,16,2]. However, most of the approaches relying on an environment with a labeling
+function as discussed before. Consequently, they have similar challenges and limitations as RMs, QRM and
+JIRP.
+
+
+2    Preliminaries
+
+In this section, we introduce the necessary background of Reinforcement Learning and Reward Machines. We
+use a modified version of the ‘Office World’ as our running example throughout the paper. The Office World was
+introduced by Icarte et al. [5]. We define a discrete and a continuous version of the Office World. The discrete
+version is defined by the state space S = {(x, y) | x, y ∈ N0 ∧ x ≤ 14 ∧ y ≤ 10}. It is an example for a finite
+environment. The continuous version is defined by the state space S = {(x, y) | x, y ∈ R≥0 ∧ x < 15 ∧ y < 11}.
+It is an example for an infinite environment. Figure 1 shows the discrete version of the Office World.
+
+
+
+
+Figure 1: Office World environment. The discrete version is displayed. The labeled environments output the
+labels shown at the specific positions.
+
+
+    A Markov Decision Process (MDP) is often used to model an environment.
+Definition 1 (MDP). A Markov Decision Process is a 5-tuple M = (S, sI , A, p, R) consisting of a set of
+states S, an initial state sI ∈ S, a finite set of actions A, a probabilistic transition function p : S×A×S → [0, 1],
+and a reward function R : (S × A)+ × S → R.
+Our definition of an MDP differs slightly from the classical definition in RL [12,6,13]. There, the reward
+function is defined by R : S × A × S → R. Instead, we use an extended, generalized definition where rewards
+may depend on the current trajectory (the state-action history). Note that this generalized definition captures
+both Markovian and non-Markovian reward functions.
+   An example of a non-Markovian task in the Office World is that the agent should accomplish the following
+sub-tasks in the defined order:
+
+ 1. The robot has to move to the left inner office (label E);
+ 2. the robot has to visit the right inner office (label F); and
+ 3. the robot has to move back to the initial position (label A).
+
+
+                                                         3
+The agent receives a reward of 1, 2 and 10 after it reaches the respective sub-task in the right order.
+The proposed RMs3 by Icarte et al. [5,14] can model this reward structure. Figure 2a shows a graphical
+representation of an RM for this task. Note that the RM uses E, F, A, which are high-level events that the
+environment has to output by using an explicit labeling function. Therefore, the MDP definition has to be
+extended to a labeled MDP. A labeled MDP consists of an MDP, propositional symbols P (labels), and a
+labeling function L : S → 2P [5,6,19]. The labeling function indicates which propositional symbols (labels)
+are true or false for a given environment state.
+
+
+
+
+                          (a) RM                                                (b) SRM
+
+Figure 2: RM and SRM for the example task in the Office World. Self-loops with an output of zero are omitted
+in the RM.
+
+
+    The agent uses a policy to select an action to interact with the environment. A deterministic policy
+π(s) : S → A directly maps a state to an action. A probabilistic policy π(a|s) : S × A → [0, 1] outputs a
+probability distribution for each state. The agent can then sample an action from this distribution. Based on
+an MDP and a policy, a trajectory is defined by the interaction of an agent with an MDP. It is a (state,
+action, reward)-sequence s0 , a0 , r1 , s1 , ..., sk , ak , rk+1 , sk+1 where s0 = sI . The sequence s0 , s1 , ..., sk , sk+1
+is the state-sequence of the trajectory, and the sequence r1 , r2 , ..., rk+1 is the reward-sequence of the
+trajectory.
+
+
+3     Symbolic Reward Machines
+In this section, we propose our Symbolic Reward Machines (SRMs) as a novel representation of non-Markovian
+reward functions. SRMs integrate aspects of a Reward Machine and a symbolic automaton [4,17]. The major
+difference between RMs and SRMs is the input. RMs get propositional symbols (labels) from a specified
+alphabet as the input. In contrast, SRMs receive the environment state directly and handle it through guards.
+These guards can be defined by the specified logic.
+
+Definition 2 (SRM). A Symbolic Reward Machine is a 5-tuple C = (L, Q, q0 , δ, σ) and consists of a logic L
+with formulas Ψ and an input space S, a finite set of states Q, an initial state q0 ∈ Q, a transition relation
+                                                                            φ
+δ ⊆ Q × Ψ × Q, and a partial output function σ : Q × Ψ → R. We write p −    → q for a transition (p, φ, q) ∈ δ.
+
+The input space S is always given by the underlying MDP. The state space of the environment can be also
+defined by a function S : Var → U . Each component of the state is represented by a variable x ∈ Var that is
+mapped to a concrete value in a universe U . Furthermore, we call φ the guard of a transition. The SRM
+takes the transition if the current environment state s fulfills the guard. This means that s is a model of
+3
+    Icarte et al. [5,14] introduce Reward Machines more generally. The Reward Machines, that are considered in this
+    paper, are defined by Icarte et al. [5,14] as Simple Reward Machines.
+
+
+                                                             4
+φ, which is expressed by s |= φ. Additionally, the SRM returns the reward from the output function σ. We
+focus solely on SRMs with LRA (Linear Real Arithmetic) [8] as the logic component in this paper. This is
+done for simplicity. However, the concepts should be easily extendable to other logics with the following two
+properties. The restriction for the logic is that the validity and satisfiability problem has to be decidable.
+   In addition, we require the following two properties for an SRM:
+ 1. An SRM is deterministic. The transition function δ has to be deterministic. Intuitively speaking, there
+    are no two outgoing transitions of an SRM state that can be taken at the same time. This means that
+    the guards of any two transitions of an SRM state cannot be fulfilled at the same time. In formula terms,
+                                                                                            φ         φ′
+    it is required that for all p, q, q ′ ∈ Q and formulas φ, φ′ ∈ Ψ it is true that, if p −
+                                                                                           → q, and p −→ q ′ , and q
+                      ′              ′
+    is not equal to q , then φ ∧ φ has to be unsatisfiable.
+ 2. An SRM is complete. Intuitively speaking, an SRM has to handle any possible input. This means that for
+                                                                                   φ
+    all SRM states p ∈ Q and every input x, there has to exist a transition p −    → q with q ∈ Q and φ ∈ Ψ and
+    x fulfills the guard φ.
+   We also define an SRM run of an SRM C = (L, Q, q0 , δ, σ) that can process a complete state-sequence and
+outputs a reward-sequence. For that, first, we define the sequence of the states of the SRM while it processes
+the state-sequence s0 , ..., sn of an trajectory τ . The sequence of SRM states q0 , ..., qn is defined by
+                            
+                              q0 , if i = 0,
+                    qi =
+                              q , with q ∈ Q. ∃φ ∈ Ψ. (qi−1 , φ, q) ∈ δ ∧ si |= φ , otherwise.
+
+On this basis, the output sequence r1 , ..., rn of the SRM C is defined by
+
+                             ri = σ(qi−1 , φ) with φ ∈ Ψ ∧ si |= φ ∧ (qi−1 , φ, qi ) ∈ δ.
+
+On the basis of these two definitions, we define an SRM run of the SRM C on the state-sequence s0 , ..., sn of
+a trajectory τ by C(τ ) = r1 , ..., rn .
+
+3.1   Learning effective policies with given SRMs
+We can represent non-Markovian reward functions with our proposed notion of SRMs. However, they are not
+supported by the existing learning algorithms QRM [5] and JIRP [19]. Consequently, we must introduce new
+learning algorithms that use SRMs to learn effective policies. We propose QSRM as a learning algorithm that
+supports SRMs. QSRM is similar to QRM in that it also assumes that the user provides the required SRM.
+However, in contrast to QRM, which requires access to an explicit labeling function, QSRM only requires the
+current state and the reward of the environment. Thus, QSRM respects the standard environment interaction
+interface in RL. The procedure of QSRM is given as pseudocode in Algorithm 1. It can be seen that the
+procedure uses the identical environment interaction as in Q-Learning [18]; the environment receives an action
+and emits the current state and a reward. In addition, QSRM uses the same multi-update scheme as QRM to
+accelerate the learning process.
+    The natural question is whether our new QSRM algorithm preserves the convergence property of Q-
+Learning, and thus, is also guaranteed to converge to an optimal policy.
+
+Theorem 1 (QSRM Convergence). QSRM always converges to an optimal policy in the limit with the
+same conditions as Q-Learning [18,13]. So, if
+ 1. all rewards are bounded;
+ 2. all (state, action)-pairs are visited infinity often;
+ 3. learning rates 0 ≤ αt < 1; and
+ 4. learning rates αt are decreasing at the right rate:
+                                            ∞
+                                            X                   ∞
+                                                                X
+                                                  αt = ∞ and         αt2 < ∞.
+                                              t                  t
+
+
+                                                            5
+Algorithm 1 Q-Learning for SRMs (QSRM)
+Initialize an ϵ-greedy policy µ, and initialize Q-tables qu for all u ∈ QSRM for all (state, action)-pairs with 1.
+Then iterate:
+ 1: for t in {0,..., number_of_episodes - 1} do
+ 2:      Start new trajectory with s = sI and u = q0
+ 3:      while s is not terminal state do
+ 4:         Sample action a from µ given s and u
+ 5:         Execute action a in environment and receive next state s′
+ 6:         for u′ ∈ QSRM do
+ 7:             Get r, u′′ by SRM (u′ , s′ )
+ 8:             Update qu′ by qu′ (s, a) = qu′ (s, a) + αt (r + γ · max
+                                                                     ′
+                                                                        qu′′ (s′ , a′ ) − qu′ (s, a))
+                                                                       a
+ 9:       end for
+10:       Step in SRM with input s′
+11:       s = s′ and u = current SRM state
+12:    end while
+13: end for
+14: return policy π(s, u) = argmaxa qu (s, a) for all s ∈ S and u ∈ QSRM
+
+
+
+Proof. We show the convergence property by building a cross product MDP M2 = (S2 , sI2 , A2 , p2 , R2 ) with a
+Markovian reward function of an MDP M = (S, sI , A, p, R) where R is defined by an SRM C = (L, Q, q0 , δ, σ).
+The following scheme is used to build M2 . The state space S2 is the cross product S × Q. The initial state
+sI2 is defined by the tuple (sI , q0 ). The action set A2 is taken from the action set A from MDP M . The
+probabilistic transition function is defined by
+                                           (
+                                 ′ ′        p(s, a, s′ ) , if ∃φ ∈ Ψ such that (q, φ, q ′ ) ∈ δ ∧ s′ |= φ,
+                p2 ((s, q), a, (s , q )) =
+                                            0            , otherwise.
+
+The reward function R2 is defined by
+                                                                 X
+                                    R2 ((s, p), a, (s′ , q)) =         Js′ |= φK · σ(p, φ),
+                                                                 φ∈Ψ
+
+whereby JxK is the Iverson bracket, which evaluates to 1 if x is true, and to 0 otherwise. Q-Learning by
+Watkins et al. [18] converges for the MDP M2 to the optimal policy. With the transformation procedure as
+defined above, QSRM does exactly the same as Q-Learning except that QSRM updates multiple states of the
+cross product MDP in parallel. This multi-update is applied by using the correct data of the reward function.
+Hence, QSRM also converges to the optimal policy with the same conditions as standard Q-Learning.          ⊔
+                                                                                                           ⊓
+
+    We also develop QSRM with function approximation methods and name it DQSRM. The core idea remains
+unchanged. Instead of Q-tables, neural networks are utilized to approximate the Q-function for each SRM
+state.
+
+
+4    Learning Symbolic Reward Machines
+
+QSRM provides the ability to use all existing environments out of the box, e.g., the environments of the
+popular Gymnasium library [15], as it respects the standard interaction scheme. However, QSRM is also not
+fully compatible with the standard RL definition because it assumes that the agent has access to the SRM
+and thus to the reward function. To overcome this limitation, we propose the LSRM algorithm that can
+automatically infer the SRM. LSRM can work in two settings. First, we assume that the possible guards are
+given by the user. We name this setting ‘LSRM with given formulas’ (LSRM-GF). In the second setting of
+LSRM, we lift this assumption. We name the second setting ‘LSRM with formula templates’ (LSRM-FT).
+
+
+                                                             6
+    The basic procedure is the same for both settings. It is given as pseudocode in Algorithm 2. Like JIRP
+[19], LSRM starts with a basic hypothesis SRM and updates it if counterexamples are found. The basic
+SRM consists only of one state and one self-loop. LSRM tries to learn a policy with (D)QSRM based on
+the current hypothesis SRM. The agent receives a reward from the environment and a reward from the
+current hypothesis SRM. These rewards are consistent if they are equal. If the rewards are not consistent,
+LSRM stops the (D)QSRM algorithm and adds the current trajectory to a set of counterexamples E. We
+refer to the reward at timestep t of a counterexample e ∈ E as re,t , and to the observed state as se,t . Note
+that re,t is only defined for t > 0. Furthermore, we define a function T that maps a counterexample e to the
+set of all timesteps contained in that counterexample. We also need the set of timesteps excluding the last
+one. Therefore, we define a function T ∗ with T ∗ (e) = T (e) \ {|T (e)| − 1}. After adding the trajectory to the
+counterexamples, LSRM uses an SRM-inferring process to generate a new hypothesis SRM that is consistent
+with all counterexamples. Next, LSRM restarts the (D)QSRM algorithm with the new hypothesis SRM.
+
+
+Algorithm 2 LSRM (Learning Symbolic Reward Machines)
+ 1: obs = {}
+ 2: r = {}
+ 3: hypothesis_srm = init_basic_srm()
+ 4: q_tables = init_q_tables_for_srm(hypothesis_srm)
+ 5: for number_of_episodes times do
+ 6:    observations, rewards, rewards_hypothesis_srm = QSRM_episode( hypothesis_srm, q_tables)
+ 7:    if rewards ̸= rewards_hypothesis_srm then
+ 8:        obs.append(observations)
+ 9:        r.append(rewards)
+10:        hypothesis_srm = generate_consistent_srm(obs, r)
+11:        q_tables = init_q_tables_for_srm(hypothesis_srm)
+12:     end if
+13: end for
+
+
+    The SRM-inferring process is the core component of LSRM. It generates a consistent SRM from the set of
+counterexamples E. The LSRM algorithm infers a consistent SRM by encoding the collected counterexamples
+into a constraint satisfaction problem. The encoding produces a logical formula φSRM with two key properties:
+(1) the formula is satisfiable if, and only if, a consistent SRM exists, and (2) we can build a consistent
+SRM from a model of the formula. The required number of SRM states in the state set Q is not known a
+priori. Therefore, the inferring process generates constraints for an increasing number of SRM states. At
+the beginning, it encodes an SRM with only one SRM state. So, it applies Q = {q0 } where q0 is w.l.o.g. the
+initial state. If no consistent SRM with n SRM states can be found, the SRM-inferring process increases the
+number of SRM states to n + 1, which results to the state set Q = {q0 , ..., qn }, and tries it again. As a result,
+it generates a consistent SRM with the fewest number of SRM states.
+
+4.1   LSRM with Given Formulas
+In LSRM with given formulas (LSRM-GF), we assume that the user provides a set of formulas Ψ =
+{φ0 , . . . , φf −1 } for the guards of the SRM. LSRM-GF uses four constraint types to encode the following
+properties of the SRM. First, the SRM has to be deterministic. To ensure this, LSRM-GF adds Constraint
+φdet . Furthermore, the SRM is always in exactly one SRM state, and the first SRM state is always the initial
+state. This is modeled by Constraint φstate . Moreover, the SRM has to be consistent with all counterexamples.
+LSRM-GF uses the constraints φtrans and φused to model this property. The global formula φSRM is the
+conjunction
+                                         φSRM = φdet ∧ φstate ∧ φtrans ∧ φused
+of all these constraints. We will define all the components in detail in the following. First, we have to define
+the variables that are used to build the constraints.
+
+
+                                                        7
+Variables LSRM with given formulas uses:
+ – Boolean variables dp,φ,q that encode whether a transition from state p to state q exists with the formula
+   φ as the guard;
+ – Boolean variables xe,t,p that encode whether the SRM is in state p after processing counterexample e
+   through the t-th observation; and
+ – Real variables op,φ that encode the SRM output in state p and the guard φ is fulfilled.
+
+Constraints On the basis of the variables described above, we define the constraints used in detail in the
+following. The constraints are defined by:
+                  ^ ^ ^ ^               ^
+           φdet =                          dp,φ1 ,q1 ∧ dp,φ2 ,q2 ⇒ Unsat(φ1 ∧ φ2 )                      (1)
+                   p∈Q q1 ∈Q q2 ∈Q φ1 ∈Ψ         φ2 ∈Ψ,
+                                                (p,φ1 ,q1 )
+                                                    ̸=
+                                                (p,φ2 ,q2 )
+
+                      ^                ^        _                   ^ ^
+           φstate =         xe,0,q0         (        xe,t,p ) ∧ (              ¬(xe,t,p ∧ xe,t,q ))                   (2)
+                      e∈E             t∈T (e) p∈Q                   p∈Q q∈Q
+                                                                        p̸=q
+
+                       ^      ^        ^ ^ ^
+           φtrans =                                      xe,t,p ∧ dp,φ,q ∧ (se,t+1 |= φ) ⇒ xe,t+1,q ∧ op,φ = re,t+1   (3)
+                      e∈E t∈T ∗ (e) p∈Q φ∈Ψ q∈Q
+
+                      ^      ^        _ _ _
+           φused =                                      xe,t,p ∧ dp,φ,q ∧ (se,t+1 |= φ).                              (4)
+                      e∈E t∈T ∗ (e) p∈Q φ∈Ψ q∈Q
+
+    The four constraints are used to encode in general two properties. Constraint 1 guarantees that the SRM
+is deterministic and the constraints 2, 3 and 4 encode the runs over all counterexamples, which leads to the
+property that the SRM is consistent with all these counterexamples.
+    The basic idea of Constraint 1 to encode the determinism property is the following. If there are any two
+different outgoing transitions in one SRM state that should be used, then the conjunction of both transition
+guards must be unsatisfiable. The usage of two outgoing transitions would be indicated by setting variables
+dp,φ1 ,q1 and dp,φ2 ,q2 to true. Note that the Unsat term can be precalculated as the formulas are given a priori.
+This precalculation is essential as the use of a universal quantifier would be required otherwise. This universal
+quantifier would lead to a significant decrease of the SMT solver performance.
+    Constraint 2 encodes that the SRM is always in exactly one SRM state. In addition, naturally, the SRM
+must always start in the initial SRM state q0 . The variables xe,0,q0 ensure that the SRM starts in the initial
+state for all counterexamples. The remaining part of the constraint models the following two properties. First,
+the SRM is always in at least one state. That is modeled by the discjunction over all variables xe,t,p for that
+counterexample. Second, the SRM cannot be in two states at the same time. That is modeled by the negation
+¬(xe,t,p ∧ xe,t,q ).
+    Constraint 3 encodes consistency across all counterexamples. For each state in the state-sequence of a
+counterexample, the SRM has to output the observed reward of the reward-sequence. The SRM is in one
+specific state p at timestep t during the processing of counterexample e. If there is an outgoing transition
+with the guard φ to state q and the observed environment state of the counterexample is a model of this
+guard, the SRM takes this transition. This means that the SRM is in state q in the next timestep. In addition,
+the generated reward of the SRM, which is encoded by op,φ , has to be equal to the observed reward in the
+counterexample e.
+    Constraint 4 guarantees that for each step in the counterexample, the SRM has to be in one state p,
+there is a transition from a state p to a state q with the guard φ, and the observation of the step in the
+counterexample is a model of the guard φ. In other words, we need a step that the SRM takes. So, it
+guarantees that one premise of the implications in Constraint 3 is valid.
+
+
+                                                                       8
+   All these constraints guarantee that a consistent SRM can be generated by finding a model for the global
+formula φSRM . Next, we describe how LSRM-GF generates a consistent SRM given a model of φSRM .
+
+
+Generate SRM from Model The SMT solver returns a model of φSRM , if and only if, φSRM is satisfiable.
+We assume w.l.o.g. that the SRM states form the set Q = {q0 , q1 , ..., qn } where q0 denotes the initial state.
+LSRM-GF can derive a consistent SRM C = (L, Q, q0 , δ, σ) from the model. The logic L is set to LRA (see
+Section 3). The output function σ is defined by σ(p, φ) = op,φ for all p ∈ Q and φ ∈ Ψ . To generate the
+transition relation δ, LSRM-GF adds (p, φ, q) to δ for all p, q ∈ Q and φ ∈ Ψ if dp,φ,q is set to true in the
+model.
+    With this procedure, LSRM-GF constructs a consistent SRM based on a model for φSRM . However, the
+resulting SRM is not guaranteed to be complete. It is possible that for some inputs, the learned SRM does
+not have a transition with a fulfilled guard. Thus, it is not a valid SRM for our definition in Section 3. To
+achieve this property while preserving quantifier freedom in the constraints, we first invoke the SMT solver
+without further constraints and then add a post-processing step afterwards. We process each SRM state
+p ∈ Q with the following procedure. We define a formula φp,out that is the negated disjunction of all outgoing
+guards. Therefore, first, we define the set of formulas X p = {φ|φ ∈ Ψ ∧ ∃q ∈ Q. dp,φ,q = T rue}. The set X p
+includes all formulas that are used as a guard for the SRM state p, which is indicated by a variable dp,φ,q is
+set to true. Based on the formula set X p , the formula φp,out is defined by
+                                                              _
+                                                φp,out = ¬           φ.
+                                                             φ∈X p
+
+If φp,out is satisfiable, we add a self-loop transition with φp,out as the guard and an output of zero. This is done
+by extending the set Ψ of the generated SRM with φp,out , adding (p, φp,out , p) to δ and letting σ(p, φp,out )
+maps to 0. This procedure works because we only want to generate a consistent SRM. No counterexample
+uses the transition that we add because constraints 3 and 4 would force a transition that covers the example,
+otherwise. As a result of this post-processing step, LSRM-GF generates a fully working SRM that is consistent
+with all counterexamples.
+
+
+4.2   LSRM with Formula Templates
+
+LSRM-GF still has the limitation that the user must provide the concrete formula set Ψ . This assumption
+is not feasible for many practical tasks because the user must have an extensive domain expertise about
+the environment and the task. To address this limitation, we lift this assumption in the second setting that
+we name LSRM with formula templates (LSRM-FT). LSRM-FT can learn an SRM without any further
+information except the standard RL environment output, which consists of an environment state and a reward.
+This makes LSRM-FT compatible with all existing environments and the standard RL definitions. LSRM-FT
+automatically infers for each SRM state the required formulas for the guards. This means that LSRM-FT
+maintains a formula set Ψ p for each SRM state p ∈ Q. Let f ∈ N denote the number of formulas that can be
+used as guards for an SRM state. There are two options to handle the number of formulas f . The first one
+is to increase the number of states and the number of formulas in parallel in order to search for a model.
+The second option is that LSRM-FT handles the number of formulas per state as a hyperparameter. This
+option is computationally faster and is guaranteed to find the SRM with the fewest number of SRM states for
+the specified number of formulas. In the evaluation, we will use the second option. By using f formulas per
+SRM state, Ψ p is defined by Ψ p = {φp0 , ..., φpf −1 }. As the algorithm’s name suggests, LSRM-FT uses formula
+templates as fixed building blocks for the formulas in Ψ p . Formula templates are formulas that contain free
+variables besides those representing the inputs of the SRM. As an example, one formula template could be
+φ = x ≥ b1 ∧ x < b2 . This formula template could be used to find an interval for a component x. LSRM-FT
+infers suitable values for the additional free variables; in the given example, for b1 and b2 . This means that
+LSRM-FT concretizes a formula template. A concretized version of the example formula template could be
+φ = x ≥ 2 ∧ x < 3. Inferring formulas from templates is a significant improvement to overcome the limitation
+
+
+                                                         9
+that the user has to provide the concrete formulas, and thus, information about the reward structure. In
+principal, every formula can be used as a formula template.
+   The basic idea of LSRM-FT is the same as for LSRM-GF. LSRM-FT uses constraints to guarantee the
+same properties as LSRM-GF. The SRM is deterministic, the SRM is always in exactly one SRM state, and
+the SRM is consistent with all counterexamples. Therefore, the constraints φdet , φstate , φtrans , and φused are
+adapted from LSRM-GF to LSRM-FT.
+   In the following, first, we define the needed variables again. Afterwards, we define and describe the required
+adjustments of the constraints.
+
+
+Variables The general idea of encoding a consistent SRM is the same as in LSRM with given formulas.
+Hence, LSRM with formula templates requires similar variables for the structure and the runs over the
+counterexamples. We adapt the variables dp,φ,q , xe,t,p , and op,φ as defined for LSRM-GF in Section 4.1. So,
+LSRM-FT uses:
+
+ – Boolean variables dp,φp ,q that encode whether a transition from state p to state q exists with the formula
+   φp as the guard;
+ – Boolean variables xe,t,p that encode whether the SRM is in state p after processing counterexample e
+   through the t-th observation; and
+ – Real variables op,φp that encode the SRM output in state p and the guard φp is fulfilled.
+
+   In addition to these variables, LSRM-FT uses further variables for the formula templates that are used to
+build the guards. The required variables depend on the specific formula template that is used. We will use a
+box formula template in the evaluation of our methods. A box formula template can describe an interval for
+each component of the environment state. We described in Section 3 that the state space can also be defined
+by a function S : Var → U . On the basis of this definition, the box formula template specifies an interval for
+each x ∈ Var. We also allow a negated box formula template, whereby the complete specified box is negated.
+Consequently, the box formula template is defined by
+                                                      ^
+                                  φbox = posbox ⇔             x ≥ bx≥ ∧ x < bx< ,
+                                                     x∈Var
+
+
+where posbox indicates whether it is a box formula template or a negated box formula template. This formula
+template is used in all SRM states and guards. The following variables are required to define the formula
+templates for the guards:
+
+ – Boolean variables pospi that encode whether the formula template of formula φpi of state p appears in
+   positive or negated form; and
+ – Real variables bpi,xj that encode the right sides of the inequality equations of the box template for formula
+   φpi and the environment state component x ∈ Var and the operator j ∈ {≥, <}.
+
+   On the basis of these variables and our general concept of box templates, we can define the formula
+templates for each SRM state p. The set of formula templates for a state p is Γ p = {ψ0p , ..., ψfp−1 }, where
+each formula template is defined by
+                                                     ^
+                                    ψip = pospi ⇔           x ≥ bpx≥ ∧ x < bpx< .
+                                                    x∈Var
+
+
+The number of formula templates associated with each SRM state is given by |Γ p | and corresponds to the
+number of formulas f that LSRM-FT can use in each SRM state. In the naive approach, each guard is
+constructed directly from its formula template by setting φpi = ψip .
+
+
+                                                         10
+Constraints The constraints of LSRM-FT are adapted from the constraints of LSRM-GF in Section 4.1.
+The modified constraints are:
+             ^ ^ ^ ^            ^
+     φdet =                         dp,φ1 ,q1 ∧ dp,φ2 ,q2 ⇒ Unsat(φ1 ∧ φ2 )                   (5)
+              p∈Q q1 ∈Q q2 ∈Q φ1 ∈Ψ p φ2 ∈Ψ p ,
+                                     (p,φ1 ,q1 )
+                                         ̸=
+                                     (p,φ2 ,q2 )
+
+                  ^                ^        _                  ^ ^
+       φstate =         xe,0,q0         (       xe,t,p ) ∧ (              ¬(xe,t,p ∧ xe,t,q ))                            (6)
+                  e∈E             t∈T (e) p∈Q                  p∈Q q∈Q
+                                                                   p̸=q
+
+                   ^      ^        ^ ^ ^
+       φtrans =                                     xe,t,p ∧ dp,φ,q ∧ substitute(φ, se,t+1 ) ⇒ xe,t+1,q ∧ op,φ = re,t+1   (7)
+                  e∈E t∈T ∗ (e) p∈Q φ∈Ψ p q∈Q
+
+                  ^      ^        _ _ _
+       φused =                                     xe,t,p ∧ dp,φ,q ∧ substitute(φ, se,t+1 ).                              (8)
+                  e∈E t∈T ∗ (e) p∈Q φ∈Ψ p q∈Q
+
+    There are two differences in the constraints. First, we replace each Ψ with Ψ p because LSRM-FT uses a
+separate formula set per SRM state. And second, we cannot precalculate se,t+1 |= φ. Instead, we use the
+function substitute that performs substitution of the variables x ∈ Var through the observed environment state
+se,t+1 . However, one challenge remains. In Section 4.1, we described that we can precalculate Unsat(φ1 ∧ φ2 ),
+and thus, eliminate a large part of the work for the SMT solver. However, this approach will not work for
+LSRM-FT. The formulas φ1 and φ2 are now formula templates and LSRM-FT should infer values for these
+templates. So, we cannot precalculate the unsatisfiability anymore. The naive approach would be to add a
+universal quantifier. Instead of Unsat(φ1 ∧ φ2 ), it would use ∀s ∈ S. ¬(substitute(φ1 , s) ∧ substitute(φ2 , s)).
+However, this would lead to a major degeneration in the performance of the SMT solver.
+    To overcome this performance issue, we propose another approach to guarantee determinism without
+introducing quantifiers. As a result, our version retains the quantifier freedom. Currently, each guard formula
+φpi ∈ Ψ p of an SRM state p is defined by its formula template ψip ∈ Γ p . So, φpi = ψip applies. However, as we
+mentioned, it is possible that two guard formulas φp1 , φp2 ∈ Ψ p are satisfiable at the same time (φp1 ∧ φp2 is
+satisfiable). Hence, we have to adjust the guard formulas that we can guarantee that two of them are not
+satisfiable at the same time. We reach this property by using the following mechanism. Instead of the guard
+φpi only consists of the formula template ψip , it consists of all formula templates in Γ p . The idea is that the
+related formula template ψip should be fulfilled and all other formula templates ψjp with i ̸= j are not fulfilled.
+Consequently, the guard formula φpi ∈ Ψ p is defined by
+                                                          ^
+                                               φpi = ψip       ¬ψjp .
+                                                                      ψjp ∈Ψ p
+                                                                        i̸=j
+
+This definition always guarantees determinism. Let us take any two guard formulas φp1 , φp2 ∈ Ψ p with φp1 ̸= φp2 .
+To fulfill φp1 , ψ1p has to be fulfilled. However, ψ1p appears in negated form in φp2 . As a result, φp2 cannot be
+fulfilled. This also applies vice versa and for each guard formula pair and for each SRM state. The remaining
+part is to force that there are no two outgoing transitions that uses the same guard because it would be non
+deterministic otherwise. Therefore, we rewrite the determinism constraint φdet to
+                                            ^ ^ ^ ^
+                                    φdet =                    ¬(dp,φ,q1 ∧ dp,φ,q2 ).
+                                                  p∈Q q1 ∈Q q2 ∈Q φ∈Ψ p
+                                                            q1 ̸=q2
+
+Consequently, the determinism property of the SRM is always guaranteed. The global formula φSRM remains
+as before:
+                                 φSRM = φdet ∧ φstate ∧ φtrans ∧ φused .
+
+
+                                                                      11
+Generate SRM from Model LSRM-FT can generate a consistent SRM from a given model for the global
+formula φSRM . First, it sets the inferred variables for the formula templates Γ p for each SRM state p. The
+remaining procedure is similar as the procedure described in Section 4.1 for LSRM-GF. The only difference is
+that we replace every Ψ with a Ψ p because LSRM-FT relies on a formula set per SRM state.
+
+4.3    LSRM Convergence
+In this section, we analyze the convergence properties of our two LSRM methods. Therefore, we analyse
+two convergence properties for each method in the following. First, whether LSRM almost surely learns an
+equivalent SRM, and second, whether LSRM learns an optimal policy. We say that two SRMs C1 and C2 are
+almost surely equivalent for an MDP M , noted with C1 ≃ C2 , if for all trajectories τ with a non negative
+probability to occur, the generated reward-sequences C1 (τ ) and C2 (τ ) are equal. In particular, the probability
+of the set of all trajectories with C1 (τ ) ̸= C2 (τ ) is zero.
+    The first result is that all our methods which rely on DQSRM do not converge to an optimal policy. The
+underlying method is based on all three elements (function approximation, bootstrapping, and off-policy
+training) of the deadly triad [13].
+
+Convergence of LSRM with Given Formulas In the following, we describe the convergence properties
+of LSRM-GF. Therefore, first, we show that the learned SRM is almost surely equivalent to the one used in
+the environment. Afterwards, we argue that LSRM converges to an optimal policy.
+
+Theorem 2 (LSRM-GF convergence to equivalent SRM). LSRM with given formulas converges to an
+almost surely equivalent SRM in the limit if all state-sequences are observed infinitely often and the given
+formulas are sufficient to build an equivalent SRM.
+
+Proof. We prove the theorem by contradiction. Assume that the SRM C1 used by LSRM and the SRM C2
+used in the environment are not almost surely equivalent, and let trajectory τ be the evidence for that. This
+means that C1 (τ ) ̸= C2 (τ ), and the probability of observing τ is greater than zero. The RL setup guarantees
+that such a trajectory τ will be observed in the limit. Furthermore, let w.l.o.g. epoch m be the first epoch in
+which τ occurs. At this point, LSRM stops the learning process and adds τ to the set of counterexamples
+E. Subsequently, LSRM infers a new SRM that is consistent with all counterexamples and therefore is also
+consistent with τ . Hence, from episode m + 1 onward, the SRM is consistent for τ with the SRM used in the
+environment. As a result, the SRM inferred by LSRM is almost surely equivalent to the SRM used in the
+environment in the limit.
+    The remaining part to show is that LSRM-GF guarantees to generate a consistent SRM from the
+counterexamples E. Therefore, we must show that if a consistent SRM exists, then there also exists a model
+for the formula φSRM and vice versa. We start by proving the forward implication. This means that a
+consistent SRM C = (L, Q, q0 , δ, σ) is given and we have to show that φSRM = φdet ∧ φstate ∧ φtrans ∧ φused
+is satisfiable by constructing a model for it. Since the formula is a conjunction of multiple subformulas, it is
+sufficient to show that all subformulas are fulfilled by a model.
+    First, we consider subformula φdet and show its satisfiability. We set all variables dp,φ,q to true if
+(p, φ, q) ∈ δ and to false otherwise. These assignments also guarantee that all dp,φ,q are set. Since the SRM is
+deterministic, it holds that if there exist two distinct transitions (p, φ1 , q1 ), (p, φ2 , q2 ) ∈ δ, then φ1 and φ2 are
+not satisfiable at the same time. This also means that if any two different dp,φ1 ,q1 , dp,φ2 ,q2 variables are set to
+true, then the conjunction of φ1 and φ2 is unsatisfiable. This results in the formula φdet evaluating to true in
+the case that two dp,φ,q variables are true. Furthermore, if at least one of any two variables dp,φ1 ,q1 , dp,φ2 ,q2
+is false, then the premise is false and thus the implication is true. This results in the property that φdet
+evaluates to true in all cases.
+    The second subformula is φstate . To show that φstate is satisfiable, let us pick an arbitrary counterexample
+e ∈ E. In addition, let n denote the length of the state-sequence of the counterexample. As we described in
+Section 3, the run of the SRM C induces a sequence of SRM states q0 , ..., qn . We set xe,t,p to true if p = qt
+and to false otherwise. Since q0 is always the first SRM state, as it is the initial state of the SRM, the first
+
+
+                                                           12
+part of the formula φstate is true. Furthermore, the SRM is in every timestep exactly in one SRM state.
+At timestep t, the SRM is in state qt . This also means that for each t, we set only one variable xe,t,p for
+counterexample e to true and for all other SRM states to false. Consequently, the second part of the formula,
+which describes that only one xe,t,p can be true at each timestep for a counterexample, evaluates to true
+under the assignments we made. We make these assignments for each counterexample and thus the complete
+formula φstate evaluates to true.
+     The remaining subformulas are φtrans and φused . We already set all variables dp,φ,q and xe,t,p . They are
+fixed and cannot be changed in our proof anymore. We consider any counterexample e ∈ E again. This
+counterexample consists of a state-sequence s0 , ..., sn and a reward sequence r1 , ..., rn . The run of the SRM C
+induces a sequence of SRM states q0 , ..., qn again. First, we show that for each timestep t, φused is true. The
+SRM is in state qt in timestep t. In φstate , we set the variable xe,t,qt to true. Furthermore, the SRM transitions
+to state qt+1 by using a transition with a guard φt and the observed state se,t+1 , which is the input of the
+SRM, fulfills this guard. We set in φdet all dp,φ,q to true if and only if the SRM has a transition from state p
+to state q with guard φ. This means that for the current timestep t, we set the variable dqt ,φt ,qt+1 to true in
+φdet . In addition, the observed state se,t+1 fulfills the guard. Hence, se,t+1 |= φt also holds. Consequently,
+φused entirely evaluates to true.
+     To prove that φtrans evaluates to true, the remaining part to show is that only one premise is true and for
+the true premise, the conclusion is correct. We already argued that for each counterexample e and timestep t,
+the SRM is in exactly one SRM state qt . This means that for all other states the premise is wrong because
+for all other states, we set the variable xe,t,p to false. In addition, the SRM is deterministic. This means that
+there is only one outgoing transition that is fulfilled by the observed state. So, either we set the variable dp,φ,q
+to false in φdet or the observed state se,t+1 is not a model of φ and thus se,t+1 |= φ evaluates to false. As a
+result, there is exactly one premise in φtrans that is true for each counterexample e and timestep t. For this
+valid premise, we have to prove that the conclusion is correct. The SRM is for counterexample e and timestep
+t in state qt . In addition, the SRM used the transition (qt , φt , qt+1 ) and thus the observed state se,t+1 fulfills
+φt . Moreover, the SRM outputs the reward re,t . Consequently, the SRM is in state qt+1 in timestep t + 1. We
+set the variable xe,t+1,qt+1 to true in φstate . The remaining part to show is that oqt ,φt = re,t+1 evaluates to
+true. We know that the SRM always outputs for the transition it took the same reward that is the observed
+reward re,t+1 . Thus, we can set variable oqt ,φt to the reward re,t+1 and thus the complete conclusion evaluates
+to true. We never try to set oqt ,φt to two different values because then the SRM has to output two different
+values for the same SRM state and guard. This is not possible because one formula can only be used one time
+in an SRM state as a guard. Otherwise, the SRM is not deterministic anymore. As a result, the complete
+formula φtrans evaluates to true for our assignments.
+     The remaining variables, which are only variables op,φ , can be set to zero in order to obtain a complete
+model where every variable has an assigned value. Since all subformulas are fulfilled by our constructed model,
+the global formula φSRM evaluates to true. This shows that whenever a consistent SRM exists, there also
+exists a model satisfying φSRM .
+     Next, we show that if there exists a model m of the formula φSRM , then there exists a consistent SRM.
+We have to show the following four properties:
+
+ 1. SRM is deterministic;
+ 2. SRM always starts in q0 ;
+ 3. SRM is consistent with all e ∈ E; and
+ 4. SRM is complete: This is directly given by the argumentation of the post-processing step in Section 4.1.
+
+The SRM is constructed as described in Section 4.1.
+    First, we start to show that the constructed SRM is deterministic. We only add transitions (p, φ, q) to
+δ if dp,φ,q is set to true. Since φdet evaluates to true, the conjunction of the guards of any two outgoing
+transitions in an SRM state is unsatisfiable. Thus, the generated SRM is always deterministic.
+    The second property that we have to prove is that the SRM always starts in the initial state q0 . In the
+model m, every variable xe,0,q0 is set to true. According our construction of an SRM, we set this state to the
+initial state of the SRM, and thus, the SRM always starts in the initial state.
+
+
+                                                         13
+    The most important property to prove is the third one, which claims that the SRM is consistent with all
+counterexamples. Let us pick any counterexample e ∈ E that consists of the state-sequence s0 , ..., sn and the
+reward-sequence r1 , ..., rn . Next, we have to show that the SRM is consistent with this counterexample. The
+formula φstate guarantees that the SRM is always in exactly one SRM state at every timestep t and that the
+first SRM state is the initial state. It is important that the generated SRM always transitions to the next
+correct state that is specified with the variable xe,t,p and that the SRM outputs the observed return. Let us
+assume that the SRM is in state p after processing the counterexamples e trough the t-th observation. We
+have to show that the SRM transitions to the next state that is indicated as the variable xe,t+1,q is set to
+true in the model. The formula φused guarantees that there is a variable dp,φ,q set to true and the observed
+state fulfills the guard φ. As our construction, we add a transition (p, φ, q) to δ. Since we already showed that
+the SRM is deterministic, the SRM has exactly one transition that it can take. Furthermore, the next SRM
+state is q, which corresponds to the variable xe,t+1,q is set to true in the model. The last thing to check is
+whether the SRM outputs the correct reward re,t+1 . The formula φtrans guarantees that the model variable
+op,φ is set to re,t+1 . In the construction of the SRM, the output function σ is defined by σ(p, φ) = op,φ for all
+p ∈ Q and φ ∈ Ψ . Consequently, the SRM outputs the correct reward re,t+1 . As a result, if there exists a
+model m of the formula φSRM , then there exists a consistent SRM.
+    We showed that whenever a consistent SRM exists, there also exists a model satisfying φSRM , and
+whenever a model m of the formula φSRM exists, then there exists a consistent SRM. Consequently, LSRM-
+GF guarantees to generate a consistent SRM from the counterexamples E.                                          ⊔
+                                                                                                                ⊓
+Corollary 1 (LSRM-GF convergence to optimal policy). LSRM with given formulas converges to an
+optimal policy in the limit for finite state spaces with the same conditions as QSRM (see Theorem 1) and
+LSRM-GF converges to an equivalent SRM.
+Proof. We prove above that LSRM with given formulas converges to an almost surely equivalent SRM. The
+convergence of QSRM then guarantees that LSRM-GF also converges to an optimal policy in the limit.
+
+Convergence of LSRM with Formula Templates The natural question is whether LSRM-FT has the
+same convergence properties as LSRM-GF. In the following, we argue that this is the case.
+Theorem 3 (LSRM-FT convergence to equivalent SRM). LSRM with formula templates converges
+to an almost surely equivalent SRM in the limit if all state-sequences are observed infinitely often and the
+formula templates used are capable of expressing the formulas that are used as guards at the transitions of the
+underlying SRM in the environment.
+Proof. The proof is adapted from Theorem 2. Only the SRM-inferring process is different. However, both
+SRM-inferring processes generate a new SRM that is consistent with the counterexamples. The proof that
+LSRM-FT generates a consistent SRM from the counterexamples E is analogous to the proof for LSRM-GF.
+The difference is that for LSRM-FT the determinism of different guards is given through the construction of
+them and it is only necessary to check that a guard is not used for two outgoing transitions in one SRM state.
+Furthermore, each Ψ has to be replaced by an Ψ p . As a result, LSRM with formula templates converges to an
+almost surely equivalent SRM.
+Corollary 2 (LSRM-FT convergence to optimal policy). LSRM with formula templates converges to
+an optimal policy in the limit for finite state spaces with the same conditions as QSRM (see Theorem 1) and
+LSRM-FT converges to an equivalent SRM.
+Proof. We prove above that LSRM with formula templates converges to an almost surely equivalent SRM.
+The convergence of QSRM then guarantees that LSRM-FT also converges to an optimal policy in the limit.
+
+
+5   Experimental Results
+To demonstrate the effectiveness of our methods, we implemented a prototype in Python using PyTorch
+[11] for training the neural networks. We evaluate the methods in discrete (finite) and continuous (infinite)
+
+
+                                                       14
+environments. The SMT solver used is Z3 [10], and the experiments were carried out on an Intel Core
+i9-13900K and an NVIDIA RTX A6000.
+
+
+Environments and Tasks Here, we describe the environments and tasks that we use to evaluate the
+methods. We evaluate the methods in two types of environments.
+    The first environment type is the discrete and continuous Office World. We perform two tasks on both
+variants of the Office World environment. The first task is the example task that we introduced in Section 2.
+The RM and SRM for the task are visualized in Figure 2. We refer to the task as ‘post_inner_offices’. The
+second task is named ‘diagonal_run’. The goal of the task is that the robot navigates from the initial state
+to the upper right corner (label C), then to the upper left corner (label D), and finally to the bottom right
+corner (label B). The RM and SRM for this task are visualized in Figure 3.
+
+
+
+
+                      (a) RM                                            (b) SRM
+
+Figure 3: RM and SRM of task diagonal_run for the Office World. Self-loops in the RM with zero rewards
+are omitted.
+
+
+    We also evaluate our methods that are developed for infinite MDPs in a second environment. We use a
+modified version of the Mountain Car environment, which is a widely-used environment in the RL community
+and implemented in the popular Gymnasium library [15]. The first version of the Mountain Car environment
+was defined by Moore [9]. We take the implementation of the Mountain Car environment of the Gymnasium
+library4 and modify it. Figure 4 illustrates the difference between the original variant and our variant of the
+environment. We shift the x-axis to have a left and a right mountain peak, as opposed to a single incline to
+the right in the original. The selected action is used for four timesteps in our version. We denote the task for
+the Mountain Car environment as ‘rml’. The name ‘rml’ refers to ‘right-middle-left’. The task is defined as
+follows. First, the car has to be navigated onto the right mountain. Afterwards, it has to be navigated back to
+the start region between the mountains. Thereby, it is required that the velocity is back to near zero. Finally,
+the car has to be navigated onto the left mountain. We use this environment exclusively to evaluate our novel
+methods for infinite MDPs. Hence, we only define an SRM version of this task that is visualized in Figure 5.
+
+
+Metric To evaluate the methods, we compute a metric that we call ‘mean10 performance value’. Every
+5,000 steps (for Q-Learning, QRM, QSRM, LSRM methods for finite environments) or every 10,000 steps (for
+DQN [7] (with a frame stack of 100 states), DQRM, DQSRM, LSRM methods for infinite environments), we
+pause the learning process and execute the current policy as a greedy policy 20 times in a newly initialized
+environment, where each run is limited to a maximum of 500 steps. The mean reward obtained across these
+20 runs is denoted as the ‘performance value’. The ‘mean10 performance value’ is defined as the mean of the
+4
+    https://gymnasium.farama.org/environments/classic_control/mountain_car_continuous/
+
+
+                                                      15
+                  Figure 4: Original Mountain Car environment (left) and our version (right).
+
+
+
+
+                        Figure 5: SRM for task ‘rml’ for our Mountain Car environment.
+
+
+  last 10 performance values, normalized to the range [0, 1] with respect to the maximal achievable reward of
+  the task. We use this metric for the following reasons:
+
+   1. It provides an intuitive view of the progress during training since we compute it periodically.
+   2. It directly refers to the performance and effectiveness of the returned policy because it is not affected by
+      the exploration parameter ϵ.
+   3. Averaging 20 runs and using a sliding window smooths the metric value and detaches the value from
+      outliers or stuck runs.
+   4. Scaling between 0 and 1 improves interpretability by bounding the metric and making relative performance
+      comparisons more intuitive.
+
+
+  Research Questions We summarize the research questions for the evaluation in the following:
+
+RQ1: How do our methods perform in comparison to the baseline methods Q-Learning and DQN (with a frame
+     stack of 100 states for DQN)?
+RQ2: How does (D)QSRM perform in comparison to (D)QRM? We expect that the methods for SRMs perform
+     exactly the same as the methods for RMs. The reason for that is that QSRM can be seen as a more
+     intuitive QRM method in the case where the agent has access to the RM and SRM. The reason for that is
+     if we substitute each formula with a label and add a labeling function into the environment that exactly
+     maps the values regarding to the formulas, we get the setup of QRM. Accordingly, QRM and QSRM
+     have to generate exactly the same results if we use the same random seeds.
+RQ3: LSRM learns policies end-to-end. The obvious question is whether our LSRM methods learn an optimal
+     policy.
+RQ4: LSRM learns the SRM in the learning process, too. Here, the main question is: Does LSRM learn an
+     almost surely equivalent SRM? If this is not the case, the follow up question is: Is the learned SRM close
+     enough to the one used to get good performance values?
+
+
+                                                        16
+5.1   Results of methods with access to RM/SRM
+
+In this section, we focus on the methods that have direct access to the RM or SRM. Thus, we look at
+(D)QRM, (D)QSRM, and for comparison at the baseline methods Q-Learning and DQN (with a frame stack
+of 100 states for DQN). These methods relate to RQ1 and RQ2. Figure 6 shows the results for the different
+methods. The figure provides the required information and results to evaluate and compare our methods with
+the baseline and existing ones.
+    The baseline methods, Q-Learning and DQN (with a frame stack of 100 states), perform worse. Q-Learning
+has no information about the state history. Thus, it cannot learn non-Markovian reward functions, which
+results in low mean10 performance values. Interestingly, DQN with a frame stack also performs worse in the
+example tasks, even though it has access to the last 100 states, which should be sufficient to cover all required
+steps for the tasks in the frame stack. If we increase the frame stack further, it becomes increasingly challenging
+to train the network. In addition, we never know how large the frame stack needs to be. As a result, both
+baseline methods perform worse on the example tasks. The methods based on RMs and SRMs train effective
+policies and obtain good mean10 performance values. As a result of this comparison, we can say that our new
+methods (D)QSRM and the existing methods (D)QRM outperform the baseline methods. Furthermore, QRM
+and QSRM converge to the optimal mean10 performance value 1. This observation also matches with the
+convergence properties of QRM [5] and QSRM (Theorem 1). The second observation for QRM and QSRM is
+that they perform exactly the same. This is a result that we expected in RQ2. Furthermore, it demonstrates
+that our new QSRM method can also train effective policies in the non-Markovian setting.
+    The result regarding performance also applies to the DQRM and DQSRM methods for infinite state
+spaces. As expected, both methods yield identical mean10 performance values when initialized with the same
+random seed. We note that neither DQRM nor DQSRM reach optimal mean10 performance values. Thus,
+their policies are not optimal. However, we expected this behaviour because both methods rely on DQN.
+Nevertheless, they still achieve good performance values.
+    Overall, it can be seen that our new methods (D)QSRM provide the ability to train effective policies
+and obtain good performance values and at the same time have fewer restrictions than (D)QRM as they
+respect the standard MDP definition and do not need a labeling function. In addition, like (D)QRM, they
+outperform the baseline methods.
+
+
+5.2   Results of LSRM
+
+In this section, we evaluate our novel LSRM methods that can infer the SRM during the learning process,
+and thus, provide the ability to learn policies for MDPs with non-Markovian reward functions end-to-end. In
+particular, we consider RQ3 and RQ4: whether the LSRM methods learn an optimal policy, and whether the
+inferred SRM is almost surely equivalent to the one used in the environment. If they are not almost surely
+equivalent, we check whether the learned SRM is close enough to the one used to obtain good performance
+values.
+    Figure 7 shows the mean10 performance values for all of our LSRM methods. The result plots demonstrate
+the performance and effectiveness of them. We can observe similar results as for the methods with access to
+the SRM. LSRM converges in both variants, LSRM-GF and LSRM-FT, for the tasks in the finite environment
+to the optimal mean10 performance values. Furthermore, LSRM reaches good but not optimal performance
+values in the infinite environments. Regarding RQ3, we can claim that LSRM learns an optimal policy in the
+finite setting but not in the infinite setting. Nevertheless, LSRM learns a very good policy in the infinite
+setting. These results also match the convergence properties of LSRM from Section 4.3.
+    RQ4, which addresses whether LSRM learns an almost surely equivalent SRM, is still not answered. So
+far, we observe that the agent trained by LSRM reaches optimal performance values in the finite setting and
+good performance values in the infinite setting. LSRM must have learned an SRM that is close enough to the
+one used because it would not reach these performance values if it had learned an SRM that was far from the
+true one. However, the natural question is how do the inferred SRMs look in comparison to the SRMs that
+are used in the environment? This is a crucial question because LSRM provides the SRM to the user, and
+thus, interesting information about the reward structure. This gives the user the ability to make decisions
+
+
+                                                        17
+              Q-Learning                                      QRM                                        QSRM
+
+ 1.00                                            1.00                                       1.00
+ 0.75                                            0.75                                       0.75
+ 0.50                                            0.50                                       0.50
+ 0.25                                            0.25                                       0.25
+ 0.00                                            0.00                                       0.00
+          2       4       6          8                  15    30     45        60                  15     30    45        60
+                                         ×106                                       ×103                                       ×103
+ 1.00                                            1.00                                       1.00
+ 0.75                                            0.75                                       0.75
+ 0.50                                            0.50                                       0.50
+ 0.25                                            0.25                                       0.25
+ 0.00                                            0.00                                       0.00
+          2       4       6          8                   20     40        60        80 3            20     40        60        80 3
+                                         ×106                                       ×10                                        ×10
+                  DQN                                         DQRM                                       DQSRM
+
+ 1.00                                            1.00                                       1.00
+ 0.75                                            0.75                                       0.75
+ 0.50                                            0.50                                       0.50
+ 0.25                                            0.25                                       0.25
+ 0.00                                            0.00                                       0.00
+              4       8        12         16            50    100    150       200 3               50    100    150       200 3
+                                         ×106                                     ×10                                        ×10
+ 1.00                                            1.00                                       1.00
+ 0.75                                            0.75                                       0.75
+ 0.50                                            0.50                                       0.50
+ 0.25                                            0.25                                       0.25
+ 0.00                                            0.00                                       0.00
+              4       8         12          16          60    120     180           240 3          60     120    180           240 3
+                                         ×106                                        ×10                                        ×10
+ 1.00                                                                                       1.00
+ 0.75                                                                                       0.75
+ 0.50                                                                                       0.50
+ 0.25                                                                                       0.25
+ 0.00                                                                                       0.00
+          0.5      1.0        1.5         2.0                                                      50     100    150       200 3
+                                         ×106                                                                                ×10
+Figure 6: Mean10 performance values for the tasks post_inner_offices and diagonal_run in the discrete Office
+World (Rows 1-2), and for the tasks post_inner_offices, diagonal_run, and rml in the infinite environments
+(Rows 3-5).
+
+
+                                                               18
+        post_inner_offices                              diagonal_run
+
+ 1.00                                           1.00
+ 0.75                                           0.75
+ 0.50                                           0.50
+ 0.25                                           0.25
+ 0.00                                           0.00
+         40    80     120         160 3                50     100     150     200 3
+                                     ×10                                      ×10
+ 1.00                                           1.00
+ 0.75                                           0.75
+ 0.50                                           0.50
+ 0.25                                           0.25
+ 0.00                                           0.00
+          60   120     180          240 3              60    120    180     240
+                                      ×10                                         ×103
+        post_inner_offices                              diagonal_run                                  rml
+
+ 1.00                                           1.00                                     1.00
+ 0.75                                           0.75                                     0.75
+ 0.50                                           0.50                                     0.50
+ 0.25                                           0.25                                     0.25
+ 0.00                                           0.00                                     0.00
+         250    500         750         10003          250    500     750     10003             200    400         600      800
+                                        ×10                                   ×10                                         ×103
+ 1.00                                           1.00                                     1.00
+ 0.75                                           0.75                                     0.75
+ 0.50                                           0.50                                     0.50
+ 0.25                                           0.25                                     0.25
+ 0.00                                           0.00                                     0.00
+         0.6   1.2    1.8         2.4     3.0          0.6   1.2     1.8     2.4 6              0.4   0.8    1.2         1.6 6
+                                        ×106                                   ×10                                         ×10
+Figure 7: LSRM mean10 performance values: Finite state space environment in the upper half and infinite
+state space environments in the lower half. The results for LSRM-GF are in the first row and for LSRM-FT
+in the second row.
+
+
+
+
+                                                              19
+or conclusions about the environment. The figures 8, 9, and 10 show the SRMs that are learned by LSRM
+for the task post_inner_offices. Note that only the SRMs for the task post_inner_offices are compared,
+since the observations for the other tasks are the same. The SRM that is used in the environment for the
+experiment, and thus, is the SRM to compare the learned SRMs by LSRM with, is the SRM in Figure 2b.
+For simplicity, we name it SRM-Real in the following. First, we compare the SRMs that are generated by
+LSRM-GF. Afterwards, we discuss and analyze the SRMs that are generated by LSRM-FT.
+
+
+SRMs by LSRM-GF First, we compare the SRMs that LSRM-GF learned. They are visualized in Figure
+10. For simplicity, we name the learned SRM in the finite environment SRM-GF-Fin and in the infinite
+environment SRM-GF-Inf. We can observe that
+ 1. SRM-GF-Fin is not equal to SRM-Real. They differ in the aspect that SRM-GF-Fin has one state less
+    and the transition with the output 10 is a self-loop in state 2 instead of a new state with a self-loop that
+    always outputs 0 as in SRM-Real. Nevertheless, they are almost surely equivalent. All episodes end if the
+    goal is reached and a reward of 10 is observed. This means that all episodes end after the SRM uses the
+    transition with the output value of 10. Consequently, SRM-GF-Fin and SRM-Real are equivalent on all
+    attainable trajectories, and thus, they are almost surely equivalent.
+ 2. The results and arguments of the previous point 1 also apply in the comparison of SRM-GF-Inf and
+    SRM-Real. The difference is that the names of states 1 and 2 are swapped, and the transition that
+    outputs a reward of 10 goes back to state 2. Nevertheless, this difference does not change the result that
+    SRM-GF-Inf and SRM-Real are not equal but they are almost surely equivalent.
+
+SRMs by LSRM-FT Here, we compare the SRMs that LSRM-FT learned. The SRMs are visualized in
+Figure 8 (finite environment) and Figure 9 (infinite environment). For simplicity, we name the learned SRM
+in the finite environment SRM-FT-Fin and in the infinite environment SRM-FT-Inf. We can observe that
+SRM-FT-Fin and SRM-FT-Inf are both not equal to SRM-Real. The remaining question is whether they are
+almost surely equivalent. Here, we distinguish between the comparison to SRM-FT-Fin and SRM-FT-Inf and
+can observe that
+
+ 1. the formulas that are used as guards differ between SRM-Real and SRM-FT-Fin. However, the only
+    reason for this behaviour is that LSRM-FT uses real values for the values in the formula templates and
+    LSRM-FT can only observe discrete positions in the finite environment. So, the formulas are equivalent if
+    we only consider discrete positions. The additional transitions introduced by the post-processing step
+    in Section 4.1 only cover non-discrete positions. In a discrete setting, they remain unused and exist
+    only because the completeness check is performed over the full space R. As a result, SRM-Real and
+    SRM-FT-Fin are almost surely equivalent according to the definition in Section 4.3.
+ 2. SRM-Real and SRM-FT-Inf are not almost surely equivalent. Let us consider the transition from state
+    0 to state 1 and the self-loop from state 0. SRM-Real and SRM-FT-Inf output a different reward for
+    X = {(x, y)|(x ∈ (4.99994980, 5) ∨ x ∈ (6, 6.00046406)) ∧ (y ∈ (5, 5.00200890) ∨ y ∈ (6, 6.00000048))}. The
+    probability of a trajectory τ that includes a observation of X in the state-sequence and the SRM is in
+    SRM state 0 is greater than 0. Consequently, τ is a counterexample to the claim that SRM-Real and
+    SRM-FT-Inf are almost surely equivalent, as the rewards generated by SRM-Real and SRM-FT-Inf differ.
+    However, this observation does not break the convergence properties described in Section 4.3 because
+    we only run LSRM-FT for a finite number of epochs, while our convergence result holds in the limit.
+    However, SRM-FT-Inf is similar to SRM-Real if we compare the structure, transitions and guards. As a
+    result, LSRM can train effective policies without an almost surely equivalent SRM.
+
+    Overall, we observe two key points in the evaluation of both LSRM versions. First, our LSRM versions can
+infer in almost all cases almost surely equivalent SRMs in comparison to the SRMs used in the environments.
+And second, both LSRM versions can learn effective policies that yield good mean10 performance values.
+
+
+
+
+                                                      20
+¬(
+     (¬¬(x ≥ 4.5 ∧ x < 5.5 ∧ y ≥ 4.5 ∧ y < 6) ∧
+                                                               ¬(x ≥ 4.5 ∧ x < 6.5 ∧ y ≥ 4.5 ∧ y < 6) ∧
+     ¬(¬(x ≥ 4.5 ∧ x < 6.5 ∧ y ≥ 4.5 ∧ y < 6))¬¬)
+                                                               ¬(x ≥ 4.5 ∧ x < 5.5 ∧ y ≥ 4.5 ∧ y < 6) / 0
+                        ∨
+                                                     0
+     (¬¬(x ≥ 4.5 ∧ x < 6.5 ∧ y ≥ 4.5 ∧ y < 6) ∧
+     (¬¬(x ≥ 4.5 ∧ x < 5.5 ∧ y ≥ 4.5 ∧ y < 6))¬¬)
+                                                                               ¬(¬(x ≥ 4.5 ∧ x < 5.5 ∧ y ≥ 4.5 ∧ y < 6) ∧
+¬) / 0
+                                                                               ¬(¬(x ≥ 4.5 ∧ x < 6.5 ∧ y ≥ 4.5 ∧ y < 6)) / 1
+                 ¬(¬(x ≥ 0 ∧ x < 1 ∧ y ≥ 0 ∧ y < 1 ∧
+                 ¬(¬(x ≥ 0 ∧ x < 1 ∧ y ≥ 0 ∧ y < 1)) / 10                                                        ¬(x ≥ 8.5 ∧ x < 9.5 ∧ y ≥ 4.5 ∧ y < 6) ∧
+                                                                                                                 ¬(x ≥ 8.5 ∧ x < 10. ∧ y ≥ 4.5 ∧ y < 6) / 0
+                                                     1                                                  2
+         ¬(¬(x ≥ 0 ∧ x < 1 ∧ y ≥ 0 ∧ y < 1) ∧                                                               ¬(
+         ¬(¬(x ≥ 0 ∧ x < 1 ∧ y ≥ 0 ∧ y < 1)) / 0         ¬(¬(x ≥ 8.5 ∧ x < 10..∧ y ≥ 4.5 ∧ y < 6 ∧
+                                                                                                                 (¬¬(x ≥ 8.5 ∧ x < 9.5 ∧ y ≥ 4.5 ∧ y < 6) ∧
+                                                         ¬(¬(x ≥ 8.5 ∧ x < 9.5 ∧ y ≥ 4.5 ∧ y < 6) / 2
+                                                                                                                 (¬¬(x ≥ 8.5 ∧ x < 10. ∧ y ≥ 4.5 ∧ y < 6))¬¬)
+                                                                                                                                    ∨
+                                                                                                                 (¬¬(x ≥ 8.5 ∧ x < 10. ∧ y ≥ 4.5 ∧ y < 6) ∧
+                                                                                                                 ¬(¬(x ≥ 8.5 ∧ x < 9.5 ∧ y ≥ 4.5 ∧ y < 6))¬¬)
+                                                                                                            ¬) / 0
+
+
+        Figure 8: Learned SRM by LSRM-FT for task post_inner_offices in the discrete Office World.
+
+
+
+
+                               ¬(x ≥ 4.99 ∧ x < 6.01) ∧
+                               ¬(y ≥ 5.01 ∧ y < 6.01) ∧
+                                                                     0                 ¬(¬(x ≥ 4.99 ∧ x < 6.01) ∧
+                               ¬(x ≥ 4.99 ∧ x < 6.01) ∧
+                                                                                       ¬(¬(y ≥ 5.01 ∧ y < 6.01) ∧
+                               ¬(y ≥ 5.01 ∧ y < 6.01) / 0
+                                                                                       ¬(¬(x ≥ 4.99 ∧ x < 6.01) ∧
+                                                                                       ¬(¬(y ≥ 5.01 ∧ y < 6.01)) / 1
+
+                           ¬(¬(x ≥ 0 ∧ x < 0.99 ∧ y ≥ 0 ∧ y < 0.99 ∧                                                        ¬(x ≥ 8.99 ∧ x < 9.99)1∧
+                           ¬(¬(x ≥ 0 ∧ x < 1    ∧ y ≥ 0 ∧ y < 1)) / 10                                                      ¬(y ≥ 5.01 ∧ y < 6.01)1∧
+                                                                                                                            ¬(x ≥ 8.99 ∧ x < 10.01)∧
+                                                                                                                   1        ¬(y ≥ 5.01 ∧ y < 6.01) / 0
+
+ ¬(x ≥ 0 ∧ x < 1.99 ∧ y ≥ 0 ∧ y < 1) ∧
+ ¬(x ≥ 0 ∧ x < 0.99 ∧ y ≥ 0 ∧ y < 0.99)) / 0                                                                           ¬(
+                                                                                                                            (¬¬(x ≥ 8.99 ∧ x < 10.01)∧
+                                                                         ¬(¬(x ≥ 8.99 ∧ x < 10.01) ∧                        ¬(¬(y ≥ 5.01 ∧ y < 6.01)1∧
+                                                      2                  ¬(¬(y ≥ 5.01 ∧ y < 6.01)1 ∧                        ¬(¬(x ≥ 8.99 ∧ x < 9.99)1∧
+                                                                         ¬(¬(x ≥ 8.99 ∧ x < 9.99)1 ∧                        ¬(¬(y ≥ 5.01 ∧ y < 6.01))¬¬)
+                                                                         ¬(¬(y ≥ 5.01 ∧ y < 6.01)) / 2                                 ∨
+        ¬(
+                                                                                                                            (¬¬(x ≥ 8.99 ∧ x < 9.99)1∧
+             (¬¬(x ≥ 0 ∧ x < 1.99 ∧ y ≥ 0 ∧ y < 1).99 ∧
+                                                                                                                            ¬(¬(y ≥ 5.01 ∧ y < 6.01)1∧
+             (¬¬(x ≥ 0 ∧ x < 0.99 ∧ y ≥ 0 ∧ y < 0.99))¬¬)
+                                                                                                                            ¬(¬(x ≥ 8.99 ∧ x < 10.01)∧
+                               ∨
+                                                                                                                            ¬(¬(y ≥ 5.01 ∧ y < 6.01))¬¬)
+             (¬¬(x ≥ 0 ∧ x < 0.99 ∧ y ≥ 0 ∧ y < 0.99) ∧
+                                                                                                                       ¬) / 0
+             ¬(¬(x ≥ 0 ∧ x < 1.99 ∧ y ≥ 0 ∧ y < 1)).99¬¬)
+        ¬) / 0
+
+
+
+
+Figure 9: Learned SRM by LSRM-FT for task post_inner_offices in the continuous Office World. For better
+                                                     ′
+                                           ( round that rounds the input value to two decimal places. The
+visualization, we apply our rounding function
+                                             ⌊x·100⌋
+                                                       , if ⌊x · 100⌋ mod 10 ≥ 5,
+function round′ is defined by round′ (x) = ⌈x·100⌉
+                                               100
+
+                                               100     , if ⌊x · 100⌋ mod 10 < 5.
+The learned SRM is even closer to the SRM used in the environment than the one visualized in this figure.
+
+
+
+
+                                                                             21
+                   ¬(x ≥ 5 ∧ x < 6 ∧                                                             ¬(x ≥ 5 ∧ x < 6 ∧
+                   ¬(y ≥ 5 ∧ y < 6) / 0                                                          ¬(y ≥ 5 ∧ y < 6) / 0
+
+
+                           0                                                                             0
+
+       x≥5∧x<6∧                         x≥0∧x<1∧                                     x≥5∧x<6∧                           x≥0∧x<1∧
+       y≥5∧y<6/1                        y ≥ 0 ∧ y < 1 / 10                           y≥5∧y<6/1                          y ≥ 0 ∧ y < 1 / 10
+
+
+                           1                      2                                                      2                      1
+                               x ≥ 9 ∧ x < 10 ∧                                                              x ≥ 9 ∧ x < 10 ∧
+    ¬(x ≥ 9 ∧ x < 10 ∧         y≥5∧y<6/2              ¬(x ≥ 0 ∧ x < 1 ∧           ¬(x ≥ 9 ∧ x < 10 ∧         y≥5∧y<6/2              ¬(x ≥ 0 ∧ x < 1 ∧
+    ¬(y ≥ 5 ∧ y < 6) / 0                              ¬(y ≥ 0 ∧ y < 1) / 0        ¬(y ≥ 5 ∧ y < 6) / 0                              ¬(y ≥ 0 ∧ y < 1) / 0
+
+                    (a) Discrete Office World                                                  (b) Continuous Office World
+
+Figure 10: Learned SRMs by LSRM-GF for task post_inner_offices in the discrete and continuous Office
+World.
+
+
+6    Conclusion
+
+In this paper, we introduced SRMs as a novel method to represent non-Markovian reward functions. They
+are more flexible than RMs and only require the standard MDP definition in RL. Furthermore, the formulas
+that are used as guards in the SRM are more interpretable for the user and do not require generic labels
+in the environment as opposed to RMs. Based on this novel concept we developed (D)QSRM and LSRM,
+two powerful methods which leverage the SRM structure to learn policies efficiently. In the experimental
+evaluation, we demonstrate their applicability, capability and effectiveness to yield good mean10 performance
+values. LSRM-FT provides the possibility to infer semantic information (symbolic formulas/guards) about
+the reward function automatically. Accordingly, the user receives important and useful information about the
+hidden reward function.
+
+
+Acknowledgements
+
+This work has been financially supported by the Research Center Trustworthy Data Science and Security
+(https://rc-trust.ai), one of the Research Alliance centers within the UA Ruhr (https://uaruhr.de). We also
+thank Jan Corazza and Simon Lutz for helpful discussions and suggestions.
+
+
+References
+ 1. Ardon, L., Furelos-Blanco, D., Parac, R., Russo, A.: Form: Learning expressive and transferable first-order logic
+    reward machines. In: Proceedings of the 24th International Conference on Autonomous Agents and Multiagent
+    Systems. p. 142–151. AAMAS ’25, International Foundation for Autonomous Agents and Multiagent Systems,
+    Richland, SC (2025)
+ 2. Bester, T., Rosman, B., James, S., Tasse, G.N.: Counting reward automata: Sample efficient reinforcement learning
+    through the exploitation of reward function structure. In: Neuro-Symbolic Learning and Reasoning in the era of
+    Large Language Models (2023), https://openreview.net/forum?id=XfXLM8uIxH
+ 3. Corazza, J., Gavran, I., Neider, D.: Reinforcement learning with stochastic reward machines. Proceedings of the
+    AAAI Conference on Artificial Intelligence 36(6), 6429–6436 (Jun 2022). https://doi.org/10.1609/aaai.v36i6.20594,
+    http://dx.doi.org/10.1609/aaai.v36i6.20594
+ 4. D’Antoni, L., Veanes, M.: The power of symbolic automata and transducers. In: Majumdar, R., Kunčak, V. (eds.)
+    Computer aided verification, Lecture Notes in Computer Science, vol. 10426, pp. 47–67. Springer, Cham (2017).
+    https://doi.org/10.1007/978-3-319-63387-9_3
+ 5. Icarte, R.T., Klassen, T., Valenzano, R., McIlraith, S.: Using reward machines for high-level task specification
+    and decomposition in reinforcement learning. In: Dy, J., Krause, A. (eds.) Proceedings of the 35th International
+
+
+                                                                             22
+    Conference on Machine Learning. Proceedings of Machine Learning Research, vol. 80, pp. 2107–2116. PMLR
+    (2018), https://proceedings.mlr.press/v80/icarte18a.html
+ 6. Kaelbling, L.P., Littman, M.L., Moore, A.W.: Reinforcement learning: A survey. Journal of Artificial Intelligence
+    Research 4, 237–285 (1996). https://doi.org/10.1613/jair.301
+ 7. Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A.A., Veness, J., Bellemare, M.G., Graves, A., Riedmiller, M.,
+    Fidjeland, A.K., Ostrovski, G., Petersen, S., Beattie, C., Sadik, A., Antonoglou, I., King, H., Kumaran, D.,
+    Wierstra, D., Legg, S., Hassabis, D.: Human-level control through deep reinforcement learning. Nature 518(7540),
+    529–533 (Feb 2015), http://dx.doi.org/10.1038/nature14236
+ 8. Monniaux, D.: A survey of satisfiability modulo theory. In: Gerdt, V.P., Koepf, W., Seiler, W.M., Vorozhtsov, E.V.
+    (eds.) Computer Algebra in Scientific Computing. pp. 401–425. Springer International Publishing, Cham (2016)
+ 9. Moore, A.W.: Efficient memory-based learning for robot control (1990). https://doi.org/10.48456/TR-209
+10. de Moura, L., Bjørner, N.: Z3: An efficient smt solver. In: Ramakrishnan, C.R., Rehof, J. (eds.) Tools and
+    Algorithms for the Construction and Analysis of Systems. pp. 337–340. Springer Berlin Heidelberg, Berlin,
+    Heidelberg (2008)
+11. Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., Killeen, T., Lin, Z., Gimelshein, N., Antiga,
+    L., Desmaison, A., Kopf, A., Yang, E., DeVito, Z., Raison, M., Tejani, A., Chilamkurthy, S., Steiner, B., Fang,
+    L., Bai, J., Chintala, S.: Pytorch: An imperative style, high-performance deep learning library. In: Wallach, H.,
+    Larochelle, H., Beygelzimer, A., d'Alché-Buc, F., Fox, E., Garnett, R. (eds.) Advances in Neural Information
+    Processing Systems. vol. 32. Curran Associates, Inc. (2019), https://proceedings.neurips.cc/paper_files/paper/
+    2019/file/bdbca288fee7f92f2bfa9f7012727740-Paper.pdf
+12. Puterman, M.L.: Chapter 8 markov decision processes. In: Heyman, D.P., Sobel, M.J. (eds.) Stochastic models,
+    Handbooks in Operations Research and Management Science, vol. 2, pp. 331–434. North-Holland, Amsterdam
+    and New York and New York, NY, U.S.A (1990). https://doi.org/10.1016/S0927-0507(05)80172-0
+13. Sutton, R.S., Barto, A.: Reinforcement learning: An introduction. Adaptive computation and machine learning,
+    The MIT Press, Cambridge, Massachusetts and London, England, second edition edn. (2020)
+14. Toro Icarte, R., Klassen, T.Q., Valenzano, R., McIlraith, S.A.: Reward machines: Exploiting reward function
+    structure in reinforcement learning. J. Artif. Int. Res. 73 (May 2022). https://doi.org/10.1613/jair.1.12440,
+    https://doi.org/10.1613/jair.1.12440
+15. Towers, M., Kwiatkowski, A., Balis, J.U., Cola, G.D., Deleu, T., Goulão, M., Andreas, K., Krimmel, M., KG, A.,
+    Perez-Vicente, R.D.L., Terry, J.K., Pierré, A., Schulhoff, S.V., Tai, J.J., Tan, H., Younis, O.G.: Gymnasium: A
+    standard interface for reinforcement learning environments. In: The Thirty-ninth Annual Conference on Neural
+    Information Processing Systems Datasets and Benchmarks Track (2025), https://openreview.net/forum?id=
+    qPMLvJxtPK
+16. Varricchione, G., Klassen, T.Q., Alechina, N., Dastani, M., Logan, B., McIlraith, S.A.: Pushdown Reward
+    Machines for Reinforcement Learning. In: Proceedings of the 22nd International Conference on Principles of
+    Knowledge Representation and Reasoning. pp. 566–576 (10 2025). https://doi.org/10.24963/kr.2025/55, https:
+    //doi.org/10.24963/kr.2025/55
+17. Veanes, M.: Applications of symbolic finite automata. In: Konstantinidis, S. (ed.) Implementation and Application
+    of Automata. pp. 16–23. Springer Berlin Heidelberg, Berlin, Heidelberg (2013)
+18. Watkins, Christopher J. C. H., Dayan, P.: Q-learning. Machine Learning 8(3-4), 279–292 (1992). https://doi.org/
+    10.1007/BF00992698, https://link.springer.com/article/10.1007/BF00992698
+19. Xu, Z., Gavran, I., Ahmad, Y., Majumdar, R., Neider, D., Topcu, U., Wu, B.: Joint inference of reward machines
+    and policies for reinforcement learning. Proceedings of the International Conference on Automated Planning and
+    Scheduling 30(1), 590–598 (Jun 2020). https://doi.org/10.1609/icaps.v30i1.6756, https://ojs.aaai.org/index.php/
+    ICAPS/article/view/6756
+20. Zhou, W., Li, W.: A hierarchical Bayesian approach to inverse reinforcement learning with symbolic reward
+    machines. In: Chaudhuri, K., Jegelka, S., Song, L., Szepesvari, C., Niu, G., Sabato, S. (eds.) Proceedings of the
+    39th International Conference on Machine Learning. Proceedings of Machine Learning Research, vol. 162, pp.
+    27159–27178. PMLR (17–23 Jul 2022), https://proceedings.mlr.press/v162/zhou22b.html
+
+
+
+
+                                                          23
+

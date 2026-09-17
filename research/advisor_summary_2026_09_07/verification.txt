@@ -1,0 +1,18 @@
+Verification performed 2026-09-07, without replacing saved research runs.
+
+Working directory: /Users/yuhang/Downloads/why TL/tl_sequence_pilot
+Command: .venv/bin/python ../research/advisor_summary_2026_09_07/audit_saved_results.py
+Exit status: 0
+Detailed results: audit_evidence.json
+
+Working directory: /Users/yuhang/Downloads/why TL/tl_sequence_pilot/pilots/pilot_3_0_rl_structure
+Command: ../../.venv/bin/python -m pytest -q tests
+Result: 12 passed in 2.33s
+Exit status: 0
+
+Working directory: /Users/yuhang/Downloads/why TL/tl_sequence_pilot/pilots/pilot_3_1_objective_boundary
+Command: ../../.venv/bin/python -m pytest -q tests
+Result: 12 passed in 0.09s
+Exit status: 0
+
+The timings above are test-run durations, not research training performance.

@@ -1,0 +1,214 @@
+{
+  "rows": 9600,
+  "paired_bundles": 1200,
+  "gzip_sha256": "f701dc69e2c24c5626957f2524ef7c0b40ca8adbfcd1b912b8f3e4cac25d283a",
+  "raw_sha256": "1b6b88ace392d022099ee6a17fb56a720b2eb772f3965e479f5c0afdc44bec8b",
+  "runner_sha256": "df4849f62d3945ba86e5af8c46ef66cb3c79e093d6f09d8b6d2f02963d4a69f5",
+  "results": {
+    "3": {
+      "metrics_mean_ci": {
+        "full": [
+          28.28,
+          26.987437500000002,
+          29.6075625
+        ],
+        "oracle": [
+          6.0525,
+          5.675,
+          6.4475
+        ],
+        "immediate": [
+          6.85,
+          6.4775,
+          7.2375
+        ],
+        "delayed": [
+          6.85,
+          6.4775,
+          7.2375
+        ],
+        "direct": [
+          4.295,
+          4.0575,
+          4.5425
+        ],
+        "ident": [
+          4.295,
+          4.0575,
+          4.5425
+        ],
+        "pre_greedy_gain": [
+          0.13666666666666666,
+          0.11604166666666665,
+          0.15854166666666664
+        ],
+        "realized_reward_gain": [
+          0.1225,
+          0.085,
+          0.165
+        ],
+        "extra_rebuild_evals": [
+          61.56,
+          60.99,
+          62.13
+        ]
+      },
+      "mean_T95_ratio_full_oracle": 4.672449401073936,
+      "paired_T95_saving": [
+        22.2275,
+        20.975,
+        23.4925
+      ],
+      "pre_gain_epsilon_policy_expected": [
+        0.12299999999999998,
+        0.10443750000000002,
+        0.1426875
+      ],
+      "post_ident_curve_mismatches": 0,
+      "T95_equals_max_oracle_T95_and_identification_all_400": true,
+      "largest_identification_episode": 18,
+      "largest_immediate_accuracy_before_identification": 0.8333333333333334,
+      "analytic_mean_exact_T95_full": 29.4,
+      "analytic_mean_exact_T95_oracle": 6
+    },
+    "4": {
+      "metrics_mean_ci": {
+        "full": [
+          109.145,
+          106.3299375,
+          111.9650625
+        ],
+        "oracle": [
+          5.885,
+          5.52,
+          6.2675
+        ],
+        "immediate": [
+          7.6775,
+          7.3425,
+          8.0275
+        ],
+        "delayed": [
+          7.6775,
+          7.3425,
+          8.0275
+        ],
+        "direct": [
+          5.8625,
+          5.5825,
+          6.155
+        ],
+        "ident": [
+          5.8625,
+          5.5825,
+          6.155
+        ],
+        "pre_greedy_gain": [
+          0.53296875,
+          0.4771328125,
+          0.5918229166666668
+        ],
+        "realized_reward_gain": [
+          0.4525,
+          0.3675,
+          0.54
+        ],
+        "extra_rebuild_evals": [
+          568.38,
+          561.06,
+          575.82
+        ]
+      },
+      "mean_T95_ratio_full_oracle": 18.546304163126592,
+      "paired_T95_saving": [
+        103.26,
+        100.452375,
+        106.10006249999999
+      ],
+      "pre_gain_epsilon_policy_expected": [
+        0.479671875,
+        0.42941953125,
+        0.532640625
+      ],
+      "post_ident_curve_mismatches": 0,
+      "T95_equals_max_oracle_T95_and_identification_all_400": true,
+      "largest_identification_episode": 22,
+      "largest_immediate_accuracy_before_identification": 0.8333333333333334,
+      "analytic_mean_exact_T95_full": 109.24599253216832,
+      "analytic_mean_exact_T95_oracle": 6
+    },
+    "5": {
+      "metrics_mean_ci": {
+        "full": [
+          547.225,
+          541.2746875,
+          553.25
+        ],
+        "oracle": [
+          6.0975,
+          5.7325,
+          6.475
+        ],
+        "immediate": [
+          8.18,
+          7.8425,
+          8.53
+        ],
+        "delayed": [
+          8.18,
+          7.8425,
+          8.53
+        ],
+        "direct": [
+          6.595,
+          6.325,
+          6.885
+        ],
+        "ident": [
+          6.595,
+          6.325,
+          6.885
+        ],
+        "pre_greedy_gain": [
+          0.6961458333333335,
+          0.6267036458333334,
+          0.7713666666666666
+        ],
+        "realized_reward_gain": [
+          0.635,
+          0.5275,
+          0.75
+        ],
+        "extra_rebuild_evals": [
+          4917.6,
+          4853.4,
+          4982.7
+        ]
+      },
+      "mean_T95_ratio_full_oracle": 89.74579745797458,
+      "paired_T95_saving": [
+        541.1275,
+        535.187375,
+        547.2128124999999
+      ],
+      "pre_gain_epsilon_policy_expected": [
+        0.6265312500000002,
+        0.5640332812500001,
+        0.69423
+      ],
+      "post_ident_curve_mismatches": 0,
+      "T95_equals_max_oracle_T95_and_identification_all_400": true,
+      "largest_identification_episode": 25,
+      "largest_immediate_accuracy_before_identification": 0.8333333333333334,
+      "analytic_mean_exact_T95_full": 543.7578261942522,
+      "analytic_mean_exact_T95_oracle": 6
+    }
+  },
+  "minimal_candidate_disagreement": {
+    "3": 0.3333333333333333,
+    "4": 0.3333333333333333,
+    "5": 0.3333333333333333
+  },
+  "replayed_rows_all_semantic_fields_equal": 72,
+  "independent_known_compression_replays": 18
+}

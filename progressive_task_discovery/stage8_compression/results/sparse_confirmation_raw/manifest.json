@@ -1,0 +1,9 @@
+{
+  "source_sha256": "45f296b984edf57b55766094dae4308ed54f1643378171865bc645cee236b505",
+  "binary_sha256": "41200a736afb7783446a2402805f6a09cad94a42fbc60fd44a4e2b5cac5b9bc8",
+  "started": "2026-09-09T23:19:00-0700",
+  "workers": 2,
+  "completed": "2026-09-09T23:19:12-0700",
+  "elapsed_seconds": 11.694591375,
+  "runs": 384
+}

@@ -1,0 +1,941 @@
+                                             FORM: Learning Expressive and Transferable First-Order Logic
+                                                                  Reward Machines
+                                                                        Leo Ardon∗                                                 Daniel Furelos-Blanco
+                                                                   Imperial College London                                           Imperial College London
+                                                                   London, United Kingdom                                           London, United Kingdom
+                                                                     leo.ardon19@ic.ac.uk                                          d.furelos-blanco18@ic.ac.uk
+
+                                                                        Roko Parac                                                    Alessandra Russo†
+                                                                   Imperial College London                                          Imperial College London
+                                                                   London, United Kingdom                                           London, United Kingdom
+
+
+
+
+arXiv:2501.00364v3 [cs.AI] 28 Feb 2025
+                                                                    roko.parac18@ic.ac.uk                                              a.russo@ic.ac.uk
+
+                                         ABSTRACT                                                                  structure of tasks and allow agents to handle non-Markovian re-
+                                         Reward machines (RMs) are an effective approach for addressing            wards. However, traditional RMs rely on propositional logic to label
+                                         non-Markovian rewards in reinforcement learning (RL) through              transitions, which limits their expressivity and scalability. Abstract-
+                                         finite-state machines. Traditional RMs, which label edges with            ing over object properties (e.g., colour or type) is unfeasible with
+                                         propositional logic formulae, inherit the limited expressivity of         propositional logic: it requires all combinations to be encoded in the
+                                         propositional logic. This limitation hinders the learnability and         RM, leading to a combinatorial explosion in the number of states
+                                         transferability of RMs since complex tasks will require numerous          and edges. As a result, RMs are difficult to learn and transfer across
+                                         states and edges. To overcome these challenges, we propose First-         different tasks, especially as the complexity of the tasks increases.
+                                         Order Reward Machines (FORMs), which use first-order logic to                In this paper, we make the following contributions. (i) We in-
+                                         label edges, resulting in more compact and transferable RMs. We           troduce First-Order Reward Machines (FORMs), a novel formulation
+                                         introduce a novel method for learning FORMs and a multi-agent             of RMs that uses first-order logic to label transitions, enhancing
+                                         formulation for exploiting them and facilitate their transferability,     expressivity and transferability. (ii) We propose a new RM learning
+                                         where multiple agents collaboratively learn policies for a shared         method which is, to the best of our knowledge, the first to tackle the
+                                         FORM. Our experimental results demonstrate the scalability of FORMs       problem of learning RMs with first-order logic. (iii) We formalise
+                                         with respect to traditional RMs. Specifically, we show that FORMs         the exploitation of an RM as a multi-agent problem, where multiple
+                                         can be effectively learnt for tasks where traditional RM learning         agents collaboratively learn the policies of the RM. Finally, (iv) we
+                                         approaches fail. We also show significant improvements in learning        demonstrate empirically the benefit of our approach over traditional
+                                         speed and task transferability thanks to the multi-agent learning         RM learning methods, in both learning and transferability.
+                                         framework and the abstraction provided by the first-order language.          The paper is organised as follows. Section 2 introduces the back-
+                                                                                                                   ground of our work. Section 3 formalises FORMs, and describes our
+                                         CCS CONCEPTS                                                              methods for learning and exploiting them. We evaluate our meth-
+                                                                                                                   ods’ performance and the reusability of FORMs in Section 4. Section 5
+                                         • Theory of computation → Reinforcement learning; • Com-
+                                                                                                                   discusses related work, and Section 6 concludes the paper.
+                                         puting methodologies → Inductive logic learning; Logic pro-
+                                         gramming and answer set programming.
+                                                                                                                   2     BACKGROUND
+                                         KEYWORDS                                                                  In this section, we cover three basic topics needed to understand our
+                                                                                                                   approach. We discuss reinforcement learning and a state-of-the-art
+                                         Reward Machine; Reinforcement Learning; First-Order Logic
+                                                                                                                   algorithm which we use to learn policies. We present the notion of
+                                                                                                                   a reward machine which we build upon and generalise it to a First-
+                                         1    INTRODUCTION                                                         Order Reward Machine (FORM). Finally, we discuss the Learning
+                                         In recent years, reinforcement learning [RL; 32] has emerged as a         from Answer Sets framework, which we use to learn FORMs.
+                                         powerful technique to train autonomous agents able to reach super-
+                                         human performance across a wide range of applications, including          2.1    Reinforcement Learning
+                                         games [22, 28, 39, 40], autonomous driving [15, 25], finance [3, 29],     Reinforcement learning [RL; 32] is a machine learning paradigm
+                                         and science [27, 30]. Despite these successes, RL struggles to handle     where an agent learns to make sequential decisions by interacting
+                                         tasks that require long-term planning and abstraction, particularly       with an environment, often modeled as a Markov decision pro-
+                                         when rewards are non-Markovian, i.e. they depend on histories of          cess (MDP). The agent’s objective is to learn a policy 𝜋, a mapping
+                                         states and actions. Reward machines [RMs; 36] offer a promising           from states to actions, that maximizes the expected cumulative
+                                         solution by leveraging finite-state machines to encode the temporal                                                Í
+                                                                                                                   discounted reward (called return) 𝑅 = 𝑇𝑡=0 𝛾 𝑡 𝑟𝑡 , where 𝑟𝑡 ∈ R is
+                                         ∗ Corresponding author.                                                   the reward received at time-step 𝑡, 𝛾 ∈ [0, 1) is the discount factor,
+                                         † Sponsored in part by DEVCOM Army Research Lab under W911NF2220243 and   and 𝑇 is the time horizon. The agent observes the current state
+                                         EPSRC project EP/Y037421/1.                                               𝑠𝑡 of the environment, takes an action 𝑎𝑡 ∼ 𝜋 (·|𝑠𝑡 ) according to
+            4            6                                                    0          𝑢1              1
+       8                                      9
+                                                                                                                           5
+                  5                  2
+
+
+            7
+                                                                         𝑢0                                  𝑢3                     𝑢4                𝑢𝐴
+                                0        11
+
+
+                                10
+                                                                                                                           4
+                                                                              1          𝑢2           0
+
+                                              1
+                                                                                      (b) Traditional RM encoding of the example task.
+                  3
+
+
+
+
+                                                                                      ∀𝑋 . 𝑋                      ∃𝑋 . 𝑋
+                                                                              𝑢0                    𝑢1                         𝑢2                𝑢𝐴
+
+                (a) Environment instance.                                                 (c) FORM encoding of the example task.
+
+Figure 1: An instance of the environment (a), and RMs for the task “visit all                                     followed by any        before reaching     ” (b, c).
+                                                See Example 2.1 for details.
+
+
+its current policy 𝜋, transitions to a new state 𝑠𝑡 +1 ∼ 𝑝 (·|𝑠𝑡 , 𝑎𝑡 )                  2.3      Reward Machines
+according to the environment transition function 𝑝, and receives a                       Reward machines [RMs; 36, 37] are finite-state machine represen-
+reward 𝑟𝑡 = 𝑟 (𝑠𝑡 , 𝑎𝑡 , 𝑠𝑡 +1 ) from the reward function 𝑟 .                            tations of reward functions. RMs encode the temporal structure of
+   Proximal policy optimization [PPO; 26] is a state-of-the-art RL                       a task’s rewards, enabling expressive and interpretable specifica-
+algorithm that, based on the policy gradient theorem [33], directly                      tions; besides, they enable handling non-Markovian reward tasks
+learns a policy 𝜋 (𝑎𝑡 |𝑠𝑡 ) as an action distribution conditioned on a                   by using the state of the RM as an external memory.
+state 𝑠𝑡 . PPO optimizes a surrogate objective function that balances                       Reward machines are defined in terms of high-level events (or
+exploration and exploitation; specifically, PPO uses a clipped prob-                     observables) P, which aim to abstract the environment’s state space
+ability ratio to constrain the policy update, ensuring that the new                      𝑆. More specifically, the transitions of an RM are labelled with sets
+policy does not deviate too much from the old policy, preventing                         of observables 𝑂 (or observations). We denote by O the set of all pos-
+large and destabilizing changes. PPO has the advantage of being ro-                      sible observations, i.e. the powerset of P, such that |O| ≪ |𝑆 |. The
+bust and effective on a wide range of tasks while requiring minimal                      abstraction from environment states and actions to observations is
+hyperparameter tuning [42].                                                              performed by a labelling function 𝐿 : 𝑆 × 𝐴 × 𝑆 → O.
+                                                                                            Definition 2.1 (Reward Machine). An RM is a tuple RM =
+2.2        Learning from Answer Sets                                                     ⟨U, P, 𝑢 0, 𝑢𝐴 , 𝑢𝑅 , 𝛿𝑢 , 𝛿𝑟 ⟩, where U is a finite set of states; P is a set
+Answer set programming [ASP; 14] is a declarative programming                            of observables whose powerset is denoted as O; 𝑢 0, 𝑢𝐴 , 𝑢𝑅 ∈ U are the
+language for knowledge representation. A problem is expressed in                         initial, accepting and rejecting state, respectively; 𝛿𝑢 : U × O → U
+ASP using logic rules, and the models (known as answer sets) of its                      is a deterministic state-transition function that maps a RM state
+representation are its solutions. Within the context of this paper, an                   and an observation to the next RM state; and 𝛿𝑟 : U × U → R is
+ASP program 𝑃 is a set of normal rules. Given any atoms h, b1, . . . , bn ,              a deterministic reward-transition function that returns the reward
+c1, . . . , cm , a normal rule is of the form h : - b1, . . . , bn, not c1, . . . ,      given a pair of RM states determining a transition.
+not cm where h is the head, b1, . . . , bn, not c1, . . . , not cm is (col-                    We now introduce a running example used throughout the paper.
+lectively) the body of the rule, and “not” represents negation as
+failure. An atom is ground if it is variable free. Informally, given a                       Example 2.1. Let us consider an agent (       ) navigating the grid
+set of ground atoms (or interpretation) 𝐼 , a ground normal rule is                      environment in Figure 1a. The grid consists of several checkpoints
+satisfied if the body is not satisfied by 𝐼 or the head is satisfied by 𝐼 .              (e.g. 4 ), each characterised by a unique identifier and a colour, and a
+The reader is referred to [13] for further details on the semantics                      goal location      placed in the bottom right corner. These checkpoints
+of ASP programs. ILASP [16] is a state-of-the-art inductive logic                        and the goal constitute the set of observables P. At each step, the
+programming system for learning ASP programs from partial an-                            agent observes the state of the environment. The labelling function 𝐿
+swer sets. A program 𝑃 is said to accept an example 𝑒 if and only if                     returns the set of observables in the cell where the agent has stepped
+there exists an answer set 𝐴 of 𝑃 ∪ 𝑒. An ILASP task [17] is a tuple                     on, e.g. { 4 } if the agent moves forward in Figure 1a.
+𝑇 = ⟨𝐵, 𝑆 𝑀 , 𝐸⟩, where 𝐵 is the ASP background knowledge, 𝑆 𝑀 is                            Several non-Markovian tasks can be formulated in this environ-
+the set of rules allowed in the hypotheses (called hypothesis space),                    ment, each consisting of observing a sequence of observables, e.g. “visit
+and 𝐸 is a set of examples . A hypothesis 𝐻 ⊆ 𝑆 𝑀 is a solution of 𝑇                     all yellow checkpoints       followed by any blue checkpoint      before
+if and only if 𝐵 ∪ 𝐻 accepts all examples 𝑒 ∈ 𝐸.                                         reaching ”. Figure 1b shows the propositional RM for this task. To
+“visit all yellow checkpoints”, the agent may start with 0 followed by             3     METHODOLOGY
+  1 or vice-versa. To “visit any blue checkpoints”, the agent can visit
+                                                                                   The limited expressivity of propositional logic formulae presents
+either 4 or 5 . After completing these sub-tasks, in the specified                 significant challenges to the broader adoption of RM-based ap-
+order, the agent can reach the goal .                                              proaches for RL. For instance, propositional logic cannot express
+                                                                                   tasks in terms of the properties of a specific or a group of entities,
+  We assume the tasks are such that the reward is 1 if completed
+                                                                                   such as the colour of checkpoints in Example 2.1. This limitation
+and 0 otherwise. Accordingly, in the case of RMs, we assume the
+                                                                                   substantially increases the number of sub-task combinations to be
+reward is 1 only on transitions to the accepting state 𝑢𝐴 . We thus
+                                                                                   captured (if expressed at propositional level), resulting in larger
+omit the rewards from the RM figures for clarity.
+                                                                                   RMs that are more difficult to learn and exploit. In addition, the
+Learning of Reward Machines. When the RM is unknown ‘a priori’,                    restriction to a fixed set of observables hinders the re-use of RMs
+it can be learnt from sequences of observations (or traces) seen by                across different scenarios (e.g., on environments with different num-
+the agent. Furelos-Blanco et al. [10] present an approach that learns              bers of objects of the same colour). To address these limitations, we
+RMs from traces using the ILASP inductive logic programming                        propose to label the edges of RMs using first-order formulae. The
+system introduced in Section 2.2. The RM is expressed in ASP using                 high expressivity of first-order logic allows for more compact and
+the following rules:                                                               general RMs, making them easier to learn and transfer across differ-
+                                                                                   ent scenarios. We first illustrate the intuition behind our approach
+      • Facts ed(𝑢, 𝑢 ′, 𝑖), which encode the presence of an edge
+                                                                                   by building upon the RM from Example 2.1.
+        from 𝑢 to 𝑢 ′ with identifier 𝑖; and
+      • Rules with head 𝜙¯(𝑢, 𝑢 ′, 𝑖, T), which encode the negation                   Example 3.1. Figure 1c displays the First-Order RM (FORM) for the
+        of the formulae to be satisfied for the RM transition 𝑖 from               task “visit all yellow checkpoints     followed by any blue checkpoint
+        𝑢 to 𝑢 ′ .                                                                      before reaching ”. Despite encoding the same task, the FORM is
+                                                                                   more compact than its propositional counterpart (Figure 1b).
+   Example 2.2. Given the RM in Figure 1b, the ASP rules that encode                  Existentially quantified formulae reduce the number of edges re-
+the transition 𝑢 3 → 𝑢 4 are:                                                      quired to encode the disjunctions, impacting the parameter 𝑘 in Equa-
+            ed(𝑢 3 , 𝑢 4 , 0).                                                   tion 1 (Figure 2a). Universally quantified formulae reduce the number
+                                                               
+            ed(𝑢 3, 𝑢 4, 1).
+           
+                                                               
+                                                                
+                                                                                  of states and, consequently, the number of edges required to encode a
+                                                                     ,             task (Figure 2b).1
+           
+            𝜙¯ (𝑢 3 , 𝑢 4 , 0, T) : - not obs( 4 , T), step(T). 
+           𝜙¯ (𝑢 , 𝑢 , 1, T) : - not obs( 5 , T), step(T).     
+                  3 4                                           
+                                                                                                      5
+where atoms obs(𝑜, T) and step(T) indicate respectively that ob-                                                                            ∃𝑋 . 𝑋
+servable 𝑜 is observed at time T, and T is a time-step. Note that (i) the                       𝑢1          𝑢2             ⇒           𝑢1               𝑢2
+
+disjunction is encoded with two edges whose indices are 0 and 1, and                                  4
+(ii) the transition rules encode 𝜙¯ (i.e., the negation of 𝜙), explaining
+the use of not [10].                                                                                 (a) Existentially quantified formulae.
+                                                                                                     𝑢1
+                                                                                                 1           2
+   The hypothesis space for the ILASP task learning the ASP rules                                                                           ∀𝑋 . 𝑋
+that encode the reward machine, like the ones from Example 2.2, is                         𝑢0                    𝑢3        ⇒           𝑢0               𝑢1
+defined as:
+                                                                                                 2   𝑢2      1
+                      ′
+               ed(𝑢, 𝑢 , 𝑖 ).
+               (                                      )
+         𝑆 𝑀 = 𝜙¯ (𝑢, 𝑢 ′ , 𝑖, T) : - obs(𝑜, T), step(T).                ,   (1)                     (b) Universally quantified formulae.
+               𝜙¯ (𝑢, 𝑢 ′ , 𝑖, T) : - not obs(𝑜, T), step(T).
+
+where 𝑢 ∈ U \ {𝑢𝐴 , 𝑢𝑅 }, 𝑢 ′ ∈ U \ {𝑢}, 𝑖 ∈ [1, 𝑘], 𝑜 ∈ P, and 𝑘                  Figure 2: Equivalence between Propositional RMs and FORMs.
+is a hyperparameter denoting the maximum number of disjuncts
+(i.e., edges) between each pair of states. Traces, which form the
+                                                                                      We now formalise the first-order language over which the transi-
+examples of an ILASP task, are encoded as a set of obs(𝑜, T) facts;
+                                                                                   tions of FORMs are defined (Section 3.1) and provide a formal defini-
+e.g., {obs( ,0).obs( 1 ,1).step(0).step(1)}. To be consid-
+                                                                                   tion of a first-order RM (Section 3.2). We then introduce our method
+ered as a solution, a hypothesis (i.e., the ASP encoding of an RM)
+                                                                                   for learning FORMs (Section 3.3) and exploiting them (Section 3.4).
+must accept all traces.
+    As it can be observed in Equation 1, the number of ed facts in the             3.1     Language
+hypothesis space scales quadratically with the number of states in
+the RM (|U|) and linearly with the maximum of disjuncts allowed                    In this section, we introduce the first-order language L used to label
+in the transition rules (𝑘): (|U| − 2) · (|U| − 1) · 𝑘. Additionally,              transitions in FORMs. The signature of L, denoted as Σ = ⟨C, K⟩, is
+the number of 𝜙¯ rules depends on the number of observables (|P |):                composed of a set C of constants and a set K of 𝑛-ary predicates.
+(|U| − 2) · (|U| − 1) · 𝑘 · 2|P |. As the number of states, disjuncts, or          Predicates with 0-arity are referred to as propositions. A variable
+observables increase, learning the RM quickly becomes unfeasible.                  𝑋 of a predicate P ∈ K is bound if it is in the scope of a quantifier
+This underscores the need for new solutions to ensure that RM                      𝑄 ∈ {∀, ∃}. A ground atom is a predicate whose arguments are
+learning can scale effectively.                                                    1 An example with three yellow checkpoints is shown in Appendix A.
+constants. A quantified atom is a predicate whose variables are             use of first-order formulae returned by a logical transition func-
+bound, e.g. ∃𝑋 .P (𝑋 ). A ground instance, 𝜓𝑔 , of a quantified atom        tion 𝜙 : U × U → L. Secondly, it takes a history of observations
+𝜓 is a ground atom generated by replacing all variables in 𝜓 with           instead of a single observation. This is important to semantically
+constants. Propositions, ground atoms and quantified atoms are              evaluate universally quantified atoms. To relax the requirement of
+atomic formulae of L. The first-order language L of a FORM is               having to see all the ground instances of the universally quantified
+defined as follows.                                                         atoms in the same observation, we use the following interpretation.
+                                                                            Given a history, a universally quantified atom is true when all
+    Definition 3.1. Given a signature Σ = ⟨C, K⟩, the language L            its ground instances are contained in the history. We refer to this
+is the set of formulae defined inductively as follows:                      history as a buffer 𝐵 = [𝑂𝑡 −𝑘 , . . . , 𝑂𝑡 ] which gathers observations
+      (1) An atomic formula is a formula.                                   from time-step 𝑡 − 𝑘 to 𝑡, where 𝑘 ≥ 0 is the length of the buffer.
+      (2) If 𝜓 is a formula, then so is ¬𝜓 .                                    Algorithm 1 shows the pseudo-code that defines 𝛿𝑢 . The buffer 𝐵
+      (3) If 𝜓 1 and 𝜓 2 are formulae, then 𝜓 1 ∧ 𝜓 2 , and 𝜓 1 ∨ 𝜓 2 are   contains all the observations perceived since the current RM state
+          formulae.                                                         was reached. The buffer is emptied when a transition to a new state
+We refer to formulae in a first-order language L as L-formulae.             is taken (l.4), or updated with the current observation otherwise
+                                                                            (l.1). The L-formulae are given by the logical transition function
+  The set of all propositions and ground atoms in L is called the           𝜙 and are evaluated against the buffer (l.3).
+Herbrand Base of L, denoted H B L .
+   Example 3.2. Consider the environment given in Figure 1a. The            Algorithm 1: State-Transition Function 𝛿𝑢
+language L for this environment has the signature Σ = ⟨C, K⟩ given            Input: The current FORM state 𝑢, the latest observation 𝑂𝑡 , the
+by the following sets:                                                      buffer 𝐵.
+                                                                              Output: The next FORM state 𝑢 ′ , the updated buffer .
+                  C ={𝑜 0, . . . , 𝑜 12 },
+                                                                             1: 𝐵 ← 𝐵 ⊕ 𝑂 𝑡
+                  K ={       ,      ,        ,   ,   ,   ,   },
+                                                                             2: for all 𝑢 ′ ∈ U do
+where the predicates are pictograms for unary predicates yellow,             3:    if 𝐵 |= 𝜙 (𝑢, 𝑢 ′ ) then
+blue, red, gray, purple, green, and the proposition goal, respec-            4:       𝐵 ← []
+tively. We depict a ground atom of L as a predicate pictogram with           5:       return 𝑢 ′ , 𝐵
+                                                                                 ′
+                                                                             6: 𝑢 ← 𝑢
+the subscript of its constant argument, e.g. blue(𝑜 4 ) is depicted as
+  4 . Analogously, we depict quantified atoms with the quantifier and        7: return 𝑢 ′ , 𝐵
+the predicate pictogram with the bound variable, e.g. ∀𝑋 .yellow(𝑋 )
+is depicted as ∀𝑋 ; . 𝑋 . The proposition   and the negated formula           In the following section, we define the notion of satisfiability of
+¬ 4 are examples of L-formulae.                                             an L-formula given a buffer 𝐵.
+
+3.2      First-Order Reward Machines (FORMs)                                Satisfiability of L-formulae. Given a buffer 𝐵 = [𝑂𝑡 −𝑘 , . . . , 𝑂𝑡 ],
+                                                                            observables that are included in 𝐵 are assumed to be true. Any
+We formalise now the notion of a first-order RM (FORM), where
+                                                                            other observable from H B L not included in 𝐵 is assumed to be
+transitions are labelled with formulae of a first-order language L.
+                                                                            false. We can now define the satisfiability of a L-formula given a
+FORMs enhance the expressivity of traditional RMs. The core enti-
+                                                                            buffer 𝐵 = [𝑂𝑡 −𝑘 , . . . , 𝑂𝑡 ].
+ties that characterise a FORM are its observables, labelling function,
+and state-transition function. In what follows, we describe how                Definition 3.3. Let 𝐵 = [𝑂𝑡 −𝑘 , . . . , 𝑂𝑡 ] be a buffer for some
+these entities are defined and how the satisfiability of L-formulae         𝑘 ≥ 0. Let 𝜓 be a L-formula. 𝐵 satisfies 𝜓 , written 𝐵 |= 𝜓 , is defined
+labelling the transitions of a FORM is checked.                             as follows:
+                                                                                  • 𝐵 |= 𝜓 if 𝜓 ∈ 𝑂𝑡 , where 𝜓 is a proposition or a ground atom.
+   Definition 3.2 (First-Order RM). A First-Order RM over a first-
+                                                                                  • 𝐵 |= 𝜓 if 𝜓𝑔 ∈ 𝑂𝑡 for some ground instance 𝜓𝑔 of 𝜓 , where 𝜓
+order language L is a tuple FORM L = ⟨U, H B L , 𝑢 0, 𝑢𝐴 , 𝑢𝑅 , 𝛿𝑢 , 𝛿𝑟 ⟩
+                                                                                     is an existentially quantified atom.
+where U, 𝑢 0, 𝑢𝐴 , 𝑢𝑅 and 𝛿𝑟 are as defined in Definition 2.1, and                                   Ð
+                                                                                  • 𝐵 |= 𝜓 if 𝜓𝑔 ∈ 0≤𝑖 ≤𝑘 𝑂𝑡 −𝑖 for all ground instance 𝜓𝑔 of 𝜓 ,
+       • H B L is the set of observables, and                                        where 𝜓 is a universally quantified atom.
+       • 𝛿𝑢 : U × O ∗ → U × O ∗ is the state-transition function                  • 𝐵 |= ¬𝜓 if 𝐵 ̸ |= 𝜓
+         taking a state and a history of observations to a new state              • 𝐵 |= 𝜓 1 ∧ 𝜓 2 if 𝐵 |= 𝜓 1 and 𝐵 |= 𝜓 2 .
+         and an updated history.
+                                                                                Note that a universally quantified formula is satisfied over a
+Observables and Labelling Function. Differently from traditional            buffer when all ground instances of the formula, in the language L
+RMs, where observables are given as a set of propositions P, the            have been observed, i.e. are included in the buffer. The number of
+observables in a FORM L are defined as the Herbrand base of the             occurrences of the same observation throughout the buffer is not
+first-order language L. The labelling function 𝐿 thus returns at each       relevant. All other atomic formulae of L are satisfied over a buffer,
+time-step, a subset of H B L as an observation.                             if the most recent observation satisfies them.
+State-Transition Function. The state-transition function 𝛿𝑢 gener-             Example 3.3. Given the RM in Figure 1c, we exemplify the satisfi-
+alises that of a traditional RM in two ways. Firstly, it supports the       ability of different L-formulae 𝜓 for different buffer examples:
+                                                 
+      Proposition Let 𝜓 =         and 𝐵 = [{ } ; then, 𝐵 |= 𝜓 .          Listing 1: ASP encoding for an existentially quantified sentence
+      Existentially   Quantified   Atom Let 𝜓 = ∃𝑋 𝑋 and 𝐵 =             ∃𝑋 .p(𝑋 )
+                      
+           { 0 }, { 4 } ; then, 𝐵 |= 𝜓 .                                 1     e_pred (p, T ) : - obs (O , T ) , p( O ) .
+                                                                         The rule e_pred(p, T) is true when an observable seen at time-step
+                                                                 
+      Universally Quantified Atom Let𝜓 = ∀𝑋 . 𝑋 , 𝐵 1 = { },
+                                                             
+        { 0 }, { 4 }, { 1 } , and 𝐵 2 = { }, { 0 }, { 4 } ; then,        T is a ground atom of p.
+        𝐵 1 |= 𝜓 and 𝐵 2 ̸ |= 𝜓 .                      
+      Conjunctions Let 𝜓 = ∀𝑋 . 𝑋 ∧ , 𝐵 1 = { }, { 0 },                  Listing 2: ASP encoding for a universally quantified sentence
+                                      
+        { 4 }, ∅, { 1 } , and 𝐵 2 = { }, { 0 }, { 4 }, ∅, { 1 }, ∅,      ∀𝑋 .p(𝑋 )
+               
+        { } ; then, 𝐵 1 ̸ |= 𝜓 since 𝐵 1 |= ∀𝑋 . 𝑋 but 𝐵 1 ̸ |= , and    1     # evaluate if the observation p( O ) was observed at T
+        𝐵 2 |= 𝜓 since 𝐵 2 |= ∀𝑋 . 𝑋 and 𝐵 2 |= .                        2     # while being in the current state of the RM .
+                                                                         3     p_holds (O , T ) : -
+                                                                         4         obs (O , T2 ) , p( O ) ,
+3.3     FORM Learning                                                    5         T >= T2 , st (T , X ) , st ( T2 , X ) ,
+                                                                         6         step ( T ) , step ( T2 ) , state ( X ) .
+We now focus on the problem of learning a FORM from the observa-
+                                                                         7     # rules to evaluate whether all the ground atoms
+tion traces collected by the agent. Although observations are sets       8     # of p hold at T.
+of ground atoms and propositions, the goal is to learn an abstract       9     not_all_p_hold ( T ) : -
+representation of the task’s structure using lifted first-order formu-   10        not p_holds (O , T ) , p( O ) , step ( T ) .
+lae. To achieve this, we leverage the support of ASP for variables       11    all_p_hold ( T ) : -
+                                                                         12        not not_all_p_hold ( T ) , step ( T ) .
+and learn ASP rules for the L-formulae constituting the FORM.            13    # rule used in the hypothesis space that will be true
+   The set of observables (H B L ) and the set of predicates (K)         14    # when all the ground atoms of p have been seen for
+are not known ‘a priori’; instead, they are automatically derived        15    # the first time in the current state of the RM
+from the observation traces and used to dynamically generate a           16    a_pred (p, T ) : - all_p_hold ( T ) ,
+                                                                         17        not all_p_hold (T -1) , step ( T ) .
+new ILASP learning task. We model existentially and universally
+quantified atoms as ASP rules and expand the hypothesis space            The rule a_pred(p, T) is true when all the ground atoms of p have
+from Equation 1 to allow the edges of the RM to be labelled with         all been observed while being in the same RM state.
+quantified atoms or their negations. Formally,
+
+                 ed(𝑢, 𝑢 ′ , 𝑖 ).                                      property, the L-formulae on such transitions must be mutually ex-
+                  ¯ (𝑢, 𝑢 ′ , 𝑖, T) : - obs(𝑜, T),step(T).
+                                                                
+                
+                
+                 𝜙                                              
+                                                                 
+                                                                        clusive. Two transitions are mutually exclusive if an atomic formula
+                 ¯       ′                                      
+                𝜙 (𝑢, 𝑢 , 𝑖, T) : - not obs(𝑜, T),step(T).              appears positively on one transition and negatively on the other.
+                
+                                                                
+                                                                 
+                                                                
+                                                                 
+         𝑆 𝑀 = 𝜙¯ (𝑢, 𝑢 ′ , 𝑖, T) : - e_pred(𝑝, T),step(T).        ,        Mutual exclusivity is encoded through ASP rules and enforced at
+              
+              
+               𝜙¯ (𝑢, 𝑢 ′ , 𝑖, T) : - not e_pred(𝑝, T),step(T). 
+                                                                 
+                                                                        learning time so that the output FORMs are guaranteed to be deter-
+                𝜙¯ (𝑢, 𝑢 ′ , 𝑖, T) : - a_pred(𝑝, T),step(T).
+              
+                                                                
+                                                                 
+              
+                                                                
+                                                                        ministic. Since quantified atoms can represent multiple associated
+              ¯         ′
+              𝜙 (𝑢, 𝑢 , 𝑖, T) : - not a_pred(𝑝, T),step(T). 
+                                                                 
+                                                                         ground instances, we also define rules that translate quantified
+                                                                         atoms into their corresponding sets of ground instances. We refer
+where 𝑢 ∈ U \ {𝑢𝐴 , 𝑢𝑅 }, 𝑢 ′ ∈ U \ {𝑢}, 𝑖 ∈ [1, 𝜅], 𝑜 ∈ H B L , and
+                                                                         the reader to Appendix E for the encoding of mutual exclusivity
+𝑝 ∈ K.
+                                                                         and the mapping from quantified atoms into ground instances.
+    Listing 1 presents the ASP encoding for an existentially quan-
+tified atom. The rule e_pred(p,T) is true iff a ground atom of
+                                                                         3.4      Policy Learning
+p is observed at time-step T. Listing 2 shows the ASP encoding
+of a universally quantified atom. The rule p_holds(O,T) is true          The vast majority of the algorithms used to learn the policy as-
+whenever the observable O is present in the buffer at time-step T.       sociated with the RM are based on CRM [37], an algorithm that
+We use this rule to encode the all_p_hold(T), evaluating to true         learns a single policy for the whole RM. This poses some concerns
+for all time-steps T for which all the ground atoms of p holds. Fi-      on the transferability of the learnt solution, and more specifically
+nally, the rule a_pred(p,T), used in the hypothesis space, encodes       on the ability to reuse the policy associated with a given sub-task
+a universally quantified atom and is true for the first time-step T      of the RM. To address this issue, we propose a novel formulation
+when all the ground atoms of p have been observed. These rules           as a multi-agent problem, where a team of agents (one for each RM
+make use of the atoms:                                                   state) collaborate to complete the task. Our approach grounds the
+                                                                         problem of RL with RM into the Markov game framework and, com-
+      • obs(O, T): the observable O is seen at time-step T;              bined with FORM, enables the transfer of the learnt policies across
+      • st(T, X): the RM was in state X at time-step T;                  scenarios (e.g., with different objects) to speed up the learning.
+      • step(T): T is a valid time-step (i.e. its value is between 0        We formalise the problem as a collaborative Markov game of 𝑁
+        and the maximum trace length); and                               agents defined with the tuple G = ⟨RM, 𝑁 , 𝑺, 𝒔 𝑰 , 𝑨, 𝑝, 𝑟, 𝛾⟩, where
+      • state(X): X is an RM state.                                      RM is a FORM, 𝑁 = |UR M | is the number of agents equal to
+                                                                         the number of states in the FORM; 𝑺 = 𝑆 1′ × · · · × 𝑆 𝑁
+                                                                                                                                ′ is the set of
+Determinism. The state-transition function 𝛿𝑢 , like in traditional      joint states; 𝒔 𝑰 ∈ 𝑺 is a joint initial state; 𝑨 = 𝐴1 × · · · × 𝐴𝑁 is
+RMs, must be deterministic; that is, two or more transitions cannot      the set of joint actions; 𝑝 : 𝑺 × 𝑨 → 𝑺 is a deterministic joint
+be simultaneously satisfied from a given state. To guarantee this        transition function; and 𝑟 : (𝑺 × 𝑨) + × 𝑺 → R𝑁 is the joint reward
+                                                    PPO        Recurrent PPO                                                   Handcrafted RM                Propositional RM Learning                           FORM Learning (ours)
+
+                          1.0
+                                                                                                                                                                                                               0.8
+                                                                                                                       0.8
+                                                                                               0.8
+
+
+
+
+                                                                                                 Mean Episode Return                                                                     Mean Episode Return
+                          0.8
+
+
+
+
+    Mean Episode Return
+                                                                                                                                                                                                               0.6
+
+
+
+
+                                                                         Mean Episode Return
+                                                                                                                       0.6
+                          0.6                                                                  0.6
+                                                                                                                       0.4                                                                                     0.4
+                          0.4
+                                                                                               0.4
+                                                                                                                       0.2                                                                                     0.2
+                          0.2
+                                                                                               0.2
+                          0.0                                                                                          0.0                                                                                     0.0
+
+                            107   108        109      1010      1011                                                     108        109      1010           1011     1012                                        106    107       108    109         1010     1011   1012
+                                                                                               0.0
+                                            Steps                                                                                                   Steps                                                                                    Steps
+
+                                  (a) AllYellow                                                                                (b) GreenButOne-NoLava                                                                  (c) Blue-AllYellow-7
+
+                                                             Figure 3: Average undiscounted return for the three tasks.
+
+
+function. The objective of the game is to find a team policy 𝝅 =                                                                                        4          EXPERIMENTS
+𝜋1 × · · · × 𝜋 𝑁 mapping joint states to joint actions such that the                                                                                    We demonstrate the benefits of the proposed FORM learning and
+sum of the individual expected cumulative rewards is maximised.                                                                                         exploitation approach in the environment from Figure 1a. The tasks
+   In practice, each state of the FORM is assigned an RL agent respon-                                                                                  posed in this environment are challenging to traditional RM learn-
+sible for learning a policy to accomplish the associated sub-task.                                                                                      ing methods, especially as the number of objects increases. We
+Since the FORM state-transition function is deterministic, we can                                                                                       first show the benefits of FORM learning with respect to standard
+only be in a single state at any given time; therefore, only one RL                                                                                     RL algorithms and methods leveraging propositional RMs (with
+agent acts at each time-step. The joint reward function is designed                                                                                     and without learning them). Second, we show that first-order logic
+so that the reward received is uniformly shared among all the agents                                                                                    eases the transfer of RMs and policies to more complex scenar-
+that contributed to reaching the current state (i.e., 𝑛𝑟′ where 𝑟 is the                                                                                ios (e.g., with more objects). Additional experimental details are
+global reward obtained and 𝑛 ′ is the number of agents that have                                                                                        described in Appendix C.2
+participated in getting 𝑟 ), implying that their assigned FORM state
+was visited. Consequently, the agents work collaboratively and in                                                                                       4.1         FORM Learning
+turns to traverse the FORM towards the accepting state.
+                                                                                                                                                        We evaluate the performance of our approach in its ability to learn
+Agent State Space. Since all agents act in the same environment,                                                                                        and exploit FORMs. We consider three baselines: (i) PPO [26], to show
+their state space 𝑆𝑢′ is the environment’s state space 𝑆. However, de-                                                                                  how RMs help deal with non-Markovian tasks; (ii) Recurrent PPO
+pending on the outgoing transitions from a given FORM state 𝑢 ∈ U,                                                                                      using a recurrent network to keep track of the history (iii) Hand-
+the state space 𝑆𝑢′ of the associated agent may be extended. As de-                                                                                     crafted FORM, which assumes the FORM is known ‘a priori’; and (iv) a
+scribed in Section 3.2, universally quantified formulae are evaluated                                                                                   state-of-the-art propositional RM learning approach [10]. Both (iii)
+over multiple time-steps using an observation buffer 𝐵, making the                                                                                      and (iv) employ our multi-agent based exploitation method.
+sub-task non-Markovian as the policy becomes dependent on a                                                                                                In the following paragraphs, we compare our approach against
+history (i.e., the buffer).                                                                                                                             the baselines in three, increasingly complex, tasks.
+   We address this issue by extending the state space 𝑆𝑢′ of agent
+                                                                                                                                                        Task 1 – AllYellow. The task consists in visiting all yellow check-
+𝑢 with indicators encoding whether the ground atoms of inter-
+                                                                                                                                                        points      before going to the     location. Figure 1a illustrates the
+est have been perceived by the agent, hence making the sub-task
+                                                                                                                                                        environment with two yellow checkpoints. This task is chosen to
+Markovian. Let 𝑔𝑢 denote the set of ground atoms of a universally
+                                                                                                                                                        be relatively simple to ensure that traditional RM learning methods
+quantified formula that must be satisfied to exit a FORM state 𝑢. The
+                                                                                                                                                        work so that we can compare against them.
+extended state 𝑠𝑢′ is constructed by concatenating the state 𝑠 from
+the environment with the indicators computed using the buffer 𝐵:
+                                                                                                                                                                                                                                        𝑢1
+                                        𝑠𝑢′ = 𝑠 ⊕ [1 {𝑝 ∈𝐵 } ; ∀𝑝 ∈ 𝑔𝑢 ].                                                                                                                                                     1                      2
+                                                                                                                                                                   ∀𝑋 . 𝑋
+                                                                                                                                                              𝑢0              𝑢1                               𝑢𝐴        𝑢0                              𝑢3                 𝑢𝐴
+   Example 3.4. Let us consider 𝜙𝑢→𝑢 ′ = ∀𝑋 . 𝑋 ∨                                                                       2      . The steps
+followed to extend the state space are:                                                                                                                                                                                       2         𝑢2           1
+
+     (1) Identify the universally quantified predicates:   {  }.
+                                                                                                                                                                    (a) FORM encoding.
+                                                   
+     (2) Get the ground atoms associated: 𝑔𝑢 = 4 , 5 .                                                                                                                                                                   (b) Propositional RM encoding.
+     (3) Extend the state space: 𝑆𝑢′ = 𝑆 × {0, 1} |𝑔𝑢 | .
+                                                        ′ = 𝑠 ⊕ [1, 0].                                                                                                   Figure 4: RMs for the AllYellow task.
+At time-step 𝑡 = 5, assume 𝐵 = { 0 }, { 4 } ; then, 𝑠𝑢,5       5
+
+   The FORM states without outgoing transitions labelled with uni-
+versally quantified formulae keep the state 𝑆 of the environment.                                                                                       2 Code available at https://github.com/leoardon/form.
+Objective. We wish to assess the performance impact of learning           Task 3 – Blue-AllYellow-7. The task consists of visiting any
+FORMs as opposed to using a traditional RM learning method [10].          blue checkpoint        , followed by visiting all yellow checkpoints
+With fewer states, fewer sub-tasks need to be learnt, which should            , visiting the checkpoint 7 , and reaching the      location. The
+make the policy learning easier and therefore faster.                     grid in Figure 1a contains two checkpoints for each colour. This task
+                                                                          is much more complex than the previous ones since it combines
+Results. Figure 4 presents the FORM and propositional RM encod-           existentially and universally quantified atoms, ground atoms, and
+ings of the task and Figure 3a the learning curves of the different       propositions over a long sequence of sub-tasks.
+approaches. The traditional RL learning algorithm PPO (in blue)
+fails at solving this non-Markovian task since it does not learn
+                                                                                        ∃𝑋 . 𝑋        ∀𝑋 . 𝑋        7
+history-dependent policies by default. Recurrent PPO (in purple)                   𝑢0            𝑢1            𝑢2       𝑢3          𝑢𝐴
+converges rapidly to a high return but fails to find the optimal pol-
+icy. On the other hand, the RM-based solutions successfully learn
+an optimal policy to solve the task. The perfect FORM (Figure 4a)                Figure 6: FORM for the Blue-AllYellow-7 task.
+is learnt quickly (policy learning iteration #3) by our algorithm.
+Similarly, the perfect propositional RM (Figure 4b) is learnt at itera-
+tion #4; however, it requires learning more policies since the RM         Objective. This experiment aims to demonstrate the scalability of
+has more states. Our method (in red) converges significantly faster       our approach compared to existing RM learning techniques. The
+than the propositional RM learning method (in green), almost on           expressivity of the first-order language supported by FORMs enables
+par with the case where the RM is not learnt (in orange).                 a more compact encoding, addressing the scalability concerns of
+                                                                          learning propositional RMs.
+Task 2 – GreenButOne-NoLava. For this task, the environment
+is made more complex with the introduction of five randomly placed        Results. The results are shown in Figure 3c. Our approach manages
+lava cells , ending the episode whenever the agent steps on any           to learn the FORM encoding the structure of this task (Figure 6),
+of them. The number of green checkpoints            is increased from     while the propositional RM approach (in green) fails to find the
+two to three. In this task, the agent must visit any green checkpoint     correct RM (see Figure 9 in Appendix A) and times out due to the
+     different than 12 (which is also green), then reach the goal         size of the RM to learn (two more states and twice as many edges
+    but without ever stepping on the lava .                               as the FORM encoding). Moreover, our approach (in red) reaches the
+                                                                          same performance level as that with a handcrafted FORM (in orange).
+                                                                          Our approach therefore scales to more complex problems whereas
+                                             10                           existing methods cannot.
+            Ó
+   ∃𝑋 . 𝑋       ¬ 12
+                                             11                           4.2    FORM Transfer
+   𝑢0              𝑢1        𝑢𝐴        𝑢0          𝑢1           𝑢𝐴
+                                                                          One of the advantages of FORMs lies in their ability to learn RMs
+                                                                          that capture the structure of a task without necessarily being bound
+                   𝑢𝑅                              𝑢𝑅                     to the individual objects of the environments but rather to their
+                                                                          properties (e.g., their colour in our case). It makes the RM transfer-
+        (a) FORM encoding.          (b) Propositional RM encoding.        able to new tasks, considerably improving learning efficiency. Our
+                                                                          multi-agent formulation lets us also transfer the trained policies
+    Figure 5: RMs for the GreenButOne-NoLava task.                        to the new task. Depending on the ‘a priori’ knowledge available,
+                                                                          we may want to restrict the re-training to the ones that need it
+                                                                          (see results below) or re-train all of them (see Appendix F). In both
+                                                                          cases, the transferred policies are used as a warm start.
+Objective. This experiment intends to show the expressivity of the
+learnable rules, including complex disjunctions between first-order       Setup. We reuse the FORM and policies learnt for the AllYellow
+formulae and ground atoms or propositions, and the ability to learn       task (Figure 3a) in two tasks. These tasks increase the number of
+a FORM with rejecting states.                                             yellow checkpoints       to four and six, respectively. We evaluate
+                                                                          the change in learning speed between learning from scratch (w/o
+Results. The results are presented in Figure 3b, where we can see         reuse) and reusing the FORM and policies (w/ reuse). The policy
+that the Handcrafted FORM baseline (in orange) outperforms the            associated with the RM state 𝑢 0 where the agent must “visit all  ”
+other two RM-based approaches converging faster. However, both            is retrained, whereas that for going to     remains unchanged.
+the Propositional RM-based method (in green) and ours (in red)
+                                                                          Objective. This experiment aims to show the transferability of
+achieve a very similar level of performance. In both cases, they
+                                                                          FORMs and the ability to adapt quickly to new tasks. FORMs help
+manage to correctly learn the RMs illustrated in Figure 5, showing
+                                                                          abstract the environment settings, while the multi-agent formula-
+that akin to traditional RM learning methods, our FORM-learning
+                                                                          tion helps the transfer of the policies associated with the sub-tasks.
+method can induce complex task structures involving both accept-
+ing and rejecting states. Both RMs share the same number of states,       Results. Figure 7 shows (in black) the performance of the base
+and thus the policies to train, which explains the similar perfor-        solution being transferred (two yellow checkpoints) along with the
+mance.                                                                    performance of our approach learning the FORM and the policies
+                                                        2 Yellows            4 Yellows (w/ reuse)            6 Yellows (w/ reuse)
+                                                      (transferred )         4 Yellows (w/o reuse)           6 Yellows (w/o reuse)   which usually considers rewards during an option’s activation,
+                             1.0                                                                                                     our approach distributes rewards to all agents that contributed to
+                                                     1.0
+                                                                                                                                     reaching the current RM state.
+                             0.8                     0.8                                                                             Learning RMs. Most RM research has focused on relaxing the
+
+
+
+       Episode Return Mean     Mean Episode Return
+                                                                                                                                     assumption that the RM is known ‘a priori’, proposing various
+                                                     0.6
+                             0.6                                                                                                     methods to learn it dynamically. These methods include discrete
+                                                                                                                                     optimization [38], SAT solving [41], state-merging [12], inferring
+                                                     0.4
+                             0.4                                                                                                     LTL formula from expert data [4], and inductive logic program-
+                                                     0.2
+                                                                                                                                     ming [10, 23], the latter of which forms the base of our approach.
+                             0.2                                                                                                     These techniques leverage traces collected through the agent’s ex-
+                                                     0.0
+                                                                                                                                     ploration or provided by an expert to learn the RM. All these meth-
+                             0.0                            107             108                 109          1010                    ods have focused on learning propositional RMs, which are tailored
+                                                     0         10      20           30      Steps
+                                                                                               40       50     60        70
+                                                                                  Training Iterations
+                                                                                                                                     to specific scenarios and thus lack reusability. Additionally, as the
+                                                                                                                                     task complexity increases, the size of the RMs typically grows ex-
+   Figure 7: Transfer of the FORM learnt for the task from                                                                           ponentially, making them impossible to learn. Finally, more loosely
+Figure 1c, to an environment with more yellow checkpoints                                                                            related to our work, other methods learn ASP rules as a proxy for
+ (w/ reuse) compared against full FORM learning (w/o reuse).                                                                         the policy [5, 21]. However, unlike our work, the ASP encode the
+                                                                                                                                     decision rule of the policy rather than the structure of the task.
+                                                                                                                                        To address the scalability issues inherent to propositional RMs,
+for four and six yellow checkpoints (coloured dotted lines). We then                                                                 recent work has proposed to compose them hierarchically [11],
+reuse the transferred FORM and policies to solve those tasks (coloured                                                               learning small RMs that call each other. This approach requires
+solid lines). We see a significant speed-up in the learning of the                                                                   knowing the level of each RM in the hierarchy and learns them
+optimal policies in both cases, highlighting the benefits of reusing                                                                 bottom-up. Besides, existentially and universally quantified atoms
+existing solutions trained on simpler tasks. See Appendix F for more                                                                 cannot be hierarchically decomposed, making HRM suffer the same
+experiments.                                                                                                                         problem as standard RM learning approaches in these cases. Simi-
+                                                                                                                                     larly, work on multi-agent RL decomposes a task across multiple
+5   RELATED WORK                                                                                                                     agents, each learning their own RM [2]. While these approaches still
+                                                                                                                                     focus on propositional RMs, they could be extended to incorporate
+Exploiting RMs. Recent work has also aimed at increasing the
+                                                                                                                                     our contributions.
+expressivity of RMs, e.g. by introducing counter variables that
+support richer grammars [6]. In parallel, other languages such as
+                                                                                                                                     6   CONCLUSION
+linear temporal logic have also been used to formulate task specifi-
+cations [1, 8, 9, 35]. These approaches primarily focus on exploiting                                                                While the literature has actively contributed to improving the ex-
+the given task structure. Unlike these methods, our approach tackles                                                                 ploitation and learning of RMs, existing methods primarily focus
+the challenge of learning the task structure itself.                                                                                 on propositional RMs, which are limited in their generalizability
+   The exploitation of RMs is often performed in the literature                                                                      and scalability. In this paper, we introduced First-Order Reward
+through QRM [36] or CRM [37]. Although both learn policies over                                                                      Machines (FORMs), a novel extension of reward machines (RMs)
+the joint state space 𝑆 ×U of the MDP and RM, the former associates                                                                  that leverages first-order logic to enhance expressivity and trans-
+an action-value function with each RM state, whereas the latter                                                                      ferability. We propose a learning algorithm that effectively learns
+keeps a single action-value function. These algorithms employ a                                                                      FORMs from traces, and a multi-agent framework that facilitates effi-
+counterfactual mechanism that enables reusing the experiences for                                                                    cient policy learning and transfer. Experimental results demonstrate
+an RM state to update the value associated with other RM states; as                                                                  that, unlike traditional RM methods, FORMs enhance scalability, en-
+such, the underlying RL algorithms are off-policy, e.g. DDQN [37],                                                                   able faster policy and RM learning, and ease task transferability.
+DDPG [31, 37], and SAC [31]. QRM and our approach both learn a                                                                       Although our approach provides greater expressivity than proposi-
+policy for each RM state; however our approach uses an on-policy                                                                     tional logic, extending our methodology to include languages like
+algorithm (PPO). Li et al. [19] also use PPO with RMs but learn a                                                                    LTL could be an interesting avenue to be able to also learn the
+single policy conditioned on 𝑆 × U. Besides, the 𝑄-value function                                                                    structure of temporally extended tasks.
+in QRM is updated by using the successor state’s value function,
+creating a dependency between the policies of each state. We, on the
+other hand, take the approach of using the global reward returned
+by the RM as a signal for each agent, limiting the dependency
+between the policies, hence increasing transferability.
+   Our multi-agent exploitation method aligns with the options
+framework [34]. In our formulation, each agent operates an option
+determining the next action to accomplish a sub-task. In our case,
+an option terminates when the RM state changes (i.e., the option
+for the next RM state initiates). Unlike the options framework,
+REFERENCES                                                                                    Human-level control through deep reinforcement learning. Nature 518, 7540
+ [1] Brandon Araki, Xiao Li, Kiran Vodrahalli, Jonathan A. DeCastro, Micah J. Fry,            (2015), 529–533.
+     and Daniela Rus. 2021. The Logical Options Framework. In Proceedings of the         [23] Roko Parać, Lorenzo Nodari, Leo Ardon, Daniel Furelos-Blanco, Federico Cerutti,
+     International Conference on Machine Learning (ICML). 307–317.                            and Alessandra Russo. 2024. Learning Robust Reward Machines from Noisy
+ [2] Leo Ardon, Daniel Furelos-Blanco, and Alessandra Russo. 2023. Learning Re-               Labels. In Proceedings of the International Conference on Principles of Knowledge
+     ward Machines in Cooperative Multi-Agent Tasks. In Autonomous Agents and                 Representation and Reasoning (KR). 909–919.
+     Multiagent Systems. Best and Visionary Papers. 43–59.                               [24] Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory
+ [3] Leo Ardon, Nelson Vadori, Thomas Spooner, Mengda Xu, Jared Vann, and Sumitra             Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban
+     Ganesh. 2021. Towards a fully RL-based Market Simulator. In Proceedings of the           Desmaison, Andreas Köpf, Edward Z. Yang, Zachary DeVito, Martin Raison,
+     ACM International Conference on AI in Finance. 1–9.                                      Alykhan Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and
+ [4] Mattijs Baert, Sam Leroux, and Pieter Simoens. 2024. Learning Temporal Task              Soumith Chintala. 2019. PyTorch: An Imperative Style, High-Performance Deep
+     Specifications From Demonstrations. In Proceedings of the International Workshop         Learning Library. In Proceedings of the Advances in Neural Information Processing
+     on Explainable and Transparent AI and Multi-Agent Systems (EXTRAAMAS) at the             Systems Conference (NeurIPS). 8024–8035.
+     International Conference on Autonomous Agents and Multiagent Systems (AAMAS).       [25] Ahmad El Sallab, Mohammed Abdou, Etienne Perot, and Senthil Kumar Yogamani.
+     81–98.                                                                                   2017. Deep Reinforcement Learning framework for Autonomous Driving. In
+ [5] Kexin Gu Baugh, Luke Dickens, and Alessandra Russo. 2025. Neural DNF-MT: A               Autonomous Vehicles and Machines. Society for Imaging Science and Technology,
+     Neuro-symbolic Approach for Learning Interpretable and Editable Policies. In             70–76.
+     Proceedings of the International Conference on Autonomous Agents and Multiagent     [26] John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov.
+     Systems (AAMAS).                                                                         2017. Proximal Policy Optimization Algorithms. arXiv:1707.06347
+ [6] Tristan Bester, Benjamin Rosman, Steven James, and Geraud Nangue Tasse. 2024.       [27] Andrew W. Senior, Richard Evans, John Jumper, James Kirkpatrick, Laurent
+     Counting Reward Automata: Sample Efficient Reinforcement Learning Through                Sifre, Tim Green, Chongli Qin, Augustin Zídek, Alexander W. R. Nelson, Alex
+     The Exploitation of Reward Function Structure. In Proceedings of the Neuro-              Bridgland, Hugo Penedones, Stig Petersen, Karen Simonyan, Steve Crossan,
+     Symbolic Learning and Reasoning in the Era of Large Language Models Workshop             Pushmeet Kohli, David T. Jones, David Silver, Koray Kavukcuoglu, and Demis
+     (NucLeaR) at the AAAI Conference on Artificial Intelligence (AAAI).                      Hassabis. 2020. Improved protein structure prediction using potentials from
+ [7] Alberto Camacho, Oscar Chen, Scott Sanner, and Sheila A. McIlraith. 2017. Non-           deep learning. Nature 577, 7792 (2020), 706–710.
+     Markovian Rewards Expressed in LTL: Guiding Search Via Reward Shaping.              [28] David Silver, Aja Huang, Chris J. Maddison, Arthur Guez, Laurent Sifre, George
+     In Proceedings of the International Symposium on Combinatorial Search (SOCS).            van den Driessche, Julian Schrittwieser, Ioannis Antonoglou, Vedavyas Pan-
+     159–160.                                                                                 neershelvam, Marc Lanctot, Sander Dieleman, Dominik Grewe, John Nham,
+ [8] Alberto Camacho, Rodrigo Toro Icarte, Toryn Q. Klassen, Richard Valenzano, and           Nal Kalchbrenner, Ilya Sutskever, Timothy P. Lillicrap, Madeleine Leach, Koray
+     Sheila A. McIlraith. 2019. LTL and Beyond: Formal Languages for Reward Func-             Kavukcuoglu, Thore Graepel, and Demis Hassabis. 2016. Mastering the game of
+     tion Specification in Reinforcement Learning. In Proceedings of the International        Go with deep neural networks and tree search. Nature 529, 7587 (2016), 484–489.
+     Joint Conference on Artificial Intelligence (IJCAI). 6065–6073.                     [29] Thomas Spooner, John Fearnley, Rahul Savani, and Andreas Koukorinis. 2018.
+ [9] Giuseppe De Giacomo, Marco Favorito, Luca Iocchi, Fabio Patrizi, and Alessandro          Market Making via Reinforcement Learning. In Proceedings of the International
+     Ronca. 2020. Temporal Logic Monitoring Rewards via Transducers. In Proceedings           Conference on Autonomous Agents and MultiAgent Systems (AAMAS). 434–442.
+     of the International Conference on Principles of Knowledge Representation and       [30] Jonathan M Stokes, Kevin Yang, Kyle Swanson, Wengong Jin, Andres Cubillos-
+     Reasoning (KR). 860–870.                                                                 Ruiz, Nina M Donghia, Craig R MacNair, Shawn French, Lindsey A Carfrae,
+[10] Daniel Furelos-Blanco, Mark Law, Anders Jonsson, Krysia Broda, and Alessandra            Zohar Bloom-Ackermann, et al. 2020. A deep learning approach to antibiotic
+     Russo. 2021. Induction and Exploitation of Subgoal Automata for Reinforcement            discovery. Cell 180, 4 (2020), 688–702.
+     Learning. Journal of Artificial Intelligence Research 70 (2021), 1031–1116.         [31] Haolin Sun and Yves Lespérance. 2023. Exploiting Reward Machines with Deep
+[11] Daniel Furelos-Blanco, Mark Law, Anders Jonsson, Krysia Broda, and Alessandra            Reinforcement Learning in Continuous Action Domains. In Proceedings of the
+     Russo. 2023. Hierarchies of Reward Machines. In Proceedings of the International         European Conference on Multi-Agent Systems (EUMAS). 83–99.
+     Conference on Machine Learning (ICML). 10494–10541.                                 [32] Richard S. Sutton and Andrew G. Barto. 2018. Reinforcement Learning: An Intro-
+[12] Maor Gaon and Ronen Brafman. 2020. Reinforcement Learning with Non-                      duction. MIT Press.
+     Markovian Rewards. In Proceedings of the AAAI Conference on Artificial Intelli-     [33] Richard S. Sutton, David A. McAllester, Satinder Singh, and Yishay Mansour.
+     gence (AAAI). 3980–3987.                                                                 1999. Policy Gradient Methods for Reinforcement Learning with Function Ap-
+[13] Michael Gelfond and Yulia Kahl. 2014. Knowledge representation, reasoning, and           proximation. In Proceedings of the Advances in Neural Information Processing
+     the design of intelligent agents: The answer-set programming approach. Cambridge         Systems Conference (NeurIPS). 1057–1063.
+     University Press.                                                                   [34] Richard S Sutton, Doina Precup, and Satinder Singh. 1999. Between MDPs and
+[14] Michael Gelfond and Vladimir Lifschitz. 1988. The Stable Model Semantics for             semi-MDPs: A framework for temporal abstraction in reinforcement learning.
+     Logic Programming. In Proceedings of the International Conference and Symposium          Artificial Intelligence 112 (1999), 181–211.
+     on Logic Programming (ICLP/SLP). 1070–1080.                                         [35] Rodrigo Toro Icarte, Toryn Q. Klassen, Richard Valenzano, and Sheila A. McIlraith.
+[15] Alex Kendall, Jeffrey Hawke, David Janz, Przemyslaw Mazur, Daniele Reda, John-           2018. Teaching Multiple Tasks to an RL Agent using LTL. In Proceedings of
+     Mark Allen, Vinh-Dieu Lam, Alex Bewley, and Amar Shah. 2019. Learning to                 the International Conference on Autonomous Agents and Multi-Agent Systems
+     Drive in a Day. In Proceedings of the International Conference on Robotics and           (AAMAS). 452–461.
+     Automation (ICRA). 8248–8254.                                                       [36] Rodrigo Toro Icarte, Toryn Q. Klassen, Richard Valenzano, and Sheila A. McIl-
+[16] Mark Law, Alessandra Russo, and Krysia Broda. 2015. The ILASP System for                 raith. 2018. Using Reward Machines for High-Level Task Specification and
+     Learning Answer Set Programs. https://www.ilasp.com                                      Decomposition in Reinforcement Learning. In Proceedings of the International
+[17] Mark Law, Alessandra Russo, and Krysia Broda. 2016. Iterative Learning of                Conference on Machine Learning (ICML). 2112–2121.
+     Answer Set Programs from Context Dependent Examples. Theory and Practice            [37] Rodrigo Toro Icarte, Toryn Q. Klassen, Richard Valenzano, and Sheila A. McIlraith.
+     of Logic Programming 16, 5-6 (2016), 834–848.                                            2022. Reward Machines: Exploiting Reward Function Structure in Reinforcement
+[18] Mark Law, Alessandra Russo, and Krysia Broda. 2018. The Meta-program Injection           Learning. Journal of Artificial Intelligence Research 73 (2022), 173–208.
+     Feature in ILASP. Technical Report. https://www.doc.ic.ac.uk/~ml1909/ILASP/         [38] Rodrigo Toro Icarte, Ethan Waldie, Toryn Klassen, Rick Valenzano, Margarita
+     inject.pdf                                                                               Castro, and Sheila McIlraith. 2019. Learning Reward Machines for Partially
+[19] Andrew Li, Zizhao Chen, Toryn Klassen, Pashootan Vaezipoor, Rodrigo                      Observable Reinforcement Learning. In Proceedings of the Advances in Neural
+     Toro Icarte, and Sheila McIlraith. 2024. Reward Machines for Deep RL in Noisy            Information Processing Systems Conference (NeurIPS).
+     and Uncertain Environments. In Proceedings of the Advances in Neural Information    [39] Oriol Vinyals, Igor Babuschkin, Wojciech M. Czarnecki, Michaël Mathieu, An-
+     Processing Systems Conference (NeurIPS). 110341–110368.                                  drew Dudzik, Junyoung Chung, David H. Choi, Richard Powell, Timo Ewalds,
+[20] Eric Liang, Richard Liaw, Robert Nishihara, Philipp Moritz, Roy Fox, Ken Gold-           Petko Georgiev, Junhyuk Oh, Dan Horgan, Manuel Kroiss, Ivo Danihelka, Aja
+     berg, Joseph Gonzalez, Michael Jordan, and Ion Stoica. 2018. RLlib: Abstractions         Huang, Laurent Sifre, Trevor Cai, John P. Agapiou, Max Jaderberg, Alexan-
+     for Distributed Reinforcement Learning. In Proceedings of the International Con-         der Sasha Vezhnevets, Rémi Leblond, Tobias Pohlen, Valentin Dalibard, David
+     ference on Machine Learning (ICML). 3053–3062.                                           Budden, Yury Sulsky, James Molloy, Tom Le Paine, Çaglar Gülçehre, Ziyu Wang,
+[21] Daniele Meli, Alberto Castellini, and Alessandro Farinelli. 2024. Learning Logic         Tobias Pfaff, Yuhuai Wu, Roman Ring, Dani Yogatama, Dario Wünsch, Katrina
+     Specifications for Policy Guidance in POMDPs: an Inductive Logic Programming             McKinney, Oliver Smith, Tom Schaul, Timothy P. Lillicrap, Koray Kavukcuoglu,
+     Approach. Journal of Artificial Intelligence Research 79 (2024), 725–776.                Demis Hassabis, Chris Apps, and David Silver. 2019. Grandmaster level in
+[22] Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei A. Rusu, Joel Veness,            StarCraft II using multi-agent reinforcement learning. Nature 575, 7782 (2019),
+     Marc G. Bellemare, Alex Graves, Martin A. Riedmiller, Andreas Fidjeland, Georg           350–354.
+     Ostrovski, Stig Petersen, Charles Beattie, Amir Sadik, Ioannis Antonoglou, Helen    [40] Peter R. Wurman, Samuel Barrett, Kenta Kawamoto, James MacGlashan, Kaushik
+     King, Dharshan Kumaran, Daan Wierstra, Shane Legg, and Demis Hassabis. 2015.             Subramanian, Thomas J. Walsh, Roberto Capobianco, Alisa Devlic, Franziska
+     Eckert, Florian Fuchs, Leilani Gilpin, Piyush Khandelwal, Varun Raj Kompella,          for Reinforcement Learning. In Proceedings of the International Conference on
+     HaoChih Lin, Patrick MacAlpine, Declan Oller, Takuma Seno, Craig Sherstan,             Automated Planning and Scheduling (ICAPS). 590–598.
+     Michael D. Thomure, Houmehr Aghabozorgi, Leon Barrett, Rory Douglas, Dion         [42] Chao Yu, Akash Velu, Eugene Vinitsky, Jiaxuan Gao, Yu Wang, Alexandre M.
+     Whitehead, Peter Dürr, Peter Stone, Michael Spranger, and Hiroaki Kitano. 2022.        Bayen, and Yi Wu. 2022. The Surprising Effectiveness of PPO in Cooperative
+     Outracing champion Gran Turismo drivers with deep reinforcement learning.              Multi-Agent Games. In Proceedings of the Advances in Neural Information Pro-
+     Nature 602, 7896 (2022), 223–228.                                                      cessing Conference (NeurIPS).
+[41] Zhe Xu, Ivan Gavran, Yousef Ahmad, Rupak Majumdar, Daniel Neider, Ufuk
+     Topcu, and Bo Wu. 2020. Joint Inference of Reward Machines and Policies
+SUPPLEMENTARY MATERIAL                                                                           is observed; e.g. for AllYellow, a goal trace always contains a sub-
+                                                                                                 sequence of yellow checkpoints followed by the goal cell. A goal
+A REWARD MACHINES
+                                                                                                 trace will never contain just a fraction of yellow cells because the
+In this section, we present some reward machines (RMs) omitted                                   environment will not label the trace as a goal trace in such a case.
+in the main paper. Figure 8 exemplifies the equivalence between                                  The first learnt FORM will probably not be the target one, e.g. it may
+traditional and first-order RMs originally shown in Figure 2b but                                just contain an edge labeled with a yellow checkpoint or the goal
+extended to a case with three objects. Figure 9 shows the proposi-                               cell. In the following steps, the agent will collect counterexamples
+tional RM for the Blue-AllYellow-7 task, whose first-order RM is                                 that refute the hypothesis that the current FORM is the target one,
+shown in Figure 6.                                                                               and drive the agent towards learning the target one. Theorem 7.1
+                                                                                                 from [10] shows that if the target FORM is in the hypothesis space, it
+                                                 2
+                          𝑢1                                   𝑢4                                will be found with a finite number of counterexamples. We aim to
+                                                                              3                  learn a FORM with the fewest number of states and transitions, so the
+                 1                 1                  3
+                                                                                                 ILASP learning task is such that a solution with a minimal number
+                     3                                    1                       2              of rules selected from the hypothesis space will be preferred. Thus,
+            𝑢0                         𝑢3                                𝑢5            𝑢7        events irrelevant to the target task (e.g., blue circles for AllYellow)
+                                                                                                 will either be omitted from the FORM or will eventually be discarded
+                                                       2
+                 2                                                                               through counterexamples if they ever appear in a candidate FORM.
+                                                                              1
+                                             3
+                          𝑢2                                   𝑢6
+                                                                                                 Table 1: Hyperparameters used for Handcrafted RM, Propo-
+                                                                                                 sitional RM Learning and FORM Learning.
+                                                       ⇓
+                                                     ∀𝑋 . 𝑋                                         Hyperparameter                                   Value
+                                            𝑢0                      𝑢1
+                                                                                                    Gamma                                            0.999
+                                                                                                    Learning Rate                                    7e-4
+                                                                                                    Train Batch Size                                 16384
+    Figure 8: Equivalence between a propositional and a
+                                                                                                    SGD Mini Batch Size                              4096
+first-order RM for the All-Yellow task with three yellow
+                                                                                                    Number SGD Iteration                             20
+                       checkpoints .
+                                                                                                    Value Function Loss Coeff.                       0.5
+                                                                                                    Entropy Coeff.                                   0.01
+                                                                                                    Clip ratio                                       0.15
+                 5
+                                            𝑢2                                                      Value Function Clip ratio                        0.1
+                               1                           0
+                                                                          7                         Gradient Clip                                    0.7
+       𝑢0                𝑢1                                    𝑢4                 𝑢5        𝑢𝐴
+                                                                                                    KL Target                                        0.15
+                 4             0            𝑢3             1                                        Optimizer                                        Adam
+                                                                                                    GAE                                              True
+                                                                                                    Lambda                                           0.95
+             Figure 9: Propositional RM encoding the
+                                                                                                    Number Hidden Layers                             2
+                    Blue-AllYellow-7 task.
+                                                                                                    Hidden Dimension                                 64
+                                                                                                    Activation Function                              tanh
+                                                                                                    CNN Conv Filters (Channel, Kernel, Stride)       [16, [2, 2], 1],
+B    FORM LEARNING PROCESS                                                                                                                           [32, [2, 2], 1],
+We detail in this section the RM learning algorithm from [10] used                                                                                   [32, [2, 2], 1]
+as the base of our approach to learn FORMs. There are two types                                     CNN Max Pooling (Filter, Stride)                 [2, 2],
+of traces collected by the agent: (i) goal traces, which achieve the                                                                                 None,
+task’s goal (e.g., visiting all     followed by visiting ), and (ii)                                                                                 None
+incomplete traces (i.e. any trace that is not a goal trace). ILASP must
+learn a transition function such that goal traces reach the accepting
+state, and incomplete traces do not reach the accepting state. The
+                                                                                                 C EXPERIMENTAL DETAILS
+trace type (goal, incomplete) is determined by the environment
+according to whether the task’s goal is reached or not.                                          The code is available at https://github.com/leoardon/form. The ex-
+   We start from a dummy FORM consisting of an initial state without                             periments are run using the RLlib framework [20]. All experiments
+outgoing edges. The learning of new FORMs is driven by counterex-                                were run on a c6a.12xlarge AWS machine, parallelizing the runs
+amples, i.e. goal traces that do not reach the accepting state in the                            for 12 different seeds. An episode is automatically terminated when
+current FORM, or incomplete traces that reach the accepting state.                               the agent has accomplished the task or when it has reached the
+The agent cannot initially exploit a valuable FORM, so it acts ran-                              maximum number of time-steps (3000), whichever comes first. We
+domly. The learning of the first FORM is triggered when a goal trace                             set a timeout of 1ℎ for ILASP to return a solution. We apply early-
+                                                                                                 stopping of the training whenever the mean return falls by more
+ Table 2: Hyperparameters used for single policy learning.              E     DETERMINISM ASP ENCODING
+                                                                        In this section, we describe the ASP encoding of the determinism-
+    Hyperparameter                                 Value                related constraints, whose intuition is outlined in Section 3.3. These
+    Gamma                                          0.999                rules enforce mutual exclusivity between the formulae labelling
+    Learning Rate                                  7e-4                 transitions from a given state to two different states.
+    Train Batch Size                               49152                   The ASP representation of the formulae labelling the edges is
+    SGD Mini Batch Size                            256                  done using rules; however, defining constraints over rules is not
+    Number SGD Iteration                           20                   straightforward. To address this problem, we associate rules in
+    Value Function Loss Coeff.                     0.5                  the hypothesis spaces with facts, over which defining the mutual
+    Entropy Coeff.                                 0.01                 exclusivity constraints is easy. The mapping from rules to facts is:
+    Clip ratio                                     0.15                     
+                                                                             pos(X,Y,E,obs(o)).     𝜙¯(X,Y,E,T) : - not obs(o,T),step(T).   
+                                                                            
+                                                                             neg(X,Y,E,obs(o)).     𝜙¯(X,Y,E,T) : - obs(o,T),step(T).        
+                                                                                                                                              
+    Value Function Clip ratio                      0.1                                               ¯
+                                                                                                                                              
+                                                                            
+                                                                            pos(X,Y,E,e_pred(p)).   𝜙 (X,Y,E,T) : - not e_pred(p,T),step(T). 
+                                                                                                                                              
+    Gradient Clip                                  0.7                      neg(X,Y,E,e_pred(p)).     ¯
+                                                                                                     𝜙 (X,Y,E,T) : - e_pred(p,T),step(T).
+                                                                                                                                                ,
+                                                                                                                                             
+                                                                                                     𝜙¯(X,Y,E,T) : - not a_pred(p,T),step(T). 
+                                                                                                                                             
+    KL Target                                      0.15                    pos(X,Y,E,a_pred(p)).
+                                                                          
+                                                                                                                                             
+                                                                                                     𝜙¯(X,Y,E,T) : - a_pred(p,T),step(T).
+                                                                                                                                              
+    Optimizer                                      Adam                    neg(X,Y,E,a_pred(p)).                                             
+    GAE                                            True                 where pos (resp. neg) facts denote that a proposition or quantified
+    Lambda                                         0.95                 atom appears positively (resp. negatively) in the transition. Re-
+                                                                        member that the actual transition is the negation of 𝜙,  ¯ hence why
+    Number Hidden Layers                           2
+    Hidden Dimension                               64                   the not are mapped into pos. The ILASP system enables performing
+    Activation Function                            Tanh                 the mapping at learning time through meta-program injection [18];
+    CNN Conv Filters (Channel, Kernel, Stride)     [16, [2, 2], 1],     therefore, we can express the mutual exclusivity constraints in
+                                                   [32, [2, 2], 1],     terms of pos and neg facts.
+                                                   [32, [2, 2], 1]         Before defining the constraint, we need to map quantified atoms
+    CNN Max Pooling (Filter, Stride)               [2, 2],              into their respective sets of ground atoms, as described in Section 3.3.
+                                                   None,                Listing 3 contains the ASP program that performs the mapping.
+                                                   None                    Example E.1. Given the grid from Figure 1a, the mapping for the
+    Number LSTM Layers                             1                    formulae ¬∃𝑋 . 𝑋 labelling a transition from state X to state Y using
+    LSTM Hidden Dimension                          256                  the edge with id E is:
+                                                                                                                                    
+                                                                                neg(X,Y,E,obs( 4 ) ) ∧
+                                                                                                          neg(X,Y,E,e_pred(        )) .
+than 10% of its current value after crossing the limit of 70% of the              neg(X,Y,E,obs( 5 ) )
+maximum possible return.                                                The mapping for the formula ∃𝑋 . 𝑋 is analogous:
+                                                                                                                                         
+Policy Learning. We use RLlib’s PyTorch [24] implementation of                    pos(X,Y,E,obs( 4 ) ) ∨
+                                                                                                              pos(X,Y,E,e_pred(         )) .
+PPO. Default weight initializations are employed. A convolutional                 pos(X,Y,E,obs( 5 ) )
+neural network (CNN) processes the image of the environment,               We then enforce the mutual exclusivity of each atomic formulae
+and multi-layer perceptrons process the buffer and the RM state.        between edges starting from the same node and reaching different
+The outputs of the CNN and the MLPs are concatenated and fed to         ones [10], using the neg and pos facts of the propositions, ground
+the policy network. We use the reward shaping technique from [7]        atoms and the mapped ground atoms associated with quantified
+using the distance to the closest accepting state of the RM as po-      atoms.
+tential function, for all the experiments with an RM (Propositional
+or First-Order). In the single policy experiments (see Appendix F),     F     ADDITIONAL TRANSFER EXPERIMENTS
+there is only the CNN and one MLP (i.e., that for the RM state
+                                                                        We show the benefit of our multi-agent learning approach compared
+is processed). The deep layers of the value function network are
+                                                                        to a single policy, when transferring the RM and the policy to a
+shared between the actor and the critic. The hyperparameters for
+                                                                        new environment. The single policy is trained on the cross-product
+the multi-agent and single policy settings are presented in Tables 1
+                                                                        between the environment state space 𝑆 and the RM state space U.
+and 2, respectively.
+
+D    ILASP LEARNING TIMINGS                                             Table 3: ILASP Learning Timings between Propositional RM
+Table 3 shows the timings associated with the last ILASP task (i.e.     learning and FORM learning.
+the one that learnt the correct RM) for the baseline method to learn
+propositional RM and for our FORM learning approach. In general,                                           Propositional RM         FORM (ours)
+since FORMs are more compact (i.e. they have fewer states and edges),
+                                                                             AllYellow                           16.3s                  1.0s
+they can be learnt faster. The performance is comparable when the
+                                                                         GreenButOne-NoLava                       0.6s                  0.5s
+number of states is the same, such as in the GreenButOne-NoLava
+                                                                          Blue-AllYellow-7                     Timed Out                12.8s
+task.
+Listing 3: Mapping from Quantified Atoms to Ground Atoms                                                          In the new environment, the number of yellow checkpoints ( ) is
+1    %%%% Assuming the facts :                                                                                    increased from two to four and six, but the task remains the same:
+2    %%%% "P(o1). P(o2) ."                                                                                        “visit all yellow checkpoints       , before going to the location ”.
+3                                                                                                                 We observe that for the single policy, the transfer is ineffective and
+4    pos (X , Y , E , obs (P(o1) ) ) : - pos (X , Y , E , a_pred (P) ) .
+                                                                                                                  the policy does not succeed in the new environment. On the other
+5    pos (X , Y , E , obs (P(o2) ) ) : - pos (X , Y , E , a_pred (P) ) .
+6
+                                                                                                                  hand, we observe that our multi-agent approach succeeds in the
+7    neg (X , Y , E , obs (P(o1) ) ) : - neg (X , Y , E , e_pred (P) ) .                                          new environment.
+8    neg (X , Y , E , obs (P(o2) ) ) : - neg (X , Y , E , e_pred (P) ) .                                             We also analyse the impact of reusing policies that have been
+9
+                                                                                                                  trained on a simpler task (2-Yellow) into more complex ones: 4-
+10   1 { pos (X , Y , E , obs (P(o1) ) ) ;
+11   pos (X , Y , E , obs (P(o2) ) ) } 2 : -
+                                                                                                                  Yellow (Figure 10) and 6-Yellow (Figure 11). We examine different
+12        pos (X , Y , E , e_pred (P) ) .                                                                         configurations and compare the number of iterations to converge
+13                                                                                                                with the base case where the policies are learnt from scratch (With-
+14   1 { neg (X , Y , E , obs (P(o1) ) ) ;                                                                        out reuse). The first configuration (With reuse - Partial re-training)
+15   neg (X , Y , E , obs (P(o2) ) ) } 2 : -
+                                                                                                                  corresponds to the case where we know ‘a priori’ the policies that
+16        neg (X , Y , E , a_pred (P) ) .
+                                                                                                                  must be retrained. In that case, we can simply retrain a subset of
+                                                                                                                  the policies and use the others in inference mode during training.
+                  With reuse - Partial re-training         With reuse - Full re-training          Without reuse
+                                                                                                                  We observe a huge speed-up in the learning of the policies with
+                           1.0
+                                                                                                                  the agents converging in fewer iterations for both 4-Yellow and
+                                                                                                                  6-Yellow. In the second case, we retrain all the policies (With reuse
+                                                                                                                  - Full re-training) but use the transferred policies as a warm start. In
+                           0.8
+                                                                                                                  this configuration we observe a decent speed-up for the 4-Yellow
+
+
+
+     Mean Episode Return
+                                                                                                                  task but only a marginal improvement for 6-Yellow.
+                           0.6
+                                                                                                                     Figure 12 shows the benefit of our multi-agent approach by
+                                                                                                                  comparing the performance of transferring the FORM learnt with a
+                           0.4
+                                                                                                                  single policy with the performance of transferring the FORM learnt
+                                                                                                                  with out multi-agent approach. By having separate policies, the
+                           0.2                                                                                    adaptation to a new environment configuration is feasible. While
+                                                                                                                  the single policy associated with the learnt FORM fails to transfer
+                           0.0                                                                                    to a different configuration, our multi-agent approach is able to
+                                    108              109                1010               1011                   re-train only the policies that need retraining but re-using the other
+                                                           Steps
+                                                                                                                  policies.
+
+                                 Figure 10: Transfer to the 4-Yellow task.                                                                                   4 Yellows (w/ reuse, MA)             4 Yellows (w/ reuse, SP)
+                                                                                                                                                             6 Yellows (w/ reuse, MA)             6 Yellows (w/ reuse, SP)
+
+
+
+
+                                                                                                                           Mean Episode Return
+                  With reuse - Partial re-training         With reuse - Full re-training          Without reuse                                  1.0
+
+
+
+                                                                                                                                                 0.5
+                           1.0
+
+
+                                                                                                                                                 0.0
+                                                                                                                                                       107                 108              109                 1010
+                           0.8
+                                                                                                                                                                                    Steps
+
+
+
+
+     Mean Episode Return
+                           0.6
+                                                                                                                   Figure 12: Transferring the RM and policies learnt with a
+                                                                                                                   single policy (SP) versus our multi-agent approach (MA).
+                           0.4
+
+
+
+                           0.2
+
+
+
+                           0.0
+
+                                    108              109                1010               1011
+                                                           Steps
+
+
+                                 Figure 11: Transfer to the 6-Yellow task.
+

@@ -1,0 +1,344 @@
+[
+  {
+    "tag": "rung_1.3",
+    "prefixes": 185,
+    "true_classes": 29,
+    "full_evidence": {
+      "legacy": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 29,
+        "true_classes": 29
+      },
+      "loose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 29,
+        "true_classes": 29
+      },
+      "strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 29,
+        "true_classes": 29
+      }
+    },
+    "graded": {
+      "1.0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 29.0
+      },
+      "0.95": {
+        "precision": 0.9317941487267708,
+        "recall": 0.6526958290946083,
+        "classes": 48.2
+      },
+      "0.9": {
+        "precision": 0.7995141686322113,
+        "recall": 0.4238046795523906,
+        "classes": 55.2
+      },
+      "0.8": {
+        "precision": 0.2840447939368775,
+        "recall": 0.08952187182095625,
+        "classes": 76.2
+      },
+      "0.65": {
+        "precision": 0.11512131955272083,
+        "recall": 0.06978636826042726,
+        "classes": 57.8
+      },
+      "0.5": {
+        "precision": 0.08971865711133181,
+        "recall": 0.1422177009155646,
+        "classes": 35.8
+      }
+    }
+  },
+  {
+    "tag": "rung_1.6",
+    "prefixes": 34,
+    "true_classes": 15,
+    "full_evidence": {
+      "legacy": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 15,
+        "true_classes": 15
+      },
+      "loose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 15,
+        "true_classes": 15
+      },
+      "strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 15,
+        "true_classes": 15
+      }
+    },
+    "graded": {
+      "1.0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 15.0
+      },
+      "0.95": {
+        "precision": 0.8810364372469636,
+        "recall": 0.6628571428571428,
+        "classes": 18.0
+      },
+      "0.9": {
+        "precision": 0.643982973548191,
+        "recall": 0.4628571428571428,
+        "classes": 19.2
+      },
+      "0.8": {
+        "precision": 0.282031746031746,
+        "recall": 0.2342857142857143,
+        "classes": 18.0
+      },
+      "0.65": {
+        "precision": 0.1437908496732026,
+        "recall": 0.18285714285714286,
+        "classes": 13.4
+      },
+      "0.5": {
+        "precision": 0.06812532255281264,
+        "recall": 0.18857142857142856,
+        "classes": 9.2
+      }
+    }
+  },
+  {
+    "tag": "rung_1.8",
+    "prefixes": 161,
+    "true_classes": 27,
+    "full_evidence": {
+      "legacy": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 27,
+        "true_classes": 27
+      },
+      "loose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 27,
+        "true_classes": 27
+      },
+      "strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 27,
+        "true_classes": 27
+      }
+    },
+    "graded": {
+      "1.0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 27.0
+      },
+      "0.95": {
+        "precision": 0.928346437530761,
+        "recall": 0.7722679200940071,
+        "classes": 35.6
+      },
+      "0.9": {
+        "precision": 0.8362191636446319,
+        "recall": 0.5203290246768508,
+        "classes": 47.0
+      },
+      "0.8": {
+        "precision": 0.32225010229377915,
+        "recall": 0.11045828437132785,
+        "classes": 65.8
+      },
+      "0.65": {
+        "precision": 0.13779096617130632,
+        "recall": 0.07144535840188014,
+        "classes": 51.0
+      },
+      "0.5": {
+        "precision": 0.0914500038016443,
+        "recall": 0.12549941245593418,
+        "classes": 31.6
+      }
+    }
+  },
+  {
+    "tag": "rung_2",
+    "prefixes": 46,
+    "true_classes": 19,
+    "full_evidence": {
+      "legacy": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 19,
+        "true_classes": 19
+      },
+      "loose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 19,
+        "true_classes": 19
+      },
+      "strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 19,
+        "true_classes": 19
+      }
+    },
+    "graded": {
+      "1.0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 19.0
+      },
+      "0.95": {
+        "precision": 0.8470795469751712,
+        "recall": 0.7914893617021276,
+        "classes": 20.4
+      },
+      "0.9": {
+        "precision": 0.6386909726616418,
+        "recall": 0.5659574468085106,
+        "classes": 22.4
+      },
+      "0.8": {
+        "precision": 0.28628580333489173,
+        "recall": 0.2893617021276596,
+        "classes": 22.0
+      },
+      "0.65": {
+        "precision": 0.13332680620606316,
+        "recall": 0.19148936170212766,
+        "classes": 18.4
+      },
+      "0.5": {
+        "precision": 0.07121681789758222,
+        "recall": 0.19148936170212766,
+        "classes": 13.2
+      }
+    }
+  },
+  {
+    "tag": "rung_2.2",
+    "prefixes": 233,
+    "true_classes": 33,
+    "full_evidence": {
+      "legacy": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 33,
+        "true_classes": 33
+      },
+      "loose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 33,
+        "true_classes": 33
+      },
+      "strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 33,
+        "true_classes": 33
+      }
+    },
+    "graded": {
+      "1.0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 33.0
+      },
+      "0.95": {
+        "precision": 0.8500081715836079,
+        "recall": 0.6992782678428228,
+        "classes": 48.4
+      },
+      "0.9": {
+        "precision": 0.710362074756379,
+        "recall": 0.29655172413793107,
+        "classes": 79.0
+      },
+      "0.8": {
+        "precision": 0.19599052434538958,
+        "recall": 0.06623897353648757,
+        "classes": 98.4
+      },
+      "0.65": {
+        "precision": 0.09513376589538358,
+        "recall": 0.06559743384121892,
+        "classes": 68.8
+      },
+      "0.5": {
+        "precision": 0.06578094505236852,
+        "recall": 0.12413793103448276,
+        "classes": 40.8
+      }
+    }
+  },
+  {
+    "tag": "rung_2.6",
+    "prefixes": 209,
+    "true_classes": 31,
+    "full_evidence": {
+      "legacy": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 31,
+        "true_classes": 31
+      },
+      "loose": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 31,
+        "true_classes": 31
+      },
+      "strict": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 31,
+        "true_classes": 31
+      }
+    },
+    "graded": {
+      "1.0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "classes": 31.0
+      },
+      "0.95": {
+        "precision": 0.8775434024507568,
+        "recall": 0.577219730941704,
+        "classes": 54.8
+      },
+      "0.9": {
+        "precision": 0.6902415532455531,
+        "recall": 0.284304932735426,
+        "classes": 70.4
+      },
+      "0.8": {
+        "precision": 0.21095295088086186,
+        "recall": 0.07013452914798206,
+        "classes": 90.4
+      },
+      "0.65": {
+        "precision": 0.09822588912227141,
+        "recall": 0.05955156950672645,
+        "classes": 65.2
+      },
+      "0.5": {
+        "precision": 0.07061716886001605,
+        "recall": 0.1180269058295964,
+        "classes": 37.4
+      }
+    }
+  }
+]

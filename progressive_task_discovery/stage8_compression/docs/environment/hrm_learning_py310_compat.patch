@@ -1,0 +1,61 @@
+diff --git a/src/ilasp/ilasp_common.py b/src/ilasp/ilasp_common.py
+index f98dad6..e60634b 100644
+--- a/src/ilasp/ilasp_common.py
++++ b/src/ilasp/ilasp_common.py
+@@ -27,4 +27,7 @@ def set_ilasp_env_variables(root_folder_path):
+ 
+ def _set_env_variable(root_folder_path, dir, env_var):
+     final_path = os.path.join(root_folder_path, dir)
+-    os.environ.putenv(env_var, final_path + os.pathsep + os.environ.get(env_var, ""))
++    # os.environ.putenv was removed in Python 3.9. Assigning to os.environ sets
++    # the variable for this process and its children, which is what the original
++    # call intended; putenv alone never updated os.environ anyway.
++    os.environ[env_var] = final_path + os.pathsep + os.environ.get(env_var, "")
+diff --git a/src/reinforcement_learning/learning_algorithm.py b/src/reinforcement_learning/learning_algorithm.py
+index 880fb73..47d9ad1 100644
+--- a/src/reinforcement_learning/learning_algorithm.py
++++ b/src/reinforcement_learning/learning_algorithm.py
+@@ -100,7 +100,14 @@ class LearningAlgorithm(ABC):
+ 
+         # General reinforcement learning parameters
+         use_gpu = get_param(params, LearningAlgorithm.USE_GPU, False)
+-        self.device = "cuda" if use_gpu and torch.cuda.is_available() else "cpu"
++        # Apple silicon has no CUDA; MPS is the equivalent backend and the
++        # original line would silently fall back to the CPU on this machine.
++        if use_gpu and torch.cuda.is_available():
++            self.device = "cuda"
++        elif use_gpu and getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
++            self.device = "mps"
++        else:
++            self.device = "cpu"
+         self.debug = get_param(params, LearningAlgorithm.DEBUG, False)
+         self.training_enable = get_param(params, LearningAlgorithm.TRAINING_ENABLE, True)
+         self.num_episodes = get_param(params, LearningAlgorithm.NUM_EPISODES, 20000)
+diff --git a/src/run_algorithm.py b/src/run_algorithm.py
+index 72739e4..4f473e6 100755
+--- a/src/run_algorithm.py
++++ b/src/run_algorithm.py
+@@ -9,6 +9,8 @@ from reinforcement_learning.drqn_algorithm import DRQNAlgorithm
+ from reinforcement_learning.ihsa_crm_algorithm import IHSAAlgorithmCRM
+ from reinforcement_learning.ihsa_dqrm_algorithm import IHSAAlgorithmDQRM
+ from reinforcement_learning.ihsa_hrl_tabular_algorithm import IHSAAlgorithmHRLTabular
++from reinforcement_learning.ihsa_hrl_tabular_perstate_algorithm import IHSAAlgorithmHRLTabularPerState
++from reinforcement_learning.ihsa_hrl_dqn_perstate_algorithm import IHSAAlgorithmHRLDQNPerState
+ from reinforcement_learning.ihsa_hrl_dqn_algorithm import IHSAAlgorithmHRLDQN
+ from reinforcement_learning.learning_algorithm import LearningAlgorithm
+ import sys
+@@ -72,6 +74,14 @@ if __name__ == "__main__":
+                 algorithm = IHSAAlgorithmHRLDQN(config)
+             else:
+                 raise RuntimeError(f"Error: Unrecognized observation format '{state_format}'.")
++        elif algorithm_name == "ihsa-hrl-perstate":
++            state_format = get_param(config, LearningAlgorithm.STATE_FORMAT)
++            if state_format == LearningAlgorithm.STATE_FORMAT_TABULAR:
++                algorithm = IHSAAlgorithmHRLTabularPerState(config)
++            elif state_format in [LearningAlgorithm.STATE_FORMAT_ONE_HOT, LearningAlgorithm.STATE_FORMAT_FULL_OBS]:
++                algorithm = IHSAAlgorithmHRLDQNPerState(config)
++            else:
++                raise RuntimeError(f"Error: Unrecognized observation format '{state_format}'.")
+         elif algorithm_name == "ihsa-crm":
+             algorithm = IHSAAlgorithmCRM(config)
+         elif algorithm_name == "ihsa-dqrm":

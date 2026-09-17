@@ -1,0 +1,248 @@
+{
+  "task": "taskQ",
+  "band": "mid",
+  "n": 4,
+  "d": 2,
+  "m": 1,
+  "m2": 4,
+  "pair": [
+    0,
+    1
+  ],
+  "L": 2,
+  "arm": 8,
+  "overlap": 0.3333333333333333,
+  "source_seed": 80005,
+  "target_seed": 80050,
+  "source_orders": [
+    [
+      0,
+      2,
+      1,
+      3
+    ],
+    [
+      0,
+      3,
+      1,
+      2
+    ],
+    [
+      1,
+      2,
+      3,
+      0
+    ],
+    [
+      2,
+      0,
+      1,
+      3
+    ]
+  ],
+  "target_orders": [
+    [
+      0,
+      3,
+      1,
+      2
+    ],
+    [
+      1,
+      2,
+      0,
+      3
+    ],
+    [
+      2,
+      0,
+      1,
+      3
+    ],
+    [
+      2,
+      1,
+      3,
+      0
+    ],
+    [
+      3,
+      0,
+      1,
+      2
+    ],
+    [
+      3,
+      1,
+      2,
+      0
+    ]
+  ],
+  "mapA": {
+    "tag": "taskQ_mid4A",
+    "seed": 80005,
+    "orders": 4,
+    "horizon": 58,
+    "lengths": [
+      17,
+      13,
+      29,
+      23
+    ],
+    "cells": 31
+  },
+  "mapB": {
+    "tag": "taskQ_mid4B",
+    "seed": 80050,
+    "orders": 6,
+    "horizon": 56,
+    "lengths": [
+      26,
+      23,
+      16,
+      28,
+      27,
+      25
+    ],
+    "cells": 31
+  },
+  "seed": 80050,
+  "tag": "taskQ_mid_safeB",
+  "target": "taskQ_mid_safeB",
+  "fatal": false,
+  "horizon": 56,
+  "lengths": [
+    26,
+    23,
+    16,
+    28,
+    27,
+    25
+  ],
+  "starts": [
+    20,
+    25,
+    28,
+    0,
+    17,
+    23
+  ],
+  "tail_lengths": [
+    1,
+    4
+  ],
+  "failing_states": 0,
+  "history_states": 50,
+  "minimal_states": 23,
+  "denominator": "window4",
+  "denominator_states": 41,
+  "min_sufficient_window": 4,
+  "honest_ratio": 1.7826086956521738,
+  "orders": 6,
+  "feature_sizes": {
+    "count": 11,
+    "bag": 20,
+    "window1": 23,
+    "window2": 30,
+    "window3": 36,
+    "window4": 41,
+    "window5": 44,
+    "window6": 47,
+    "window7": 49,
+    "history": 50
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": false,
+    "window4": true,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      3,
+      1,
+      2,
+      4,
+      5,
+      4
+    ],
+    [
+      1,
+      2,
+      0,
+      3,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6
+    ],
+    [
+      2,
+      0,
+      1,
+      3,
+      4,
+      5,
+      4
+    ],
+    [
+      2,
+      1,
+      3,
+      0,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6
+    ],
+    [
+      3,
+      0,
+      1,
+      2,
+      4,
+      5,
+      4
+    ],
+    [
+      3,
+      1,
+      2,
+      0,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6
+    ]
+  ],
+  "task_states": 29,
+  "minimal_total": 28,
+  "bridge": [
+    4,
+    5
+  ],
+  "tails": [
+    [
+      4
+    ],
+    [
+      6,
+      4,
+      5,
+      6
+    ]
+  ]
+}

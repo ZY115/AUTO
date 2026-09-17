@@ -1,0 +1,18 @@
+{
+  "cheap": {
+    "n": 16,
+    "attainment_area_interaction": {
+      "mean": 0.001975,
+      "lo": 0.0003,
+      "hi": 0.004608333333333333
+    }
+  },
+  "expensive": {
+    "n": 9,
+    "attainment_area_interaction": {
+      "mean": 0.7704740740740741,
+      "lo": 0.4819407407407407,
+      "hi": 0.9725037037037036
+    }
+  }
+}

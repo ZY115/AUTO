@@ -1,0 +1,23 @@
+{
+  "runner": "src/run_p2.py",
+  "families": 24,
+  "arms": [
+    "raw_free",
+    "window2_free",
+    "window4_free",
+    "count_free",
+    "history_80",
+    "history_320",
+    "goal_80",
+    "goal_160",
+    "goal_320",
+    "goal_free"
+  ],
+  "seeds": 6,
+  "seed0": 10100,
+  "budget": 200000,
+  "runs": 1440,
+  "source_sha256": "688e44663e8e935a14dffe2d925c91cd930053e9e48901345a064ff9895cc90b",
+  "data_sha256": "33b58e2dd0cee903e22fe5a5e3f7dd46a969ff1ac13308d02debb474f94e5d3a",
+  "written": "2026-09-11"
+}

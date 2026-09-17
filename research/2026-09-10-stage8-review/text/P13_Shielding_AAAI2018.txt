@@ -1,0 +1,718 @@
+                                                      The Thirty-Second AAAI Conference
+                                                       on Artificial Intelligence (AAAI-18)
+
+
+
+
+                                 Safe Reinforcement Learning via Shielding
+                             Mohammed Alshiekh,1 Roderick Bloem,2 Rüdiger Ehlers,3
+                                Bettina Könighofer,2 Scott Niekum,1 Ufuk Topcu 1
+                         1
+                       University of Texas at Austin, 210 East 24th Street, Austin, Texas 78712, USA
+                          2
+                            Graz University of Technology, Rechbauerstraße 12, 8010 Graz, Austria
+                 3
+                   University of Bremen and DFKI GmbH, Bibliothekstraße 1, 28359 Bremen, Deutschland
+ {malshiekh, sniekum, utopcu}@utexas.edu, {roderick.bloem, bettina.koenighofer}@iaik.tugraz.at, rehlers@uni-bremen.de
+
+
+                             Abstract                                                                 reward
+                                                                                 Environment                      Learning Agent
+  Reinforcement learning algorithms discover policies that                                          observation
+  maximize reward, but do not necessarily guarantee safety dur-                                                          actions
+  ing learning or execution phases. We introduce a new ap-
+  proach to learn optimal policies while enforcing properties                                                         Shield
+  expressed in temporal logic. To this end, given the temporal                                safe action
+  logic speciﬁcation that is to be obeyed by the learning system,
+  we propose to synthesize a reactive system called a shield.
+  The shield monitors the actions from the learner and corrects                        Figure 1: Shielded reinforcement learning
+  them only if the chosen action causes a violation of the spec-
+  iﬁcation. We discuss which requirements a shield must meet
+  to preserve the convergence guarantees of the learner. Finally,           its operation whenever absolutely needed in order to ensure
+  we demonstrate the versatility of our approach on several                 safety?”
+  challenging reinforcement learning scenarios.
+                                                                               In this paper, we introduce shielded learning, a frame-
+                                                                            work that allows applying machine learning to control sys-
+                        Introduction                                        tems in a way that the correctness of the system’s execution
+                                                                            against a given speciﬁcation is assured during the learning
+Advances in learning enabled a new paradigm for devel-                      and controller execution phases, regardless of how fast the
+oping controllers for autonomous systems that accomplish                    learning process converges. The shield monitors the actions
+complicated tasks in uncertain and dynamic environments.                    selected by the learning agent and corrects them if and only
+For example, in reinforcement learning (RL), an agent acts                  if the chosen action is unsafe.
+to optimize a long-term return that models the desired be-                     In the traditional reinforcement learning setting, in every
+havior for the agent and is revealed to it incrementally in a               step, the learning agent chooses an action and sends it to
+reward signal as it interacts with its environment (Sutton and              the environment. The environment evolves according to the
+Barto 1998). Increasing use of learning-based controllers in                action and sends the agent an observation of its state and a
+physical systems in the proximity of humans strengthens the                 reward associated with the underlying transition. The objec-
+concern of whether these systems will operate safely.                       tive of the agent is to optimize the reward accumulated over
+   While convergence, optimality and data-efﬁciency of                      this evolution.
+learning algorithms are relatively well understood, safety
+                                                                               Our approach introduces a shield into the traditional rein-
+or more generally correctness during learning and execu-
+                                                                            forcement learning setting. The shield is computed upfront
+tion of controllers has attracted signiﬁcantly less attention. A
+                                                                            from the safety part of the given system speciﬁcation and an
+number of different notions of safety were recently explored
+                                                                            abstraction of the agent’s environment dynamics. It ensures
+(Garcı́a and Fernández 2015; Pecka and Svoboda 2014). We
+                                                                            safety and minimum interference. With minimum interfer-
+approach the problem of ensuring safety in reinforcement
+                                                                            ence we mean that the shield restricts the agent as little as
+learning from a formal methods perspective. We begin with
+                                                                            possible and forbids actions only if they could endanger safe
+an unambiguous and rich set of speciﬁcations of what safety
+                                                                            system behavior.
+and more generally correctness mean. To this end, we adopt
+temporal logic as a speciﬁcation language (Emerson 1990).                      Shielding offers several pragmatic advantages: Even
+For algorithmic purposes, we focus on the safety fragment of                though the inner working of learning algorithms is often
+(linear) temporal logic (Manna and Pnueli 1995). We then                    complex, shielding with respect to critical safety speciﬁ-
+investigate the question “how can we let a learning agent                   cations may be manageable (as we demonstrate in upcom-
+do whatever it is doing, and also monitor and interfere with                ing sections). The algorithms we present for the compu-
+                                                                            tation of shields make relatively mild assumptions on the
+Copyright  c 2018, Association for the Advancement of Artiﬁcial            input-output structure of the learning algorithm (rather than
+Intelligence (www.aaai.org). All rights reserved.                           its inner working). Consequently, the correctness guarantees
+
+
+
+                                                                     2669
+are agnostic—to an extent to be described precisely—to the                tional burden. Control methods based on RL partly address
+learning algorithm of choice. Our setup introduces a clear                this problem, but do not typically incorporate any correct-
+boundary between the learning agent and the shield. This                  ness guarantees. Wen et al. (Wen, Ehlers, and Topcu 2015)
+boundary helps to separate the concerns, e.g., safety and cor-            propose a method to combine strict correctness guarantees
+rectness on one side and convergence and optimality on the                with RL. They start with a non-deterministic correct-by-
+other and provides a basis for the convergence analysis of                construction strategy and then perform RL to limit it towards
+a shielded RL algorithm. Last but not least, the shielding                cost optimality without having to know the cost function a
+framework is compatible with mechanisms such as function                  priori. Unlike the approach in the paper, their technique does
+approximation, employed by learning algorithms in order to                not work with function approximation, which prevents it
+improve their scalability.                                                from being used in complex scenarios. Junges et al. (Junges
+                                                                          et al. 2016) adopt a similar framework in a stochastic set-
+                      Related Work                                        ting. A major difference between the works by Wen et al. and
+                                                                          Junges et al. on the one hand and the shielding framework on
+Safety in RL. An exploration process is called safe if                    the other hand is the fact that the computational cost of the
+no undesirable states are ever visited, which can only                    construction of the shield depends on the complexity of the
+be achieved through the incorporation of external knowl-                  speciﬁcation and a very abstract version of the system, and is
+edge (Garcı́a and Fernández 2015; Moldovan and Abbeel                    independent of the state space components of the system to
+2012). The safety fragment of temporal logic that we con-                 be controlled that are irrelevant for enforcing the safety spec-
+sider is more general than the notion of safety of Garcı́a                iﬁcation. Fu et al. (Fu and Topcu 2016) establish connec-
+and Fernández (which is technically a so-called invari-                  tions between temporal-logic-constrained strategy synthesis
+ance property (Baier and Katoen 2008)). One way of guid-                  in Markov decision processes and probably-approximately-
+ing exploration in learning is to provide teacher advice. A               correct-type bounds in learning (Valiant 1984). Bloem et
+teacher (usually a human) provides advice (e.g., safe ac-                 al. (Bloem et al. 2015) proposed the idea to synthesize a
+tions) when either the learner (Pecka and Svoboda 2014;                   shield that is attached to a system to enforce safety prop-
+Clouse 1997) or the teacher (Vidal et al. 2013; Thomaz                    erties at run time. We adopt this idea, and present our own
+and Breazeal 2006) considers it to be necessary to prevent                realization of a shield, geared to the needs of the learning
+catastrophic situations. For example, in a Q-learning set-                setting.
+ting, the agent acts on the teacher’s advice, whenever ad-
+vice is provided. Otherwise, the agent chooses randomly be-
+tween the set of actions with the highest Q-values. In each                                     Preliminaries
+time step, the human teacher tunes the reward signal be-                  A word is deﬁned to be a ﬁnite or inﬁnite sequence of el-
+fore sending it to the agent (Thomaz and Breazeal 2006;                   ements from some alphabet Σ. The set of ﬁnite words over
+2008). Our work is closely related to teacher-guided RL,                  Σ is denoted by Σ∗ , and the set of inﬁnite words over Σ is
+since a shield can be considered as a teacher, who provides               written as Σω . The union of Σ∗ and Σω is denoted by the
+safe actions only if absolutely necessary. In contrast to previ-          symbol Σ∞ .
+ous work, the reward signal does not have to be manipulated
+by the shield, since the shield corrects unsafe actions in the                                               a (ﬁnite) set X is a func-
+                                                                              A probability distribution over
+                                                                          tion μ : X → [0, 1] ⊆ R with x∈X μ(x) = μ(X) = 1.
+learning and deployment phases.                                           The set of all distributions on X is denoted by Distr(X).
+                                                                              A Markov decision process (MDP) M = (S, sI , A, P,
+Safety in Formal Methods. Traditional correct-by-                         R) is a tuple with a ﬁnite set S of states, a unique initial
+construction controller computation techniques are based on               state sI ∈ S, a ﬁnite set A = {a1 . . . an } of actions, a prob-
+computing an abstraction of the environment dynamics and                  abilistic transition function P : S × A → Distr(S), and an
+deriving a controller that guarantees to satisfy the speciﬁca-            immediate reward function R : S × A × S → R.
+tion under the known environment dynamics. Such meth-                         In reinforcement learning (RL), an agent must learn
+ods combine reactive synthesis with faithful environment                  a behavior through trial-and-error via interactions with
+modelling and abstraction. Wongpiromsarn et al. (Wong-                    an unknown environment modeled by a MDP M =
+piromsarn, Topcu, and Murray 2012) deﬁne a receding hori-                 (S, sI , A, P, R). Agent and environment interact in discrete
+zon control approach that combines continuous control with                time steps. At each step t, the agent receives an observation
+discrete correctness guarantees. For simple system dynam-                 st . It then chooses an action at ∈ A. The environment then
+ics, the controller can be computed directly (Henzinger and               moves to a state st+1 with the probability P(st , at , st+1 )
+Kopke 1999). For more complex dynamics, both approaches                   and determines the reward rt+1 = R(st , at , st+1 ). We re-
+are computationally too difﬁcult. A mitigation strategy is to             fer to negative
+                                                                                        ∞rewards    rt < 0 as punishments. The re-
+                                                                          turn R =        t=0 γ rt is the cumulative future discounted
+                                                                                                t
+compute a set of low-level motion primitives to be combined
+to an overall strategy (DeCastro and Kress-Gazit 2016).                   reward, where rt is the immediate reward at time step t, and
+Having many motion primitives however also leads to in-                   γ ∈ [0, 1] is the discount factor that controls the inﬂuence
+efﬁciency. All of the above approaches have in common that                of future rewards. The objective of the agent is to learn an
+a faithful, yet precise enough, abstraction of the physical               optimal policy Π : S → A that maximizes (over the class
+environment is required, which is not only difﬁcult to ob-                of policies considered by the learner) the expectation of the
+tain in practice, but also introduces the mentioned computa-              return; i.e. maxπ∈Π Eπ (R), where Eπ (.) stands for the ex-
+
+
+
+                                                                   2670
+rb , ¬ga gb                ¬ra ¬rb , ¬ga ¬gb                 ra , ga ¬gb           traces. The reactive system S realizes ϕ, denoted by S |= ϕ,
+                                                                                   iff L(S) ⊆ L(ϕ). ϕ is realizable if there exists such an S.
+                 ¬ra rb                          ra
+                ¬ga ¬gb                        ¬ga ¬gb
+                                                                                   We assume   ϕ is a set of properties {ϕ1 , . . . , ϕl } such that
+  qGNTb                         qIDLE                         qGNTa                L(ϕ) = i L(ϕi ). A system satisﬁes ϕ iff it satisﬁes all its
+                 ¬rb                            ¬ra                                properties.
+                ¬ga ¬gb                        ¬ga ¬gb                                In formal methods, speciﬁcations of reactive systems are
+                                                                                   typically given as formulas in temporal logic. Linear tem-
+Figure 2: Reactive system implementing a simple arbiter.                           poral logic (Pnueli 1977) (LTL) is a commonly used for-
+The transitions of the system are labeled by the input upon                        mal speciﬁcation language. Given a set of propositions AP,
+reading which causes the transition to be taken and the out-                       an LTL formula describes a language in (2AP )ω . LTL ex-
+put selected by the system in this case.                                           tends Boolean logic by the introduction of temporal oper-
+                                                                                   ators such as X (next time), G (globally/always), F (even-
+                                                                                   tually), and U (until). To use LTL for specifying a set
+pectation w.r.t. the policy π.                                                     of allowed traces by a reactive system, the joint alphabet
+   We consider a reactive system with a ﬁnite set I =                              Σ = ΣI × ΣO of the system must be decomposable into
+{i1 , . . . , im } of Boolean input propositions and a ﬁnite set                   Σ = 2API × Σrest  I     × 2APO × Σrest
+                                                                                                                        O   for some system input
+O = {o1 , . . . , on } of Boolean output propositions. The in-                     and output components Σrest  I    and Σrest
+                                                                                                                           O   that we do not want
+put alphabet is ΣI = 2I , the output alphabet is ΣO = 2O ,                         to reason about in the LTL speciﬁcation. Then, the LTL for-
+and Σ = ΣI ×ΣO . We refer to words over Σ as traces σ. We                          mula can use AP = API ∪APO as the set of atomic proposi-
+write |σ| for the length of a trace σ ∈ Σ∞ . A set of words                        tions. Given a trace σ, we write σ AP to denote a copy of the
+L ⊆ Σ∞ is called a language.                                                       trace where, in each character, the factors Σrest  O    and Σrest
+                                                                                                                                                 I
+   As an example, consider a simple arbiter that coordinates                       have been stripped away so that σ AP ∈ (2AP )ω .
+the access of some shared resource for two clients. The                               Let us consider an example for an LTL speciﬁcation (for
+clients send requests for the shared resource to the arbiter                       the arbiter introduced above) that we build from ground
+with the input propositions {ra , ra }; whenever proposition                       up. By default, LTL formulas are evaluated at the ﬁrst el-
+rc has a true value, then client c ∈ {a, b} requests access.                       ement of a trace. The LTL formula ra holds on a trace
+The arbiter provides grants to the clients by indicating them                      σ AP = σ 0 σ 1 σ 2 . . . ∈ (2AP )ω if and only if ra ∈ σ 0 . The
+with the values of the output propositions {ga , gb }, where                       next-time operator X allows to look one step into the future,
+gc = true indicates that client c can make use of the shared                       so the LTL formula Xga holds if ga ∈ σ 1 . We can take the
+resource. The values of the propositions change during the                         disjunction between the formulas ra and Xga to obtain an
+trace of the arbiter such that the clients can take turn in uti-                   LTL formula (ra ∨ Xga ) which holds for a trace if at least
+lizing the shared resource.                                                        one of ra or Xga hold. We can then wrap (ra ∨ Xga ) into
+   A ﬁnite-state reactive system is a tuple S =                                    the temporal operator G to obtain G(ra ∨ Xga ). The effect
+(Q, q0 , ΣI , ΣO , δ, λ) with the input alphabet ΣI , the output                   of adding this operator is that in order for σ AP to satisfy
+alphabet ΣO , a ﬁnite set of states Q, and the initial state                       G(ra ∨ Xga ), the subformula (ra ∨ Xga ) has to hold at ev-
+q0 ∈ Q. Function δ : Q × ΣI → Q is a complete transi-                              ery position in the trace. All in all, we can formalize this
+tion function, and λ : Q × ΣI → ΣO is a complete out-                              description by stating that we have that σ |= G(ra ∨ Xga )
+put function. Given the input trace σI = x0 x1 . . . ∈ Σ∞            I ,           holds if and only if for every i ∈ N, at least one of ra ∈ σ i
+the system S produces the output trace σO = S(σI ) =                               and ga ∈ σ i+1 holds. Note that the reactive system given in
+λ(q0 , x0 )λ(q1 , x1 ) . . . ∈ Σ∞  O , where qi+1 = δ(qi , xi ) for                Figure 2 does not satisfy the speciﬁcation G(ra ∨ Xga ) along
+all i ≥ 0. The input and output traces can be merged to the                        all of its traces. The system induces, for instance, a trace of
+trace of S over the alphabet ΣI × ΣO , which is deﬁned as                          the form σ = (¬ra ¬rb , ¬ga ¬gb )ω that results from staying
+σ = (x0 , λ(q0 , x0 ))(x1 , λ(q1 , x1 )) . . . ∈ (ΣI × ΣO )ω . The                 in the qIDLE state forever, along which this speciﬁcation is
+type of ﬁnite-state reactive system used in this paper is also                     not fulﬁlled. A speciﬁcation that is however satisﬁed along
+called Mealy machines in the literature.                                           all traces of the system is G(G(ra ∧ ¬rb ) → FGga ), which
+   Fig. 2 shows an example of a reactive sys-                                      can be read as “If from some point onwards, request ra is
+tem S            =     (Q, q0 , ΣI , ΣO , δ, λ) for the resource                   always set to true while request proposition rb is not, then
+arbiter introduced above. The system S has the                                     eventually, a grant is given to process a for eternity.”
+components ΣI                =      {ra rb , ¬ra rb , ra ¬rb , ¬ra ¬rb },             A speciﬁcation is called a safety speciﬁcation if every
+ΣO            =      {ga gb , ¬ga gb , ga ¬gb , ¬ga ¬gb }, Q          =            trace σ that is not in the language represented by the speciﬁ-
+{qIDLE , qGNT0 , qGNT1 }, the transition function δ                                cation has a preﬁx such that all words starting with the preﬁx
+(which, e.g., has δ(qIDLE , ¬ra ¬rb ) = qIDLE ), and                               are also not in the language. Intuitively, a safety speciﬁca-
+the output labeling function λ (which, e.g., has                                   tion states that “something bad should never happen”. Safety
+λ(qIDLE , ¬ra ¬rb ) = ¬ga ¬gb ). The three states repre-                           speciﬁcations can be simple invariance properties (such as
+sent which grant was given last during the execution of the                        “the level of a water tank should never fall below 1 liter”),
+system, where the system being in qIDLE denotes that no                            but can also also be more complex (such as “whenever a
+grant has been given in the previous step of the system’s                          valve is opened, it stays open for at least three seconds”).
+trace.                                                                             For speciﬁcations in LTL, it is known how to check if it is
+A speciﬁcation ϕ deﬁnes a set L(ϕ) ⊆ Σ∞ of allowed                                 a safety language and how to compute a safety automaton
+
+
+
+                                                                            2671
+that represents it (Kupferman and Vardi 2001). Such an au-                    Reactive synthesis enforces ϕs by solving a safety game
+tomaton is deﬁned as a tuple ϕs = (Q, q0 , Σ, δ, F ), where                built from ϕs and an abstraction of the environment in which
+Σ = ΣI × ΣO , δ : Q × Σ → Q, and F ⊆ Q is a set of safe                    the policy is to be executed. The game is played by the en-
+states. A run induced by a trace σ = σ0 σ1 . . . ∈ Σ∞ is a se-             vironment and the system. In every state q ∈ Q, the envi-
+quence of states q = q0 q1 . . . such that qi+1 = δ(qi , σi ) for          ronment chooses an input σI ∈ ΣI , and then the system
+all i ∈ N. A trace σ of a system S satisﬁes ϕs if the induced              chooses some output σO ∈ ΣO . The play is won by the sys-
+run visits only safe states, i.e., ∀i ≥ 0 . qi ∈ F . The next              tem if only safe states in F are visited during the play. In
+section gives a detailed example of a safety speciﬁcation.                 order to win, the system has to plan ahead: it can never al-
+   A (2-player, alternating) game is a tuple G =                           low the play to visit a state from which the environment can
+(G, g0 , ΣI , ΣO , δ, win), where G is a ﬁnite set of game                 force the play to visit an unsafe state in the future.
+states, g0 ∈ G is the initial state, δ : G × ΣI × ΣO → G                      Planning ahead is the true power of synthesis. Let us re-
+is a complete transition function, and win : Gω → B is a                   visit the autonomous driver example. Suppose that the car
+winning condition. The game is played by the system and                    is heading towards a cliff. In order to enforce that the car
+the environment. In every state g ∈ G (starting with g0 ), the             never crosses the cliff, it has to be slowed down long before
+environment chooses an input σI ∈ ΣI , and then the system                 it reaches the cliff, and thus far before an abnormal operat-
+chooses some output σO ∈ ΣO . These choices by the system                  ing condition such as falling down can possibly be detected.
+and the environment deﬁne the next state g  = δ(g, σI , σO ),             In particular, the system has to avoid all states from which
+and so on. The resulting (inﬁnite) sequence g = g0 g1 . . .                avoiding to reach the cliff is no longer possible.
+is called a play. A play is won by the system iff win(g) is                   Planning ahead does not require the environment dynam-
+true. A (memoryless) strategy for the system is a function                 ics to be completely known in advance. However, to rea-
+ρ : G × ΣI → ΣO . A strategy is winning for the system                     son about when exactly a speciﬁcation violation cannot be
+if all plays g that can be constructed when deﬁning the out-               avoided, we have to give a (coarse ﬁnite-state) abstraction
+puts using the strategy (for the respective previous state in              of the environment dynamics. Given that the environment
+the play and the previous environment player move) satisfy                 is often represented as an MDP, such an abstraction has to
+win(g). The winning region W is the set of states from which               be conservative w.r.t. the behavior of the real MDP. This
+a winning strategy exists.                                                 approximation may have ﬁnitely many states even if the
+   A safety game deﬁnes win via a set F g ⊆ G of safe                      MDP has inﬁnitely many states and/or is only approximately
+states: win(g0 g1 . . .) is true iff ∀i ≥ 0 . gi ∈ F g , i.e., if          known.
+only safe states are visited.                                                 Formally, given an MDP M = (S, sI , A, P, R) and an
+                                                                           MDP observer function f : S → L for some set L, we call a
+                                                                           deterministic safety word automaton ϕM = (Q, q0 , Σ, δ, F )
+         Safety, Abstractions, and Games                                   an abstraction of M if Σ = A × L and for every trace
+The goal of this paper is to combine the best of two worlds,               s0 s1 s2 . . . ∈ S ω with the corresponding action sequence
+namely (1) the formal correctness guarantees of a controller               a0 a1 . . . ∈ Aω of the MDP, for every automaton run q =
+w.r.t. a temporal logic speciﬁcation, as provided by formal                q0 q1 . . . ∈ Qω of ϕM with qi+1 = δ(qi , (li , ai )) for li =
+methods (and reactive synthesis in particular), and (2) the                L(si ) and all i ∈ N, we have that q always stays in F . An
+optimality w.r.t. an a priori unknown performance criterion,               abstraction of an MDP describes how its executions can pos-
+as provided by RL.                                                         sibly evolve, and provides the needed information about the
+   Consider the example of a path planner for autonomous                   environment to allow planning ahead w.r.t. the safety prop-
+vehicles. Many requirements on system behaviors such as                    erties of interest. Without loss of generality, we assume that
+safety concerns may be known and expressed as speciﬁ-                      ϕM has no states in F from which all inﬁnite paths eventu-
+cations in temporal logic and can be enforced by reactive                  ally leave F . This ensures that paths that model traces that
+controllers. This includes always driving in the correct lane,             cannot occur in M are rejected by ϕM as early as possible.
+never jumping the red light, and never exceeding the speed                 Example 1 We want to learn an energy-efﬁcient controller
+limit (Wen, Ehlers, and Topcu 2015). A learning algorithm is               for a hot water storage tank. Stored water is kept warm by
+able to incorporate more subtle considerations, such as spe-               a heater whose energy consumption depends on the ﬁlling
+ciﬁc intentions for the current scenario and personal pref-                level of the tank, but we do not know what the exact rela-
+erences of the human driver, such as reaching some goal                    tionship is. The outﬂow is always between 0 and 1 liters per
+quickly but at the same time driving smoothly. By combin-                  second, and the inﬂow is known to be between 1 and 2 liters
+ing RL with reactive synthesis, we achieve safe reinforce-                 per second whenever the valve is open (and it is 0 other-
+ment learning, which we deﬁne in the following way:                        wise). The capacity of the tank is limited to 100 liters, and
+                                                                           whenever the inﬂow is switched on or off, the setting has to
+Deﬁnition 1 Safe RL is the process of learning an optimal
+                                                                           be kept for at least three seconds to limit the wear-out of the
+policy while satisfying a temporal logic safety speciﬁcation
+                                                                           valve. Also, the tank must never overﬂow or run dry.
+ϕs during the learning and execution phases.
+                                                                              We can express the safety speciﬁcation for the water tank
+In the following, we consider a safety speciﬁcation to be                  valve controller using the following linear temporal logic
+given in the form of a deterministic safety word automaton                 formula: G(level > 0) ∧ G(level < 100) ∧ G((open ∧
+ϕs = (Q, q0 , Σ, δ, F ), i.e., an automaton in which only safe             Xclose) → XXclose ∧ XXXclose) ∧ G((close ∧ Xopen) →
+states in F may be visited.                                                XXopen∧XXXopen). The speciﬁcation consists of four con-
+
+
+
+                                                                    2672
+                                            (∗, 0 ≤                                  (close, 1 ≤         (open, 1 ≤
+                              q0                                                    level ≤ 99)                                (open, 1 ≤
+                                          level < 1)                                                    level ≤ 99)
+                                                                                                                              level ≤ 99)
+                                                                               qa                  qb                  qc
+                                                                                      (open, 1 ≤
+                                                                                     level ≤ 99)
+                (close, 0             (open, 1                                                                          (close, 1 ≤        (open, 1 ≤
+              ≤ level < 1)          ≤ level < 2)                                                                       level ≤ 99)         level ≤ 99)
+                                                                             (close, 1 ≤      qf                  qe                  qd
+                                                         (open,             level ≤ 99)             (close, 1 ≤
+                                                                                                   level ≤ 99)
+    (open, 3                  q1            (∗, 1 ≤        2≤
+  ≤ level < 4)                            level < 2)      level
+                                                          < 3)             Figure 4: The speciﬁcation for the water tank controller.
+                                      (open, 2
+                (close, 1           ≤ level < 3)
+              ≤ level < 2)                                               putes ensures that when the water level in the tank becomes
+                                                                         too low, the inﬂow valve is opened until some minimum level
+                                                                         of 4 is reached, and it also prevents the inﬂow valve from
+        ...                   q2            (∗, 2 ≤                      being opened when the level is above 93. The latter is nec-
+                                          level < 3)                     essary as the valve has to stay open for at least three time
+                                                                         steps. So as the inﬂow may be up to 2 liters/second during
+                                                     (open, 4            this time and the outﬂow may be 0, there is otherwise an
+                        ...         ...            ≤ level < 5)          overﬂow risk. As the shield is generated using the speciﬁca-
+                                                                         tion, it plans ahead for this not to happen, so it must prevent
+                                                                         the opening of the inﬂow valve if the level is above 93.
+
+        ...                   ...                  ...
+                                                                                     Shielded Reinforcement Learning
+                                                                         We introduce a correct-by-construction reactive system,
+                                                                         called a shield, into the traditional learning process. We
+                        ...         ...                                  make the following assumptions.
+                                                                         Assumption 1 (i) The environment can be modeled as an
+     (open, 99                                                           MDP M = (S, sI , A, P, R). (ii) We have constructed an
+  ≤ level < 100)                            (∗, 99 ≤                     abstraction ϕM . (iii) The learner accepts elements from S ×
+                              q99                                        Q as state input (for the state space of the shield Q).
+                                          level < 100)
+                                                                         We describe the operation of a learner and a shield together
+Figure 3: The abstraction of the water tank behavior. All                in this section, and give the construction for computing the
+states are accepting and transitions leading to the error state          shield in the next section. The shield will be given as a reac-
+(which exists in addition to the states in the ﬁgure and is not          tive system S = (Q, q0 , ΣI , ΣO , δ, λ).
+accepting) are not shown.                                                   The shield monitors the actions of the agent, and substi-
+                                                                         tutes the selected actions by safe actions whenever this is
+                                                                         necessary to prevent the violation of ϕs . In each step t, the
+                                                                         agent selects an action a1t . The shield forwards a1t to the en-
+juncts, where the ﬁrst two conjuncts enforce the water lev-              vironment, i.e., at = a1t . Only if a1t is unsafe w.r.t. ϕs , the
+els to be between the minimum and maximum thresholds.                    shield selects a different action at = a1t instead. The envi-
+The next conjunct enforces that if the valve is open and then            ronment executes at , moves to st+1 and provides rt+1 . The
+closed, then it has to stay closed for two more time steps               agent receives at and rt+1 , and updates its policy for at us-
+(seconds). The ﬁnal conjunct enforces that if the valve is               ing rt+1 . The question is what the reward for a1t should be in
+closed and then opened, it has to stay open for two more                 case we have at = a1t . We discuss two different approaches.
+time steps.
+                                                                                                       
+   We can translate the speciﬁcation to the safety automa-               1. Assign a punishment rt+1       to a1t . The agent assigns a
+ton shown in Fig. 4. All states are accepting and transitions               punishment rt+1 < 0 to at and learns that selecting a1t
+                                                                                                        1
+
+leading to the error state (which exists in addition to the                 at state st is unsafe, without ever violating ϕs . However,
+states in Fig. 4 and is not accepting) are not shown. It uses               there is no guarantee that unsafe actions are not part of
+the action sets A = {open, closed} for the inﬂow valve state,               the ﬁnal policy. Therefore, the shield has to remain active
+and the label set L = {level < 1, 1 ≤ level ≤ 99, level >                   even after the learning phase.
+99} as needed information about the water tank ﬁlling sta-               2. Assign the reward rt+1 to a1t . The agent updates a1t with
+tus. What we know about the behavior of the water tank can                  the reward rt+1 . Therefore, picking unsafe actions can
+be summarized as the abstraction automaton that we give in                  likely be part of an optimal policy by the agent. Since an
+Fig. 3.                                                                     unsafe action is always mapped to a safe one, this does not
+   The shield that the approach presented in this paper com-                pose a problem and the agent never has to learn to avoid
+
+
+
+                                                                  2673
+   unsafe actions. Consequently, the shield is (again) needed                                       close,
+                                                                                                 3 ≤ level ≤ 4                                            open
+   during the learning and execution phases.
+                                                                                        open,
+In order to be less restrictive to the learning algorithm, we                        5 ≤ level ≤ 6                   close                    close                 open, close
+                                                                              ...                    (q3 , qd )                 (q2 , qe )               (q1 , qf )               qfail
+propose that in every time step, the agent provides a rank-                                                       2 ≤ level ≤ 3            1 ≤ level ≤ 2            0 ≤ level ≤ 1
+ing rankt = (a1t , . . . , akt ) on the allowed actions, i.e., the                            open,                                         close,                  close,
+agent wants a1t to be executed the most, a2t to be executed                                4 ≤ level ≤ 5                                 2 ≤ level ≤ 3           1 ≤ level ≤ 2
+                                                                              ...                                                  ...                     ...
+the second most, etc. The ranking does not have to contain
+all available actions, i.e. 1 ≤ |rankt | ≤ nt , where nt is the
+number of available actions in step t. The shield selects the                 Figure 5: An excerpt for the product game of our running
+ﬁrst action at ∈ rankt that is safe according to ϕs . Only                    example. Transitions to paradise states are not shown.
+if all actions in rankt are unsafe, the shield selects a safe
+action at ∈ / rankt . Both approaches for updating the policy
+discussed before can naturally be extended for a ranking of                         The shield has the following components: QS =
+several actions. A second advantage of having a ranking on                          G, q0,S = (q0 , q0,M ), ΣI,S = L × A, ΣO,S = A,
+actions is that the agent can perform several policy updates                        δS (g, (l, a)) = δ(g, (l, λS (g, (l, a)))) for all g ∈ G, l ∈
+at once; e.g., if all actions in rankt are unsafe, the agent can                    L, a ∈ A, and
+perform |rankt | + 1 policy updates in one step by using the                                       ⎧
+           
+rewards rt+1    or rt+1 for all of them, depending on which of                                     ⎨a if δ(g, (l, a)) ∈ W
+the above variants is used.                                                         λS (g, l, a) = a if δ(g, (l, a)) ∈   / W for some arbitrary
+                                                                                                   ⎩
+                                                                                                           but ﬁxed a with δ(g, (l, a )) ∈ W.
+                    Synthesis of Shields
+A shield S enforces two properties: correctness and min-
+imum interference. First, S enforces correctness against a                    In the construction, the state space of the game is the prod-
+given safety speciﬁcation ϕs .With minimum interference,                      uct between the speciﬁcation automaton state set and the ab-
+we mean that the shield restricts the agent as rarely as pos-                 straction state set. The safe states in the game (in the set F g )
+sible. S is computed by reactive synthesis from ϕs and an                     are the ones at which either the speciﬁcation automaton is in
+MDP abstraction ϕM that represents the environment in                         a safe state, or the abstraction is in an unsafe state. The latter
+which the agent shall operate.                                                case represents that the observed MDP behavior differs from
+   We give an algorithm to compute shields. We establish (in                  the behavior that was modeled in the abstraction. For game
+the next section) that the computed shields (1) enforce the                   solving, it is important that such cases (whose occurrence in
+correctness criterion, and (2) are the minimally interfering                  the ﬁeld witnesses the incorrectness of the abstraction) count
+shields among those that enforce ϕs on all MDPs for which                     as winning for the system player, as the system player only
+ϕM is an abstraction.                                                         needs to play correctly in environments that conform to the
+   Given is an RL problem in which an agent has to learn                      abstraction.
+an optimal policy for an unknown environment that can be                         To exemplify the shield construction, let us reconsider
+modelled by an MDP M = (S, sI , A, P, R) while satisfy-                       Example 1. Building the product game between the speci-
+ing ϕs = (Q, q0 , Σ, δ, F ) with Σ = ΣI × ΣO and A =                          ﬁcation automaton and the MDP abstraction (that we detail
+ΣO . We assume some abstraction ϕM = (QM , q0,M , A ×                         in the next section) leads to a game with 602 states (if we
+L, δM , FM ) of M for some MDP observer function f :                          merge all states in F × QM into a single error state and
+S → L to be given. Since ϕs models a restriction of the                       all states in Q × (QM \ FM ) into a single paradise state
+traces of the MDP and the learner together that we want to                    from which the game is always won by the system). If we
+enforce, we assume it to have Σ = L × A, i.e., it reads the                   solve the game, then most of the states are winning, but a
+part of the system behavior that the abstraction is concerned                 few are not. Fig. 5 shows a small fraction of the game that
+with. We perform the following steps.                                         contains such non-winning states. In state (q3 , qd ), the sys-
+1. We translate ϕs and ϕM to a safety game G =                                tem should not choose action close, as otherwise the system
+   (G, g0 , ΣI , ΣO , δ, F g ) between two players. In the game,              cannot avoid to reach qfail for some possible evolution of the
+   the environment player chooses the next observations                       environment that is consistent with our abstraction. It could
+   from the MDP state (i.e., elements from L), and                            be the case that qfail is not reached when the environment
+   the system chooses the next action. Formally, G has                        chooses to let the level stay the same for a step, but the sys-
+   the following components: G = Q × QM , g0 =                                tem cannot be sure about this, so the action close must not
+   (q0 , q0,M ), ΣI = L, ΣO = A, δ((q, qM ), l, a) =                          be picked.
+   (δ(q, (l, a)), δM (q, (l, a))), for all (q, qM ) ∈ G, l ∈                     A shield allows all actions that are guaranteed to lead to
+   L, a ∈ A, and F g = (F × QM ) ∪ (Q × (QM \ FM )).                          a state in W , no matter what the next observation is. Since
+                                                                              these states, by the deﬁnition of the set of winning states, are
+2. Next, we compute the winning region W ⊆ F g of G as
+                                                                              exactly the ones from which the system player can enforce
+   described by Bloem et al. (2015).
+                                                                              not to ever visit a state not in F , the shield is minimally
+3. We translate G and W to a reactive system S =                              interfering. It disables all actions that may lead to an error
+   (QS , q0,S , ΣI,S , ΣO,S , δS , λS ) that constitutes the shield.          state (according to the abstraction).
+
+
+
+                                                                       2674
+   The construction of a shield can be extended naturally if a                    M = (S  , sI , A, P  , R) with S  = QM × L,
+ranking of actions rank t = {a1t , . . . , ant } is provided by the               sI = (q0,M , f (s0 )), A being the same set of actions as in
+agent. Then, the shield selects the ﬁrst action at = ait that                     the original MDP, and where P  ((q, l), a) is a uniform dis-
+is allowed by ϕs . Only if all actions in rank t are unsafe,                      tribution over all elements from the set {(q  , l ) ∈ QM × L |
+the shield is allowed to deviate and to select a safe action                      q  = δ(q, (l, a)), q  ∈ F, ∃a ∈ A.δ(q  , (l , a )) ∈ F } for
+at ∈/ rankt .                                                                     every (q, l) ∈ S  and a ∈ A. Every state (q  , l ) ∈ S  is
+                                                                                  mapped to l by the abstraction function f . The reward
+ Correctness and Minimal Interference of the                                      function is the same as in the original MDP, except that we
+              Computed Shields                                                    ignore the (new) state component of the shield.
+                                                                                      Assume now that action ak+1 is activated after the pre-
+We now prove that the shields computed according to the
+                                                                                  ﬁx trace s0 a0 s1 a1 s2 a2 . . . sk while the shield is in a state
+deﬁnitions indeed have the claimed properties, namely cor-
+                                                                                  (q S , q M ). We have that M is an MDP in which every ﬁnite-
+rectness, and minimal interference.
+                                                                                  length label sequence that is possible in the abstraction for
+                                                                                  some action sequence has a non-zero probability to occur if
+Correctness: A shield works correctly if for every trace                          the action sequence is chosen. Due to the construction of the
+s0 a0 s1 a1 . . . ∈ (S × A)ω that MDP, shield and learner can                     shield by game solving, action ak+1 is only deactivated in
+together produce, we have that (f (s0 ), a0 )(f (s1 ), a1 ) . . . is              state (q S , q M ) if in the game, the environment player had a
+in the language of the speciﬁcation automaton ϕS for the                          strategy to violate ϕS using only traces allowed by the ab-
+MDP labeling function f . Additionally, the shield must al-                       straction. Since ϕS is a safety property, the violation would
+ways report at least one available action at every step.                          occur in ﬁnite time. Since in M , all ﬁnite traces that can oc-
+    Let q0 q1 . . . ∈ Qω be the run of S corresponding to                         cur in the abstraction have a non-zero probability, activating
+a trace s0 a0 s1 a1 . . . of the abstraction, i.e., for which for                 ak+1 (and the learner choosing ak+1 ) would imply a non-
+every i ∈ N, we have ai = λS (qi , (f (si ), ai )) and                            zero proability to violate the speciﬁcation in the future, no
+qi+1 = δS (qi , (f (si ), ai )). By the construction of the shield,               matter what the learner does in the future. Hence, the shield
+we have that QS = Q × QM , where Q is the state                                   could not prevent a violation in such a case, and ak+1 needs
+space of ϕS and QM is the state space of the abstraction.                         to be deactivated.
+Hence, we can also write q0 q1 . . . as (q0S , q0M )(q1S , q1M ) . . .,
+where q0M q1M . . . is the run of the abstraction automaton on                                           Convergence
+s0 a0 s1 a1 . . . and q0S q1S . . . is a run of ϕS on s0 a0 s1 a1 . . ..
+By the construction of the shield, it only has reachable states                   Deﬁne an MDP M = (S, sI , A, P, R), with discrete
+(q S , q M ) that are in the set of winning positions. For all such               state set S, discrete state-dependent action sets As , and
+states and all possible next labels l ∈ L, there exists at least                  state-dependent transition functions Ps (a, s ) that deﬁne
+one action such that if the action is taken, then the next state                  the probability of transitioning to state s when taking
+           M
+(q S , q  ) is winning as well. The q S component of the run                    action a in state s. Assume also that a shield S =
+of the shield always reﬂects the state of the speciﬁcation au-                    (QS , q0,S , ΣI,S , ΣO,S , δS , λS ) is given for M and for some
+tomaton along the trace, and since a winning strategy makes                       MDP labeling function f : S → L.
+sure that only winning states are ever visited along a play, by                      We can build a product MDP M that represents the be-
+the deﬁnition of F g , the error state of ϕS can only be visited                  havior of the shield and the MDP together. Since M is
+after the error state for the abstraction MDP has been visited                    a standard MDP, all learning algorithms that converge on
+(and hence the abstraction turned out to be incorrect). Note                      standard MDPs can be shown to converge in the presence
+that actions that may lead to the violation of the speciﬁca-                      of a shield under this construction. Note that this argument
+tion (according to the abstraction) are modiﬁed by the shield                     requires that whenever an action ranking is chosen by the
+whenever the preﬁx trace is accepted by the abstraction, as                       learner that does not contain a safe action, there is a ﬁxed
+otherwise a state that is not winning in the game would be                        probability distribution over the safe actions executed in-
+visited, which the deﬁnition of λS prevents.                                      stead. This distribution may depend on the state of the MDP
+                                                                                  and the shield and the selected ranking, but must be constant
+                                                                                  over time, as otherwise we could not model the joint be-
+Minimal Interference: Let the shield, learner, and MDP                            havior of the shield and the environment MDP as a product
+together produce a preﬁx trace s0 a0 s1 a1 s2 a2 . . . sk that in-                MDP. Note that we made use of the fact that the learner has
+duces a (preﬁx) run q0 q1 . . . qk−1 ∈ Q∗ of the safety au-                       access to the state of the shield and can base its actions on it
+tomaton ϕS that we used as the representation of the spec-                        in this argument. In such a case, it sufﬁces for the learner to
+iﬁcation for building the shield. Assume that the shield de-                      observe the current state as state of M rather than M . To
+activates an action ak+1 that is available from state sk in                       the learner, this is indistinguishable from operating on M
+the MDP. We show that the shield had to deactivate ak+1 as                        without a shield.
+there is another MDP that is consistent with the observed
+behavior and the abstraction for which, regardless of the
+learner’s policy, there is a non-zero probability to violate the                                         Experiments
+speciﬁcation after the trace preﬁx s0 a0 s1 a1 s2 a2 . . . sk ak+1 .              We applied shielded RL in four domains: (1) a robot in a
+   Using the abstract ﬁnite-state machine ϕM                     =                grid world, (2) a self-driving car scenario, (3) the water tank
+(QM , q0,M , Σ, δ, F ), we deﬁne this other MDP                                   scenario from Example 1, and (4) the pacman example. For
+
+
+
+                                                                           2675
+clarity, we compare between a subset of shielding settings                                    for unsafe actions (black, solid), and a |rankt | = 3 shield-
+which we later specify for each problem. The simulations                                      ing with penalties for corrected actions (black, solid). The
+were performed on a computer equipped with an Intel       R
+                                                                                              results show that only the unshielded versions experience
+      TM
+Core i7-4790K and 16 GB of RAM running a 64-bit ver-                                          negative rewards. Furthermore, the shielded version is not
+sion of Ubuntu  R
+                   16.04 LTS. Source code, input ﬁles, and                                    only safe, but also tends to learn more rapidly.
+detailed instructions to reproduce our experiments are avail-
+able for download.1
+
+Grid world Example. We conduced two experiments: a
+robot in a 9x9 grid world, and a robot in a 15x9 grid world
+with a moving obstacle. In both experiments, the robot’s
+objective is to visit all the colored regions in a given or-
+der while maintaining the following safety property ϕs : the
+robot must not crash into walls or the moving opponent
+                                                                                                   Figure 8: 15x9 grid world with moving obstacle.
+agent. If the robot visits all marked regions in a given order
+(called episode), a reward is granted, and if ϕs is violated, a
+penalty is applied.
+   The agent uses tabular Q-learning with an -greedy ex-                                                                  0.10
+plorer that is capable of multiple policy updates at once. For
+
+
+
+
+                                                                                                    Accumulated Reward
+both settings, we synthesized a shield from ϕs and the (pre-
+cise) environment abstraction in less than 2 seconds.                                                                     0.00
+
+                                                                       α1                                                −0.10
+                                                                                                                                          |rankt | = 1 w/o penalty
+                                            α4                                                                                            |rankt | = 3 w/o penalty
+                                                                                                                         −0.20
+                                                                                                                                           |rankt | = 1 w/ penalty
+                                                                                                                                           |rankt | = 3 w/ penalty
+                                                                                                                         −0.30                 No Shielding
+                                                                                                                                 0   20   40     60     80     100
+                                                 α3
+                                                                                                                                          Episodes
+                                                                  α2
+
+
+                                       Figure 6: 9x9 grid world.                              Figure 9: The accumulated reward per episode for the 15x9
+                                                                                              grid world example.
+
+                                                                                                 The 15x9 grid world of the second experiment is illus-
+                                                                                              trated in Fig. 8. The result is shown in Fig. 9. Only the
+                                0.20
+                                                                                              shielded version with |rankt | = 3 without penalty (blue,
+
+
+
+
+          Accumulated Reward
+                                                                                              dashed) ﬁnds the optimal path, resulting in a higher average
+                                0.10                                                          reward. In scenarios with |rankt | = 1 (red) or with penalties
+                                                                                              (solid), the agent computes a suboptimal path.
+                                0.00
+                                                                                              A Self-Driving Car Example. This example considers an
+                               −0.10                          No shielding                    agent that learns to drive around a block in a clockwise di-
+                                                      No shielding w/ Large penalty           rection in an environment with the size of 480x480 pixels.
+                                                         |rankt | = 3 w/ penalty              The car has 8 sensors distributed evenly around the car that
+                               −0.20
+                                        0         20       40     60        80   100
+                                                                                              trigger whenever the agent is less than 60 pixels away from
+                                                                                              a wall. In each step, the car moves 3 pixels in the direc-
+                                                           Episodes
+                                                                                              tion of its heading and can make a maximum turn of 7.5
+                                                                                              degrees in either direction. The safety speciﬁcation in this
+Figure 7: The accumulated reward per episode for the 9x9                                      example is to avoid crashing into a wall. A corresponding
+grid world example.                                                                           shield was synthesized in 2 seconds. In each step, a positive
+                                                                                              reward is given if the car moves a step in a clockwise direc-
+  The 9x9 grid world of the ﬁrst experiment is illustrated in                                 tion along its track and a penalty is given if it moves in a
+Fig. 6. The result is shown in Fig. 7. We compare between                                     counter-clockwise direction. A crash into the wall results in
+no shielding (red, dashed), no shielding with large penalties                                 a penalty and a restart. The agent uses a Deep Q-Network
+                                                                                              with a Boltzmann exploration policy. This network consists
+   1
+       https://github.com/safe-rl/safe-rl-shielding                                           of 4 input nodes, 8 outputs nodes and 3 hidden layers.
+
+
+
+                                                                                       2676
+                                    20
+
+
+
+
+       Accumulated Reward
+                                     0
+
+
+                                   −20                                                     Figure 12: The 5x18 grid world of the pacman example.
+
+                                   −40                      No shielding                 The Pacman Example. We conduced another experiment
+                                                       |rankt | = 1 w/o penalty          in a 18x5 grid world that simulates a pacman-like environ-
+                                                                                         ment, as illustrated in Fig. 12. The objective of the robot
+                                         0          50            100       150          (pacman) is to visit all ﬁelds of the maze without crashing
+                                                       Episodes                          into the moving opponent agent (ghost). If pacman visits all
+                                                                                         ﬁelds in the maze, a reward is granted, and if pacman and
+Figure 10: The accumulated reward per episode for the self                               the ghost collide, a penalty is applied. The example uses an
+driving car example.                                                                     approximate Q-learning agent.
+
+                                                                                                                     1,000
+   The plot in Fig. 10 shows that the accumulated rewards
+
+
+
+
+                                                                                               Accumulated Reward
+for unshielded RL (red, dashed) increases over time, but the
+car still crashes at the end of the simulation. The shielded                                                             0
+version without punishment (blue, solid) learns more rapidly
+than the unshielded learner and never crashes.
+                                                                                                                    −1,000
+
+
+                                   10                                                                                                          No shielding
+                                                                                                                    −2,000
+                                                                                                                                          |rankt | = 1 w/o penalty
+                                    8
+
+
+
+
+              Accumulated Reward
+                                                                                                                             0       50           100          150
+                                                                                                                                          Episodes
+                                    6
+
+                                    4                                                    Figure 13: The accumulated reward per episode for the pac-
+                                                      No shielding - Q                   man example.
+                                                   No shielding - SARSA
+                                    2
+                                                |rankt | = 1 w/o penalty - Q               We synthesized a shield in less than 7 seconds. Fig. 13
+                                             |rankt | = 1 w/o penalty - SARSA            shows the results. As expected, in the shielded case, pac-
+                                    0
+                                                                                         man is always able to clear the game starting from the ﬁrst
+                                         0    200    400    600     800   1,000
+                                                                                         episode.
+                                                      Episodes
+                                                                                                                                 Conclusion
+Figure 11: The accumulated reward per episode for the water                              We developed a method for RL under safety constraints
+tank example.                                                                            expressed as temporal logic speciﬁcations. The method is
+                                                                                         based on shielding the decisions of the underlying learning
+The Water Tank Example. In this example, the tank must                                   algorithm from violating the speciﬁcation. We proposed an
+never run dry or overﬂow by controlling the inﬂow switch                                 algorithm for the automated synthesis of shields for given
+(ϕs1 ). In addition, the inﬂow switch must not change its mode                           temporal logic speciﬁcations. Even though the inner work-
+of operation before 3 time steps have passed since the last                              ing of a learning algorithm is often complex, the safety crite-
+mode change (ϕs2 ). Refer to Ex. 1, for a full description                               ria may still be enforced by possibly simple means. Shield-
+of the abstract water tank dynamics and speciﬁcation. We                                 ing exploits this possibility. A shield depends only on the
+generated a concrete MDP in which the energy consump-                                    monitored input-output behavior, the environment abstrac-
+tion depends only on the state and there are multiple lo-                                tion, and the correctness speciﬁcations – it is independent of
+cal minima. A shield was synthesized in less than a sec-                                 the intricate details of the underlying learning algorithm.
+ond. Fig. 11 shows that both shielded (dashed lines) and un-                                We demonstrated the use of shielded learning on several
+shielded Q-learning and SARSA experiments (solid lines)                                  RL scenarios. In all of them, the learning performance of
+do reach an optimal policy. However, the shielded imple-                                 the shielded agents improved compared to the unshielded
+mentations reach the optimal policy in a signiﬁcantly shorter                            case. The main downside of our approach is that in order to
+time than the unshielded implementations.                                                prevent the learner from making unsafe actions, some ap-
+
+
+
+                                                                                  2677
+proximate model of when which action is unsafe needs to                 Kupferman, O., and Vardi, M. Y. 2001. Model check-
+be available. We argue that this is unavoidable if the allowed          ing of safety properties. Formal Methods in System Design
+actions depend on the state of the environment, as otherwise            19(3):291–314.
+there is no way to know which actions are allowed. Our ex-              Manna, Z., and Pnueli, A. 1995. Temporal veriﬁcation of
+periments show, however, that in applications in which safe             reactive systems - safety. Springer.
+learning is needed, the effort to construct an abstraction is
+                                                                        Moldovan, T. M., and Abbeel, P.             2012.    Safe ex-
+well-spent, as our approach not only makes learning safe,
+                                                                        ploration in Markov decision processes. arXiv preprint
+but also shows great promise of improving learning perfor-
+                                                                        arXiv:1205.4810.
+mance.
+                                                                        Pecka, M., and Svoboda, T. 2014. Safe Exploration Tech-
+                                                                        niques for Reinforcement Learning – An Overview. Cham:
+                  Acknowledgments                                       Springer International Publishing. 357–375.
+R. Ehlers was supported by the Institutional Strategy of                Pnueli, A. 1977. The temporal logic of programs. In 18th
+the University of Bremen, funded by the German Excel-                   Annual Symposium on Foundations of Computer Science,
+lence Initiative. R. Bloem and B. Könighofer were supported            FOCS 1977, 46–57.
+by the Austrian Science Fund (FWF) through the projects                 Sutton, R. S., and Barto, A. G. 1998. Reinforcement
+RiSE (S11406-N23) and LogiCS (W1255-N23). The au-                       learning: An introduction. IEEE Trans. Neural Networks
+thors U. Topcu and M. Alshiekh were supported partly by                 9(5):1054–1054.
+the grants AFRL FA8650-15-C-2546, NSF 1652113 and
+1646522, DARPA W911NF-16-1-0001 and ARO W911NF-                         Thomaz, A. L., and Breazeal, C. 2006. Reinforcement learn-
+15-1-0592. The authors U. Topcu and S. Niekum were sup-                 ing with human teachers: Evidence of feedback and guid-
+ported partly by NSF 1617639.                                           ance with implications for learning performance. In Pro-
+                                                                        ceedings of the 21st National Conference on Artiﬁcial Intel-
+                                                                        ligence - Vol. 1, 1000–1005. AAAI Press.
+                       References
+                                                                        Thomaz, A. L., and Breazeal, C. 2008. Teachable robots:
+Baier, C., and Katoen, J.-P. 2008. Principles of Model                  Understanding human teaching behavior to build more ef-
+Checking. The MIT Press.                                                fective robot learners. Artif. Intell. 172(6-7):716–737.
+Bloem, R.; Könighofer, B.; Könighofer, R.; and Wang, C.               Valiant, L. G. 1984. A theory of the learnable. Commun.
+2015. Shield synthesis: - runtime enforcement for reactive              ACM 27(11):1134–1142.
+systems. In Tools and Algorithms for the Construction and               Vidal, P. Q.; Rodrı́guez, R. I.; González, M. R.; and
+Analysis of Systems - 21st Int. Conf, TACAS 2015, 533–548.              Regueiro, C. V. 2013. Learning on real robots from experi-
+Clouse, J. 1997. On integrating apprentice learning and                 ence and simple user feedback. Journal of Physical Agents
+reinforcement learning title2:. Technical report, Amherst,              7(1).
+MA, USA.                                                                Wen, M.; Ehlers, R.; and Topcu, U. 2015. Correct-by-
+DeCastro, J. A., and Kress-Gazit, H. 2016. Nonlinear con-               synthesis reinforcement learning with temporal logic con-
+troller synthesis and automatic workspace partitioning for              straints. In IROS 2015, 4983–4990.
+reactive high-level behaviors. In Proceedings of the 19th               Wongpiromsarn, T.; Topcu, U.; and Murray, R. M. 2012.
+International Conference on Hybrid Systems: Computation                 Receding horizon temporal logic planning. IEEE Trans. Au-
+and Control, HSCC 2016, 225–234.                                        tomat. Contr. 57(11):2817–2830.
+Emerson, E. A. 1990. In van Leeuwen, J., ed., Handbook
+of Theoretical Computer Science (Vol. B). Cambridge, MA,
+USA: MIT Press. chapter Temporal and Modal Logic, 995–
+1072.
+Fu, J., and Topcu, U. 2016. Synthesis of shared autonomy
+policies with temporal logic speciﬁcations. IEEE Trans. Au-
+tomation Science and Engineering 13(1):7–17.
+Garcı́a, J., and Fernández, F. 2015. A comprehensive survey
+on safe reinforcement learning. Journal of Machine Learn-
+ing Research 16:1437–1480.
+Henzinger, T. A., and Kopke, P. W. 1999. Discrete-time
+control for rectangular hybrid automata. Theor. Comput. Sci.
+221(1-2):369–392.
+Junges, S.; Jansen, N.; Dehnert, C.; Topcu, U.; and Ka-
+toen, J. 2016. Safety-constrained reinforcement learning
+for mdps. In Tools and Algorithms for the Construction and
+Analysis of Systems - 22nd Int. Conference, TACAS 2016,
+130–146.
+
+
+
+                                                                 2678
+

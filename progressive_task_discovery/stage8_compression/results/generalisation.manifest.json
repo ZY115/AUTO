@@ -1,0 +1,26 @@
+{
+  "runner": "src/generalisation_audit.py",
+  "pairs": 25,
+  "budgets": {
+    "few": 2000,
+    "medium": 10000,
+    "ample": 40000
+  },
+  "seeds": 8,
+  "seed0": 9000,
+  "policies": [
+    "plain",
+    "directed"
+  ],
+  "artefacts": [
+    "dictionary",
+    "machine",
+    "oracle_merge"
+  ],
+  "questions": 1634544,
+  "note": "re-run after the BFS reachability fix",
+  "source_sha256": "8d171de54408533e0d53780d85eb74691a5ff57dce7ea905ffc8b2b132122000",
+  "data_sha256": "043ab9c09089f81ed1a1616b40182361f91597db0f74d81430aa6d72845806ee",
+  "written": "2026-09-10",
+  "rows": 1640592
+}

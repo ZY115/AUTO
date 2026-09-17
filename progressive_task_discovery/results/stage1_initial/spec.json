@@ -1,0 +1,88 @@
+{
+  "name": "stage1_initial",
+  "defaults": {
+    "budget": 200000,
+    "every": 5000,
+    "hfactor": 24
+  },
+  "conditions": [
+    {
+      "name": "benign",
+      "args": {
+        "slip": 0
+      }
+    }
+  ],
+  "lengths": [
+    2,
+    4,
+    6,
+    8
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "variants": [
+    {
+      "name": "flat",
+      "args": {
+        "method": "flat"
+      }
+    },
+    {
+      "name": "count",
+      "args": {
+        "method": "count"
+      }
+    },
+    {
+      "name": "discovered",
+      "args": {
+        "method": "discovered"
+      }
+    },
+    {
+      "name": "oracle_state",
+      "args": {
+        "method": "oracle_state"
+      }
+    },
+    {
+      "name": "progressive",
+      "args": {
+        "method": "progressive"
+      }
+    },
+    {
+      "name": "count_frontier",
+      "args": {
+        "method": "count_frontier"
+      }
+    },
+    {
+      "name": "learned_qrm",
+      "args": {
+        "method": "learned_qrm"
+      }
+    },
+    {
+      "name": "progressive_qrm",
+      "args": {
+        "method": "progressive_qrm"
+      }
+    },
+    {
+      "name": "oracle_qrm",
+      "args": {
+        "method": "oracle_qrm"
+      }
+    }
+  ]
+}

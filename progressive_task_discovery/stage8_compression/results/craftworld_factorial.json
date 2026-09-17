@@ -1,0 +1,1226 @@
+{
+  "cw_book_cheap_0": {
+    "auc": {
+      "Y00 flat history": 0.99450005,
+      "Y01 skill-only meta": 0.97037505,
+      "Y10 no-reuse readout": 0.9999286,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9976607000000001
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 4000,
+      "Y01 skill-only meta": 1000,
+      "Y10 no-reuse readout": 1000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 2000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "cheap",
+    "c_reuse": 7.57,
+    "cells": 25
+  },
+  "cw_book_cheap_1": {
+    "auc": {
+      "Y00 flat history": 0.9956786,
+      "Y01 skill-only meta": 0.9721608,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.99919665
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95714285,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 3000,
+      "Y01 skill-only meta": 1000,
+      "Y10 no-reuse readout": 1000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 2000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "cheap",
+    "c_reuse": 7.43,
+    "cells": 25
+  },
+  "cw_book_cheap_2": {
+    "auc": {
+      "Y00 flat history": 0.99207145,
+      "Y01 skill-only meta": 0.97228565,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9967145
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 5000,
+      "Y01 skill-only meta": 1000,
+      "Y10 no-reuse readout": 1000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 3000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "cheap",
+    "c_reuse": 10.0,
+    "cells": 25
+  },
+  "cw_book_cheap_3": {
+    "auc": {
+      "Y00 flat history": 0.99257145,
+      "Y01 skill-only meta": 0.97326785,
+      "Y10 no-reuse readout": 0.9999643,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.99548205
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.9642857,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 4000,
+      "Y01 skill-only meta": 1000,
+      "Y10 no-reuse readout": 1000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 3000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "cheap",
+    "c_reuse": 8.57,
+    "cells": 25
+  },
+  "cw_book_cheap_4": {
+    "auc": {
+      "Y00 flat history": 0.99789295,
+      "Y01 skill-only meta": 0.97419655,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9995537
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 2000,
+      "Y01 skill-only meta": 1000,
+      "Y10 no-reuse readout": 1000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 2000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "cheap",
+    "c_reuse": 9.43,
+    "cells": 25
+  },
+  "cw_book_cheap_5": {
+    "auc": {
+      "Y00 flat history": 0.9886607000000001,
+      "Y01 skill-only meta": 0.98644635,
+      "Y10 no-reuse readout": 0.9990179,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.99501785
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 6000,
+      "Y01 skill-only meta": 1000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 3000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "cheap",
+    "c_reuse": 8.29,
+    "cells": 25
+  },
+  "cw_book_expensive_0": {
+    "auc": {
+      "Y00 flat history": 0.9099642,
+      "Y01 skill-only meta": 0.95966075,
+      "Y10 no-reuse readout": 0.98264285,
+      "Y11 goal readout": 0.99753575,
+      "QRM (CRM)": 0.9495357
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 38000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 9000,
+      "Y11 goal readout": 2000,
+      "QRM (CRM)": 24000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "expensive",
+    "c_reuse": 25.29,
+    "cells": 104
+  },
+  "cw_book_expensive_1": {
+    "auc": {
+      "Y00 flat history": 0.8675356,
+      "Y01 skill-only meta": 0.96408935,
+      "Y10 no-reuse readout": 0.977375,
+      "Y11 goal readout": 0.99735715,
+      "QRM (CRM)": 0.9339286
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 56000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 10000,
+      "Y11 goal readout": 2000,
+      "QRM (CRM)": 29000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "expensive",
+    "c_reuse": 31.0,
+    "cells": 104
+  },
+  "cw_book_expensive_2": {
+    "auc": {
+      "Y00 flat history": 0.93,
+      "Y01 skill-only meta": 0.94669655,
+      "Y10 no-reuse readout": 0.98098205,
+      "Y11 goal readout": 0.9957322,
+      "QRM (CRM)": 0.9537857
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.8428571499999999,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 33000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 9000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 23000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "expensive",
+    "c_reuse": 28.29,
+    "cells": 104
+  },
+  "cw_book_expensive_3": {
+    "auc": {
+      "Y00 flat history": 0.84774995,
+      "Y01 skill-only meta": 0.97055355,
+      "Y10 no-reuse readout": 0.9640714499999999,
+      "Y11 goal readout": 0.9950536,
+      "QRM (CRM)": 0.9120892
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 64000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 15000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 39000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "expensive",
+    "c_reuse": 33.71,
+    "cells": 104
+  },
+  "cw_book_expensive_4": {
+    "auc": {
+      "Y00 flat history": 0.85191065,
+      "Y01 skill-only meta": 0.9782857,
+      "Y10 no-reuse readout": 0.9662142499999999,
+      "Y11 goal readout": 0.9949465,
+      "QRM (CRM)": 0.91899995
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.9214286,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 62000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 14000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 37000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "expensive",
+    "c_reuse": 26.29,
+    "cells": 104
+  },
+  "cw_book_expensive_5": {
+    "auc": {
+      "Y00 flat history": 0.92628575,
+      "Y01 skill-only meta": 0.964625,
+      "Y10 no-reuse readout": 0.990625,
+      "Y11 goal readout": 0.99887515,
+      "QRM (CRM)": 0.9608928999999999
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.9857143,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 32000,
+      "Y01 skill-only meta": 3000,
+      "Y10 no-reuse readout": 5000,
+      "Y11 goal readout": 2000,
+      "QRM (CRM)": 20000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book",
+    "cond": "expensive",
+    "c_reuse": 26.0,
+    "cells": 104
+  },
+  "cw_bookandquill_cheap_0": {
+    "auc": {
+      "Y00 flat history": 0.925125,
+      "Y01 skill-only meta": 0.9042857,
+      "Y10 no-reuse readout": 0.9960535500000001,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9890179
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 33000,
+      "Y01 skill-only meta": 3000,
+      "Y10 no-reuse readout": 4000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 6000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "c_reuse": 42.86,
+    "cells": 25
+  },
+  "cw_bookandquill_cheap_1": {
+    "auc": {
+      "Y00 flat history": 0.96725005,
+      "Y01 skill-only meta": 0.9015892,
+      "Y10 no-reuse readout": 0.999393,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9948215
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.87142855,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 16000,
+      "Y01 skill-only meta": 3000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 4000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "c_reuse": 38.29,
+    "cells": 25
+  },
+  "cw_bookandquill_cheap_2": {
+    "auc": {
+      "Y00 flat history": 0.9541964,
+      "Y01 skill-only meta": 0.82564285,
+      "Y10 no-reuse readout": 0.99767855,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9946073
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 21000,
+      "Y01 skill-only meta": 2000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 4000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "c_reuse": 34.0,
+    "cells": 25
+  },
+  "cw_bookandquill_cheap_3": {
+    "auc": {
+      "Y00 flat history": 0.96685705,
+      "Y01 skill-only meta": 0.85887505,
+      "Y10 no-reuse readout": 0.9987500500000001,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9950714
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.64285715,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 16000,
+      "Y01 skill-only meta": 2000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 3000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "c_reuse": 42.86,
+    "cells": 25
+  },
+  "cw_bookandquill_cheap_4": {
+    "auc": {
+      "Y00 flat history": 0.9394286,
+      "Y01 skill-only meta": 0.8839464,
+      "Y10 no-reuse readout": 0.9961965,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9901964
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.9,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 27000,
+      "Y01 skill-only meta": 2000,
+      "Y10 no-reuse readout": 3000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 5000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "c_reuse": 39.86,
+    "cells": 25
+  },
+  "cw_bookandquill_cheap_5": {
+    "auc": {
+      "Y00 flat history": 0.9429464,
+      "Y01 skill-only meta": 0.8904999,
+      "Y10 no-reuse readout": 0.9969109,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.99099985
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.8642857,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 26000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 4000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 5000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "c_reuse": 40.14,
+    "cells": 25
+  },
+  "cw_bookandquill_expensive_0": {
+    "auc": {
+      "Y00 flat history": 0.00048214300000000004,
+      "Y01 skill-only meta": 0.8950536,
+      "Y10 no-reuse readout": 0.9031428,
+      "Y11 goal readout": 0.9924464500000001,
+      "QRM (CRM)": 0.82380355
+    },
+    "final": {
+      "Y00 flat history": 0.028571400000000004,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 400000,
+      "Y01 skill-only meta": 27000,
+      "Y10 no-reuse readout": 76000,
+      "Y11 goal readout": 4000,
+      "QRM (CRM)": 75000
+    },
+    "censored": {
+      "Y00 flat history": 1.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "c_reuse": 155.14,
+    "cells": 104
+  },
+  "cw_bookandquill_expensive_1": {
+    "auc": {
+      "Y00 flat history": 0.41524995,
+      "Y01 skill-only meta": 0.884732,
+      "Y10 no-reuse readout": 0.95532145,
+      "Y11 goal readout": 0.99574995,
+      "QRM (CRM)": 0.8991785999999999
+    },
+    "final": {
+      "Y00 flat history": 0.9857143,
+      "Y01 skill-only meta": 0.9,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 349000,
+      "Y01 skill-only meta": 12000,
+      "Y10 no-reuse readout": 26000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 43000
+    },
+    "censored": {
+      "Y00 flat history": 0.1,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "c_reuse": 147.71,
+    "cells": 104
+  },
+  "cw_bookandquill_expensive_2": {
+    "auc": {
+      "Y00 flat history": 0.10985714,
+      "Y01 skill-only meta": 0.8940714,
+      "Y10 no-reuse readout": 0.9284464,
+      "Y11 goal readout": 0.99260715,
+      "QRM (CRM)": 0.85801795
+    },
+    "final": {
+      "Y00 flat history": 0.7571431,
+      "Y01 skill-only meta": 0.7857143,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 400000,
+      "Y01 skill-only meta": 11000,
+      "Y10 no-reuse readout": 66000,
+      "Y11 goal readout": 4000,
+      "QRM (CRM)": 59000
+    },
+    "censored": {
+      "Y00 flat history": 0.85,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "c_reuse": 163.71,
+    "cells": 104
+  },
+  "cw_bookandquill_expensive_3": {
+    "auc": {
+      "Y00 flat history": 0.5117678,
+      "Y01 skill-only meta": 0.91573225,
+      "Y10 no-reuse readout": 0.96657135,
+      "Y11 goal readout": 0.9954464,
+      "QRM (CRM)": 0.91385715
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.9,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 257000,
+      "Y01 skill-only meta": 10000,
+      "Y10 no-reuse readout": 19000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 37000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "c_reuse": 147.29,
+    "cells": 104
+  },
+  "cw_bookandquill_expensive_4": {
+    "auc": {
+      "Y00 flat history": 0.33492855,
+      "Y01 skill-only meta": 0.88532145,
+      "Y10 no-reuse readout": 0.93876785,
+      "Y11 goal readout": 0.994875,
+      "QRM (CRM)": 0.8854464
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 287000,
+      "Y01 skill-only meta": 20000,
+      "Y10 no-reuse readout": 39000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 50000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "c_reuse": 136.86,
+    "cells": 104
+  },
+  "cw_bookandquill_expensive_5": {
+    "auc": {
+      "Y00 flat history": 0.0327321355,
+      "Y01 skill-only meta": 0.8908215,
+      "Y10 no-reuse readout": 0.90298225,
+      "Y11 goal readout": 0.9923749500000001,
+      "QRM (CRM)": 0.83866065
+    },
+    "final": {
+      "Y00 flat history": 0.52142835,
+      "Y01 skill-only meta": 0.9,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 400000,
+      "Y01 skill-only meta": 14000,
+      "Y10 no-reuse readout": 48000,
+      "Y11 goal readout": 4000,
+      "QRM (CRM)": 67000
+    },
+    "censored": {
+      "Y00 flat history": 1.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "c_reuse": 141.71,
+    "cells": 104
+  },
+  "cw_cake_cheap_0": {
+    "auc": {
+      "Y00 flat history": 0.95987505,
+      "Y01 skill-only meta": 0.82966075,
+      "Y10 no-reuse readout": 0.9986964500000001,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9911785
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.75,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 18000,
+      "Y01 skill-only meta": 15000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 5000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "cheap",
+    "c_reuse": 18.43,
+    "cells": 25
+  },
+  "cw_cake_cheap_1": {
+    "auc": {
+      "Y00 flat history": 0.9357857,
+      "Y01 skill-only meta": 0.8605536,
+      "Y10 no-reuse readout": 0.99735715,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9872144
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.75,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 28000,
+      "Y01 skill-only meta": 18000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 7000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "cheap",
+    "c_reuse": 18.71,
+    "cells": 25
+  },
+  "cw_cake_cheap_2": {
+    "auc": {
+      "Y00 flat history": 0.94605355,
+      "Y01 skill-only meta": 0.8852142,
+      "Y10 no-reuse readout": 0.9976250000000001,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.98921415
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.85,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 23000,
+      "Y01 skill-only meta": 11000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 6000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "cheap",
+    "c_reuse": 17.57,
+    "cells": 25
+  },
+  "cw_cake_cheap_3": {
+    "auc": {
+      "Y00 flat history": 0.9768036,
+      "Y01 skill-only meta": 0.91182125,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9947858
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 1,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 11000,
+      "Y01 skill-only meta": 4000,
+      "Y10 no-reuse readout": 1000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 4000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "cheap",
+    "c_reuse": 19.71,
+    "cells": 25
+  },
+  "cw_cake_cheap_4": {
+    "auc": {
+      "Y00 flat history": 0.9482322,
+      "Y01 skill-only meta": 0.8493929,
+      "Y10 no-reuse readout": 0.9984286,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.9894287
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.75,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 23000,
+      "Y01 skill-only meta": 14000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 6000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "cheap",
+    "c_reuse": 18.29,
+    "cells": 25
+  },
+  "cw_cake_cheap_5": {
+    "auc": {
+      "Y00 flat history": 0.95324995,
+      "Y01 skill-only meta": 0.86271425,
+      "Y10 no-reuse readout": 0.99875,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 0.99098205
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 21000,
+      "Y01 skill-only meta": 5000,
+      "Y10 no-reuse readout": 2000,
+      "Y11 goal readout": 1000,
+      "QRM (CRM)": 5000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "cheap",
+    "c_reuse": 18.0,
+    "cells": 25
+  },
+  "cw_cake_expensive_0": {
+    "auc": {
+      "Y00 flat history": 0.30285715,
+      "Y01 skill-only meta": 0.8163213,
+      "Y10 no-reuse readout": 0.949,
+      "Y11 goal readout": 0.992375,
+      "QRM (CRM)": 0.8403928
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.9,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 291000,
+      "Y01 skill-only meta": 39000,
+      "Y10 no-reuse readout": 21000,
+      "Y11 goal readout": 4000,
+      "QRM (CRM)": 68000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "expensive",
+    "c_reuse": 68.71,
+    "cells": 104
+  },
+  "cw_cake_expensive_1": {
+    "auc": {
+      "Y00 flat history": 0.23696419999999999,
+      "Y01 skill-only meta": 0.89087505,
+      "Y10 no-reuse readout": 0.917375,
+      "Y11 goal readout": 0.99264275,
+      "QRM (CRM)": 0.8285356
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.82142855,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 319000,
+      "Y01 skill-only meta": 28000,
+      "Y10 no-reuse readout": 34000,
+      "Y11 goal readout": 4000,
+      "QRM (CRM)": 72000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "expensive",
+    "c_reuse": 64.71,
+    "cells": 104
+  },
+  "cw_cake_expensive_2": {
+    "auc": {
+      "Y00 flat history": 0.000732145,
+      "Y01 skill-only meta": 0.8692143,
+      "Y10 no-reuse readout": 0.904,
+      "Y11 goal readout": 0.9910893000000001,
+      "QRM (CRM)": 0.7460536
+    },
+    "final": {
+      "Y00 flat history": 0.028571449999999998,
+      "Y01 skill-only meta": 0.85,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 400000,
+      "Y01 skill-only meta": 29000,
+      "Y10 no-reuse readout": 38000,
+      "Y11 goal readout": 5000,
+      "QRM (CRM)": 105000
+    },
+    "censored": {
+      "Y00 flat history": 1.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "expensive",
+    "c_reuse": 71.0,
+    "cells": 104
+  },
+  "cw_cake_expensive_3": {
+    "auc": {
+      "Y00 flat history": 0.30246445,
+      "Y01 skill-only meta": 0.87499995,
+      "Y10 no-reuse readout": 0.948,
+      "Y11 goal readout": 0.99475,
+      "QRM (CRM)": 0.8478929000000001
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 304000,
+      "Y01 skill-only meta": 14000,
+      "Y10 no-reuse readout": 22000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 65000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "expensive",
+    "c_reuse": 72.14,
+    "cells": 104
+  },
+  "cw_cake_expensive_4": {
+    "auc": {
+      "Y00 flat history": 0.48901775000000003,
+      "Y01 skill-only meta": 0.88710715,
+      "Y10 no-reuse readout": 0.9674286,
+      "Y11 goal readout": 0.99605365,
+      "QRM (CRM)": 0.87251785
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.95,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 213000,
+      "Y01 skill-only meta": 24000,
+      "Y10 no-reuse readout": 14000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 55000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "expensive",
+    "c_reuse": 57.43,
+    "cells": 104
+  },
+  "cw_cake_expensive_5": {
+    "auc": {
+      "Y00 flat history": 0.4233929,
+      "Y01 skill-only meta": 0.8507321,
+      "Y10 no-reuse readout": 0.9632499999999999,
+      "Y11 goal readout": 0.9955535,
+      "QRM (CRM)": 0.8774465
+    },
+    "final": {
+      "Y00 flat history": 1,
+      "Y01 skill-only meta": 0.87142855,
+      "Y10 no-reuse readout": 1,
+      "Y11 goal readout": 1,
+      "QRM (CRM)": 1
+    },
+    "first90": {
+      "Y00 flat history": 240000,
+      "Y01 skill-only meta": 30000,
+      "Y10 no-reuse readout": 16000,
+      "Y11 goal readout": 3000,
+      "QRM (CRM)": 51000
+    },
+    "censored": {
+      "Y00 flat history": 0.0,
+      "Y01 skill-only meta": 0.0,
+      "Y10 no-reuse readout": 0.0,
+      "Y11 goal readout": 0.0,
+      "QRM (CRM)": 0.0
+    },
+    "task": "cake",
+    "cond": "expensive",
+    "c_reuse": 52.71,
+    "cells": 104
+  }
+}

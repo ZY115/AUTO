@@ -1,0 +1,1994 @@
+[
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 32,
+    "lengths": [
+      12,
+      12,
+      13,
+      13,
+      14,
+      15,
+      16
+    ],
+    "c_reuse": 7.57,
+    "cost": {
+      "h": [
+        1.29,
+        3
+      ],
+      "s": [
+        2.29,
+        2
+      ],
+      "t": [
+        1.86,
+        1
+      ],
+      "y": [
+        2.71,
+        2
+      ]
+    },
+    "tag": "cw_book_cheap_0",
+    "task": "book",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 0
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 24,
+    "lengths": [
+      9,
+      9,
+      10,
+      10,
+      11,
+      12,
+      12
+    ],
+    "c_reuse": 7.43,
+    "cost": {
+      "h": [
+        1.43,
+        3
+      ],
+      "s": [
+        2.86,
+        2
+      ],
+      "t": [
+        1.86,
+        1
+      ],
+      "y": [
+        1.71,
+        2
+      ]
+    },
+    "tag": "cw_book_cheap_1",
+    "task": "book",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 1
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 36,
+    "lengths": [
+      13,
+      14,
+      15,
+      15,
+      16,
+      17,
+      18
+    ],
+    "c_reuse": 10.0,
+    "cost": {
+      "h": [
+        2.29,
+        3
+      ],
+      "s": [
+        3.43,
+        2
+      ],
+      "t": [
+        1.71,
+        1
+      ],
+      "y": [
+        2.0,
+        2
+      ]
+    },
+    "tag": "cw_book_cheap_2",
+    "task": "book",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 2
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 38,
+    "lengths": [
+      16,
+      16,
+      17,
+      17,
+      18,
+      19,
+      19
+    ],
+    "c_reuse": 8.57,
+    "cost": {
+      "h": [
+        2.14,
+        3
+      ],
+      "s": [
+        1.86,
+        2
+      ],
+      "t": [
+        2.14,
+        1
+      ],
+      "y": [
+        2.43,
+        2
+      ]
+    },
+    "tag": "cw_book_cheap_3",
+    "task": "book",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 3
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 24,
+    "lengths": [
+      9,
+      9,
+      10,
+      10,
+      11,
+      12,
+      12
+    ],
+    "c_reuse": 9.43,
+    "cost": {
+      "h": [
+        2.57,
+        3
+      ],
+      "s": [
+        2.43,
+        2
+      ],
+      "t": [
+        1.71,
+        1
+      ],
+      "y": [
+        1.86,
+        2
+      ]
+    },
+    "tag": "cw_book_cheap_4",
+    "task": "book",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 4
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 42,
+    "lengths": [
+      18,
+      19,
+      19,
+      19,
+      19,
+      20,
+      21
+    ],
+    "c_reuse": 8.29,
+    "cost": {
+      "h": [
+        2.14,
+        3
+      ],
+      "s": [
+        2.14,
+        2
+      ],
+      "t": [
+        2.57,
+        1
+      ],
+      "y": [
+        1.86,
+        2
+      ]
+    },
+    "tag": "cw_book_cheap_5",
+    "task": "book",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 5
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 78,
+    "lengths": [
+      28,
+      31,
+      32,
+      34,
+      35,
+      37,
+      39
+    ],
+    "c_reuse": 25.29,
+    "cost": {
+      "h": [
+        6.14,
+        3
+      ],
+      "s": [
+        4.29,
+        2
+      ],
+      "t": [
+        4.43,
+        1
+      ],
+      "y": [
+        8.71,
+        2
+      ]
+    },
+    "tag": "cw_book_expensive_0",
+    "task": "book",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 0
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 84,
+    "lengths": [
+      37,
+      38,
+      39,
+      39,
+      40,
+      41,
+      42
+    ],
+    "c_reuse": 31.0,
+    "cost": {
+      "h": [
+        8.43,
+        3
+      ],
+      "s": [
+        7.29,
+        2
+      ],
+      "t": [
+        6.71,
+        1
+      ],
+      "y": [
+        6.86,
+        2
+      ]
+    },
+    "tag": "cw_book_expensive_1",
+    "task": "book",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 1
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 72,
+    "lengths": [
+      25,
+      29,
+      30,
+      31,
+      33,
+      34,
+      36
+    ],
+    "c_reuse": 28.29,
+    "cost": {
+      "h": [
+        6.0,
+        3
+      ],
+      "s": [
+        10.71,
+        2
+      ],
+      "t": [
+        7.57,
+        1
+      ],
+      "y": [
+        5.57,
+        2
+      ]
+    },
+    "tag": "cw_book_expensive_2",
+    "task": "book",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 2
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 104,
+    "lengths": [
+      43,
+      44,
+      46,
+      48,
+      49,
+      51,
+      52
+    ],
+    "c_reuse": 33.71,
+    "cost": {
+      "h": [
+        9.29,
+        3
+      ],
+      "s": [
+        7.57,
+        2
+      ],
+      "t": [
+        5.71,
+        1
+      ],
+      "y": [
+        7.57,
+        2
+      ]
+    },
+    "tag": "cw_book_expensive_3",
+    "task": "book",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 3
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 100,
+    "lengths": [
+      39,
+      41,
+      43,
+      45,
+      46,
+      48,
+      50
+    ],
+    "c_reuse": 26.29,
+    "cost": {
+      "h": [
+        5.57,
+        3
+      ],
+      "s": [
+        6.57,
+        2
+      ],
+      "t": [
+        7.29,
+        1
+      ],
+      "y": [
+        8.57,
+        2
+      ]
+    },
+    "tag": "cw_book_expensive_4",
+    "task": "book",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 4
+  },
+  {
+    "states": 8,
+    "minimal": 8,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "y"
+    ],
+    "starts": 7,
+    "horizon": 62,
+    "lengths": [
+      24,
+      25,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "c_reuse": 26.0,
+    "cost": {
+      "h": [
+        6.29,
+        3
+      ],
+      "s": [
+        5.14,
+        2
+      ],
+      "t": [
+        7.29,
+        1
+      ],
+      "y": [
+        8.29,
+        2
+      ]
+    },
+    "tag": "cw_book_expensive_5",
+    "task": "book",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 5
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 64,
+    "lengths": [
+      29,
+      29,
+      29,
+      30,
+      30,
+      31,
+      32
+    ],
+    "c_reuse": 42.86,
+    "cost": {
+      "h": [
+        2.29,
+        6
+      ],
+      "s": [
+        2.29,
+        4
+      ],
+      "t": [
+        2.0,
+        3
+      ],
+      "x": [
+        2.29,
+        4
+      ],
+      "y": [
+        2.14,
+        4
+      ],
+      "z": [
+        2.43,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_cheap_0",
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 0
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 42,
+    "lengths": [
+      18,
+      19,
+      19,
+      19,
+      20,
+      20,
+      21
+    ],
+    "c_reuse": 38.29,
+    "cost": {
+      "h": [
+        1.57,
+        6
+      ],
+      "s": [
+        2.43,
+        4
+      ],
+      "t": [
+        1.29,
+        3
+      ],
+      "x": [
+        2.0,
+        4
+      ],
+      "y": [
+        3.14,
+        4
+      ],
+      "z": [
+        1.71,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_cheap_1",
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 1
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 46,
+    "lengths": [
+      18,
+      19,
+      20,
+      20,
+      21,
+      22,
+      23
+    ],
+    "c_reuse": 34.0,
+    "cost": {
+      "h": [
+        1.57,
+        6
+      ],
+      "s": [
+        1.14,
+        4
+      ],
+      "t": [
+        1.29,
+        3
+      ],
+      "x": [
+        3.43,
+        4
+      ],
+      "y": [
+        1.29,
+        4
+      ],
+      "z": [
+        2.0,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_cheap_2",
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 2
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 40,
+    "lengths": [
+      18,
+      18,
+      18,
+      19,
+      19,
+      19,
+      20
+    ],
+    "c_reuse": 42.86,
+    "cost": {
+      "h": [
+        2.14,
+        6
+      ],
+      "s": [
+        3.0,
+        4
+      ],
+      "t": [
+        2.57,
+        3
+      ],
+      "x": [
+        1.29,
+        4
+      ],
+      "y": [
+        2.86,
+        4
+      ],
+      "z": [
+        1.86,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_cheap_3",
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 3
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 62,
+    "lengths": [
+      27,
+      28,
+      29,
+      29,
+      30,
+      30,
+      31
+    ],
+    "c_reuse": 39.86,
+    "cost": {
+      "h": [
+        1.57,
+        6
+      ],
+      "s": [
+        1.71,
+        4
+      ],
+      "t": [
+        2.29,
+        3
+      ],
+      "x": [
+        1.71,
+        4
+      ],
+      "y": [
+        3.57,
+        4
+      ],
+      "z": [
+        2.14,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_cheap_4",
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 4
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 25,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 58,
+    "lengths": [
+      24,
+      25,
+      26,
+      27,
+      27,
+      28,
+      29
+    ],
+    "c_reuse": 40.14,
+    "cost": {
+      "h": [
+        1.71,
+        6
+      ],
+      "s": [
+        2.29,
+        4
+      ],
+      "t": [
+        2.71,
+        3
+      ],
+      "x": [
+        3.29,
+        4
+      ],
+      "y": [
+        1.86,
+        4
+      ],
+      "z": [
+        1.29,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_cheap_5",
+    "task": "book-and-quill",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 5
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 172,
+    "lengths": [
+      78,
+      79,
+      79,
+      80,
+      82,
+      84,
+      86
+    ],
+    "c_reuse": 155.14,
+    "cost": {
+      "h": [
+        8.29,
+        6
+      ],
+      "s": [
+        9.71,
+        4
+      ],
+      "t": [
+        8.43,
+        3
+      ],
+      "x": [
+        7.71,
+        4
+      ],
+      "y": [
+        8.71,
+        4
+      ],
+      "z": [
+        6.14,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_expensive_0",
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 0
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 112,
+    "lengths": [
+      48,
+      49,
+      50,
+      52,
+      53,
+      54,
+      56
+    ],
+    "c_reuse": 147.71,
+    "cost": {
+      "h": [
+        7.43,
+        6
+      ],
+      "s": [
+        8.29,
+        4
+      ],
+      "t": [
+        7.29,
+        3
+      ],
+      "x": [
+        7.0,
+        4
+      ],
+      "y": [
+        9.86,
+        4
+      ],
+      "z": [
+        6.86,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_expensive_1",
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 1
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 142,
+    "lengths": [
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      71
+    ],
+    "c_reuse": 163.71,
+    "cost": {
+      "h": [
+        7.57,
+        6
+      ],
+      "s": [
+        9.57,
+        4
+      ],
+      "t": [
+        11.29,
+        3
+      ],
+      "x": [
+        8.43,
+        4
+      ],
+      "y": [
+        9.14,
+        4
+      ],
+      "z": [
+        7.29,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_expensive_2",
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 2
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 106,
+    "lengths": [
+      43,
+      45,
+      46,
+      47,
+      48,
+      51,
+      53
+    ],
+    "c_reuse": 147.29,
+    "cost": {
+      "h": [
+        7.43,
+        6
+      ],
+      "s": [
+        9.57,
+        4
+      ],
+      "t": [
+        6.0,
+        3
+      ],
+      "x": [
+        7.0,
+        4
+      ],
+      "y": [
+        9.29,
+        4
+      ],
+      "z": [
+        6.86,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_expensive_3",
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 3
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 122,
+    "lengths": [
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      61
+    ],
+    "c_reuse": 136.86,
+    "cost": {
+      "h": [
+        5.57,
+        6
+      ],
+      "s": [
+        6.43,
+        4
+      ],
+      "t": [
+        12.71,
+        3
+      ],
+      "x": [
+        6.71,
+        4
+      ],
+      "y": [
+        3.0,
+        4
+      ],
+      "z": [
+        11.71,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_expensive_4",
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 4
+  },
+  {
+    "states": 21,
+    "minimal": 21,
+    "cells": 104,
+    "alphabet": [
+      "h",
+      "s",
+      "t",
+      "x",
+      "y",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 164,
+    "lengths": [
+      72,
+      74,
+      76,
+      77,
+      78,
+      81,
+      82
+    ],
+    "c_reuse": 141.71,
+    "cost": {
+      "h": [
+        6.57,
+        6
+      ],
+      "s": [
+        7.29,
+        4
+      ],
+      "t": [
+        6.43,
+        3
+      ],
+      "x": [
+        7.14,
+        4
+      ],
+      "y": [
+        8.86,
+        4
+      ],
+      "z": [
+        8.71,
+        4
+      ]
+    },
+    "tag": "cw_bookandquill_expensive_5",
+    "task": "book-and-quill",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 5
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 25,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 54,
+    "lengths": [
+      25,
+      25,
+      25,
+      26,
+      26,
+      27,
+      27
+    ],
+    "c_reuse": 18.43,
+    "cost": {
+      "c": [
+        2.0,
+        2
+      ],
+      "h": [
+        2.86,
+        1
+      ],
+      "i": [
+        1.43,
+        2
+      ],
+      "s": [
+        3.14,
+        2
+      ],
+      "t": [
+        2.0,
+        5
+      ],
+      "w": [
+        2.0,
+        2
+      ],
+      "z": [
+        1.86,
+        2
+      ]
+    },
+    "tag": "cw_cake_cheap_0",
+    "task": "cake",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 0
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 25,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 72,
+    "lengths": [
+      34,
+      34,
+      34,
+      34,
+      35,
+      35,
+      36
+    ],
+    "c_reuse": 18.71,
+    "cost": {
+      "c": [
+        2.57,
+        2
+      ],
+      "h": [
+        2.29,
+        1
+      ],
+      "i": [
+        2.43,
+        2
+      ],
+      "s": [
+        2.43,
+        2
+      ],
+      "t": [
+        2.0,
+        5
+      ],
+      "w": [
+        1.86,
+        2
+      ],
+      "z": [
+        1.43,
+        2
+      ]
+    },
+    "tag": "cw_cake_cheap_1",
+    "task": "cake",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 1
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 25,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 68,
+    "lengths": [
+      30,
+      30,
+      31,
+      32,
+      32,
+      33,
+      34
+    ],
+    "c_reuse": 17.57,
+    "cost": {
+      "c": [
+        2.0,
+        2
+      ],
+      "h": [
+        2.71,
+        1
+      ],
+      "i": [
+        2.0,
+        2
+      ],
+      "s": [
+        1.29,
+        2
+      ],
+      "t": [
+        2.0,
+        5
+      ],
+      "w": [
+        1.57,
+        2
+      ],
+      "z": [
+        2.71,
+        2
+      ]
+    },
+    "tag": "cw_cake_cheap_2",
+    "task": "cake",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 2
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 25,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 44,
+    "lengths": [
+      20,
+      20,
+      20,
+      20,
+      21,
+      21,
+      22
+    ],
+    "c_reuse": 19.71,
+    "cost": {
+      "c": [
+        2.43,
+        2
+      ],
+      "h": [
+        1.57,
+        1
+      ],
+      "i": [
+        1.43,
+        2
+      ],
+      "s": [
+        2.0,
+        2
+      ],
+      "t": [
+        2.57,
+        5
+      ],
+      "w": [
+        1.86,
+        2
+      ],
+      "z": [
+        1.71,
+        2
+      ]
+    },
+    "tag": "cw_cake_cheap_3",
+    "task": "cake",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 3
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 25,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 64,
+    "lengths": [
+      29,
+      29,
+      30,
+      30,
+      31,
+      31,
+      32
+    ],
+    "c_reuse": 18.29,
+    "cost": {
+      "c": [
+        2.29,
+        2
+      ],
+      "h": [
+        2.14,
+        1
+      ],
+      "i": [
+        3.57,
+        2
+      ],
+      "s": [
+        3.0,
+        2
+      ],
+      "t": [
+        1.29,
+        5
+      ],
+      "w": [
+        2.57,
+        2
+      ],
+      "z": [
+        1.71,
+        2
+      ]
+    },
+    "tag": "cw_cake_cheap_4",
+    "task": "cake",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 4
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 25,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 56,
+    "lengths": [
+      26,
+      26,
+      27,
+      27,
+      27,
+      28,
+      28
+    ],
+    "c_reuse": 18.0,
+    "cost": {
+      "c": [
+        3.29,
+        2
+      ],
+      "h": [
+        1.14,
+        1
+      ],
+      "i": [
+        1.86,
+        2
+      ],
+      "s": [
+        2.71,
+        2
+      ],
+      "t": [
+        1.57,
+        5
+      ],
+      "w": [
+        2.86,
+        2
+      ],
+      "z": [
+        1.0,
+        2
+      ]
+    },
+    "tag": "cw_cake_cheap_5",
+    "task": "cake",
+    "cond": "cheap",
+    "kind": "open_plan",
+    "size": 7,
+    "seed": 5
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 104,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 162,
+    "lengths": [
+      72,
+      73,
+      74,
+      76,
+      77,
+      79,
+      81
+    ],
+    "c_reuse": 68.71,
+    "cost": {
+      "c": [
+        9.0,
+        2
+      ],
+      "h": [
+        7.71,
+        1
+      ],
+      "i": [
+        7.86,
+        2
+      ],
+      "s": [
+        8.71,
+        2
+      ],
+      "t": [
+        6.86,
+        5
+      ],
+      "w": [
+        8.29,
+        2
+      ],
+      "z": [
+        7.43,
+        2
+      ]
+    },
+    "tag": "cw_cake_expensive_0",
+    "task": "cake",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 0
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 104,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 172,
+    "lengths": [
+      74,
+      78,
+      79,
+      80,
+      82,
+      84,
+      86
+    ],
+    "c_reuse": 64.71,
+    "cost": {
+      "c": [
+        7.57,
+        2
+      ],
+      "h": [
+        8.0,
+        1
+      ],
+      "i": [
+        6.86,
+        2
+      ],
+      "s": [
+        6.43,
+        2
+      ],
+      "t": [
+        6.71,
+        5
+      ],
+      "w": [
+        10.71,
+        2
+      ],
+      "z": [
+        6.29,
+        2
+      ]
+    },
+    "tag": "cw_cake_expensive_1",
+    "task": "cake",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 1
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 104,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 230,
+    "lengths": [
+      106,
+      107,
+      108,
+      110,
+      111,
+      113,
+      115
+    ],
+    "c_reuse": 71.0,
+    "cost": {
+      "c": [
+        5.86,
+        2
+      ],
+      "h": [
+        7.71,
+        1
+      ],
+      "i": [
+        9.14,
+        2
+      ],
+      "s": [
+        8.14,
+        2
+      ],
+      "t": [
+        8.29,
+        5
+      ],
+      "w": [
+        8.14,
+        2
+      ],
+      "z": [
+        6.57,
+        2
+      ]
+    },
+    "tag": "cw_cake_expensive_2",
+    "task": "cake",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 2
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 104,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 146,
+    "lengths": [
+      66,
+      68,
+      69,
+      69,
+      71,
+      72,
+      73
+    ],
+    "c_reuse": 72.14,
+    "cost": {
+      "c": [
+        8.86,
+        2
+      ],
+      "h": [
+        7.0,
+        1
+      ],
+      "i": [
+        7.14,
+        2
+      ],
+      "s": [
+        7.0,
+        2
+      ],
+      "t": [
+        8.86,
+        5
+      ],
+      "w": [
+        6.86,
+        2
+      ],
+      "z": [
+        6.86,
+        2
+      ]
+    },
+    "tag": "cw_cake_expensive_3",
+    "task": "cake",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 3
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 104,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 134,
+    "lengths": [
+      58,
+      60,
+      61,
+      63,
+      64,
+      66,
+      67
+    ],
+    "c_reuse": 57.43,
+    "cost": {
+      "c": [
+        5.14,
+        2
+      ],
+      "h": [
+        5.43,
+        1
+      ],
+      "i": [
+        5.86,
+        2
+      ],
+      "s": [
+        7.29,
+        2
+      ],
+      "t": [
+        6.0,
+        5
+      ],
+      "w": [
+        7.29,
+        2
+      ],
+      "z": [
+        7.86,
+        2
+      ]
+    },
+    "tag": "cw_cake_expensive_4",
+    "task": "cake",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 4
+  },
+  {
+    "states": 15,
+    "minimal": 15,
+    "cells": 104,
+    "alphabet": [
+      "c",
+      "h",
+      "i",
+      "s",
+      "t",
+      "w",
+      "z"
+    ],
+    "starts": 7,
+    "horizon": 124,
+    "lengths": [
+      57,
+      58,
+      59,
+      60,
+      60,
+      61,
+      62
+    ],
+    "c_reuse": 52.71,
+    "cost": {
+      "c": [
+        5.0,
+        2
+      ],
+      "h": [
+        6.86,
+        1
+      ],
+      "i": [
+        8.0,
+        2
+      ],
+      "s": [
+        7.0,
+        2
+      ],
+      "t": [
+        5.29,
+        5
+      ],
+      "w": [
+        6.86,
+        2
+      ],
+      "z": [
+        4.71,
+        2
+      ]
+    },
+    "tag": "cw_cake_expensive_5",
+    "task": "cake",
+    "cond": "expensive",
+    "kind": "four_rooms",
+    "size": 13,
+    "seed": 5
+  }
+]

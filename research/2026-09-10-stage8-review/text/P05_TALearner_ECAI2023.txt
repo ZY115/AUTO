@@ -1,0 +1,1261 @@
+                                             Learning Task Automata for Reinforcement Learning
+                                                       Using Hidden Markov Models
+                                                     Alessandro Abatea , Yousif Almullaa,b , James Foxa , David Hylanda and Michael Wooldridgea
+                                                                                                      a University of Oxford
+                                                                                                   b Microsoft Azure Quantum
+                                                                  {aabate, james.fox, david.hyland, mjw}@cs.ox.ac.uk, yalmulla@microsoft.com
+
+
+                                        Abstract. Training reinforcement learning (RL) agents using scalar            Section 5) has recognised that this automaton is usually a priori un-
+                                        reward signals is often infeasible when an environment has sparse             known, so they learn it concurrently with finding an optimal policy.
+                                        and non-Markovian rewards. Moreover, handcrafting these reward                We focus on how to best learn the task automaton (TA) representing a
+                                        functions before training is prone to misspecification. We learn non-         task specification in sparse, non-Markovian reward environments. To
+
+
+
+
+arXiv:2208.11838v4 [cs.LG] 3 Oct 2023
+                                        Markovian finite task specifications as finite-state ‘task automata’          our knowledge, ours is the first model-based approach; our pipeline
+                                        from episodes of agent experience within environments with un-                learns a model of the underlying MDP along with the TA. The afore-
+                                        known dynamics. First, we learn a product MDP, a model composed               mentioned work on temporal logic planning, sample-efficient model-
+                                        of the specification’s automaton and the environment’s MDP (both              based RL approaches [35], or other methods [5] can then synthesise
+                                        initially unknown), by treating it as a partially observable MDP and          an optimal policy.
+                                        employing a hidden Markov model learning algorithm. Second, we
+                                        efficiently distil the task automaton (assumed to be a deterministic
+                                                                                                                       Contributions: Our algorithmic pipeline learns both a task spe-
+                                        finite automaton) from the learnt product MDP. Our automaton en-
+                                                                                                                      cification as a TA (encoded as a deterministic finite automaton
+                                        ables a task to be decomposed into sub-tasks, so an RL agent can
+                                                                                                                      (DFA)) and a model of the MDP, from episodes of agent experience
+                                        later synthesise an optimal policy more efficiently. It is also an inter-
+                                                                                                                      within an environment with unknown dynamics and sparse, non-
+                                        pretable encoding of high-level task features, so a human can verify
+                                                                                                                      Markovian reward. This improves sample efficiency in three ways: a
+                                        that the agent’s learnt tasks have no misspecifications. Finally, we
+                                                                                                                      TA exposes a task specification’s separability, so it allows for solving
+                                        also take steps towards ensuring that the automaton is environment-
+                                                                                                                      sub-tasks independently; our model-based approach helps the agent
+                                        agnostic, making it well-suited for use in transfer learning.
+                                                                                                                      learn an optimal policy more efficiently; and we remove environ-
+                                                                                                                      mental bias from the learned TA for better transfer learning [29].
+                                        1    Introduction                                                                We learn the TA via an intermediate product MDP structure, com-
+                                                                                                                      posed of the environment’s ‘spatial’ MDP and the task specifica-
+                                        Reinforcement Learning (RL) can be prohibitively slow (sample in-             tion’s TA. The product MDP is partially observable – the agent only
+                                        efficient) at learning an optimal policy when the reward signal is            observes its state in the spatial MDP and its reward, not the TA-state
+                                        sparse and non-Markovian because of the credit assignment prob-               (its progress through the unknown task). The product MDP is learnt
+                                        lem. However, this setting is common: any task where no reward is             using the Baum-Welch algorithm [6] by first learning an estimate of
+                                        given until a sequence of sequential sub-tasks is completed. Consider         the spatial MDP using a uniform prior. Then, this learnt spatial MDP
+                                        a medical procedure where the ordering of sub-task completion mat-            is used as an inductive bias for learning the full product MDP. In
+                                        ters or where one can only enter a room if one already has the key.           Section 4, we show that our approach is more efficient than existing
+                                           Three existing approaches for improving learning in this setting           SAT-based approaches to learning TAs [1, 8, 15, 34, 36] by compar-
+                                        are hierarchical RL [23], which allows agents to plan at various levels       ing with Biermann and Feldman’s [7] SAT-based algorithm.
+                                        of abstraction; transfer learning, which utilises knowledge learnt               Once the product MDP is learnt, distilling the TA via our ‘Cone
+                                        from similar tasks [29]; and temporal logic planning approaches,              Lumping’ method is computationally cheap. This makes the product
+                                        which guide the agent’s exploration by focusing it on the MDP frag-           MDP useful for transfer learning. If the environment changes, the
+                                        ment that satisfies a linear temporal logic (LTL) property [14, 19, 30].      agent only needs to update the affected part of the product MDP be-
+                                        The latter is similar to Icarte et al [18]’s reward machines (finite-state    fore efficiently re-distilling the TA.
+                                        machines that represent non-Markovian reward functions) because                  This paper also addresses the reward misspecification problem
+                                        an LTL property is often represented as an automaton.                         [2] by using a direct task specification to encode a complex, non-
+                                           Task specifications are often separable, so an automaton (or re-           Markovian task rather than a scalar reward function. This is because
+                                        ward machine) allows an optimal policy to be found more efficiently           scalar reward functions are brittle with respect to small environ-
+                                        by breaking the task into Markovian sub-tasks. Recent work (see               mental changes [33], do not signal a task’s separability, and can be
+                                                                                                                      difficult for a human to interpret and verify whether they result in the
+                                        ∗ Accepted to the 26th European Conference on Artificial Intelligence (ECAI   desired behaviour. In contrast, our learnt TA reveals the full task spe-
+                                        2023). All authors are listed alphabetically.                                 cification. Since our pipeline works in unknown environments where
+                                                                                                                           ¬Ò        ¬é
+many high-level tasks may exist, agents using our pipeline can learn                            é       b [
+multiple tasks in one TA. Although we focus on deterministic TAs in                                                              Ò
+                                                                                                        b b        start   q0           q1   é
+this paper (i.e., DFAs), our approach can be straightforwardly exten-                                                                         q2
+                                                                                            é                                                      ¬
+ded to learning probabilistic automata [10, 24].
+                                                                                                                           q4           q3   
+   Although the paper is self-contained, for brevity, we relegate many
+proposition proofs to our supplementary material, Appendix A.                          ¹                    Ò                        ¬
+
+                                                                                                  (a)                             (b)
+2     Setup
+                                                                                 Figure 1: (a) The labelled MDP environment and (b) 5 state TA rep-
+An agent’s interaction with its environment can be viewed at many                resenting a task specification for Example 1.
+levels of abstraction, amongst which a low and fine-grained descrip-
+tion is often modelled by a Markov Decision Process (MDP). How-                     Given the initial state s0 , fixing the agent’s policy π in an MDP
+ever, agents can also recognise higher-level features of the environ-            M induces a Markov chain (MC) Mπ if for all state transitions,
+ment (e.g., chairs or tables). These are included in a labelled MDP (in          the reward function’s output is independent of the last action (i.e.,
+Section 2.1) using a set of (atomic) propositional variables from an             R(ζ, ai , st+1 ) = R(ζ, aj , st+1 ) for all ai , aj ∈ A, where ζ ∈
+alphabet of labels AP, which are assigned truth values at every MDP              (S ×A)+ ). Definition 1’s reward function is non-Markovian because
+state via a labelling function L. Task specifications refer to sequential        it depends upon the full trajectory up until that point. A Markovian
+compositions of these high-level features and can be encoded as TAs              reward function R : S × A × S → R only depends on the last trans-
+(in Section 2.2), which graphically represent the structure of tasks             ition. State-based rewards could also be handled straightforwardly.
+that an agent can get reward from completing. A TA and the MDP
+can be combined into a single structure, a product MDP (in Section               Example 1. An RL agent is in Figure 1a’s environment. The task is
+2.3) to provide a holistic representation of the agent’s exploration.            to collect coffee Ò for the guest on a couch é before turning on
+                                                                                 the TV  and then ascending the stairs (Figure 1b). The carpet
+                                                                                 b and book [ do not affect whether the agent can achieve its goal.
+2.1      MDP Environment                                                         The arrow next to the silhouette indicates the initial state.
+Definition 1. A Markov Decision Process (MDP) is a tuple M =                        Example 1’s MDP environment is shown in Figure 1a. The agent’s
+(S, A, s0 , P, R, γ), where S and A are finite sets of states and ac-            possible actions A are to move in the adjacent up, down, left,
+tions, s0 is the initial state (or distribution over states), P : S ×            and right directions; the MDP’s state space cardinality |S| is 25;
+A × S → [0, 1] is the transition probability distribution, R :                   and the transition dynamics are initially unknown (as discussed
+(S × A)+ × S → R is a (non-Markovian) reward function1 ,                         later, stochasticity in the dynamics derives from randomised ac-
+and γ ∈ [0, 1) is the discount factor. A labelled MDP is a tuple                 tion execution). The set of (atomic) propositional variables AP ≡
+M = (S, A, s0 , P, R, γ, AP, L); an MDP enriched with AP, a fi-                  {Ò,b,é,,[, } represent the high-level features of the envir-
+nite alphabet of atomic propositions (labels), and L : S → 2AP , a               onment. Empty cells are implicitly labelled L(s) = ∅ (i.e., the MDP
+labelling function.                                                              state s ∈ S has no high-level environmental feature of interest).
+                                                                                    If the agent only gets a positive reward upon completing the full
+   A sequence of states and actions s0 , a0 , s1 . . . , an−1 , sn is called
+                                                                                 task specification, this cannot be expressed with a Markovian reward
+a trajectory. A state or action trajectory is the restriction to just the
+                                                                                 function with respect to the MDP’s state space S because the agent
+sequence of states (st )n        ∈ S + or actions (at )n
+                             t=0 Q
+                                                                 +
+                                                        t=0 ∈ A . A state
+                                   n                                             cannot go between states labelled Ò and é in one timestep, let
+trajectory is attainable if t=0 P (st+1 | st , at ) > 0 for some ac-
+                                                                                 alone complete all four subtasks. So, the agent must learn an optimal
+tion trajectory (at )n t=0 , and impossible otherwise. A trajectory is ac-
+                                                                                 policy in an environment with a non-Markovian reward function that
+companied by a reward sequence (rt )n         t=0 and a sequence of labels,
+                                  AP ∗                                           provides sparse feedback. This challenge of planning using full tra-
+called a trace, (ℓt )n t=0 ∈ (2       ) , where L(st ) = ℓt for all t ≤ n.
+                                                                                 jectories can be surmounted by recognising that the agent also ob-
+A (history-based) policy π : (S × A)+ × A → [0, 1] is a function
+                                                                                 serves traces of high-level features in AP. By maintaining a memory
+mapping trajectories to probability distributions over actions, where
+                                                                                 of complete subtasks (e.g., coffee collected) at this higher-level of ab-
+π(at | s0 , a0 , . . . , st ) gives the probability of the agent choosing
+                                                                                 straction (with smaller dimension), the agent can overcome the ‘curse
+action at at state st given the (historical) trajectory s0 , a0 , . . . , st .
+                                                                                 of dimensionality’ and synthesise an optimal policy more efficiently
+Memoryless policies are a special case where the distribution over
+                                                                                 by exploiting the compositionality of many tasks.
+actions only depends on the last state (standard in RL because stor-
+ing entire histories is intractable). The agent starts at s0 in each ex-
+ploration episode and, at each time step t, in state st , it selects ac-         2.2       Task Specification
+tion at with probability π(at | st ), before transitioning to a new
+state st+1 with probability P (st+1 | st , at ) whilst receiving a re-           Linear temporal logic (LTL) or Linear Dynamic Logic (LDL), eval-
+ward rt = R(s0 , a0 , . . . , st , at , st+1 ). The agent’s task is to find      uated with respect to finite trajectories (LTLf /LDLf ), is often used
+a policy  π that maximises the expected sum of discounted reward                to express a task specification as temporally extended goals, or con-
+Eπ Σn
+            t                                                                   straints on plans because this mitigates the sample inefficiency of RL
+       t=0 γ rt . A policy π is fully mixed if every action at every
+state is chosen with non-zero probability (i.e., π(a | s) > 0 for all            in non-Markovian environments [14]. In fact, Littman et al [22] argue
+s ∈ S and a ∈ A). We assume the agent observes state trajectories,               that task specifications are superior to reward functions for specify-
+traces, and reward sequences, as it explores the labelled MDP.                   ing behaviour, as they are environment independent. We exploit the
+                                                                                 fact that the expressive power of both LDLf and LTLf is subsumed
+1 This must encompass the initial transition, as evidenced by the use of the     by the class of regular expressions, so they can be represented by
+    non-empty repetition operator +.                                             deterministic or nondeterministic finite automata (DFAs/NFAs) [5].
+Definition 2. A Non-Deterministic Finite Automaton (NFA) is a                s⊗
+                                                                              0 = ⟨s0 , q0 ⟩ is the initial state pair; P
+                                                                                                                               ⊗
+                                                                                                                                  : S⊗ × A × S⊗ →
+tuple N = (Q, q0 , Σ, δ, F), where Q is a finite set of states, q0 ∈ Q       [0, 1] is the transition probability function, where P ⊗ (⟨sj , qj ⟩ |
+is the initial state, Σ is a finite alphabet, δ : Q × Σ → 2Q is a            ⟨si , qi ⟩, ai ) = P (sj | si , ai ) if qj = δ(qi , L(sj )) and 0 otherwise;
+non-deterministic transition function, and F ⊆ Q is the set of ac-           and R⊗ : S ⊗ × A × S ⊗ → {0, 1} is a reward function such that
+cepting states. If |δ(q, α)| = 1 for all q ∈ Q and α ∈ Σ, then N is          R⊗ (⟨st , qt ⟩, at , ⟨st+1 , qt+1 ⟩) = χF (qt+1 ), where χF is the indic-
+deterministic and is called a Deterministic Finite Automaton (DFA).          ator function for the TA’s set of accepting states. Non-zero reward is
+                                                                             obtained iff the agent transitions to an accepting state of the product
+   Let Σ∗ be the set of all finite words over Σ. A finite word w =           MDP (those related to an accepting TA state). Fixing any policy π in
+α1 α2 . . . αn ∈ Σ∗ is accepted by an NFA N if there exists a fi-            the product MDP M ⊗ A , induces a product MC Mπ ⊗ A .
+nite run u0 , ..., un ∈ Q∗ where u0 = q0 , ui+1 ∈ δ(ui , αi+1 ) for
+0 ≤ i < n, and un ∈ F . In a DFA, only one path follows w, as                   A product MDP M ⊗ A more holistically represents the agent’s
+each transition is deterministic, so the final state must be accepting,      exploration progress towards achieving a task because both the MDP
+otherwise the word is rejected. The set of all accepted words is the         M and the TA A are undergoing transitions: in M, these are the
+language recognised by N , denoted by L(N ). A DFA is trivially              low-level dynamics over states in S; in A , these represent the agent’s
+an NFA and any NFA can be converted into an equivalent DFA us-               progress towards completing a task specification. M ⊗ A ’s reward
+ing Rabin and Scott [25]’s subset construction method, so NFAs and           function R⊗ is always Markovian because although a task may be
+DFAs both recognise the class of regular languages.                          non-Markovian with respect to M, M ⊗ A keeps track of what is
+                                                                             happening at both M’s and A ’s level of abstraction. In other words,
+Definition 3. A Task Automaton (TA) A is a DFA (Q, q0 , Σ, δ, F)             if M has a non-Markovian reward function R representing a task
+with Σ = 2AP , where AP is a set of propositional variables inher-           encodable by A , then the non-Markovianity in R can be resolved
+ited from the labelled MDP M.                                                by synchronising M ⊗ A . The transitions in M ⊗ A can be ex-
+                                                                             ecuted ‘under the hood’ as the agent explores (i.e., no a priori know-
+   We define a TA as a DFA to make our presentation as clear as
+                                                                             ledge about M ⊗ A is required). Moreover, M ⊗ A does not in-
+possible. However, other types of automaton may also be used, such
+                                                                             crease the agent’s possible policy space because A has deterministic
+as Icarte et al [18]’s reward machines which, rather than having a set
+                                                                             transitions, so the trajectories (and therefore also policies) in M and
+of accepting states (as in DFAs), outputs a reward function at each
+                                                                             M ⊗ A are in a bijection.
+state δr : Q → [S × A × S → R]. Our statistical approach to
+learning TAs also allows for probabilistic TAs [24], where rewards
+exhibit both non-Markovian and stochastic dynamics.                          3     Task Automaton Learning
+   The TA A keeps a ‘memory’ of traces (ℓt )n        t=0 ∈ (2
+                                                              AP +
+                                                                  ) that
+                                                                             We now give our three-step algorithmic pipeline for learning an MDP
+the exploring agent observes by transitioning according to the cur-
+                                                                             and a TA (i.e., the task specification) in unknown environments.
+rent truth assignment of the propositional variables. A trace is MDP-
+attainable if there exists a state trajectory (st )n
+                                                   t=0 such that L(st ) =
+                                                                             Algorithm 1 Learning a TA in an unknown labelled MDP
+ℓt for all t. The TA’s accepting states F mark the satisfaction of some
+task specification. In other words, the agent completes a task via trace     Input: put agent into an (unknown) labelled MDP M
+(ℓt )n
+     t=0 if, correspondingly, the TA starts in state u0 = q0 , transitions
+                                                                             Output: TA A ∗ that represents a task specification
+according to ut+1 = δ(ut , L(st+1 )) for t ≥ 0, and un ∈ F .                  1: O BS S EQ ← collect episodes of corresponding trajectories,
+   The TA in Figure 1b represents the task specification for Ex-                 traces, and reward sequences.
+ample 1 in terms of the high-level environmental features. Each move          2: function L EARN P RODUCT M DP(O BS S EQ)                 ▷ Step 1
+in the MDP is matched by a transition in the TA (recall that empty            3: Use an HMM/POMDP learning algorithm to learn estimates of
+squares in Figure 1a are labelled by ∅). For example, the (blue)                   (i) the spatial MDP M̂’s transition probability distribution P̂
+marked trajectory in Figure 1a represents an MDP-attainable accept-                (ii) the product MDP M̂ ⊗ Aˆ’s transition probability distribu-
+ing path in the TA and each ‘sub-path’ denotes a TA ‘sub-task’. The              tion P̂ ⊗ .
+sub-path (∅, ∅, ∅, ∅, Ò) denotes the path in the MDP that coresponds          4: function D ISTILTA(M̂ ⊗ Aˆ, O BS S EQ)                   ▷ Step 2
+to traversing the q0 → q1 edge in the TA. Note that the labels on             5: Determinise M̂ ⊗ Aˆ using Cone Lumping to return the MDP-
+self-loops in Figure 1b (e.g., ¬Ò) are syntactic sugar to denote all             restricted TA Aˆ  M̂
+labels not associated with outgoing edges from that TA state. The             6: function P OST P ROCESS(AˆM̂ , O BS S EQ)                     ▷ Step 3
+TA is environment-agnostic because it applies to any labelled MDP             7:   Remove environmental bias and minimise AˆM̂
+that includes the set of all high-level features {Ò,é,, } neces-
+sary for completing the corresponding task specification. Therefore,
+learning the TA can not only expedite policy synthesis within this en-
+vironment, but it also helps transfer learning, where an agent wants         3.1    Step 1: Learn the Product MDP
+to use what it knows about attaining reward in one environment to
+                                                                             Although the agent’s interactions with its environment are fully mod-
+obtain reward in different environments – e.g., if an agent learns it is
+                                                                             elled by the product MDP, the product MDP is only partially observ-
+necessary to pick up a key before opening a door in one house, then
+                                                                             able. The agent observes MDP states as well as the associated labels
+this is likely applicable to other houses.
+                                                                             and rewards but does not observe the TA states it visits. So, Step 1
+                                                                             involves learning the product MDP’s transition function P ⊗ by view-
+2.3    Product MDP                                                           ing the agent’s interaction with the (product MDP) environment as a
+                                                                             partially-observable Markov Decision Process (POMDP).
+Definition 4. Given an MDP without reward M\R = (S, A, s0 , P )
+and a TA A = (Q, q0 , Σ, δ, F), the product MDP is the struc-                Definition 5. A Partially-Observable Markov Decision Process
+ture M ⊗ A = (S ⊗ , A, s⊗      ⊗    ⊗
+                          0 , P , R , γ), where S
+                                                  ⊗
+                                                    = S × Q,                 (POMDP) is a tuple P = (S, A, s0 , P, R, γ, O, Z) where
+(S, A, s0 , P, R, γ) is an MDP, O is an observation set, and Z :              Concentrating on learning P̂ ⊗ (the process is the same for learn-
+O × S → [0, 1] is an observation probability function, where               ing P̂ ), BW begins with initial estimates for the hidden transition
+Z(o | s) is the probability that observation o ∈ O is seen when            distribution Pπ⊗ (an |S ⊗ | × |S ⊗ | matrix constructed from the in-
+the agent is at the hidden state s ∈ S.                                    ductive bias, as explained), the observation probability function Z
+                                                                           (an |S ⊗ | × |O| matrix), and the initial state distribution (a vector
+Remark 1. P ⊗ := (S ⊗ , A, s⊗        ⊗    ⊗
+                                0 , P , R , γ, O, Z) is a POMDP                        ⊗
+
+that models an agent interacting with a product MDP M ⊗ A =                ρ ∈ [0, 1]|S | defined as ρj ≡ Pr[s⊗         ⊗                      ⊗
+                                                                                                                 0 = sj ]). It then finds the Pπ
+
+(S ⊗ , A, s⊗    ⊗   ⊗                                                      and Z that maximises the likelihood of obtaining the set of observa-
+           0 , P , R , γ), where the agent makes observations from
+the set O = S × {0, 1} according to the deterministic observation          tion sequences O = (o1 , ..., oT ) ∈ (O+ )T :
+function Z : O × S ⊗ → {0, 1}.
+                                                                                          ⟨P̂π⊗ , Ẑ⟩ = argmax Pr O | ⟨Pπ⊗ , Z⟩ .
+                                                                                                                               
+                                                                                                        ⟨P ⊗ ,Z⟩
+   Remark 1 follows from Definitions 4 and 5. The agent’s obser-
+vations in the POMDP P ⊗ are from S × {0, 1}, where the latter             Definition 6. Two product MDPs M1 ⊗ A1 and M2 ⊗ A2
+component is a binary value corresponding to the co-domain of the          with the same action spaces A1 = A2 are observationally equi-
+reward function R⊗ . At each time step t, the agent transitions from       valent, denoted M1 ⊗ A1 ∼          = M2 ⊗ A2 , if for any observa-
+a hidden state s⊗                    ⊗
+                  t = ⟨st , qt ⟩ to st+1 = ⟨st+1 , qt+1 ⟩ in the product   tion sequence, any action trajectory, and all τ ∈ N, it holds
+MDP, but observes just st+1 , χF (qt+1 ) with probability 1. The                    ⊗                               ⊗
+                                                                           that PrP1 [(ot )τt=0 )|(at )τt=1 )] = PrP2 [(ot )τt=0 )|(at )τt=1 )] , where
+product MDP state s⊗   t+1 is partially obscured from the agent. Recall
+                                                                           Pi⊗ = (Mi ⊗ Ai , O, Z). The observation spaces need not be
+χF is the indicator function on the set of accepting states F in the TA
+                                                                           identical for this to hold.
+A . If a policy π is chosen by the agent interacting with the POMDP
+P ⊗ , then the POMDP becomes a partially observable Markov chain
+                                                                              Definition 6 says that the learnt product MDP is, in general, not
+Pπ⊗ , known as a Hidden Markov Model (HMM) [26].
+                                                                           unique because several can have the same observational properties,
+   To learn the product MDP M ⊗ A , we can employ any algorithm
+                                                                           i.e., no gathered experiment (episode) can distinguish between them.
+for learning HMMs or POMDPs and apply it to P ⊗ or Pπ⊗ . We use
+the Baum-Welch algorithm (BW) [6], due to its popularity and the           Proposition 1. The observational equivalence relation ∼   = is an equi-
+ability to steer optimisation towards a desired local optimum (see         valence relation since it is reflexive, symmetric, and transitive.
+Section 4 and, for further details, Appendices C and D). We learn Pπ⊗
+in two stages. (i) Learn an estimate P̂ of the true spatial MDP M’s        Proposition 2. Let M be a labelled MDP. For any two TAs A , A ′ ,
+transition probability distribution P using a fully mixed exploration      if L(A ) = L(A ′ ), then M ⊗ A ∼= M ⊗ A ′.
+policy π. This can be any fully mixed policy, but we chose a uniform
+random policy to assume no initial knowledge about the underlying            Proposition 1 says we can find the quotient set of all product MDPs
+model. Since we know π, we can always recover P from Pπ . (ii) Use         with the same action spaces under the equivalence relation ∼   =. The
+this learnt estimate P̂ as an inductive bias for learning the transition   equivalence class for the product MDP M ⊗ A is denoted by [M ⊗
+probability distribution P̂ ⊗ of the full product MDP M ⊗ A .              A ]. Proposition 2 enables us to formalise Step 1 of Algorithm 1.
+   BW requires an initial guess on the number of hidden states
+(|S ⊗ | = |S| × |Q|). Since the agent can observe the MDP states,            Step 1: Given state trajectories and reward sequences from in-
+we only need guess the number of TA states k̂. Furthermore, this             teracting with the initially unknown product MDP M⊗A , learn
+guess only needs to be at least as high as the true k (i.e., k̂ ≥ Q). If     an estimate M̂ ⊗ Aˆ ∈ [M ⊗ A ].
+k̂ is too high, it generates duplication in the learnt matrix, which is
+easily identified. For a sufficient upper bound for k̂ one can: use the    Definition 7. The digraph G = (E, V ) underlying an MDP M
+label set cardinality, use a TA simplicity assumption, or identify the     with state-space S and transition probability function P has V = S
+minimum number of distinct labels needed for task completion us-           and E = {si → sj : ∃ak ∈ A s.t. P (sj | si , ak ) > 0}. M is
+ing successful exploration episodes. We did the latter. Further details    structurally correct with respect to another MDP M′ if the digraph
+about the convergence criterion and other hyper-parameters (such as        underlying M is isomorphic to M′ .
+the episode length and the number of episodes) are in Section 4.
+   To encode the learnt spatial MDP’s transition probability distribu-        Any algorithm which learns a maximum likelihood estimate
+tion P̂ as an inductive bias for learning P̂ ⊗ , we take the Kronecker     (MLE) for the HMM parameters is asymptotically structurally cor-
+product between a k̂ × k̂ identity matrix and P̂π (the matrix induced      rect, provided it converges to the true MLE and belongs in [M ⊗ A ].
+from P̂ and π) to form the basis of the initial estimate of the product    So, every hidden state of the learned model must correspond to a state
+MDP’s transition matrix. For example, with a three-state TA:               s⊗ ∈ S ⊗ in the true product MDP M ⊗ A [38].
+                                                   
+                               P̂π         0     0
+                I3×3 ⊗K P̂π =  0         P̂π    0 .                      3.2    Step 2: Distil TA from Product MDP
+                                0          0    P̂π
+                                                                           The TA component q of each product MDP state s⊗ = ⟨s, q⟩ is
+Then, a small positive probability ε > 0 is added to each zero entry       hidden, but even when visible, the agent can only recover the TA
+in the above construction to ensure that all expressions in the HMM        fragment accessible using paths in the MDP.
+learning procedure are well-defined. The probability ε can take any
+positive value, but we chose a value inversely proportional to |S ⊗ |      Definition 8. Given an MDP M and a TA A , the MDP-restricted
+for consistency across experiments. Finally, each row is normalised        TA AM is the sub-graph of A covered by all MDP-attainable traces.
+so that the resulting initial estimate of the product MDP’s transition     We refer to paths within/outside of the MDP-restricted TA sub-graph
+matrix P̂π⊗ is a valid transition probability matrix.                      as the MDP-attainable/MDP-non-attainable paths of the TA.
+                                                                                          ¬[
+                                                                                                                      ¬b       ¬[
+
+Proposition 3. Suppose an agent is given a structurally correct                                      [                     b         [
+                                                                                          q0             q1
+product MDP M̂ ⊗ Aˆ belonging to [M ⊗ A ], where M is the true                    start                       start   q0       q1        q2
+
+MDP underlying the product MDP, and the agent can observe s and
+                                                                                               (a)                             (b)
+q for all ⟨s, q⟩ ∈ Ŝ ⊗ . Then, the agent can learn the MDP-restricted
+TA AˆM̂ , but may not be able to learn the full TA Aˆ.                      Figure 3: Two TAs for Example 1’s environment in Figure 1a to show
+                                                                            that the learned TA can be environmentally biased.
+   From Step 1, the agent knows the digraph of M ⊗ A and an es-
+timate P̂ for the transition probability function of the true MDP M.
+                                                                            Proposition 6. Cone Lumping determinises any product MDP in
+Therefore, we first compute a product MC M̂π ⊗ Aˆ by assigning
+                                                                            O(|S ⊗ |3 ), exponentially faster than Rabin and Scott [25]’s subset-
+to the agent a fully mixed policy π. We now recognise that when the                             ⊗
+
+edges of the digraph underlying M̂π ⊗ Aˆ are labelled according to          construction O(2|S | ) algorithm.
+each edge’s target state (recall that the agent observes traces), it res-      Cone Lumping therefore efficiently converts an NFA underlying
+ults in an NFA whose accepting states are those in which reward 1 is        a labelled MC into a DFA (our TA in this work, Section 4) and it
+obtained (see Appendix B for a worked example).                             assists in transfer learning because the hardness is confined to learn-
+                                                                            ing the product MDP. If the MDP or TA changes slightly, the agent
+Proposition 4. Given a labelled product MC Mπ ⊗ A with bin-
+                                                                            only has to relearn the affected part of the product MDP, before
+ary reward, labelling every edge ⟨si , q⟩ → ⟨sj , qj ⟩ according to
+                                                                            using Cone Lumping to efficiently distil the new TA. In practice,
+the label of its target state’s MDP component (i.e., in this case,
+                                                                            this uses the transition probability distribution P̂π⊗ of the old MDP
+L(sj ) = ℓj ) results in an NFA.
+                                                                            and TA’s product MDP as an initial estimate for the new product
+ This NFA can be converted into a DFA with language equal to the            MDP. The parts of the MDP and TA that remain the same will not
+MDP-restricted TA AM using the subset construction method [25].             need updating, so Baum-Welch only needs to update the parts that
+                                                                            have changed. This speeds up convergence significantly [38]. Fi-
+Proposition 5. Let N be the NFA underlying the learnt product MC            nally, this process can also be useful outside of our work, e.g., for
+Mπ ⊗A . Then, L(N ) = L(AM ), where AM is the MDP-restricted                (bi)simulation or model reduction studies [20].
+true TA.
+                                                                              Step 2: Applying Cone Lumping to a labelled product MC
+   However, the subset-construction algorithm has worst-case expo-            Mπ ⊗ A for all ⟨s, q⟩ ∈ S ⊗ until a fixed point is reached
+                                                                              returns a TA AM
+                                                               ⊗                            ′            ′
+nential time complexity in the size of the NFA (i.e., O(2|S | )). We                          , where L(AM ) = L(AM ).
+therefore introduce our more efficient Cone Lumping method for
+determinising NFAs that underlie product MDPs, which explicitly
+leverages their product structure. ‘Lumping’ aligns with related lit-       3.3       Step 3: Remove environmental bias and minimise
+erature (e.g., [9]). Our key insight is that out-going edges from a                   the learnt TA
+product state ⟨s, q⟩ ∈ S ⊗ of a product MC Mπ ⊗ A that have the             The TA distilled from the product MDP in Step 2 is in general not
+same label must transition to the same next TA state. Every time this       unique (cf. Section 3.1). If the TA is a DFA, as has been this paper’s
+occurs, the product states are merged. When representing state trans-       focus, it can be minimised using, for instance, Hopcroft [16]’s al-
+itions sequentially from left to right, this merging criterion looks for    gorithm in O(n log n). However, the TA might also not be minimal
+a cone structure to merge all states on the right-hand side (Figure 2).     due to environmental bias. If a certain label must be traversed by the
+                                                                            agent to reach a necessary label for achieving the underlying task
+Lemma 1 (Cone Lumping). Given a labelled product MC Mπ ⊗
+                           L(si )
+                                                                            specification, automaton-learning algorithms cannot differentiate the
+         ⟨s,q⟩
+A , let El   = {⟨s, q⟩ −−−→ ⟨si , qj ⟩ : L(si ) = ℓ} be the set of all      importance of the two labels and will therefore assume that both are
+out-going edges from state ⟨s, q⟩ in the digraph underlying Mπ ⊗A           necessary TA transitions, even when the former is unnecessary.
+                                                        l
+with label ℓ. Since any TA transition q −→ qj is deterministic, then
+                                             l                              Theorem 1. Given an arbitrary product MDP M ⊗ A , the TA dis-
+qj = qk for any pair qj , qk ∈ {q ′ : ⟨s, q⟩ −
+                                             → ⟨si , q ′ ⟩}. Thus, for a    tilled from M ⊗ A may not be unique because there can exist A ′ ̸=
+                                          L(si )
+product state ⟨s, q⟩, |{q ′ : ⟨s, q⟩ −−−→ ⟨si , q ′ ⟩ ∧ L(si ) = l}| = 1.   A , with or without L(A ) ̸= L(A ), such that M ⊗ A ∼
+                                                                                                                                = M ⊗ A ′.
+
+                                                                            Proof sketch by (counter)example. Let M be the labelled MDP
+                                                                            defined by the environment in Figure 1a and A and A ′ be the TAs
+                                               ⟨s1 , q ′ ⟩
+                                          ℓ
+                                                                            in Figures 3a and 3b respectively, where A is the true TA. Then,
+                                     ..            ..
+                                                    .
+                                                                            A ′ satisfies M ⊗ A ′ ∼  = M ⊗ A . In Figure 1, a b-label must
+                            ⟨s, q⟩    .
+                                                                            be traversed immediately prior to reaching the [-label, no matter
+                                          ℓ
+                                               ⟨sn , q ′ ⟩                  which MDP path to [ is taken. Because reward is only obtained
+                                                                            upon reaching [, there is no way to identify from the reward sig-
+                 Figure 2: Schematics of “Cone Lumping”.                    nal if the sequence (b , [) is necessary for reward, or just reaching
+                                                                            [suffices. The agent does not know which of the two task specifica-
+                                                                            tions, expressed by the TAs A and A ′ , is sufficient.
+   Performing Cone Lumping for all ⟨s, q⟩ ∈ S ⊗ until a fixed point
+is reached (i.e., no more states can be merged), obtains a TA accept-
+ing (at minimum) L(AM ), and at most L(A ) (by construction of
+the product MDP). This is because all non-determinism in the NFA            Corollary 1. In general, it is impossible to verify that a TA A ′ is the
+underlying M ⊗ A comes from the possible existence of multiple              TA that underpins the product MDP M ⊗ A (i.e., that A ′ = A ),
+out-going edges with the same label from a product state.                   even given knowledge of M and M ⊗ A .
+   Thus, to minimise environmental bias, we must use counterfactual                                                                                     é    b b
+reasoning in our post-processing step to select among the set of TAs
+                                                                                                                                         b                   b b
+{A ′ : M ⊗ A ′ ∼    = M ⊗ A } the TA that requires the smallest
+                                                                                                  b                                               é             
+alphabet to explain its behaviour.
+                                                                                         é                            é                 
+    Step 3: For every label in L(S), guess that it has no effect in                  ¹            Ò              ¹                       Ò   ¹                  Ò
+    the supposed true TA A (i.e., the agent self-loops on every TA
+    state). To check this guess, first merge any states of the learned-        (a) 3x3 gridworld                 (b) 4x4 gridworld               (c) 5x5 gridworld
+    automaton A ′ that have a non-loop edge between them with this                       ¬Ò       ¬                                 ¬Ò       ¬é         ¬
+
+    label, then check if the resulting TA outputs the correct accept-                         Ò                                          Ò
+                                                                                         q0       q1              q2                q0       q1     é   q2       q3
+    ance/rejection on every word in the set of observed sequences.           start                                     start
+
+
+                                                                                                               ¬Ò          ¬é
+   This post-processing only removes labels that are never meaning-
+ful to A ; it does not remove labels that are necessary somewhere, but                                                 Ò
+                                                                                                      start      q0            q1
+may still exist ‘wrongfully’ in A ′ due to environmental bias. Further                                                               é
+                                                                                                                                      q2     ¬
+post-processing can address this by looking for neighbourhoods of
+                                                                                                                q4             q3    
+(possibly same-labelled) states that entirely surround another label,
+then checking, as above, whether these are necessary in A .                                                                    ¬
+
+                                                                                                              (d) 3, 4, and 5 state TAs
+4     Experimental Results
+Although the main contributions of this paper are theoretical, our          Figure 4: (a), (b), and (c) show the grid worlds used in all experi-
+experiments (available at https://github.com/dkhyland/TALearner)            ments. The agent starts in the bottom left-hand corner of the grid and
+evaluate the efficacy of Algorithm 1’s pipeline. To our knowledge,          follows a random exploration policy over all episodes. (d) gives the
+we are the first to focus on the task of learning both the TA and           TAs used for their respective task specifications: get coffee, then go
+spatial MDP starting from no a-priori knowledge. Our experiments            upstairs; get coffee, serve to guest on a couch, then go upstairs; and
+assess our pipeline’s ability to scale up to 5x5 MDP grid-worlds and        get coffee, serve to guest on a couch, turn the TV on, then go upstairs.
+5-state TAs and benchmark, where possible, to related work. These
+sizes are comparable to or beyond those handled in all related work            We, therefore, turn to Step 1, Algorithm 1’s bottleneck. Although,
+(see Section 5).                                                            note that the question of whether there is an automaton with n states
+   Figure 4 illustrates the three grid worlds and the three-, four-,        that agrees with a finite set of data is NP-complete [13]. Recall from
+and five-state TAs used for our experiments. The grid worlds all            Section 3.1 that we learn our product MDP estimate M̂ ⊗ Aˆ using
+share a common set of high-level environmental features AP ≡                the Baum-Welch algorithm in two stages. First, we learn an estimate
+{Ò,b,é,, }, which have been distributed randomly across the                of the spatial MDP M’s transition probability distribution P̂ . Then,
+grid. The agent can visit every action and state within the grid world.     this is used as an inductive bias for learning the transition probabil-
+   For all experiments, the convergence criterion was taken to be the       ity distribution P̂ ⊗ of the full product MDP. Figure 5a demonstrates
+point when the difference between the transition matrix estimates           the merits of this two-stage approach using two baselines: i) a na-
+over one pass through the training data achieves a maximum absolute         ive uniform approach, which learns a product MDP estimate using a
+row sum less than 10−6 . In practice, this is sufficient to ensure that a   uniform initialisation (each row in the transition matrix estimate was
+structurally correct product MDP is learned.                                initialised to a uniform distribution), ii) an idealised approach which
+   The episode length and number of episodes used in the training           assumes that the agent has full a priori knowledge of the true spatial
+data are hyperparameters that can affect both the convergence time          MDP M; this is encoded in the initial estimate of the product MDP’s
+and the structural correctness of the learnt transition matrix. In prac-    transition function. Run time was chosen to measure performance
+tice, choosing the episode length so that the agent achieves (on av-        instead of the number of iterations because the latter depends on the
+erage) the goal in between 20 − 50% of the episodes, ensures that           number of training steps per episode and the number of episodes gen-
+the agent sufficiently explores all states in the product MDP. Addi-        erated, which varies across experiments.
+tionally, a general trend was observed that for larger product MDPs,           Figure 5a demonstrates our approach’s superiority over the uni-
+more training episodes were required to obtain a structurally correct       form baseline. We plot the convergence times of Step 1 for our ap-
+estimate of the transition matrix. The number of episodes that were         proach (in red) against the two baselines for the 3 state TA and 3
+sufficient for convergence in our experiments was less in our model-        different grid sizes. As the size of the grid increases, the time taken
+based approach than in model-free approaches in related work (Sec-          to learn an accurate estimate of the product MDP trends towards the
+tion 5). Exact hyperparameters used and full results are presented in       idealised baseline. This is because the time taken to learn P̂ in the
+Table 1 in Appendix E.                                                      first stage becomes negligible compared with learning the TA. Thus,
+   Step 1 of our algorithm (learning the product MDP) is implemen-          learning the TA via a larger (and therefore ostensibly more com-
+ted in C++ (see Appendices D and E for more details), and the re-           plex) structure first, the product MDP, does not noticeably increase
+maining steps are implemented in Python. All experiments are the            the time complexity of the process. This also demonstrates why our
+average of 3 runs (with negligible standard errors) and were con-           process is useful for transfer learning (Section 3.2).
+ducted on an Intel Xeon Gold 6248 (2.50GHz) CPU. Cone Lumping                  Figure 5b shows the dependence of the convergence time on the
+(Step 2) determinises the NFA underlying the product MDP for the            sizes of the MDP environment and TA. Increasing the TA size in-
+5x5 grid and 5-state TA in Figure 1 in 0.43s, and removing environ-         creases the number of sub-tasks the agent must complete before re-
+mental bias (Step 3) takes 0.8ms. This also confirms the usefulness         ceiving reward. This Figure also shows how our algorithm’s effi-
+of these steps for other purposes (argued in Sections 3.2 and 3.3).         ciency compares with related work. We presented the codebases of
+                                  Uniform                       105                             3x3 (Ours)
+                                                                                                                      Timeout       Learning an automaton from data is NP-hard [13], so under stand-
+10  4                             Two-stage
+                                  Idealised
+                                                                                                3x3 (BF)
+                                                                                                4x4
+                                                                                                                                 ard complexity assumptions, the time taken to solve this problem will
+
+
+
+        Time to convergence (s)                                       Time to convergence (s)
+                                                                104                             5x5                              necessarily grow exponentially as a function of the size of the TA.
+103
+                                                                103                                                              The most appropriate method will depend on the use-case as differ-
+102
+                                                                                                                                 ent approaches choose to relax different assumptions. For example,
+                                                                102
+                                                                                                                                 Corazza et al [8] and Dohmen et al [10] extend the SAT-based ap-
+10  1
+                                                                101                                                              proach to noisy rewards and the L∗ approach to learning probabilistic
+                                                                                                                                 automata, respectively.
+100                                                             100
+                                   3x3          4x4       5x5                                      3           4             5      Our method is most appropriate in the following situations. First,
+                                              Grid size                                                Number of TA states
+                                                                                                                                 when one does not assume the presence of an oracle (required for
+                                              (a)                                                        (b)                     L∗ ). Second, if the reward environment is sparse, i.e, where the
+                                                                                                                                 agent must follow a sequence of non-rewarding steps before get-
+Figure 5: Step 1’s convergence times (a) comparing our pipeline (red)
+                                                                                                                                 ting a reward if and only it completes the full task. Third, when
+with two baseline approaches, a uniform prior (blue) and an idealised
+                                                                                                                                 sample-efficiency is critical (as in many real-world scenarios) since
+prior in which the spatial MDP is known (green) (b) for varying MDP
+                                                                                                                                 our model-based approach requires fewer episodes to learn the TA.
+and TA sizes.
+                                                                                                                                 Fourth, for transfer learning: our approach can readily handle the un-
+                                                                                                                                 derlying MDP or TA changing slightly. For example, suppose the
+five related works (see Appendix F for details) the same sequences                                                               initial task specification is to get coffee for the guest on the couch.
+used in our smallest experiment (3x3 grid with a 3-state TA), but                                                                Then, the furniture is rearranged and the task changes from collecting
+none of these could successfully learn the TA (or threw a recursion                                                              coffee to collecting tea. Only the affected part of the product MDP
+error). We were, however, able to perform some benchmarks against                                                                needs to be re-learnt before performing the subsequent computation-
+an implementation of Biermann and Feldman [7]’s SAT-based al-                                                                    ally cheap steps (2 and 3) in our algorithmic pipeline. Other methods
+gorithm in the libalf library to infer a hypothesis reward machine                                                               would need to start learning the new TA from scratch each time. Fi-
+consistent with the data for the 3- and 4-state TAs. We used the same                                                            nally, the stochastic nature of our approach has advantages over the
+set of sequences that were used in our algorithm for comparison,                                                                 discrete approaches of related work; e.g, we can easily incorporate
+which were labelled as positive or negative sequences depending on                                                               active-learning to more intelligently guide the agent’s exploration
+whether the agent received a reward. With a 4-state TA, ours had a                                                               [3]. Furthermore, our stochastic approach allows for entropy-based
+lower convergence time in a 4x4 gridworld than BF managed in even                                                                uncertainty quantification and it will always generate an estimate of
+a 3x3 gridworld, and BF timed out at 150, 000s when trying to learn                                                              the solution even with few exploration episodes.
+the 5-state TA in the 3x3 gridworld.
+
+
+5                     Related Research                                                                                           6   Conclusions and Future work
+SAT-based approaches [1, 8, 15, 34, 36] generate a hypothesis                                                                    We have introduced an unsupervised pipeline for an RL agent to learn
+automaton (equivalent to a temporal specification) and then verify                                                               task specifications, encoded as deterministic, finite automata known
+whether this agrees with the agent’s observations during exploration.                                                            as ‘task automata’, in unknown environments with sparse and non-
+We showed that these are less efficient than our approach by bench-                                                              Markovian rewards. The agent first learns a product MDP – a com-
+marking against the only available codebase that learnt an automaton                                                             position of the task automaton with the environment’s MDP before
+from our traces. Meanwhile, Icarte et al [32] use Tabu search, which                                                             distilling out a task automaton using our efficient ‘Cone Lumping’
+relies on already knowing a partial model, and Furelos-Blanco et al                                                              method. Finally, our post-processing routine, which is useful for any
+[11] use an Answer Set Programming algorithm, which assumes a                                                                    method that learns automata in RL, minimises environmental bias
+known upper bound for the maximum finite distance between TA                                                                     and simplifies the learnt task automaton.
+states. Our assumptions are weaker than these as we are only required                                                               As future work, we are extending to environments with multiple
+to guess an upper bound on the number of TA states (in Section 4, we                                                             tasks (i.e., cases where an agent can achieve reward by satisfying
+explained why this is easy to do) and we do not require any a priori                                                             multiple different task specifications); introducing active learning to
+knowledge about the spatial MDP. Also, all of these approaches are                                                               further improve the efficiency of the rate-limiting Step 1; and try-
+local, whereas ours is complete in the sense that our TA captures all                                                            ing different techniques for learning HMMs/POMDPs (e.g., spectral
+sequential behaviour seen in the traces (high-level features).                                                                   learning [17]). We are also interested in multi-agent settings, where
+   [21, 28, 33] all consider probabilistic approaches to learning spe-                                                           agents get rewarded according to different tasks or have to optim-
+cifications. Their maximum entropy approaches (inspired by Ziebart                                                               ally share information to learn a common task. Finally, we intend
+et al [39]’s variant of inverse reinforcement learning) start from an                                                            to extend to cases where the task automata encode ω-regular LTL
+initial pool of candidate specifications. In contrast, our maximum-                                                              properties, which require evaluation over infinite trajectories.
+likelihood approach does not a priori require any structure of the spe-
+cification or the spatial MDP environment. Meanwhile, [10, 12, 27,
+31, 37] use Angluin [4]’s L∗ algorithm to learn a TA, relying on an
+oracle for equivalence and membership queries. We assume that the                                                                Acknowledgements
+agent cannot access an oracle and must learn the TA fully autonom-
+ously, which aligns with the standard setup of model-free RL (note                                                               Fox was supported by the EPSRC Centre for Doctoral Train-
+that L∗ was not originally developed for RL applications). Because                                                               ing in Autonomous Intelligent Machines and Systems (Reference:
+this means our training data cannot be provided as input to L∗ , we                                                              EP/S024050/1) and Wooldridge was supported by a UKRI Turing AI
+cannot benchmark fairly against these approaches.                                                                                World Leading Researcher Fellowship (Reference: EP/W002949/1).
+References                                                                    puter and System Sciences, 78(5), 1460–1480, (2012).
+                                                                         [18] Rodrigo Toro Icarte, Toryn Q Klassen, Richard Valenzano,
+ [1] Eden Abadi and Ronen I Brafman, ‘Learning and solving regu-              and Sheila A McIlraith, ‘Reward machines: Exploiting reward
+     lar decision processes’, in 29th International Joint Conference          function structure in reinforcement learning’, Journal of Artifi-
+     on Artificial Intelligence, IJCAI 2020, pp. 1948–1954. Interna-          cial Intelligence Research, 73, 173–208, (2022).
+     tional Joint Conferences on Artificial Intelligence, (2020).        [19] Kishor Jothimurugan, Suguman Bansal, Osbert Bastani, and
+ [2] Dario Amodei, Chris Olah, Jacob Steinhardt, Paul Christi-                Rajeev Alur, ‘Compositional reinforcement learning from lo-
+     ano, John Schulman, and Dan Mané, ‘Concrete problems in ai               gical specifications’, Advances in Neural Information Pro-
+     safety’, arXiv preprint arXiv:1606.06565, (2016).                        cessing Systems, 34, 10026–10039, (2021).
+ [3] Brigham Anderson and Andrew Moore, ‘Active learning for             [20] K. G. Larsen and A. Skou, ‘Bisimulation through probabilistic
+     hidden markov models: Objective functions and algorithms’, in            testing’, Information and computation, 94(1), 1–28, (1991).
+     Proceedings of the 22nd international conference on Machine         [21] Niklas Lauffer, Beyazit Yalcinkaya, Marcell Vazquez-
+     learning, pp. 9–16, (2005).                                              Chanlatte, Ameesh Shah, and Sanjit A Seshia, ‘Learning
+ [4] Dana Angluin, ‘Learning regular sets from queries and                    deterministic finite automata decompositions from examples
+     counterexamples’, Information and computation, 75(2), 87–                and demonstrations’, in Conference on Formal MEthods in
+     106, (1987).                                                             Computer-Aided Design–FMCAD 2022, p. 325.
+ [5] Christel Baier and Joost-Pieter Katoen, Principles of model         [22] Michael L Littman, Ufuk Topcu, Jie Fu, Charles Isbell, Min
+     checking, MIT press, 2008.                                               Wen, and James MacGlashan, ‘Environment-independent task
+ [6] Leonard E Baum and Ted Petrie, ‘Statistical inference for prob-          specifications via GLTL’, arXiv preprint arXiv:1704.04341,
+     abilistic functions of finite state markov chains’, The annals of        (2017).
+     mathematical statistics, 37(6), 1554–1563, (1966).                  [23] Shubham Pateria, Budhitama Subagdja, Ah-hwee Tan, and
+ [7] Alan W Biermann and Jerome A Feldman, ‘On the synthesis                  Chai Quek, ‘Hierarchical reinforcement learning: A compre-
+     of finite-state machines from samples of their behavior’, IEEE           hensive survey’, ACM Computing Surveys (CSUR), 54(5), 1–
+     transactions on Computers, 100(6), 592–597, (1972).                      35, (2021).
+ [8] Jan Corazza, Ivan Gavran, and Daniel Neider, ‘Reinforcement         [24] Michael O Rabin, ‘Probabilistic automata’, Information and
+     learning with stochastic reward machines’, in Proceedings of             control, 6(3), 230–245, (1963).
+     the AAAI Conference on Artificial Intelligence, volume 36, pp.      [25] Michael O Rabin and Dana Scott, ‘Finite automata and their
+     6429–6436, (2022).                                                       decision problems’, IBM journal of research and development,
+ [9] Salem Derisavi, Holger Hermanns, and William H Sanders,                  3(2), 114–125, (1959).
+     ‘Optimal state-space lumping in markov chains’, Information         [26] Lawrence R Rabiner, ‘A tutorial on hidden markov models and
+     Processing Letters, 87(6), 309–315, (2003).                              selected applications in speech recognition’, Proceedings of the
+[10] Taylor Dohmen, Noah Topper, George Atia, Andre Beckus,                   IEEE, 77(2), 257–286, (1989).
+     Ashutosh Trivedi, and Alvaro Velasquez, ‘Inferring probab-          [27] Gavin Rens, Jean-François Raskin, Raphaël Reynoaud, and Gi-
+     ilistic reward machines from non-markovian reward signals                useppe Marra, ‘Online learning of non-markovian reward mod-
+     for reinforcement learning’, in Proceedings of the Interna-              els’, in Proceedings of the Thirteenth International Conference
+     tional Conference on Automated Planning and Scheduling,                  on Agents and Artificial Intelligence, volume 2, pp. 74–66.
+     volume 32, pp. 574–582, (2022).                                          Scitepress, (2020).
+[11] Daniel Furelos-Blanco, Mark Law, Anders Jonsson, Krysia             [28] Raeid Saqur, ‘Reward learning using structural mo-
+     Broda, and Alessandra Russo, ‘Induction and exploitation of              tifs in inverse reinforcement learning’, arXiv preprint
+     subgoal automata for reinforcement learning’, Journal of Arti-           arXiv:2209.13489, (2022).
+     ficial Intelligence Research, 70, 1031–1116, (2021).                [29] Matthew E Taylor and Peter Stone, ‘Cross-domain transfer for
+[12] Maor Gaon and Ronen Brafman, ‘Reinforcement learning with                reinforcement learning’, in Proceedings of the 24th interna-
+     non-markovian rewards’, in Proceedings of the AAAI Con-                  tional conference on Machine learning, pp. 879–886, (2007).
+     ference on Artificial Intelligence, volume 34, pp. 3980–3987,       [30] Sylvie Thiébaux, Charles Gretton, John Slaney, David Price,
+     (2020).                                                                  and Froduald Kabanza, ‘Decision-theoretic planning with non-
+[13] E Mark Gold, ‘Complexity of automaton identification from                markovian rewards’, Journal of Artificial Intelligence Re-
+     given data’, Information and control, 37(3), 302–320, (1978).            search, 25, 17–74, (2006).
+[14] Mohammadhosein Hasanbeig, Alessandro Abate, and Daniel              [31] Noah Topper, George Atia, Ashutosh Trivedi, and Alvaro
+     Kroening, ‘Logically-constrained reinforcement learning’,                Velasquez, ‘Active grammatical inference for non-markovian
+     arXiv preprint arXiv:1801.08099, (2018).                                 planning’, in Proceedings of the International Conference on
+[15] Mohammadhosein Hasanbeig, Natasha Yogananda Jeppu,                       Automated Planning and Scheduling, volume 32, pp. 647–651,
+     Alessandro Abate, Tom Melham, and Daniel Kroening, ‘Deep-                (2022).
+     synth: Automata synthesis for automatic task segmentation in        [32] Rodrigo Toro Icarte, Ethan Waldie, Toryn Klassen, Rick Valen-
+     deep reinforcement learning’, in Proceedings of the AAAI Con-            zano, Margarita Castro, and Sheila McIlraith, ‘Learning reward
+     ference on Artificial Intelligence, volume 35, pp. 7647–7656,            machines for partially observable reinforcement learning’, Ad-
+     (2021).                                                                  vances in Neural Information Processing Systems, 32, 15523–
+[16] John Hopcroft, ‘An n log n algorithm for minimizing states in            15534, (2019).
+     a finite automaton’, in Theory of machines and computations,        [33] Marcell Vazquez-Chanlatte, Susmit Jha, Ashish Tiwari,
+     189–196, Elsevier, (1971).                                               Mark K Ho, and Sanjit Seshia, ‘Learning task specifications
+[17] Daniel Hsu, Sham M Kakade, and Tong Zhang, ‘A spectral al-               from demonstrations’, Advances in Neural Information Pro-
+     gorithm for learning hidden markov models’, Journal of Com-              cessing Systems, 31, 5367–5377, (2018).
+[34] Christos Verginis, Cevahir Koprulu, Sandeep Chinchali, and
+     Ufuk Topcu, ‘Joint learning of reward machines and policies in
+     environments with partially known semantics’, arXiv preprint
+     arXiv:2204.11833, (2022).
+[35] Tingwu Wang, Xuchan Bao, Ignasi Clavera, Jerrick Hoang,
+     Yeming Wen, Eric Langlois, Shunshi Zhang, Guodong Zhang,
+     Pieter Abbeel, and Jimmy Ba, ‘Benchmarking model-based
+     reinforcement learning’, arXiv preprint arXiv:1907.02057,
+     (2019).
+[36] Zhe Xu, Ivan Gavran, Yousef Ahmad, Rupak Majumdar, Daniel
+     Neider, Ufuk Topcu, and Bo Wu, ‘Joint inference of reward ma-
+     chines and policies for reinforcement learning’, in Proceedings
+     of the International Conference on Automated Planning and
+     Scheduling, volume 30, pp. 590–598, (2020).
+[37] Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, and Ufuk Topcu,
+     ‘Active finite reward automaton inference and reinforcement
+     learning using queries and counterexamples’, in International
+     Cross-Domain Conference for Machine Learning and Know-
+     ledge Extraction, pp. 115–135. Springer, (2021).
+[38] Fanny Yang, Sivaraman Balakrishnan, and Martin J Wain-
+     wright, ‘Statistical and computational guarantees for the baum-
+     welch algorithm’, in 2015 53rd Annual Allerton Conference on
+     Communication, Control, and Computing (Allerton), pp. 658–
+     665. IEEE, (2015).
+[39] Brian D Ziebart, Andrew L Maas, J Andrew Bagnell, Anind K
+     Dey, et al., ‘Maximum entropy inverse reinforcement learn-
+     ing.’, in AAAI, volume 8, pp. 1433–1438. Chicago, IL, USA,
+     (2008).
+ Learning Task Automata for Reinforcement Learning Using Hidden
+            Markov Models (Supplementary Material)
+
+A     Proofs of Technical Results
+
+Proposition 2. Let M be a labelled MDP. For any two TAs A , A ′ , if L(A ) = L(A ′ ), then M ⊗ A ∼
+                                                                                                 = M ⊗ A ′.
+
+Proof. Consider the two product Markov processes M ⊗ A and M ⊗ A ′ constructed by composing the MDP M with each TA A and A ′ .
+At each time step t, the agent’s observation ot is a pair in S × {0, 1}. Therefore, observation sequences restricted to the first component of the
+observation pair are state trajectories, and restricted to the second component are reward sequences (χF (qt ))τt=0 ∈ {0, 1}∗ . The probabilities
+of state trajectories must be equal for M ⊗ A and M ⊗ A ′ since they are constructed from identical environments M, and the probabilities
+of reward sequences must be equal because the languages of A and A are identical by assumption.
+
+
+Proposition 3. Suppose an agent is given a structurally correct product MDP M̂ ⊗ Aˆ belonging to [M ⊗ A ], where M is the true MDP
+underlying the product MDP, and the agent can observe s and q for all ⟨s, q⟩ ∈ Ŝ ⊗ . Then, the agent can learn the MDP-restricted TA AˆM̂ ,
+but may not be able to learn the full TA Aˆ.
+
+Proof. Start with the product MDP M̂ ⊗ Aˆ, where the agent can observe the MDP and TA state components (s and q) of each product MDP
+state s⊗ = ⟨s, q⟩. Induce a product MC M̂π ⊗ Aˆ by employing a random exploration policy π. Note that any exploration policy can be used
+here, provided that every action is chosen at every state with non-zero probability. For each transition P ⊗ (⟨sj , qj ⟩ | ⟨si , qi ⟩) > 0 in M̂π ⊗ Aˆ,
+                     L(sj )
+add the edge qi −→ qj to the candidate TA (unless it already exists). After going through all such transitions in the product MDP, all TA
+transitions accessible by an MDP-attainable trace must have been exhausted. We have therefore created the MDP-restricted TA AˆM̂ . AˆM̂ may
+not be equal to the true underlying TA A because there might exist a path in A that corresponds with a trace that cannot be generated by an
+agent exploring in M.
+
+
+Proposition 4. Given a labelled product MC Mπ ⊗ A with binary reward, labelling every edge ⟨si , q⟩ → ⟨sj , qj ⟩ according to the label of
+its target state’s MDP component (i.e., in this case, L(sj ) = ℓj ), results in an NFA.
+
+Proof. An NFA is a tuple (Q, q0 , Σ, δ, F) (Definition 2). The set of states Q is the set of states of the product MDP. The state q0 is the same
+as the initial state of the product MDP (since the initial states of the MDP M and TA A are known). Σ = 2AP since these are the possible
+labels of the edges. δ is indeed a non-deterministic transition function since from any state s ∈ S, there may be multiple si ∈ S such that a
+transition from s to si is possible, and L(si ) = ℓ. That is, multiple possible next states may exist, which all have the same label. Finally, the
+accepting states F are the accepting states of the product MC Mπ ⊗ A – i.e., the states where the reward observed is non-zero.
+
+
+Proposition 5. Let N be the NFA underlying the learnt product MC Mπ ⊗ A . Then, L(N ) = L(AM ), where AM is the MDP-restricted
+true TA.
+
+Proof. N accepts precisely those words that terminate at an accept state of the product MC Mπ ⊗ A , and because a product state is an accept
+state if and only if its TA-component is accepting, the language recognised by N must be contained in the language of the true underlying TA.
+Moreover, because the set of paths in N underlying Mπ ⊗ A is precisely the set of MDP-attainable paths of the true TA, the language of N
+is precisely the language of the MDP-restricted TA AM .
+
+
+Proposition 6. Cone Lumping determinises any product MDP in O(|S ⊗ |3 ), exponentially faster than Rabin and Scott [25]’s subset-
+                  ⊗
+construction O(2|S | ) algorithm.
+
+Proof. Our implementation of Cone Lumping (Lemma 1) uses iterations that involve looping over all states in S ⊗ and all out-going transitions
+at each state and then merging any successor-states2 with the same label from 2AP into one equivalence class that is used as the new state.
+The iterations end when no states can be ‘lumped’ into the same equivalence class (corresponding to the same TA state). In the worst case,
+only one state is subtracted from the NFA upon each iteration, implying that there are at most |S ⊗ | − 1 iterations. This also implies that, in the
+worst case, the number of successor-states that need to be checked on iteration i is (|S ⊗ | − i)2 : there are |S ⊗ | − i states left in the model, and
+from any of these there are at most |S ⊗ | − i out-going edges (in the worst case, the underlying graph is fully-connected). Thus, the worst-case
+                                                                  P ⊗| 2
+number of check-operations before this algorithm terminates is |S              1    ⊗                                       ⊗ 3
+                                                                     i=2 i = 6 |S |(|S| + 1)(2|S| + 2) − 1 = O(|S | ). In the common case
+where there are precisely k permitted out-going transitions from any state in the model (e.g., gridworld environments), this complexity reduces
+   P ⊗|
+to |S              k   ⊗     ⊗
+     i=2 i · k = 2 |S |(|S | + 1) − k = O(|S | ).
+                                                    ⊗ 2
+
+
+
+2 A state ⟨s′ , q ′ ⟩ such that ⟨s, q⟩ → ⟨s′ , q ′ ⟩ is called a successor-state of ⟨s, q⟩.
+B    Cone Lumping Example
+A product MDP is of size |S × Q|, so we use a simple 3 × 3 grid-world with a three state TA (Figure 6a) to use as an easy demonstration of
+cone lumping. The task specification here again can still not be expressed by a Markovian reward function because the agent cannot go from
+either Ò to the stairs in one step. A product MDP in this environment can be learnt using Step 1 of our pipeline. We then induce a product
+MC by assigning to the agent a fully mixed policy π. Figure 6b then shows the NFA underlying this product MC, where the edges have been
+labelled as instructed in Proposition 5 and ⟨s21 , q2 ⟩ is the only accepting state.
+   For the Cone Lumping step, any two outgoing edges from a product state of this NFA underlying a labelled product MC that have the same
+label must transition to the same next TA state (cf. Section 3.2). Observe that this is the case in Figure 6b; for example, every edge labelled
+with ∅ outgoing from ⟨s00 , q0 ⟩ ∈ S ⊗ ends up in a TA state with q0 as its TA component. Cone Lumping efficiently converts the NFA in Figure
+6b into the DFA in Figure 6a.
+   In the main text, we also mentioned that Cone Lumping helps transfer learning because the hardness has been confined to learning the
+product MDP. If the spatial MDP or the TA changes slightly, the agent only has to relearn the affected part of the product MDP, then can use
+Cone Lumping to efficiently find the new TA. For instance, if after learning the TA from exploring the spatial MDP in Figure 6a, the agent was
+then put in a new 3 × 3 grid-world with no carpets present. The agent only has to re-learn the parts of the product MDP associated with MDP
+states s20 and s22 before applying our efficient Cone Lumping method again. It would then find that the old TA still applies.
+
+
+                  b              b
+
+                                                                                                   ∅                ∅              b
+                                 Ò
+                                                                                                                    b
+                                                                                                       s10 , q0         s20 , q0
+
+         ¹                       Ò                                                     ∅
+                                                                               ∅           ∅              ∅ ∅                  b                   b
+                                                                                                                    ∅                      b
+                                                                                           ∅
+                                                                    start   s00 , q0       ∅           s11 , q0         s21 , q0               s22 , q0
+
+
+                                                                                           ∅              ∅ ∅                              Ò
+             ¬Ò             ¬                                                          ∅
+                                                                                                                    Ò
+                                                                                                       s01 , q0         s02 , q1
+                      Ò
+ start       q0             q1        q2                                                       ∅
+                                                                                                                                   Ò       Ò
+
+                      (a)
+                                                                                                                    ∅                  b
+                                                                                                                    b
+                                                                                           ∅           s10 , q1         s20 , q1
+
+                                                                                                                                                          Ò
+                                                                                       ∅
+                                                                               ∅           ∅              ∅ ∅                                      b
+                                                                ∅     Ò
+                                                                                           ∅
+                                                                            s00 , q1       ∅           s11 , q1         s21 , q2               s22 , q1
+
+
+                                                                                           ∅              ∅ ∅                          Ò
+                                                                                       ∅                            Ò                          b
+                                                                                                       s01 , q1         s12 , q1
+                                                                                               ∅
+                                                                                                                                   Ò
+
+                                                                                                              (b)
+
+Figure 6: A simple MDP (a) and TA (b). (c) The NFA underlying the product MDP constructed from this MDP and TA under a fully mixed
+policy π. MDP states S are labelled syx (for x, y ∈ {0, 1, 2}) corresponding to the horizontal (x) and vertical (y) cell position in the grid.
+C    Baum-Welch Algorithm
+This section more completely introduces the Baum-Welch algorithm [6] that we use to implement Step 1 of our TA learning pipeline. Recall
+there are two stages of Baum-Welch: i) learning the transition probability distribution P̂ of the MDP M and ii) learning the transition prob-
+ability distribution P ⊗ of the product MDP M ⊗ A . Both follow the same procedure, where the result of the former is used for the initial
+parameters (an inductive bias) of the latter (see Section 3.1). Since it is the ultimate goal of this procedure, we spell out the procedure for the
+latter where the hidden Markov model is Pπ⊗ = (S ⊗ , s⊗       ⊗    ⊗
+                                                         o , Pπ , R , γ, O, Z) (constructed from the product MDP and a fully mixed policy π).
+Baum-Welch uses an ‘expectation-maximisation’ method to find the hidden transition matrix and the observation (or emissions) distribution
+Z that maximises the likelihood of obtaining the given set of observation sequences,
+
+                                                                 O = (o1 , ..., oT ) ∈ (O+ )T .
+
+Formally, we represent this optimisation problem as:
+
+                                                       ⟨P̂π⊗ , Ẑ⟩ = argmax Pr O | ⟨P ⊗ , Z⟩ .
+                                                                                            
+                                                                           ⊗
+                                                                         ⟨Pπ ,Z⟩
+
+
+Defining HMM Parameters. The hidden Markov chain’s state space is the set S ⊗ and, as is commonly done, we will view the the transition
+probability function Pπ⊗ : S ⊗ × S ⊗ → [0, 1] as a matrix, with elements
+                                                                               ⊗    ⊗      ⊗
+                                                             ⊗
+                                                            Pπ,ij ≡ P ⊗ (s⊗
+                                                                          t = sj | st−1 = si ).
+
+This representation is induced by a bijective mapping, so no information is lost.
+  We do the same for the distribution Z, but call the matrix E Z (for ‘emissions from Z’):
+                                                                Z
+                                                               Eij ≡ Z(ot = oi | s⊗    ⊗
+                                                                                  t = sj ).
+
+                                                                                                      Z
+Here, oi represents the i-th element of the finite observation set O under any fixed ordering. Thus, Eij is the probability that observation Oi is
+                                    ⊗
+emitted when the hidden state is sj .
+  Under these definitions, Pπ⊗ is an |S ⊗ | × |S ⊗ | matrix and E Z is an |S ⊗ | × |O| matrix.
+                                                               ⊗
+  Lastly, we define the initial state distribution ρ ∈ [0, 1]|S | by
+
+                                                                      ρj ≡ Pr[s⊗    ⊗
+                                                                               0 = sj ].
+
+In our application, the starting state is always known to be the same, so this distribution will always have support 1.
+Initialisation. We initialise Pπ⊗ using the fact that we have an estimate of the transition matrix for the MDP P̂ as an inductive bias and we
+initialise E Z according to the deterministic observation mapping ⟨s, q⟩ 7→ ⟨s, χF (q)⟩ (see Appendix D).
+                                                                  X         ⊗
+                                                                          Pπ,ij  =1
+                                                                    {s⊗   ⊗   ⊗
+                                                                      j :sj ∈S }
+                                                                               X        Z
+                                                                                       Eij = 1.
+                                                                         {oj :oj ∈O}
+
+
+Forward Procedure. This first variable is the probability that the input model is in hidden state s⊗
+                                                                                                   i at time t in the given observation sequence
+ot+1 , . . . , oT :
+                                                αi (t) ≡ Pr o1 , . . . , ot , s⊗    ⊗     ⊗
+                                                                                                
+                                                                               t = si | ⟨Pπ , Z⟩
+
+Then, the following recursive relations are used to compute these variables for later use in the update step:
+                                                     Z
+                                     1. αi (1) = πi Ei,o 1
+
+                                                                     |S ⊗ |
+                                                      Z
+                                                                     X               ⊗
+                                     2. αi (t + 1) = Ei,o t+1
+                                                                              αj (t)Pπ,ji
+                                                                     j=1
+
+
+Backward Procedure. These variables are calculated backwards temporally for ‘smoothing’ of the calculated probabilities:
+
+                                            βi (t) ≡ Pr ot+1 , . . . , oT | s⊗        ⊗
+                                                                                            
+                                                                             t = i, ⟨Pπ , Z⟩
+
+Then, the following recursive relations are used to compute these variables for use in the update step:
+
+                                     1. βi (T ) = 1
+                                                   |S ⊗ |
+                                                   X                   ⊗
+                                     2. βi (t) =            βj (t + 1)Pπ,ij EoZt+1 ,j .
+                                                   j=1
+Calculate Update Parameters. The first update parameter is
+
+                                                                        Pr[s⊗     ⊗       T       ⊗
+                                                                            t = si , (ot )t=1 | ⟨Pπ , Z⟩]      αi (t)βi (t)
+                    γi (t) = Pr[s⊗            T       ⊗
+                                 t = i | (ot )t=1 , ⟨Pπ , Z⟩] =                      T       ⊗            = P|S ⊗ |           .
+                                                                             Pr[(ot )t=1 | ⟨Pπ , Z⟩]         j=1 αj (t)βj (t)
+
+                                                  P ⊗|
+Note that by the definitions of αi (t) and βi (t), |S
+                                                   j=1 αj (t)βj (t) is a sum over all possible hidden states which could occur at time t that
+manifest the same observation sequence (ot )Tt=1 .
+  The other update parameter is
+
+                                 ξij (t) = Pr[s⊗    ⊗ ⊗         ⊗        T       ⊗
+                                               t = si , st+1 = sj | (ot )t=1 , ⟨Pπ , Z⟩]
+
+                                            Pr[s⊗       ⊗             T       ⊗
+                                                t = i, st+1 = j, (ot )t=1 | ⟨Pπ , Z⟩]
+                                        =                                                           (by Bayes’ Theorem)
+                                                       Pr[(ot )Tt=1 | ⟨Pπ⊗ , Z⟩]
+                                                           ⊗
+                                                    αi (t)Pπ,ij βj (t + 1)EoZt+1 ,j
+                                        = P                  ⊗               Z
+                                                                                     ,
+                                              u,v∈S ⊗ αu (t)Pπ,uv βv (t + 1)Eot+1 ,v
+
+where the final denominator here is a sum over all possible hidden state transitions from time t to t + 1 which can give rise to the specific
+observation sequence (ot )Tt=1 .
+Update Step. We calculate the actual model updates with the following equations:
+                                         PT −1            PT −1        ⊗      ⊗                T     ⊗
+                                               ξij (t)        t=0 Pr[st = i, st+1 = j | (ot )t=1 , ⟨Pπ , Z⟩]
+                                 P̃ij⊗ = Pt=0
+                                          T −1
+                                                       =         PT −1     ⊗            T        ⊗
+                                          t=0 γi (t)               t=0 Pr[st = i | (ot )t=1 , ⟨Pπ , Z⟩]
+                                         PT
+                                    Z     t=0 χot =j (ot )γi (t)
+                                 Ẽji  =     PT                  ,
+                                               t=0 γi (t)
+
+  where χot =j is the indicator function for ot = j ∈ O.
+  After this step, we re-define Pπ⊗ := P̃π⊗ and E Z := Ẽ Z , and repeat all the steps with the same observation data (ot )Tt=1 . Baum-Welch
+implementations usually keep track of the magnitude of changes from iteration to iteration, terminating when changes become negligible, or
+when a user-defined maximum number of iterations is reached.
+
+
+D    Mathematical Implementation of HMM Learning
+Here we discuss any non-trivial linear algebra used by us to encode the models and data structures for the Baum-Welch algorithm.
+  As usual for MDPs, given the choice of some action a ∈ A at any time t, the transition matrix TPa⊗ ∈ [0, 1]|S||Q|×|S||Q| corresponding to
+                                                                                                                π
+Pπ⊗ in M ⊗ A is                                           
+                                                    TPa⊗                      ≡ Pπ⊗ ⟨s′ , q ′ ⟩ | ⟨s, q⟩, a .
+                                                                                                           
+                                                                                                                                            (1)
+                                                      π    ⟨s,q⟩,⟨s′ ,q ′ ⟩
+
+  The primary non-trivial linear algebra tool used is the Kronecker product. Usually, this is denoted with the symbol ⊗, but we use ⊗K to
+avoid confusion with our notation for the product MDP.
+
+Definition 9. The Kronecker product of two matrices A, B is the block-matrix
+                                                                                                         
+                                                          A11 B A12 B . . .                        A1m
+                                                         A21 B A22 B                                     
+                                           A ⊗K B ≡  .                                                   ,
+                                                                                                         
+                                                         ..                 ..
+                                                                                .                         
+                                                          An1 B                                   Anm B
+
+where each Aij B is the B-sized matrix of the scalar Aij multiplied by B.
+
+   The mathematical setup for converting a product MDP into an HMM is as follows (applies to any matrix-based implementation, this is not
+unique to our programmatic implementation).
+   We construct the product MDP according to Definition 4 and store it as a rank-3 tensor with each layer corresponding to the dynamics
+induced by a specific action. This implies that the dimensions of the tensor (T above) correspond to |S × Q| × |S × Q| × |A|. Each ‘action
+layer’ is equal to the matrix given by Equation 1 above.
+   We convert this product MDP to a Markov chain by summing and normalising to the fully mixed policy π. This results in an |S ×Q|×|S ×Q|
+transition matrix, representing the true transition dynamics of the Hidden Markov model we will be looking to solve.
+   The HMM learning algorithm takes as input a set of observation sequences and initial guesses for the transition and emission dynamics of the
+system. Note that this requires assuming a fixed number of hidden states in the system. Since we know the number of MDP states, estimating
+the right number of hidden states corresponds to guessing the number of TA states k, which is unknown a priori. However, all that is actually
+required is that our guess k is greater than or equal to the true number of TA states |Q| because guessing too many states will just generate
+duplication in the learnt matrix - which can easily be identified. It is easy to come up with an upper bound on the size of the underlying TA
+that is sufficient for there to be enough hidden states in the learned product MDP to capture the dynamics over S × Q; for instance, we could
+base it on the cardinality of the set of labels or on some type of simplicity assumption that the task specification is unlikely to have more than
+10 states perhaps. We then initialise P_initial_estimate as a k|S| × k|S| stochastic matrix by taking the Kronecker product between a
+k × k identity matrix and P̂π (the estimate for the MDP’s transition matrix after being induced by the fully mixed policy π).
+   The observations seen consist of the MDP state component s, label L(s), and reward. This corresponds to setting the true emissions matrix
+(also known as the observation probability matrix) E Z to the block matrix
+
+                                                     S × {r = 0}                   S × {r = 1}                      
+                                         S × {q0 }       I                             0       1              0
+                                         S × {q1 }       I                             0         1            0 
+                                             ..           ..                            ..        ..           ..  ⊗ I
+                                 EkZ :=
+                                                    
+                                                                                               =                     K |S|×|S| ,
+                                                                                                .               .
+                                                    
+                                              .           .                             .        
+                                                                                                                    
+                                                                                                1              0
+                                        S × {qk−1 }       I                             0
+                                                                                                                   
+                                         S × {qk }        0                                I                0    1
+
+
+where I|S|×|S| is the |S| × |S| identity matrix, and the adjacent binary matrix is k × 2. Thus, for all product states with TA state q ̸= qk ,
+the observation is just the physical state and reward 0, i.e. ⟨s, 0⟩, and in the case q = qk , the TA is an accepting state (by the assumption that
+there is one accepting TA state and that we number it with k)3 , so the observation for ⟨s, qk ⟩ is ⟨s, 1⟩. Note that the mission output from each
+specific product state is deterministic in our setting.
+
+
+E     Further experimental details
+Table 1 contains the key hyperparameters used in our experiments and presents the precise mean times to convergence across 3 runs of each
+experiment.
+
+Table 1: Parameters and results for the experiments with results displayed in Figures 4a and 4b, where the mean time to convergence for the
+Baum-Welch algorithm over three runs was measured for varying grid-world and TA sizes.
+                                     Algorithm      Grid size     TA size     Episode      No. Episodes         Convergence
+                                                                              Length                             Time (s)
+                                        Ours         3×3             3          34             275                         26.3
+                                        Ours         3×3             4          34             275                        382.3
+                                        Ours         3×3             5          70             500                      5,232.7
+                                        BF           3×3             3          34             275                         63.7
+                                        BF           3×3             4          34             275                     18,188.3
+                                        BF           3×3             5          70             500           Timeout (>150,000)
+                                        Ours         4×4             3          80             500                        660.7
+                                        Ours         4×4             4          90             1000                     3,824.7
+                                        Ours         4×4             5          80             1000                    38,025.0
+                                        Ours         5×5             3          85             2000                     2,625.7
+                                        Ours         5×5             4         100             2000                    16,819.7
+                                        Ours         5×5             5         140             2000                    68,977.7
+
+
+
+
+F    Comparisons with Related work
+We attempted to benchmark our algorithm against several existing passive DFA learning libraries. Two well-established and commonly-used
+approaches to this are the RPNI algorithm (used in, e.g., [36, 37]) and SAT-based algorithms (used in e.g., [1, 8, 15, 34, 36]). The results of our
+comparisons are summarised in Table 2. Of the six implementations we tried, only the SAT-based approach from the libalf library was able to
+successfully learn the 3-state TA in our 3x3 gridworld. As Table 2 and Figure 4b demonstrate, our algorithm runs significantly faster than the
+RPNI algorithm indicating its better efficiency compared to existing approaches. Additionally, most of the libraries we attempted to run using
+the same dataset that we used for our experiments were not able to learn the correct TA, as evidenced by the results in 2. This highlights the
+general applicability of our approach in passively learning DFAs.
+
+                                Table 2: Results from attempted comparisons to existing passive DFA learning libraries.
+                                Library        Algorithm             Result             URL
+                                AALpy            RPNI           Wrong DFA (Fig. 3)      https://github.com/DES-Lab/AALpy
+                              dfa-identify     SAT-based            Timeout             https://github.com/mvcisback/dfa-identify
+                                Inferrer         RPNI            Recursion error        https://github.com/steynvl/inferrer
+                              FlexFringe       SAT-based          Throws error          https://github.com/tudelft-cda-lab/FlexFringe
+                                 Libalf          RPNI              Wrong DFA            https://github.com/libalf/libalf
+                                 Libalf        SAT-based             Works              https://github.com/libalf/libalf
+
+3 In our application, accepting states cannot be left after achieving the goal, so it suffices in every case to have just one accepting state.
+                   Learning an automaton from data is an NP-complete problem [13], so under standard complexity assumptions, the convergence time will,
+                in the worst case, always grow exponentially with instance size. Nevertheless, as remarked in our experimental section, a 5x5 MDP grid world
+                with a 5-state TA is comparable to that of related research. For example, in [1] their largest problem is the “Maze domain” with a five-state
+                TA, MDP size 4x4 and in [12] their largest is a five-state TA and a 5x5 MDP. Other works such as [11, 21, 36] do go to slightly larger MDP
+                worlds, but they employ SAT-based approaches, which assume knowledge of the underlying environment, unlike ours.
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                         s0               1 4 2 5
+
+
+                                                                                                                                                                                                  6        5     3
+
+
+                                                                                                                                                                                         s1            1                                                                                                                                                                                           6
+
+
+                                                                                                                                                                                                                                                     6                           4                  2                                                                                                                               5        2
+
+
+                                                                                                                                                                                                                                                                                                                                  s3
+
+
+                                                                                                                                                                                                                                                                                                                                                                                               3       4
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                       s9       1                                                                   2
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        4
+
+
+                                                                                                                                            5                   6                                                                                                                          6                                                                                                                                                 6                                                       s27   4
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1
+
+
+                                                                                                                                                                                                                                                                                                                          5                                                     6                                                                                 s33                                                                  2
+
+
+                                                                                                                                                                                                                                                                                                                                            4       6                               2
+
+
+                                        4                                                                                                                                 s4         1 5                                                                                                                                                                                2                 3                                                                                                      4                     1
+
+
+                5                                                                                                                                                         4    3 2                                                                                                                                                                                                                                                                                                      4
+
+
+
+                                                  6           3                                                                                                               s22                                                                                                               3                                                                                                                                                                                                                                                                     s37
+
+
+
+                                                                                                                    6                                                                                                                        1           1           2                                       5                                                                                                                                       6
+
+
+                                1                                                                                                                                                                                                                                                                           s28                                                                                                                                                       1                                                                     3               2
+
+
+                                                              3       5             2                                                                                                                                                                                                                                     3       1 6                               5                                                                                                                                                  4
+
+
+                                                                                                                                                                      2              6                                                                                                                                                                  s31                                                 2                                                                                                      1
+
+
+                                                                                                                    4                                       6                                                                                                                                                                                                   2                         3        3            1                   2                                                                                                               3
+
+
+
+                                                                                                                                                3                                                                                                                                          4                                                                                5                                                                                         s35
+
+
+
+                                                                                                                                                                                                                                 4                                               4                                                                            4 5                                                                                         1
+
+
+
+                                                                                                                                                                                                                                                                                       3                                                                                                                                                    s21                                     6                                                                       4                                               4
+
+
+
+                                                                                                                                                                                                                                                                 3                                                                                                                                                                                                            3                                                                                                                                 2
+
+
+
+                                                                                                                                                                    s15                          4                                               2                                                                                                                                                                                           6                                                                                             2                                                            4
+
+
+
+                                                                                                                                    1                                 3                                                                                                                                                                                                                            4                                                                                         5                                                          5
+
+
+
+                                    5                                                                s18                                                            s25                  4                               5               3                                                                                    1                                                                                                                                                                                        3
+
+
+
+                                                      2                                                                                                                                           2                  3                                                                                                                                                                                                                                            3
+
+
+    6               3                                                                                                                                                                                                        3                                                                 s2       5                                                           2                                                                                                                                                                   2
+
+
+            4                           4                                                                               3                                                            6                                                                                                                                                                                                                                                                                                                         3
+
+
+                                                                                                s6                                                                                                                                                           2                                                                                                                                                      6                                                                                                                                                1      4
+
+
+                                                                                                                                                                                                                                                                                                        4                                   5                               6                                                                        2                                                                                                                                                                  1
+
+
+        2                                                                                                   3                                                                                                                                                                                                                                                                                                                                                                           s5
+
+
+                            6                             2                                                                                     6                                                                                                                                                                                           2                                                                                                                 1       5       4                                            3
+
+
+                        4                                                                                               3       2                                                                                                                                                                                 5                                                                                                             1           s7                                                                                                                                                3     3
+
+
+4                                                 2                                                                                     4                                                                                                                                                                                                                                                                               1       3                                                                                                                                                                                   3
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                   s8                           5                                                                                                                                                     6
+
+
+                                4                                                                                                                                                                                                                                                                                                                                                             4 1                                                                                   6                                                                                           2                           1
+
+
+                                                                                                                                                                                                                                                                                                                                                          6                         s10            1
+
+
+                                                                                                                6                                                                                                                                                                          5                                                                            6                                                                                                                                      6
+
+
+                                                                                5                                                                                                                                                                                                                                                                   s11
+
+
+                                                                                                                                                        2       5                                                                                                                                                                                                                                                           2                                                                        4
+
+
+
+                                                                                                                                                                      1                      1                                                                                                                                                                                                                                                   2                            s26
+
+
+
+                                                                  1                              5                                                                             6                                                                                                                                                                                                                                    1                                                                                      2
+
+
+
+                                                              1                                                                                                                                                                                                                  s29            1                                               6                                                                                                                                                                      s36
+
+
+
+                                                                                                                                                                                                                                                                                                                  1       6                 6             4                                                                                                                                                                    6   1                                  4
+
+
+
+                                                                                                                                                                                                                                                     s39                                                                                                                                                                                                                  3                                                            s13
+
+
+
+                                                                                                                                                                                                                                     1
+
+
+                                                                          6                                                                                                                                s32                                                                                                                                                                                                                                                                                                                                                                            2
+
+
+                                                                                                                                                                                                                                                                             1                                                                                                                                                                                                                                                                                  6
+
+
+
+                                                                                                                                                                                                                                                                                                                          s12           3                                                                                                                                                                                                                                                                       1
+
+
+
+                                                                                                                                                                                              1
+
+
+                                                                                                           s19
+
+
+                                                                                                     1                                                                                                                                                                                                                                                                                                                                                                                                                                              5
+
+
+
+                                                                              s24       6                   4                                                                                          6
+
+
+
+                                                                                    5       1                                                                                                                                            2                               2
+
+
+
+                                                                                                           s14                                                                                                                                                                                                                                                                                                                                                                                                                                  5
+
+
+
+                                                                                                                                            1
+
+
+                                                                                                                                                                    s23       3 2
+
+
+                                                                                                                                                                                     5
+
+
+                                                                                                                                                                                                     s16
+
+
+                                                                                                                            5                       5                                                                                                                                                                                                                                                                                   3
+
+
+                                            s17                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 s20
+
+
+                                                                                                                                                                                                                                                                                                                      3
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    s30
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          1
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  s34
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   4
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  s38
+
+
+
+
+                                                          Figure 7: TA learnt using the AALpy library with the same data set used to learn the 3-state TA in the 3x3 gridworld.
+

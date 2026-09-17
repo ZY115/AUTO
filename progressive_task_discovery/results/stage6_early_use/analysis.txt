@@ -1,0 +1,13 @@
+Unattainable 90% thresholds: 0 / 288
+benign       goal_reuse                     cost=    5688 solved=32/32 AUC=0.948 final=1.000
+benign       delayed_goal                   cost=   23812 solved=32/32 AUC=0.767 final=1.000
+benign       known_goal                     cost=    7750 solved=32/32 AUC=0.927 final=1.000
+benign       count_replay                   cost=   11500 solved=32/32 AUC=0.890 final=1.000
+deadline     goal_reuse                     cost=    6594 solved=32/32 AUC=0.939 final=1.000
+deadline     delayed_goal                   cost=   27594 solved=32/32 AUC=0.729 final=1.000
+deadline     known_goal                     cost=    8875 solved=32/32 AUC=0.916 final=1.000
+deadline     count_replay                   cost=   14000 solved=32/32 AUC=0.865 final=1.000
+noisy        goal_reuse                     cost=    6906 solved=32/32 AUC=0.932 final=0.998
+noisy        delayed_goal                   cost=   37938 solved=32/32 AUC=0.625 final=1.000
+noisy        known_goal                     cost=    9719 solved=32/32 AUC=0.908 final=1.000
+noisy        count_replay                   cost=   18594 solved=32/32 AUC=0.803 final=0.989

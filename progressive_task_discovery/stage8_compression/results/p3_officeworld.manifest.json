@@ -1,0 +1,24 @@
+{
+  "runner": "src/run_p3.py",
+  "domain": "OfficeWorld (gym-subgoal-automata)",
+  "exporter": "src/export_officeworld.py",
+  "tasks": 15,
+  "arms": [
+    "oracle_goal",
+    "oracle_index",
+    "oracle_crm",
+    "learned_free",
+    "learned_640",
+    "learned_320",
+    "learned_160",
+    "learned_novel_640",
+    "raw_free"
+  ],
+  "seeds": 6,
+  "seed0": 10200,
+  "budget": 400000,
+  "runs": 810,
+  "source_sha256": "688e44663e8e935a14dffe2d925c91cd930053e9e48901345a064ff9895cc90b",
+  "data_sha256": "fefd23cc0689675a8ca4fd9264a475b421e2698e435fe258154380388f2d4945",
+  "written": "2026-09-11"
+}

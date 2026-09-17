@@ -1,0 +1,329 @@
+{"kind":"deck","id":"pr/p9dxm9","name":"Deck"}
+{"kind":"layout","layoutId":"a2ec356d-bfb6-44b0-9da5-87def276780a","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"c233cdb7-5ff4-4e76-bc6e-af3b2cf57656","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/6g3fzk","slide":1,"title":"未知任务中的在线发现","textShapes":15}
+{"kind":"textbox","id":"sh/torixcz2","slide":1,"name":"text-1","text":"未知任务中的在线发现","textPreview":"未知任务中的在线发现","textChars":10,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/6l0z2x0b","slide":1,"name":"text-2","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/rm90v2hw","slide":1,"name":"text-3","text":"事件可见，进度反馈可靠","textPreview":"事件可见，进度反馈可靠","textChars":11,"textLines":1,"bbox":[80,125,485,40]}
+{"kind":"shape","id":"sh/gr2187id","slide":1,"bbox":[90,199,58,58]}
+{"kind":"shape","id":"sh/1sbi1czy","slide":1,"bbox":[148,199,58,58]}
+{"kind":"shape","id":"sh/epkj6h0n","slide":1,"bbox":[206,199,58,58]}
+{"kind":"shape","id":"sh/fqt0zmh8","slide":1,"bbox":[264,199,58,58]}
+{"kind":"shape","id":"sh/ov21crip","slide":1,"bbox":[322,199,58,58]}
+{"kind":"shape","id":"sh/pgbi5wza","slide":1,"bbox":[380,199,58,58]}
+{"kind":"shape","id":"sh/xsn254f2","slide":1,"bbox":[90,257,58,58]}
+{"kind":"shape","id":"sh/wrelczeh","slide":1,"bbox":[148,257,58,58]}
+{"kind":"shape","id":"sh/bq5k3uxw","slide":1,"bbox":[206,257,58,58]}
+{"kind":"shape","id":"sh/apc3apwb","slide":1,"bbox":[264,257,58,58]}
+{"kind":"shape","id":"sh/lgn294fe","slide":1,"bbox":[322,257,58,58]}
+{"kind":"shape","id":"sh/kfelgzet","slide":1,"bbox":[380,257,58,58]}
+{"kind":"shape","id":"sh/je5k7ux8","slide":1,"bbox":[90,315,58,58]}
+{"kind":"shape","id":"sh/ytw3epwn","slide":1,"bbox":[148,315,58,58]}
+{"kind":"shape","id":"sh/1k32xkfu","slide":1,"bbox":[206,315,58,58]}
+{"kind":"shape","id":"sh/0jul4fe9","slide":1,"bbox":[264,315,58,58]}
+{"kind":"shape","id":"sh/s3ylkf65","slide":1,"bbox":[322,315,58,58]}
+{"kind":"shape","id":"sh/t472dknq","slide":1,"bbox":[380,315,58,58]}
+{"kind":"shape","id":"sh/61w3i5oz","slide":1,"bbox":[90,373,58,58]}
+{"kind":"shape","id":"sh/r25kba5k","slide":1,"bbox":[148,373,58,58]}
+{"kind":"shape","id":"sh/g7ylofmh","slide":1,"bbox":[206,373,58,58]}
+{"kind":"shape","id":"sh/187mhkn2","slide":1,"bbox":[264,373,58,58]}
+{"kind":"shape","id":"sh/e5g3mp4b","slide":1,"bbox":[322,373,58,58]}
+{"kind":"shape","id":"sh/f6pkfa5w","slide":1,"bbox":[380,373,58,58]}
+{"kind":"shape","id":"sh/ovilszmd","slide":1,"bbox":[90,431,58,58]}
+{"kind":"shape","id":"sh/pwrml4ny","slide":1,"bbox":[148,431,58,58]}
+{"kind":"shape","id":"sh/j2dw7itc","slide":1,"bbox":[206,431,58,58]}
+{"kind":"shape","id":"sh/y14fyxsr","slide":1,"bbox":[264,431,58,58]}
+{"kind":"shape","id":"sh/l4ve9sbi","slide":1,"bbox":[322,431,58,58]}
+{"kind":"shape","id":"sh/k3mx0nax","slide":1,"bbox":[380,431,58,58]}
+{"kind":"shape","id":"sh/betw3itg","slide":1,"bbox":[90,489,58,58]}
+{"kind":"shape","id":"sh/adkfudcv","slide":1,"bbox":[148,489,58,58]}
+{"kind":"shape","id":"sh/x0ve5sb6","slide":1,"bbox":[206,489,58,58]}
+{"kind":"shape","id":"sh/wz2xwnul","slide":1,"bbox":[264,489,58,58]}
+{"kind":"shape","id":"sh/vuxgf2tk","slide":1,"bbox":[322,489,58,58]}
+{"kind":"shape","id":"sh/u9of6hsz","slide":1,"bbox":[380,489,58,58]}
+{"kind":"textbox","id":"sh/2h4ja183","slide":1,"name":"text-4","text":"agent","textPreview":"agent","textChars":5,"textLines":1,"bbox":[90,489,58,58]}
+{"kind":"textbox","id":"sh/3id036po","slide":1,"name":"text-5","text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[148,257,58,58]}
+{"kind":"textbox","id":"sh/4jm1cbq9","slide":1,"name":"text-6","text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[322,199,58,58]}
+{"kind":"textbox","id":"sh/pkvi5g7u","slide":1,"name":"text-7","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[322,431,58,58]}
+{"kind":"textbox","id":"sh/udkj6187","slide":1,"name":"text-8","text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[206,373,58,58]}
+{"kind":"textbox","id":"sh/fed0zmps","slide":1,"name":"text-9","text":"A   ?   B   ?   C   ?   D","textPreview":"A   ?   B   ?   C   ?   D","textChars":25,"textLines":1,"bbox":[76,578,390,42]}
+{"kind":"textbox","id":"sh/gfm18rqd","slide":1,"text":"交互反馈","textPreview":"交互反馈","textChars":4,"textLines":1,"bbox":[605,205,230,76]}
+{"kind":"textbox","id":"sh/hgvi1w7y","slide":1,"text":"局部任务结构","textPreview":"局部任务结构","textChars":6,"textLines":1,"bbox":[930,205,230,76]}
+{"kind":"textbox","id":"sh/e9oj2l8b","slide":1,"text":"继续探索","textPreview":"继续探索","textChars":4,"textLines":1,"bbox":[605,435,230,76]}
+{"kind":"textbox","id":"sh/zaxkbqpw","slide":1,"text":"调用已学技能","textPreview":"调用已学技能","textChars":6,"textLines":1,"bbox":[930,435,230,76]}
+{"kind":"shape","id":"sh/94zm1kry","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/83ql8fat","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/n2h4za98","slide":1,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/m1836psn","slide":1,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/1gzmxkr2","slide":1,"name":"text-10","text":"未知部分","textPreview":"未知部分","textChars":4,"textLines":1,"bbox":[632,520,190,36]}
+{"kind":"textbox","id":"sh/0fql4fah","slide":1,"name":"text-11","text":"已知前缀","textPreview":"已知前缀","textChars":4,"textLines":1,"bbox":[955,520,185,36]}
+{"kind":"notes","id":"nt/6g3fzk","slide":1,"text":"问题是隐藏任务顺序/逻辑的发现，不是完全没有任务信号的目标发现。事件可识别，早期实验提供可靠的逐步推进反馈。格子图仅为机制示意，不对应具体实验地图。\n\n资料来源：/Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/PROJECT_STATUS.md"}
+{"kind":"slide","id":"sl/qdh3dh","slide":2,"title":"线性任务：立即使用已发现的前缀","textShapes":5}
+{"kind":"textbox","id":"sh/upsjapwj","slide":2,"name":"text-12","text":"线性任务：立即使用已发现的前缀","textPreview":"线性任务：立即使用已发现的前缀","textChars":15,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/hs325kva","slide":2,"name":"text-13","text":"长度 16，32 个种子；立即与延迟是同配置的时机对照，普通 replay 探索率不同，仅作参考基线","textPreview":"长度 16，32 个种子；立即与延迟是同配置的时机对照，普通 replay 探索率不同，仅作参考基线","textChars":50,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/gra1cfep","slide":2,"name":"text-14","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/3ulk7ud0","slide":2,"name":"text-15","text":"首次达到 90%","textPreview":"首次达到 90%","textChars":8,"textLines":1,"bbox":[80,137,620,38]}
+{"kind":"textbox","id":"sh/itc3epwf","slide":2,"name":"text-16","text":"首次完整成功前：已知前缀","textPreview":"首次完整成功前：已知前缀","textChars":12,"textLines":1,"bbox":[816,137,400,38]}
+{"kind":"chart","id":"ch/lcfqt4zi","slide":2,"name":"","chartType":"bar","bbox":[65,198,705,413]}
+{"kind":"chart","id":"ch/kb69kzyx","slide":2,"name":"","chartType":"bar","bbox":[812,198,404,413]}
+{"kind":"notes","id":"nt/qdh3dh","slide":2,"text":"Stage 6：长度16，动作噪声，第二批32个新种子。左图为首次成功率达到90%的平均环境步。右图为第一次完整成功之前，在已知目标前缀中累计执行的平均步数，两者观察区间不同，不应当相减或当成总成本的精确分解。三方法每步9次Bellman更新；立即/延迟epsilon均为0.005，普通replay为0.05（开发集选择）。未声称超过ISA等既有方法。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/REPORT.md"}
+{"kind":"slide","id":"sl/u3o6lc","slide":3,"title":"线性任务的最小记忆","textShapes":22}
+{"kind":"textbox","id":"sh/ypwny9of","slide":3,"name":"text-17","text":"线性任务的最小记忆","textPreview":"线性任务的最小记忆","textChars":9,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/lsnmtonq","slide":3,"name":"text-18","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/0re50j6l","slide":3,"name":"text-19","text":"阶段列表","textPreview":"阶段列表","textChars":4,"textLines":1,"bbox":[148,146,400,42]}
+{"kind":"textbox","id":"sh/nu54vy5w","slide":3,"name":"text-20","text":"链式自动机","textPreview":"链式自动机","textChars":5,"textLines":1,"bbox":[721,146,400,42]}
+{"kind":"textbox","id":"sh/mtwn2tob","slide":3,"name":"text-21","text":"progress","textPreview":"progress","textChars":8,"textLines":1,"bbox":[125,222,170,36]}
+{"kind":"textbox","id":"sh/9gn6x8n2","slide":3,"name":"text-22","text":"goal","textPreview":"goal","textChars":4,"textLines":1,"bbox":[345,222,160,36]}
+{"kind":"shape","id":"sh/8ve5436h","slide":3,"bbox":[116,338,385,0]}
+{"kind":"textbox","id":"sh/vipozy58","slide":3,"name":"text-23","text":"0","textPreview":"0","textChars":1,"textLines":1,"bbox":[155,282,90,50]}
+{"kind":"textbox","id":"sh/ahgn6ton","slide":3,"name":"text-24","text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[357,282,90,50]}
+{"kind":"shape","id":"sh/8fq5k72d","slide":3,"bbox":[116,408,385,0]}
+{"kind":"textbox","id":"sh/tgz6dc3y","slide":3,"name":"text-25","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[155,352,90,50]}
+{"kind":"textbox","id":"sh/6t8nixkn","slide":3,"name":"text-26","text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[357,352,90,50]}
+{"kind":"shape","id":"sh/7ehob2ls","slide":3,"bbox":[116,478,385,0]}
+{"kind":"textbox","id":"sh/gja5or2p","slide":3,"name":"text-27","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[155,422,90,50]}
+{"kind":"textbox","id":"sh/hkj6hw3a","slide":3,"name":"text-28","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[357,422,90,50]}
+{"kind":"shape","id":"sh/uhsnmhkj","slide":3,"bbox":[116,548,385,0]}
+{"kind":"textbox","id":"sh/vi1ofml4","slide":3,"name":"text-29","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[155,492,90,50]}
+{"kind":"textbox","id":"sh/4napsr2l","slide":3,"name":"text-30","text":"?","textPreview":"?","textChars":1,"textLines":1,"bbox":[357,492,90,50]}
+{"kind":"textbox","id":"sh/5o36lw36","slide":3,"name":"text-31","text":"≡","textPreview":"≡","textChars":1,"textLines":1,"bbox":[572,356,70,85]}
+{"kind":"textbox","id":"sh/d4z65wva","slide":3,"text":"q₀","textPreview":"q₀","textChars":2,"textLines":1,"bbox":[730,262,95,68]}
+{"kind":"textbox","id":"sh/c3q5wrup","slide":3,"text":"q₁","textPreview":"q₁","textChars":2,"textLines":1,"bbox":[1020,262,95,68]}
+{"kind":"textbox","id":"sh/r2xo3md4","slide":3,"text":"q₂","textPreview":"q₂","textChars":2,"textLines":1,"bbox":[1020,466,95,68]}
+{"kind":"textbox","id":"sh/q1onuhcz","slide":3,"text":"q₃","textPreview":"q₃","textChars":2,"textLines":1,"bbox":[730,466,95,68]}
+{"kind":"shape","id":"sh/l8z69wvm","slide":3,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/07q50ru1","slide":3,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/z6ho76dg","slide":3,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/e58ny1cv","slide":3,"name":"text-32","text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[885,250,55,50]}
+{"kind":"textbox","id":"sh/hcfmxcv2","slide":3,"name":"text-33","text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[1110,368,50,50]}
+{"kind":"textbox","id":"sh/gbm5o7uh","slide":3,"name":"text-34","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[885,510,55,50]}
+{"kind":"notes","id":"nt/u3o6lc","slide":3,"text":"在线性任务与可靠进度反馈条件下，进度唯一标记任务阶段。列表是链式自动机的等价表示；结果不证明图形式本身的优势。未知项由试错逐步填入。\n\n资料来源：/Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/PROJECT_STATUS.md"}
+{"kind":"slide","id":"sl/gd6bnh","slide":4,"title":"分支任务：相同进度，不同未来","textShapes":22}
+{"kind":"textbox","id":"sh/dcn61g7m","slide":4,"name":"text-35","text":"分支任务：相同进度，不同未来","textPreview":"分支任务：相同进度，不同未来","textChars":14,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/q9wn61ob","slide":4,"name":"text-36","text":"两条历史进度相同（都做了 2 步）、刚完成的动作也相同（都是冲粉），但下一步完全不同 —— 只看进度和当前位置分不出来","textPreview":"两条历史进度相同（都做了 2 步）、刚完成的动作也相同（都是冲粉），但下一步完全不同 —— 只看进度和当前位置分不出来","textChars":59,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/ra5oz6pw","slide":4,"name":"text-37","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/4ne54r65","slide":4,"name":"text-38","text":"已发生的历史","textPreview":"已发生的历史","textChars":6,"textLines":1,"bbox":[105,151,400,40]}
+{"kind":"textbox","id":"sh/pon6xw7q","slide":4,"name":"text-39","text":"相同物理位置 E","textPreview":"相同物理位置 E","textChars":8,"textLines":1,"bbox":[529,151,330,40]}
+{"kind":"textbox","id":"sh/2lcn218z","slide":4,"name":"text-40","text":"下一目标","textPreview":"下一目标","textChars":4,"textLines":1,"bbox":[994,151,210,40]}
+{"kind":"textbox","id":"sh/3mlov6pk","slide":4,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[150,267,96,68]}
+{"kind":"textbox","id":"sh/gju50rq9","slide":4,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[150,458,96,68]}
+{"kind":"textbox","id":"sh/hk36tw7e","slide":4,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[621,267,96,68]}
+{"kind":"textbox","id":"sh/pofqx0fe","slide":4,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[621,458,96,68]}
+{"kind":"textbox","id":"sh/4n6p4vet","slide":4,"text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[1040,267,96,68]}
+{"kind":"textbox","id":"sh/32x8vax8","slide":4,"text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[1040,458,96,68]}
+{"kind":"shape","id":"sh/21o725wn","slide":4,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/h0f6t0f2","slide":4,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/gzmp0veh","slide":4,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/fydorqxw","slide":4,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/ux47ylwr","slide":4,"name":"text-41","text":"progress = 2","textPreview":"progress = 2","textChars":12,"textLines":1,"bbox":[525,373,287,45]}
+{"kind":"textbox","id":"sh/twv6pgf6","slide":4,"name":"text-42","text":"A, E","textPreview":"A, E","textChars":4,"textLines":1,"bbox":[305,235,200,45]}
+{"kind":"textbox","id":"sh/svmpwbel","slide":4,"name":"text-43","text":"B, E","textPreview":"B, E","textChars":4,"textLines":1,"bbox":[305,426,200,45]}
+{"kind":"textbox","id":"sh/kfqpcvmh","slide":4,"name":"text-44","text":"先烧开水","textPreview":"先烧开水","textChars":4,"textLines":1,"bbox":[122,345,152,34]}
+{"kind":"textbox","id":"sh/lgzqlgn2","slide":4,"name":"text-45","text":"冲入咖啡粉","textPreview":"冲入咖啡粉","textChars":5,"textLines":1,"bbox":[581,345,176,34]}
+{"kind":"textbox","id":"sh/yd87al4b","slide":4,"name":"text-46","text":"3 分钟后过滤 = 热泡","textPreview":"3 分钟后过滤 = 热泡","textChars":12,"textLines":1,"bbox":[965,345,246,34]}
+{"kind":"textbox","id":"sh/zeh8jq5w","slide":4,"name":"text-47","text":"先取冷水","textPreview":"先取冷水","textChars":4,"textLines":1,"bbox":[122,536,152,34]}
+{"kind":"textbox","id":"sh/cb6p8bm5","slide":4,"name":"text-48","text":"冲入咖啡粉","textPreview":"冲入咖啡粉","textChars":5,"textLines":1,"bbox":[581,536,176,34]}
+{"kind":"textbox","id":"sh/xcfqhgnq","slide":4,"name":"text-49","text":"冷藏 12 小时 = 冷萃","textPreview":"冷藏 12 小时 = 冷萃","textChars":13,"textLines":1,"bbox":[965,536,246,34]}
+{"kind":"textbox","id":"sh/a9o7614f","slide":4,"name":"text-50","text":"同一个「冲粉」动作，之前不同，之后就完全不同","textPreview":"同一个「冲粉」动作，之前不同，之后就完全不同","textChars":22,"textLines":1,"bbox":[432,600,472,38]}
+{"kind":"notes","id":"nt/gd6bnh","slide":4,"text":"A→E与B→E汇入同一物理位置，进度均为2、末事件均为E，但后继要求不同。图中两个E表示不同历史下的任务状态，不是两个物理位置。充分历史可以解决这个任务。咖啡例子只是同构的直觉说明，不是实验中的任务：A与B是两个不同的首步（烧开水 / 取冷水），E是两边共有的同一个动作（冲入咖啡粉）。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/REPORT.md"}
+{"kind":"slide","id":"sl/krz3pi","slide":5,"title":"同一份历史的两种表示","textShapes":19}
+{"kind":"textbox","id":"sh/lo7a98fm","slide":5,"name":"text-51","text":"同一份历史的两种表示","textPreview":"同一份历史的两种表示","textChars":10,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/ylwrydgv","slide":5,"name":"text-52","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/jm5s7yxg","slide":5,"name":"text-53","text":"Prefix tree","textPreview":"Prefix tree","textChars":11,"textLines":1,"bbox":[150,145,330,45]}
+{"kind":"textbox","id":"sh/wje9w3y5","slide":5,"name":"text-54","text":"History dictionary","textPreview":"History dictionary","textChars":18,"textLines":1,"bbox":[780,145,400,45]}
+{"kind":"textbox","id":"sh/xkna58fq","slide":5,"text":"∅","textPreview":"∅","textChars":1,"textLines":1,"bbox":[102,353,62,62]}
+{"kind":"textbox","id":"sh/axwrutgz","slide":5,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[247,262,65,62]}
+{"kind":"textbox","id":"sh/bi5s3yhk","slide":5,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[247,457,65,62]}
+{"kind":"textbox","id":"sh/ovu9sjyt","slide":5,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[402,262,65,62]}
+{"kind":"textbox","id":"sh/9wnq1oze","slide":5,"text":"E","textPreview":"E","textChars":1,"textLines":1,"bbox":[402,457,65,62]}
+{"kind":"textbox","id":"sh/9ofudkry","slide":5,"text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[548,262,65,62]}
+{"kind":"textbox","id":"sh/8n6tkfqt","slide":5,"text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[548,457,65,62]}
+{"kind":"shape","id":"sh/7mxsba98","slide":5,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/mlobip8n","slide":5,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/lkfa9kr2","slide":5,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/kj6tgfqh","slide":5,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/zixs7a9w","slide":5,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/yhobe58b","slide":5,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/xgva50r6","slide":5,"name":"text-55","text":"≡","textPreview":"≡","textChars":1,"textLines":1,"bbox":[654,343,90,85]}
+{"kind":"textbox","id":"sh/cfmtcvql","slide":5,"name":"text-56","text":"历史","textPreview":"历史","textChars":2,"textLines":1,"bbox":[786,247,170,42]}
+{"kind":"textbox","id":"sh/ozqtsvyh","slide":5,"name":"text-57","text":"下一目标","textPreview":"下一目标","textChars":4,"textLines":1,"bbox":[1040,247,190,42]}
+{"kind":"shape","id":"sh/p0zul0zm","slide":5,"bbox":[775,299,430,0]}
+{"kind":"textbox","id":"sh/2x8bq5gb","slide":5,"name":"text-58","text":"(A, E)","textPreview":"(A, E)","textChars":6,"textLines":1,"bbox":[800,327,180,55]}
+{"kind":"textbox","id":"sh/3yhcjahw","slide":5,"name":"text-59","text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[1088,327,80,55]}
+{"kind":"textbox","id":"sh/gvqtovy5","slide":5,"name":"text-60","text":"(B, E)","textPreview":"(B, E)","textChars":6,"textLines":1,"bbox":[800,445,180,55]}
+{"kind":"textbox","id":"sh/1wzah0zq","slide":5,"name":"text-61","text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[1088,445,80,55]}
+{"kind":"textbox","id":"sh/utobmlgz","slide":5,"name":"text-62","text":"逐动作一致","textPreview":"逐动作一致","textChars":5,"textLines":1,"bbox":[503,588,275,45]}
+{"kind":"notes","id":"nt/krz3pi","slide":5,"text":"前缀树与完整成功事件历史dictionary在匹配输入与随机数时逐动作一致。字典包含足够历史，并非只存进度或最后事件。这里比较表示形式，不涉及合并不同历史。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage7_branching/REPORT.md"}
+{"kind":"slide","id":"sl/bonhy8","slide":6,"title":"状态抽象：合并未来等价的历史","textShapes":16}
+{"kind":"textbox","id":"sh/u5o725oj","slide":6,"name":"text-63","text":"状态抽象：合并未来等价的历史","textPreview":"状态抽象：合并未来等价的历史","textChars":14,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/h8z6d07u","slide":6,"name":"text-64","text":"咖啡：磨豆、称粉、拿杯子的先后都不影响结果 —— 这些历史可以合并；只有决定热泡还是冷萃的那一步必须单独记 —— 这些不能合并","textPreview":"咖啡：磨豆、称粉、拿杯子的先后都不影响结果 —— 这些历史可以合并；只有决定热泡还是冷萃的那一步必须单独记 —— 这些不能合并","textChars":63,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/w76p4v6p","slide":6,"name":"text-65","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/72xo7qps","slide":6,"name":"text-66","text":"完整历史","textPreview":"完整历史","textChars":4,"textLines":1,"bbox":[95,136,310,45]}
+{"kind":"textbox","id":"sh/m1o7yl87","slide":6,"name":"text-67","text":"最终任务状态","textPreview":"最终任务状态","textChars":6,"textLines":1,"bbox":[532,136,320,45]}
+{"kind":"textbox","id":"sh/94f6907y","slide":6,"name":"text-68","text":"共享动作价值","textPreview":"共享动作价值","textChars":6,"textLines":1,"bbox":[954,136,280,45]}
+{"kind":"textbox","id":"sh/836p0v6d","slide":6,"text":"A 先于 B","textPreview":"A 先于 B","textChars":6,"textLines":1,"bbox":[540,264,230,80]}
+{"kind":"textbox","id":"sh/ryh8jupc","slide":6,"text":"B 先于 A","textPreview":"B 先于 A","textChars":6,"textLines":1,"bbox":[540,478,230,80]}
+{"kind":"textbox","id":"sh/qx87apor","slide":6,"text":"ABC","textPreview":"ABC","textChars":3,"textLines":1,"bbox":[112,211,126,50]}
+{"kind":"shape","id":"sh/8vy587m5","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/tw761c3q","slide":6,"text":"ACB","textPreview":"ACB","textChars":3,"textLines":1,"bbox":[112,284,126,50]}
+{"kind":"shape","id":"sh/6tgn6x4z","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/7upoz2lk","slide":6,"text":"CAB","textPreview":"CAB","textChars":3,"textLines":1,"bbox":[112,357,126,50]}
+{"kind":"shape","id":"sh/kre54nmt","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/ls76xs3e","slide":6,"text":"BAC","textPreview":"BAC","textChars":3,"textLines":1,"bbox":[112,425,126,50]}
+{"kind":"shape","id":"sh/ypwn2d43","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/jq5ovilo","slide":6,"text":"BCA","textPreview":"BCA","textChars":3,"textLines":1,"bbox":[112,498,126,50]}
+{"kind":"shape","id":"sh/wne50nmx","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/xon6ts3i","slide":6,"text":"CBA","textPreview":"CBA","textChars":3,"textLines":1,"bbox":[112,571,126,50]}
+{"kind":"shape","id":"sh/d8vuhkru","slide":6,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/c7md8fap","slide":6,"text":"Q(状态, X/Y)","textPreview":"Q(状态, X/Y)","textChars":10,"textLines":1,"bbox":[970,264,240,80]}
+{"kind":"textbox","id":"sh/r6dcfa94","slide":6,"text":"Q(状态, X/Y)","textPreview":"Q(状态, X/Y)","textChars":10,"textLines":1,"bbox":[970,478,240,80]}
+{"kind":"shape","id":"sh/q54v65sj","slide":6,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/pkvud0ry","slide":6,"bbox":[0,0,0,0]}
+{"kind":"notes","id":"nt/bonhy8","slide":6,"text":"零件任务规则：A先于B则选X，否则选Y，其他零件位置无关。完整顺序由环境提供；末端只做一次二选一。此图表示末端决策等价，不声称每个中间前缀在环境状态上都等价。正确自动机与等价手写程序使用同一状态划分。\n\n资料来源：/Users/yuhang/Downloads/why TL/AUTO/docs/MEMORY_COMPRESSION_PILOT.md"}
+{"kind":"slide","id":"sl/6ei1rl","slide":7,"title":"正确压缩与逐条历史学习","textShapes":7}
+{"kind":"textbox","id":"sh/x07i1wz6","slide":7,"name":"text-69","text":"正确压缩与逐条历史学习","textPreview":"正确压缩与逐条历史学习","textChars":11,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/adgzqh0f","slide":7,"name":"text-70","text":"正确等价关系已知；每规模 400 个配对种子（不是 400 个任务：候选族只有 6 / 12 / 20 条规则）","textPreview":"正确等价关系已知；每规模 400 个配对种子（不是 400 个任务：候选族只有 6 / 12 / 20 条规则）","textChars":56,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/bep0zmh0","slide":7,"name":"text-71","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/pc7ixwzu","slide":7,"name":"text-72","text":"4.67×","textPreview":"4.67×","textChars":5,"textLines":1,"bbox":[185,568,200,46]}
+{"kind":"textbox","id":"sh/29wzmh0j","slide":7,"name":"text-73","text":"18.55×","textPreview":"18.55×","textChars":6,"textLines":1,"bbox":[538,568,200,46]}
+{"kind":"textbox","id":"sh/nap0vmho","slide":7,"name":"text-74","text":"89.75×","textPreview":"89.75×","textChars":6,"textLines":1,"bbox":[891,568,200,46]}
+{"kind":"textbox","id":"sh/07ehk7id","slide":7,"name":"text-75","text":"闭式解 Σ 2H/(H-i)，H = n! = 6 / 24 / 120 → 理论 29.4 / 109.2 / 543.8 幕，与观测一致","textPreview":"闭式解 Σ 2H/(H-i)，H = n! = 6 / 24 / 120 → 理论 29.4 / 109.2 / 543.8 幕，与观测一致","textChars":70,"textLines":1,"bbox":[80,616,1120,34]}
+{"kind":"chart","id":"ch/gva58bel","slide":7,"name":"","chartType":"bar","bbox":[75,149,1120,415]}
+{"kind":"notes","id":"nt/6ei1rl","slide":7,"text":"每个规模400个配对种子，每方法5000幕。T95为首次达到并在后续记录点保持至少95%准确率的幕数，本批主要对照无删失，因此RMST等于平均T95。压缩等价关系由设计者提供。完整历史与正确压缩使用同样Q-learning。自动机与等价手写程序逐种子逐评估点一致。比值来自未取整均值，不应以显示取整值要求精确相除。该量级有闭式解释：错误动作Q恒为0，正确动作首次获正奖励后Q=1，此后该状态永远答对；未覆盖状态随机并列答对一半，故准确率=(H+c)/2H，要达95%需覆盖c>=0.9H。已覆盖i格时新覆盖一格的概率为(H-i)/(2H)，期望等待2H/(H-i)，累加得 sum(2H/(H-i), i=0..ceil(0.9H)-1)。H=6/24/120给出29.40/109.25/543.76幕，压缩后H=2给出6.0幕，理论倍数90.63x，实测89.75x。大倍数来自填表次数，不需要额外机制假设。\n\n资料来源：/Users/yuhang/Downloads/why TL/AUTO/results/runs/memory_compression_pilot_5k.md"}
+{"kind":"slide","id":"sl/6z14h6","slide":8,"title":"有限证据下的合并判断","textShapes":18}
+{"kind":"textbox","id":"sh/radwryx8","slide":8,"name":"text-76","text":"有限证据下的合并判断","textPreview":"有限证据下的合并判断","textChars":10,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/sb6xk3et","slide":8,"name":"text-77","text":"咖啡：两条历史现在都「刚冲完粉」，但一条 3 分钟后要过滤、一条要冷藏 12 小时 —— 现在合并，就是把冷萃的步骤用到热泡上","textPreview":"咖啡：两条历史现在都「刚冲完粉」，但一条 3 分钟后要过滤、一条要冷藏 12 小时 —— 现在合并，就是把冷萃的步骤用到热泡上","textChars":63,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/dcfet8fy","slide":8,"name":"text-78","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/il4fetwb","slide":8,"name":"text-79","text":"过早合并","textPreview":"过早合并","textChars":4,"textLines":1,"bbox":[180,135,390,45]}
+{"kind":"textbox","id":"sh/3mdwnyxw","slide":8,"name":"text-80","text":"保守不合并","textPreview":"保守不合并","textChars":5,"textLines":1,"bbox":[814,135,380,45]}
+{"kind":"textbox","id":"sh/4nmxg3eh","slide":8,"text":"历史 A","textPreview":"历史 A","textChars":4,"textLines":1,"bbox":[85,270,140,65]}
+{"kind":"textbox","id":"sh/5ovep8f2","slide":8,"text":"历史 B","textPreview":"历史 B","textChars":4,"textLines":1,"bbox":[85,463,140,65]}
+{"kind":"textbox","id":"sh/uhkfatgf","slide":8,"text":"同一状态","textPreview":"同一状态","textChars":4,"textLines":1,"bbox":[347,365,155,70]}
+{"kind":"shape","id":"sh/vitwjex0","slide":8,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/fmxgna1c","slide":8,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/ul4zu50r","slide":8,"name":"text-81","text":"过滤？","textPreview":"过滤？","textChars":3,"textLines":1,"bbox":[425,240,170,45]}
+{"kind":"textbox","id":"sh/hofypkji","slide":8,"name":"text-82","text":"冷藏？","textPreview":"冷藏？","textChars":3,"textLines":1,"bbox":[425,506,170,45]}
+{"kind":"textbox","id":"sh/gn6hwfix","slide":8,"name":"text-83","text":"未见后缀可能不同","textPreview":"未见后缀可能不同","textChars":8,"textLines":1,"bbox":[128,588,420,40]}
+{"kind":"textbox","id":"sh/3axgra1o","slide":8,"text":"ABC","textPreview":"ABC","textChars":3,"textLines":1,"bbox":[743,242,126,66]}
+{"kind":"textbox","id":"sh/29ozy503","slide":8,"text":"Q(X/Y)","textPreview":"Q(X/Y)","textChars":6,"textLines":1,"bbox":[1025,242,160,66]}
+{"kind":"shape","id":"sh/pcfytkje","slide":8,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/4b6h0fi9","slide":8,"text":"ACB","textPreview":"ACB","textChars":3,"textLines":1,"bbox":[743,364,126,66]}
+{"kind":"textbox","id":"sh/jedgfq14","slide":8,"text":"Q(X/Y)","textPreview":"Q(X/Y)","textChars":6,"textLines":1,"bbox":[1025,364,160,66]}
+{"kind":"shape","id":"sh/idkfml0j","slide":8,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/m9sjutk7","slide":8,"text":"CAB","textPreview":"CAB","textChars":3,"textLines":1,"bbox":[743,486,126,66]}
+{"kind":"textbox","id":"sh/na1k3yls","slide":8,"text":"Q(X/Y)","textPreview":"Q(X/Y)","textChars":6,"textLines":1,"bbox":[1025,486,160,66]}
+{"kind":"shape","id":"sh/oba1w32d","slide":8,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/9c32583y","slide":8,"name":"text-84","text":"等价历史分别学习","textPreview":"等价历史分别学习","textChars":8,"textLines":1,"bbox":[757,588,420,40]}
+{"kind":"notes","id":"nt/6z14h6","slide":8,"text":"机制示意。左侧：暂时具有相同观测的历史可能在未见后缀上要求不同操作；合并会错用经验。右侧：等价历史始终分开会重复学习。示意不是本次审计的原始自动机，不把当前裁决相同视为全后缀等价。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP35.md"}
+{"kind":"slide","id":"sl/k4bou2","slide":9,"title":"合并审计：正确性与查询节省","textShapes":7}
+{"kind":"textbox","id":"sh/f6lkjm9c","slide":9,"name":"text-85","text":"合并审计：正确性与查询节省","textPreview":"合并审计：正确性与查询节省","textChars":13,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/07ulsrax","slide":9,"name":"text-86","text":"查询节省 16.9% < 20%；错误裁决 47 次；错误归属 140 次；把 53 次求解超时全判给 Occam，节省上界 23.6% 仍不达标","textPreview":"查询节省 16.9% < 20%；错误裁决 47 次；错误归属 140 次；把 53 次求解超时全判给 Occam，节省上界 23.6% 仍不达标","textChars":73,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/1832lwr2","slide":9,"name":"text-87","text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/29c3u18n","slide":9,"name":"text-88","text":"裁决正确率","textPreview":"裁决正确率","textChars":5,"textLines":1,"bbox":[67,145,363,45]}
+{"kind":"textbox","id":"sh/nulkn698","slide":9,"name":"text-89","text":"状态归属正确率","textPreview":"状态归属正确率","textChars":7,"textLines":1,"bbox":[469,145,363,45]}
+{"kind":"textbox","id":"sh/ovulwbqt","slide":9,"name":"text-90","text":"可省查询比例","textPreview":"可省查询比例","textChars":6,"textLines":1,"bbox":[871,145,363,45]}
+{"kind":"textbox","id":"sh/3e1ofa50","slide":9,"name":"text-91","text":"预注册判据 3 / 3 不达标 —— 这条线因此关闭","textPreview":"预注册判据 3 / 3 不达标 —— 这条线因此关闭","textChars":26,"textLines":1,"bbox":[80,606,1120,40]}
+{"kind":"chart","id":"ch/t0fuls7y","slide":9,"name":"","chartType":"bar","bbox":[62,220,353,382]}
+{"kind":"chart","id":"ch/m1kby983","slide":9,"name":"","chartType":"bar","bbox":[464,220,353,382]}
+{"kind":"chart","id":"ch/n2ts7epo","slide":9,"name":"","chartType":"bar","bbox":[866,220,353,382]}
+{"kind":"notes","id":"nt/k4bou2","slide":9,"text":"Step35：n=3的8个任务族，792次查询。固定基线轨迹，逐查询只使用当时证据进行回放审计；未将这些合并接入控制器，也没有相应学习曲线。k_min是当时证据所容许的最小机器状态数，+1放松该上界。节省只计审计识别的可安全节省部分（134/792），那102次落在必要查询上的复用不计入节省，它是另一种危害：把真正需要买的答案用别人的答案替掉。判据在跑之前写定：节省>=20%且错误共享约等于0。在线k_min是8-12而真状态数是19-27，证据少时最小机器严重过度合并，这是离线97.6%精确率无法在线复现的全部原因。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP35.md"}
+{"kind":"slide","id":"sl/d42uw2","slide":10,"title":"可靠任务反馈的预算","textShapes":7}
+{"kind":"textbox","id":"sh/6h0zyhkv","slide":10,"name":"text-92","text":"可靠任务反馈的预算","textPreview":"可靠任务反馈的预算","textChars":9,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/t4ry9w3m","slide":10,"name":"text-93","text":"24 个任务族 × 6 个种子；200,000 环境步内曾达到 90%","textPreview":"24 个任务族 × 6 个种子；200,000 环境步内曾达到 90%","textChars":35,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/83ih0r21","slide":10,"name":"text-94","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/u5kz21k7","slide":10,"name":"text-95","text":"1 / 144","textPreview":"1 / 144","textChars":7,"textLines":1,"bbox":[209,590,190,40]}
+{"kind":"textbox","id":"sh/h8bydw3i","slide":10,"name":"text-96","text":"61 / 144","textPreview":"61 / 144","textChars":8,"textLines":1,"bbox":[454,590,190,40]}
+{"kind":"textbox","id":"sh/g72h4r2x","slide":10,"name":"text-97","text":"131 / 144","textPreview":"131 / 144","textChars":9,"textLines":1,"bbox":[699,590,190,40]}
+{"kind":"textbox","id":"sh/bapgz2l8","slide":10,"name":"text-98","text":"144 / 144","textPreview":"144 / 144","textChars":9,"textLines":1,"bbox":[944,590,190,40]}
+{"kind":"chart","id":"ch/buhkvqtk","slide":10,"name":"","chartType":"bar","bbox":[105,151,1080,430]}
+{"kind":"notes","id":"nt/d42uw2","slide":10,"text":"原始归档AUTO/discovery/results/verify.jsonl.gz：预算40/80/160/320，first90<200000的运行分别1/61/131/144，共144。图中百分比按用户口播四舍五入为1/42/91/100。嵌入图表数据保留12位小数，分子分母在页面与备注中保留精确计数。160预算时最终仍>=90%的只有127/144；本图量的是曾经达标，不是最终成功比例。控制器按历史节点读取局部证据，未启用合并。不能由最终树节点数推断必须完整结构才能使用。\n\n资料来源：/Users/yuhang/Downloads/why TL/AUTO/discovery/src/run_verify.py"}
+{"kind":"slide","id":"sl/l6ir0y","slide":11,"title":"提前使用：主动探索与被动证据","textShapes":13}
+{"kind":"textbox","id":"sh/0vu9ona9","slide":11,"name":"text-99","text":"提前使用：主动探索与被动证据","textPreview":"提前使用：主动探索与被动证据","textChars":14,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/zulsvito","slide":11,"name":"text-100","text":"零件实验：识别前未达 95%，识别后策略相同，因此 T95 相同","textPreview":"零件实验：识别前未达 95%，识别后策略相同，因此 T95 相同","textChars":32,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/etsrmds3","slide":11,"name":"text-101","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/dsjatsbi","slide":11,"name":"text-102","text":"早期导航任务","textPreview":"早期导航任务","textChars":6,"textLines":1,"bbox":[100,140,410,40]}
+{"kind":"textbox","id":"sh/cra9knax","slide":11,"name":"text-103","text":"最新零件实验","textPreview":"最新零件实验","textChars":6,"textLines":1,"bbox":[752,140,425,40]}
+{"kind":"textbox","id":"sh/rq18ritc","slide":11,"text":"局部流程","textPreview":"局部流程","textChars":4,"textLines":1,"bbox":[89,220,172,62]}
+{"kind":"textbox","id":"sh/qpsridsr","slide":11,"text":"执行前缀","textPreview":"执行前缀","textChars":4,"textLines":1,"bbox":[379,220,172,62]}
+{"kind":"textbox","id":"sh/xona5crm","slide":11,"text":"后缀证据","textPreview":"后缀证据","textChars":4,"textLines":1,"bbox":[238,355,172,62]}
+{"kind":"shape","id":"sh/wne9w7a1","slide":11,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/yx8vadsr","slide":11,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/jyhcjitc","slide":11,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/kzqdcnax","slide":11,"text":"环境给出排列","textPreview":"环境给出排列","textChars":6,"textLines":1,"bbox":[718,220,208,62]}
+{"kind":"textbox","id":"sh/l0zulsbi","slide":11,"text":"选择 X / Y","textPreview":"选择 X / Y","textChars":8,"textLines":1,"bbox":[1011,220,188,62]}
+{"kind":"shape","id":"sh/atov6dsv","slide":11,"bbox":[0,0,0,0]}
+{"kind":"textbox","id":"sh/buxcfitg","slide":11,"name":"text-104","text":"下一幕仍由环境独立抽样","textPreview":"下一幕仍由环境独立抽样","textChars":11,"textLines":1,"bbox":[756,325,430,55]}
+{"kind":"textbox","id":"sh/wv6d8na1","slide":11,"name":"text-105","text":"识别前实际额外成功 / 次","textPreview":"识别前实际额外成功 / 次","textChars":13,"textLines":1,"bbox":[79,477,540,48]}
+{"kind":"textbox","id":"sh/upsvixsz","slide":11,"name":"text-106","text":"每规模 400 个配对种子","textPreview":"每规模 400 个配对种子","textChars":13,"textLines":1,"bbox":[80,533,520,38]}
+{"kind":"chart","id":"ch/9gz6h8ni","slide":11,"name":"","chartType":"bar","bbox":[684,420,528,208]}
+{"kind":"notes","id":"nt/l6ir0y","slide":11,"text":"最新零件pilot每规模400种子。训练期间、规则唯一识别前立即法相比延迟法实际额外成功均值为0.1225、0.4525、0.635，图显示口播取整0.123/0.453/0.635。不是贪心评估累计期望0.137/0.533/0.696。规则识别前准确率不足95%；识别后两臂在该实现中相同，因此T95没有分辨能力。该必然性只针对这个规则族、确定反馈、更新与阈值设置。主动任务早期调用技能改变到达后缀的行为，被动任务每幕独立给出排列，动作不影响下一份证据。不能据此断言所有边学边用收益都必须依赖主动取证。\n\n资料来源：/Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/REVIEW.md"}
+{"kind":"slide","id":"sl/vn7s3m","slide":12,"title":"结构利用：任务路由与技能复用","textShapes":22}
+{"kind":"textbox","id":"sh/ov2tsfqx","slide":12,"name":"text-107","text":"结构利用：任务路由与技能复用","textPreview":"结构利用：任务路由与技能复用","textChars":14,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/nutcjapc","slide":12,"name":"text-108","text":"已知规则的控制消融；AUC 接近天花板，不能据此排序机制强弱","textPreview":"已知规则的控制消融；AUC 接近天花板，不能据此排序机制强弱","textChars":30,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/2tkbq58r","slide":12,"name":"text-109","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/xkvupk7e","slide":12,"name":"text-110","text":"无复用","textPreview":"无复用","textChars":3,"textLines":1,"bbox":[266,144,185,40]}
+{"kind":"textbox","id":"sh/cjmdwfqt","slide":12,"name":"text-111","text":"有复用","textPreview":"有复用","textChars":3,"textLines":1,"bbox":[463,144,185,40]}
+{"kind":"textbox","id":"sh/bidcnap8","slide":12,"name":"text-112","text":"无路由","textPreview":"无路由","textChars":3,"textLines":1,"bbox":[61,260,140,40]}
+{"kind":"textbox","id":"sh/ax4bup83","slide":12,"name":"text-113","text":"有路由","textPreview":"有路由","textChars":3,"textLines":1,"bbox":[61,463,140,40]}
+{"kind":"shape","id":"sh/lofut47q","slide":12,"bbox":[222,210,196,171]}
+{"kind":"textbox","id":"sh/kn6d0zq5","slide":12,"name":"text-114","text":"Y00","textPreview":"Y00","textChars":3,"textLines":1,"bbox":[240,223,160,46]}
+{"kind":"textbox","id":"sh/y94fmh43","slide":12,"name":"text-115","text":"平坦历史","textPreview":"平坦历史","textChars":4,"textLines":1,"bbox":[240,272,172,40]}
+{"kind":"textbox","id":"sh/zadgvm5o","slide":12,"name":"text-116","text":"AUC .821","textPreview":"AUC .821","textChars":8,"textLines":1,"bbox":[240,323,166,35]}
+{"kind":"shape","id":"sh/0bmxormt","slide":12,"bbox":[438,210,196,171]}
+{"kind":"textbox","id":"sh/lcfyxwne","slide":12,"name":"text-117","text":"Y01","textPreview":"Y01","textChars":3,"textLines":1,"bbox":[456,223,160,46]}
+{"kind":"textbox","id":"sh/mxofq14z","slide":12,"name":"text-118","text":"学习型元控制","textPreview":"学习型元控制","textChars":6,"textLines":1,"bbox":[456,272,172,40]}
+{"kind":"textbox","id":"sh/nyxgz65k","slide":12,"name":"text-119","text":"AUC .883","textPreview":"AUC .883","textChars":8,"textLines":1,"bbox":[456,323,166,35]}
+{"kind":"shape","id":"sh/8z6xsbm5","slide":12,"bbox":[222,411,196,171]}
+{"kind":"textbox","id":"sh/90fy1wnq","slide":12,"name":"text-120","text":"Y10","textPreview":"Y10","textChars":3,"textLines":1,"bbox":[240,424,160,46]}
+{"kind":"textbox","id":"sh/21kfex4v","slide":12,"name":"text-121","text":"分阶段技能","textPreview":"分阶段技能","textChars":5,"textLines":1,"bbox":[240,473,172,40]}
+{"kind":"textbox","id":"sh/32twn25g","slide":12,"name":"text-122","text":"AUC .988","textPreview":"AUC .988","textChars":8,"textLines":1,"bbox":[240,524,166,35]}
+{"kind":"shape","id":"sh/rm9cfyl8","slide":12,"bbox":[438,411,196,171]}
+{"kind":"textbox","id":"sh/6l0vmtkn","slide":12,"name":"text-123","text":"Y11","textPreview":"Y11","textChars":3,"textLines":1,"bbox":[456,424,160,46]}
+{"kind":"textbox","id":"sh/t8ruh83y","slide":12,"name":"text-124","text":"共享技能","textPreview":"共享技能","textChars":4,"textLines":1,"bbox":[456,473,172,40]}
+{"kind":"textbox","id":"sh/s7ido32t","slide":12,"name":"text-125","text":"AUC .997","textPreview":"AUC .997","textChars":8,"textLines":1,"bbox":[456,524,166,35]}
+{"kind":"textbox","id":"sh/jipcbylw","slide":12,"name":"text-126","text":"first90 中位 / 环境步","textPreview":"first90 中位 / 环境步","textChars":16,"textLines":1,"bbox":[754,140,425,42]}
+{"kind":"textbox","id":"sh/5k7udo32","slide":12,"name":"text-127","text":"QRM  AUC .972","textPreview":"QRM  AUC .972","textChars":13,"textLines":1,"bbox":[812,588,340,35]}
+{"kind":"textbox","id":"sh/4jydk32h","slide":12,"name":"text-128","text":"删失：Y00 有 30/720、Y01 有 10/720 次从未达标，中位数按达标者计","textPreview":"删失：Y00 有 30/720、Y01 有 10/720 次从未达标，中位数按达标者计","textChars":43,"textLines":1,"bbox":[80,626,1120,32]}
+{"kind":"chart","id":"ch/i5k3qx8f","slide":12,"name":"","chartType":"bar","bbox":[694,220,525,350]}
+{"kind":"notes","id":"nt/vn7s3m","slide":12,"text":"24族×30种子×5臂，预算200000步。first90是报告中的中位数，AUC为成功率曲线面积。Y00没有两种机制，Y01用学习型元控制器调用共享技能，Y10真规则路由但技能按任务状态独立，Y11真规则路由且跨状态共享技能；QRM单列。Y01并未被给定正确目标顺序，结构化臂用真规则而不是在线学规则。原报告关于路由压倒性强于复用的AUC解释已在Step38撤回，因天花板影响；不能用本页做该推断。后续C-full审计指出Y10/Y11差异不只来自参数共享，还涉及经验传播、采样和探索计数。删失：原始归档results/factorial.json中first90=-1（从未达标）共40次，全部落在Y00（30/720）与Y01（10/720），Y10/Y11/QRM为0。页面中位数按达标者计；Y00若把-1记作预算200000，中位为41000而非38500。该丢弃使Y00/Y01显得偏好，因此本页对比是保守的。另：报告曾给出样本复杂度主效应路由6.39x、复用5.34x，本次未能从归档复现（把-1记作预算得9.03x/4.50x），故本页不列该口径。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP36.md"}
+{"kind":"slide","id":"sl/gt1q82","slide":13,"title":"危险格数量与达标率","textShapes":5}
+{"kind":"textbox","id":"sh/36hobu94","slide":13,"name":"text-129","text":"危险格数量与达标率","textPreview":"危险格数量与达标率","textChars":9,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/o7qp4zap","slide":13,"name":"text-130","text":"已知规则；固定步费协议；100 万步预算；该扫描逐种子记录已缺失，不能重算区间","textPreview":"已知规则；固定步费协议；100 万步预算；该扫描逐种子记录已缺失，不能重算区间","textChars":39,"textLines":1,"bbox":[64,661,1110,28]}
+{"kind":"textbox","id":"sh/p8j6dkra","slide":13,"name":"text-131","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"shape","id":"sh/bu1ofu9g","slide":13,"bbox":[150,584,980,0]}
+{"kind":"textbox","id":"sh/cvap8za1","slide":13,"name":"text-132","text":"有技能无路由 0.882　≫　有路由无技能 0.106","textPreview":"有技能无路由 0.882　≫　有路由无技能 0.106","textChars":27,"textLines":1,"bbox":[80,596,1120,38]}
+{"kind":"textbox","id":"sh/dwj6h4r6","slide":13,"name":"text-133","text":"不可逆性放大的是复用，不是路由（无危险格时两臂同为 100%）","textPreview":"不可逆性放大的是复用，不是路由（无危险格时两臂同为 100%）","textChars":31,"textLines":1,"bbox":[80,631,1120,32]}
+{"kind":"chart","id":"ch/qt4bexwz","slide":13,"name":"","chartType":"line","bbox":[91,144,1105,424]}
+{"kind":"notes","id":"nt/gt1q82","slide":13,"text":"Step38.5剂量扫描，昂贵导航，自有导出模拟器，任务规则已给定，训练预算1000000环境步。达标率为预算内达到90%成功率的运行比例。Y10/Y11数据按历史报告提供。此扫描的逐种子原始数据后来确认遗失，因此不能重算置信区间。Step40新网格逐运行归档：步费改变QRM排序，并使风险交互效应缩小；不能将此页视为协议不变的效应大小。无论存在何种图论路径，危险格可能迫使成功轨迹绕行。这里不声明几何难度完全不变。页底两行取自REPORT_STEP38_5第125-126行：昂贵地图加岩浆时「有技能无路由」0.882远胜「有路由无技能」0.106。\n\n资料来源：/Users/yuhang/Downloads/why TL/progressive_task_discovery/stage8_compression/REPORT_STEP38_5.md"}
+{"kind":"slide","id":"sl/fssunj","slide":14,"title":"三层研究关系","textShapes":22}
+{"kind":"textbox","id":"sh/be1wb258","slide":14,"name":"text-134","text":"三层研究关系","textPreview":"三层研究关系","textChars":6,"textLines":1,"bbox":[64,38,1140,60]}
+{"kind":"textbox","id":"sh/wfudkn6t","slide":14,"name":"text-135","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1190,661,35,28]}
+{"kind":"textbox","id":"sh/xg3edsne","slide":14,"name":"text-136","text":"已验证","textPreview":"已验证","textChars":3,"textLines":1,"bbox":[820,142,200,42]}
+{"kind":"textbox","id":"sh/mpsvedor","slide":14,"name":"text-137","text":"尚未解决","textPreview":"尚未解决","textChars":4,"textLines":1,"bbox":[1050,142,200,42]}
+{"kind":"textbox","id":"sh/nq1w7i5c","slide":14,"name":"text-138","text":"结构发现","textPreview":"结构发现","textChars":4,"textLines":1,"bbox":[77,237,200,50]}
+{"kind":"textbox","id":"sh/oradgn6x","slide":14,"name":"text-139","text":"受限在线闭环","textPreview":"受限在线闭环","textChars":6,"textLines":1,"bbox":[807,243,229,43]}
+{"kind":"textbox","id":"sh/9sje9sni","slide":14,"name":"text-140","text":"一般规则发现","textPreview":"一般规则发现","textChars":6,"textLines":1,"bbox":[1045,243,231,43]}
+{"kind":"textbox","id":"sh/el8vadof","slide":14,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[327,232,70,62]}
+{"kind":"textbox","id":"sh/zmhw3i50","slide":14,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[475,232,70,62]}
+{"kind":"textbox","id":"sh/7md4byxw","slide":14,"text":"?","textPreview":"?","textChars":1,"textLines":1,"bbox":[623,232,70,62]}
+{"kind":"shape","id":"sh/6l432tgb","slide":14,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/tofmd8fm","slide":14,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/snml43eh","slide":14,"bbox":[76,342,1150,0]}
+{"kind":"textbox","id":"sh/fqx4fixs","slide":14,"name":"text-141","text":"状态抽象","textPreview":"状态抽象","textChars":4,"textLines":1,"bbox":[77,380,200,50]}
+{"kind":"textbox","id":"sh/upo36dw7","slide":14,"name":"text-142","text":"正确压缩收益","textPreview":"正确压缩收益","textChars":6,"textLines":1,"bbox":[807,386,229,43]}
+{"kind":"textbox","id":"sh/hsfmh8fy","slide":14,"name":"text-143","text":"可靠在线合并","textPreview":"可靠在线合并","textChars":6,"textLines":1,"bbox":[1045,386,231,43]}
+{"kind":"textbox","id":"sh/gr6l83ed","slide":14,"text":"ABC","textPreview":"ABC","textChars":3,"textLines":1,"bbox":[327,358,100,49]}
+{"kind":"textbox","id":"sh/vutk3exo","slide":14,"text":"ACB","textPreview":"ACB","textChars":3,"textLines":1,"bbox":[327,425,100,49]}
+{"kind":"textbox","id":"sh/atk3u9g3","slide":14,"text":"q","textPreview":"q","textChars":1,"textLines":1,"bbox":[581,390,110,58]}
+{"kind":"shape","id":"sh/ylcfylkn","slide":14,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/zmlgrql8","slide":14,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/0nux0b2t","slide":14,"bbox":[76,485,1150,0]}
+{"kind":"textbox","id":"sh/lo3ytg3e","slide":14,"name":"text-144","text":"结构利用","textPreview":"结构利用","textChars":4,"textLines":1,"bbox":[77,523,200,50]}
+{"kind":"textbox","id":"sh/qxsfu14r","slide":14,"name":"text-145","text":"条件性控制收益","textPreview":"条件性控制收益","textChars":7,"textLines":1,"bbox":[807,529,229,43]}
+{"kind":"textbox","id":"sh/by1gn6lc","slide":14,"name":"text-146","text":"机制归因与边界","textPreview":"机制归因与边界","textChars":7,"textLines":1,"bbox":[1045,529,231,43]}
+{"kind":"textbox","id":"sh/czaxwb2x","slide":14,"text":"q","textPreview":"q","textChars":1,"textLines":1,"bbox":[327,518,70,62]}
+{"kind":"textbox","id":"sh/d03ypg3i","slide":14,"text":"goal","textPreview":"goal","textChars":4,"textLines":1,"bbox":[475,518,88,62]}
+{"kind":"textbox","id":"sh/2tsfq14v","slide":14,"text":"技能","textPreview":"技能","textChars":2,"textLines":1,"bbox":[631,518,102,62]}
+{"kind":"shape","id":"sh/3u1wj6l0","slide":14,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/5o7i54ny","slide":14,"bbox":[0,0,0,0]}
+{"kind":"notes","id":"nt/fssunj","slide":14,"text":"这三层不是全都已集成的一套通用算法。结构发现的受限未知顺序闭环有正结果；状态抽象的已知正确压缩有明确收益，可靠在线合并尚未解决；结构利用的路由/共享实现具有条件性收益，但一般机制归因、协议与任务边界未定。未建立超过ISA等的通用新方法，不声称自动机语法优于等价手写实现。\n\n资料来源：/Users/yuhang/Downloads/why TL/research/2026-09-15-memory-compression-audit/PROJECT_STATUS.md"}

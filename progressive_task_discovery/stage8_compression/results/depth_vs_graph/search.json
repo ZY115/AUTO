@@ -1,0 +1,184 @@
+[
+  {
+    "tag": "gapA",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "L": 2,
+    "arm": 7,
+    "seed": 74995,
+    "pair": [
+      0,
+      2
+    ],
+    "gap": 3,
+    "gap_depths": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "orders": 5,
+    "history_states": 40,
+    "minimal_states": 19,
+    "physical_lengths": [
+      16,
+      16,
+      15,
+      17,
+      20
+    ],
+    "task_lengths": [
+      7,
+      7,
+      7,
+      10,
+      10
+    ],
+    "cells": 28,
+    "min_sufficient_window": 4
+  },
+  {
+    "tag": "gapB",
+    "n": 4,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "L": 2,
+    "arm": 8,
+    "seed": 75308,
+    "pair": [
+      2,
+      3
+    ],
+    "gap": 3,
+    "gap_depths": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "orders": 7,
+    "history_states": 62,
+    "minimal_states": 25,
+    "physical_lengths": [
+      22,
+      27,
+      31,
+      21,
+      20,
+      28,
+      33
+    ],
+    "task_lengths": [
+      8,
+      8,
+      11,
+      8,
+      8,
+      11,
+      11
+    ],
+    "cells": 31,
+    "min_sufficient_window": 5
+  },
+  {
+    "tag": "gapC",
+    "n": 3,
+    "d": 4,
+    "m": 1,
+    "m2": 5,
+    "L": 2,
+    "arm": 8,
+    "seed": 75020,
+    "pair": [
+      1,
+      2
+    ],
+    "gap": 4,
+    "gap_depths": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "orders": 5,
+    "history_states": 47,
+    "minimal_states": 23,
+    "physical_lengths": [
+      26,
+      28,
+      24,
+      32,
+      28
+    ],
+    "task_lengths": [
+      8,
+      8,
+      8,
+      12,
+      12
+    ],
+    "cells": 31,
+    "min_sufficient_window": 6
+  },
+  {
+    "tag": "gapD",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 5,
+    "L": 3,
+    "arm": 8,
+    "seed": 75295,
+    "pair": [
+      2,
+      3
+    ],
+    "gap": 4,
+    "gap_depths": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "orders": 7,
+    "history_states": 63,
+    "minimal_states": 24,
+    "physical_lengths": [
+      23,
+      15,
+      22,
+      16,
+      17,
+      23,
+      25
+    ],
+    "task_lengths": [
+      11,
+      7,
+      11,
+      7,
+      7,
+      11,
+      11
+    ],
+    "cells": 31,
+    "min_sufficient_window": 4
+  }
+]

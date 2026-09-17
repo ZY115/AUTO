@@ -1,0 +1,157 @@
+{
+  "pair_id": "pair05",
+  "n": 4,
+  "d": 2,
+  "m": 1,
+  "m2": 5,
+  "pair": [
+    0,
+    2
+  ],
+  "L": 3,
+  "arm": 8,
+  "mapA": {
+    "seed": 82887,
+    "tag": "pair05A",
+    "orders": 4,
+    "cells": 31,
+    "horizon": 48,
+    "lengths": [
+      18,
+      12,
+      14,
+      24
+    ],
+    "history_states": 32,
+    "minimal_states": 22
+  },
+  "mapB": {
+    "seed": 82888,
+    "tag": "pair05B",
+    "orders": 5,
+    "cells": 31,
+    "horizon": 38,
+    "lengths": [
+      18,
+      12,
+      19,
+      19,
+      18
+    ],
+    "history_states": 39,
+    "minimal_states": 22
+  },
+  "seed": 82887,
+  "tag": "pair05A",
+  "target": "pair05A",
+  "horizon": 48,
+  "lengths": [
+    18,
+    12,
+    14,
+    24
+  ],
+  "starts": [
+    30,
+    20,
+    4,
+    0
+  ],
+  "tail_lengths": [
+    1,
+    5
+  ],
+  "fatal": false,
+  "failing_states": 0,
+  "history_states": 32,
+  "minimal_states": 22,
+  "denominator": "window4",
+  "denominator_states": 32,
+  "min_sufficient_window": 4,
+  "honest_ratio": 1.4545454545454546,
+  "orders": 4,
+  "feature_sizes": {
+    "count": 12,
+    "bag": 20,
+    "window1": 23,
+    "window2": 26,
+    "window3": 29,
+    "window4": 32,
+    "window5": 32,
+    "window6": 32,
+    "window7": 32,
+    "history": 32
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": false,
+    "window4": true,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      2,
+      3,
+      1,
+      4,
+      5,
+      4
+    ],
+    [
+      0,
+      3,
+      1,
+      2,
+      4,
+      5,
+      4
+    ],
+    [
+      1,
+      0,
+      2,
+      3,
+      4,
+      5,
+      4
+    ],
+    [
+      2,
+      1,
+      0,
+      3,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      4
+    ]
+  ],
+  "task_states": 30,
+  "minimal_total": 28,
+  "bridge": [
+    4,
+    5
+  ],
+  "tails": [
+    [
+      4
+    ],
+    [
+      6,
+      4,
+      5,
+      6,
+      4
+    ]
+  ]
+}

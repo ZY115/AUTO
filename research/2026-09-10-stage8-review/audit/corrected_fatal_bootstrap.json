@@ -1,0 +1,38 @@
+[
+  {
+    "denominator": "goal_value",
+    "numerator": "automaton",
+    "ratio": 12.099999999999996,
+    "ci95": [
+      10.825000000000001,
+      13.451505016722402
+    ]
+  },
+  {
+    "denominator": "goal_learned",
+    "numerator": "goal_value",
+    "ratio": 0.09580163426317274,
+    "ci95": [
+      0.07536805097780708,
+      0.11931443638760712
+    ]
+  },
+  {
+    "denominator": "goal_learned",
+    "numerator": "merged",
+    "ratio": 2.0070442378134685,
+    "ci95": [
+      1.4595225739491442,
+      2.640857142857143
+    ]
+  },
+  {
+    "denominator": "goal_learned",
+    "numerator": "history",
+    "ratio": 2.139194139194139,
+    "ci95": [
+      1.5993204391008888,
+      2.797731568998109
+    ]
+  }
+]

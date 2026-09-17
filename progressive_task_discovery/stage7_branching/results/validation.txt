@@ -1,0 +1,15 @@
+clang++ -O3 -std=c++17 -Wall -Wextra src/branch.cpp -o branch
+python3 -m unittest discover -s tests -v
+test_budgets_and_exact_structure (test_branch.BranchTests) ... ok
+test_cpp_checks_and_geometry (test_branch.BranchTests) ... ok
+test_independent_policy_and_shortest_paths (test_branch.BranchTests) ... ok
+test_mandatory_ambiguity_witness (test_branch.BranchTests) ... ok
+test_representation_equivalence (test_branch.BranchTests) ... ok
+test_same_map_no_ambiguity_control (test_branch.BranchTests) ... ok
+test_shared_bridge_and_last_event_alias (test_branch.BranchTests) ... ok
+test_stochastic_evaluation (test_branch.BranchTests) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.418s
+
+OK

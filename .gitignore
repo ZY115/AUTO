@@ -18,3 +18,11 @@ venv/
 
 # 系统
 .DS_Store
+
+# 封存时并入：progressive_task_discovery / research
+# 编译产物，从源码可重建，且绑定本机架构
+/progressive_task_discovery/pilot
+/progressive_task_discovery/stage7_branching/branch
+/progressive_task_discovery/stage8_compression/compress
+/progressive_task_discovery/stage8_compression/unordered
+/progressive_task_discovery/stage8_compression/product

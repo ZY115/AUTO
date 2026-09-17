@@ -1,0 +1,89 @@
+{
+  "target": 3.1,
+  "n": 3,
+  "d": 1,
+  "m": 1,
+  "L": 2,
+  "side": 5,
+  "seed": 99062,
+  "pair": [
+    0,
+    2
+  ],
+  "ratio": 1.3636363636363635,
+  "tag": "rung_3.1",
+  "horizon": 52,
+  "lengths": [
+    24,
+    25,
+    26
+  ],
+  "starts": [
+    1,
+    4,
+    13
+  ],
+  "history_states": 15,
+  "minimal_states": 11,
+  "denominator": "window3",
+  "denominator_states": 15,
+  "min_sufficient_window": 3,
+  "honest_ratio": 1.3636363636363635,
+  "orders": 3,
+  "feature_sizes": {
+    "count": 6,
+    "bag": 9,
+    "window1": 11,
+    "window2": 13,
+    "window3": 15,
+    "window4": 15,
+    "window5": 15,
+    "history": 15
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": true,
+    "window4": true,
+    "window5": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    [
+      0,
+      2,
+      1,
+      3,
+      4
+    ],
+    [
+      2,
+      0,
+      1,
+      3,
+      5
+    ]
+  ],
+  "task_states": 14,
+  "minimal_total": 13,
+  "bridge": [
+    3
+  ],
+  "tails": [
+    [
+      4
+    ],
+    [
+      5
+    ]
+  ]
+}

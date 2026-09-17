@@ -1,0 +1,7 @@
+{
+  "three_round_root_signatures_equal": true,
+  "distinguishing_suffix": "aaaa",
+  "A_accepts": true,
+  "B_accepts": false,
+  "purpose": "Finite-depth semantic counterexample, not a benchmark of the project JIRP arm"
+}

@@ -1,0 +1,635 @@
+                         Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+
+                   Markov Abstractions for PAC Reinforcement Learning in
+                             Non-Markov Decision Processes
+
+                     Alessandro Ronca , Gabriel Paludo Licks , Giuseppe De Giacomo
+                                 DIAG, Sapienza University of Rome, Italy
+                                {ronca, licks, degiacomo}@diag.uniroma1.it
+
+
+                         Abstract                                             acting as an interface between the two modules. A key aspect
+                                                                              of our contribution is to show how the sequence of intermedi-
+     Our work aims at developing reinforcement learn-                         ate automata built during learning induce partial Markov ab-
+     ing algorithms that do not rely on the Markov as-                        stractions that can be readily used to guide exploration or ex-
+     sumption. We consider the class of Non-Markov                            ploitation. Our approach is Probably Approximately Correct
+     Decision Processes where histories can be ab-                            (PAC), cf. [Kearns and Vazirani, 1994], whenever the same
+     stracted into a finite set of states while preserv-                      holds for the employed automata and Markov RL algorithms.
+     ing the dynamics. We call it a Markov abstraction
+     since it induces a Markov Decision Process over a                           The idea of solving non-Markov tasks by introducing a
+     set of states that encode the non-Markov dynamics.                       Markovian state space can already be found in [Bacchus et
+     This phenomenon underlies the recently introduced                        al., 1996] and more recently in [Brafman et al., 2018; Icarte
+     Regular Decision Processes (as well as POMDPs                            et al., 2018]. RL in this setting has been considered [Icarte et
+     where only a finite number of belief states is reach-                    al., 2018; De Giacomo et al., 2019; Gaon and Brafman, 2020;
+     able). In all such kinds of decision process, an                         Xu et al., 2020]. This setting is simpler than ours since transi-
+     agent that uses a Markov abstraction can rely on                         tions are still assumed to be Markov. The setting where both
+     the Markov property to achieve optimal behaviour.                        transitions and rewards are non-Markov has been considered
+     We show that Markov abstractions can be learned                          in [Icarte et al., 2019; Brafman and De Giacomo, 2019], with
+     during reinforcement learning. Our approach com-                         RL studied in [Icarte et al., 2019; Abadi and Brafman, 2020;
+     bines automata learning and classic reinforcement                        Ronca and De Giacomo, 2021]. Such RL techniques are
+     learning. For these two tasks, standard algorithms                       based on automata learning. The approach in [Ronca and De
+     can be employed. We show that our approach                               Giacomo, 2021] comes with PAC guarantees, as opposed to
+     has PAC guarantees when the employed algorithms                          the others which do not. Our approach extends the techniques
+     have PAC guarantees, and we also provide an ex-                          in [Ronca and De Giacomo, 2021] in order to use the learned
+     perimental evaluation.                                                   automata not only to construct the final policy, but also to
+                                                                              guide exploration.
+                                                                                 Abstractions from histories to states have been studied in
+1   Introduction                                                              [Hutter, 2009; Maillard et al., 2011; Veness et al., 2011;
+In the classic setting of Reinforcement Learning (RL), the                    Nguyen et al., 2013; Lattimore et al., 2013; Hutter, 2016;
+agent is provided with the current state of the environment                   Majeed and Hutter, 2018]. [Hutter, 2009] introduces the idea
+[Sutton and Barto, 2018]. States are a useful abstraction for                 of abstractions from histories to states. Its algorithmic solu-
+agents, since predictions and decisions can be made accord-                   tion, as well as the one in [Veness et al., 2011], is less general
+ing to the current state. This is RL under the Markov as-                     than ours since it assumes a bound on the length of the histo-
+sumption, or Markov RL. Here we focus on the more realistic                   ries to consider. This corresponds to a subclass of automata.
+non-Markov RL setting [Hutter, 2009; Brafman and De Gi-                       [Maillard et al., 2011] provides a technique to select an ab-
+acomo, 2019; Icarte et al., 2019; Ronca and De Giacomo,                       straction from a given finite set of candidate abstractions; in-
+2021] where the agent is not given the current state, but can                 stead, we consider an infinite set of abstractions. [Nguyen et
+observe what happens in response to its actions. The agent                    al., 2013] considers a set of abstractions without committing
+can still try to regain the useful abstraction of states. How-                to a specific way of representing them. As a consequence,
+ever, now the abstraction has to be learned, as a map from                    they are not able to take advantage of specific properties of
+every history observed by the agent to some state invented by                 the chosen representation formalism, in the algorithm nor in
+the agent [Hutter, 2009].                                                     the analysis. On the contrary, we choose automata, which al-
+   We propose RL agents that learn a specific kind of abstrac-                lows us to take advantage of existing automata-learning tech-
+tion called Markov abstraction as part of the overall learn-                  niques, and in particular of their properties such as the in-
+ing process. Our approach combines automata learning and                      cremental construction. [Lattimore et al., 2013] studies non-
+Markov RL in a modular manner, with Markov abstractions                       Markov RL in the case where the non-Markov decision pro-
+
+
+
+                                                                       3408
+                            Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+                                                                                          P
+cess belongs to a compact class. Their results do not apply                      maxa ( or D(o, r|h, a) · (r + v∗ (haor))). The value of an
+to our case because the class of decision processes admitting                    action a under a policy π given a history h, written qπ (h, a),
+a Markov abstraction is not compact. [Majeed and Hutter,                         is the expected sum of future rewards when the next action is
+2018] studies Q-learning with abstractions, but it assumes                       a and the following actions are chosen according P       to π, given
+that abstractions are given. [Hutter, 2016] provides a result                    that the history so far is h; it is qπ (h, a) = or D(o, r|h, a) ·
+that we use in Section 3; however, none of their abstractions                    (r +vπ (haor)). The optimal value of an action a given a his-
+is required to preserve the dynamics, as we require for our                      tory h is q∗ (h, P a) = maxπ qπ (h, a), and it can be expressed
+Markov abstractions. Even in the case called ‘exact state ag-                    as q∗ (h, a) = or D(o, r|h, a) · (r + v∗ (haor)). A policy
+gregation’, their abstractions are only required to preserve re-                 π is optimal if vπ (ε) = v∗ (ε). For  > 0, a policy π is
+wards, and not to preserve observations. In this setting, it is                  -optimal if vπ (ε) ≥ v∗ (ε) − .
+unclear whether automata techniques apply.                                       Markov Decision Processes. A Markov Decision Process
+   Proofs and experimental details are given in the extended                     (MDP) [Bellman, 1957; Puterman, 1994] is a decision pro-
+version [Ronca et al., 2022].                                                    cess where the transition and reward functions (and hence the
+                                                                                 dynamics function) depend only on the last observation in the
+2    Preliminaries                                                               history, taken to be an arbitrary observation when the history
+                                                                                 is empty. Thus, an observation is a complete description of
+For x and z strings, xz denotes their concatenation. For Σ
+                                                                                 the state of affairs, and it is customarily called a state to em-
+and Γ alphabets, ΣΓ denotes the set of all strings σγ with
+                                                                                 phasise this aspect. Hence, we talk about a set S of states
+σ ∈ Σ and γ ∈ Γ. For f and g functions, f g denotes their
+                                                                                 in place of a set O of observations. All history-dependent
+composition. We write f : X ; Y to denote a function
+                                                                                 functions—e.g., transition and reward functions, dynamics,
+f : X × Y → [0, 1] that defines a probability distribution
+                                                                                 value functions, policies—can be seen as taking a single state
+f (·|x) over Y for every x ∈ X.
+                                                                                 in place of a history.
+Non-Markov Decision Processes. A Non-Markov Deci-                                Episodic RL. Given a decision process P and a required
+sion Process (NMDP), cf. [Brafman and De Giacomo, 2019],                         accuracy  > 0, Episodic Reinforcement Learning (RL) for
+is a tuple P = hA, O, R, ζ, T, Ri with components defined                        P and  is the problem of an agent that has to learn an -
+as follows. A is a finite set of actions, O is a finite set of ob-               optimal policy for P from the data it collects by interacting
+servations, R ⊆ R≥0 is a finite set of non-negative rewards,                     with the environment. The interaction consists in the agent
+ζ is a special symbol that denotes episode termination. Let                      iteratively performing an action and receiving an observation
+the elements of H = (AOR)∗ be called histories, and let                          and a reward in response, until episode termination. Specif-
+the elements of E = (AOR)∗ Aζ be called episodes. Then,                          ically, at step i, the agent performs an action ai , receiving
+T : H × A ; (O ∪ {ζ}) is the transition function, and                            a pair of an observation oi and a reward ri , or the termi-
+R : H × A × O ; R is the reward function. The transi-                            nation symbol ζ, according to the dynamics of the decision
+tion and reward functions can be combined into the dynam-                        process P. This process generates an episode of the form
+ics function D : H × A ; (OR ∪ {ζ}), which describes                             a1 o1 r1 a2 o2 r2 . . . an ζ. The collection of such episodes is the
+the probability to observe next a certain pair of observation                    data available to the agent for learning.
+and reward, or termination, given a certain history and ac-
+tion. Namely, D(or|h, a) = T(o|h, a) · R(r|h, a, o) and                          Complexity Functions. Describing the behaviour of a
+D(ζ|h, a) = T(ζ|h, a). We often write an NDMP directly                           learning algorithm requires a way to measure the complex-
+as hA, O, R, ζ, Di. A policy is a function π : H ; A.                            ity of the instance I to be learned, in terms of a set of nu-
+The uniform policy πu is the policy defined as πu (a|h) =                        meric parameters that reasonably describe the complexity of
+1/|A| for every a and every h. The dynamics of P under                           the instance—e.g., number of states of an MDP. Thus, for
+a policy π describe the probability of an episode remain-                        every instance I, we have a list ~cI of values for the parame-
+der, given the history so far, when actions are chosen ac-                       ters. We use the complexity description to state properties for
+cording to a policy π; it can be recursively computed as                         the algorithm by means of complexity functions. A complex-
+Dπ (aore|h) = π(a|h) · D(or|h, a) · Dπ (e|haor), with base                       ity function f is an integer-valued non-negative function of
+case Dπ (aζ|h) = π(a|h)·D(ζ|h, a). Since we study episodic                       the complexity parameters and possibly of other parameters.
+reinforcement learning,                                                          Two distinguished parameters are accuracy  > 0, and prob-
+                        Pwe require episodes to terminate with                   ability of failure δ ∈ (0, 1). The dependency of complexity
+probability one, i.e., e∈E Dπ (e|ε) = 1 for every policy
+                                                                                 functions on these parameters is of the form 1/ and ln(1/δ).
+π.1 This requirement ensures that the following value func-
+                                                                                 When writing complexity functions, we will hide the specific
+tions take a finite value. The value of a policy π given a
+                                                                                 choice of complexity parameters by writing I instead of ~cI ,
+history h, written vπ (h), is the expected sum of future re-
+                                                                                 and we will write  and δ for 1/ and ln(1/δ). For instance,
+wards when actions are chosen according to π given that
+                                                                                 we will write f (I, , δ) in place of f (~cI , 1/, ln(1/δ)).
+          Pso far is h; it can be recursively computed as
+the history
+vπ (h) = aor π(a|h)·D(o, r|h, a)·(r+vπ (haor)). The op-                          Automata. A Probabilistic Deterministic Finite Automa-
+timal value given a history h is v∗ (h) = maxπ vπ (h), which                     ton (PDFA), cf. [Balle et al., 2014], is a tuple A =
+can be expressed without reference to any policy as v∗ (h) =                     hQ, Σ, Γ, τ, λ, q0 i where: Q is a finite set of states; Σ is a fi-
+                                                                                 nite alphabet; Γ is a finite set of termination symbols not in Σ;
+    1
+      A constant probability p of terminating at every step amounts to           τ : Q × Σ → Q is the (deterministic) transition function; λ :
+a discount factor of 1 − p, see [Puterman, 1994].                                Q×(Σ∪Γ) → [0, 1] is the probability function, which defines
+
+
+
+                                                                          3409
+                              Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+a probability distribution λ(·|q) over Σ ∪ Γ for every state q ∈
+Q; q0 ∈ Q is the initial state. The iterated transition function
+τ ∗ : Q×Σ∗ → Q is recursively defined as τ ∗ (q, σ1 . . . σn ) =
+τ ∗ (τ (q, σ1 ), σ2 . . . σn ) with base case τ ∗ (q, ε) = q; further-
+more, τ ∗ (w) denotes τ ∗ (q0 , w). It is required that, for ev-
+ery state q ∈ Q, there exists a sequence σ1 , . . . , σn of sym-
+bols of Σ such that λ(τ ∗ (q, σ1 . . . σi−1 ), σi ) > 0 for every
+i ∈ [1, n], and λ(τ (q, σ1 . . . σn ), γ) > 0 for γ ∈ Γ—to en-
+sure that every string terminates with probability one. Given
+a string x ∈ Σ∗ , the automaton represents the probability dis-                    Figure 1: Target automaton (left), and hypothesis automaton (right).
+tribution A(·|x) over Σ∗ Γ defined recursively as A(σy|x) =                        Solid edges denote transitions for input 1, and dashed edges for 0.
+λ(τ (x), σ) · A(y|xσ) with base case A(γ|x) = λ(τ (x), γ)
+for γ ∈ Γ.
+                                                                                   the latter by the well-known correspondence between LDLf
+3     Markov Abstractions                                                          and finite automata. In terms of finite transducers, an RDP
+                                                                                   is an NMDP P = hA, O, R, ζ, Di whose dynamics function
+Operating directly on histories is not desirable. There are
+                                                                                   can be represented by a finite transducer T that, on every his-
+exponentially-many histories in the episode length, and typ-
+                                                                                   tory h, outputs the function Dh : A ; (OR ∪ {ζ}) induced
+ically each history is observed few times, which does not
+                                                                                   by D when its first argument is h. Here we observe that the
+allow for computing accurate statistics. A solution to this
+                                                                                   iterated version of the transition function of T is a Markov
+problem is to abstract histories to a reasonably-sized set of
+                                                                                   abstraction.
+states while preserving the dynamics. We fix an NMDP
+P = hA, O, R, ζ, Di.                                                               POMDPs. A Partially-Observable Markov Decision Pro-
+Definition 1. A Markov abstraction over a finite set of states                     cess (POMDP), cf. [Kaelbling et al., 1998], is a tuple P =
+S is a function α : H → S such that, for every two histories                       hA, O, R, ζ, X, T, R, O, x0 i where: A, O, R, ζ are as in an
+h1 and h2 , α(h1 ) = α(h2 ) implies D(·|h1 , a) = D(·|h2 , a)                      NMDP; X is a finite set of hidden states; T : X × A ; X
+for every action a.                                                                is the transition function; R : X × A × O ; R is the re-
+                                                                                   ward function; O : X × A× ; (O ∪ {ζ}) is the obser-
+   Given an abstraction α, its repeated application α∗ trans-                      vation function; x0 ∈ X is the initial hidden state. To de-
+forms a given history by replacing observations by the corre-                      fine the dynamics function—i.e., the function that describes
+sponding states as follows:                                                        the probability to observe next a certain pair of observation
+       α∗ (a1 o1 r1 . . . an on rn ) = s0 a1 s1 r1 . . . an sn rn ,                and reward, or termination, given a certain history of obser-
+                                                                                   vations and action—it requires to introduce the belief function
+       where si = α(hi ) and hi = a1 o1 r1 . . . ai oi ri .
+                                                                                   B : H ; X, which describes the probability of being in a
+Now consider the probability Pα (si , ri |hi−1 , ai ) obtained by                  certain hidden state given the current history. Then, the dy-
+marginalisation as:                                                                namics function can bePexpressed in terms of the belief func-
+                              X                                                    tion as D(or|h,P a) =     x B(x|h)·O(o|x, a)·R(r|x, a, o) and
+  Pα (si , ri |hi−1 , ai ) =              D(o, ri |hi−1 , ai ).                    D(ζ|h, a) = x B(x|h)·O(ζ|x, a). Policies and value func-
+                              o:α(hi−1 ai o)=si                                    tions, and hence the notion of optimality, are as for NMDPs.
+                                                                                   For each history h, the probability distribution B(·|h) over
+Since the dynamics D(o, ri |hi−1 , ai ) are the same for ev-                       the hidden states is called a belief state. We note the follow-
+ery history mapped to the same state, there is an MDP                              ing property of POMDPs.
+                           α
+Mα P with dynamics D          such that Pα (si ri |hi−1 , ai ) =
+D (si ri |α(hi−1 ), ai ). The induced MDP Mα
+  α                                                                                Theorem 1. If a POMDP has a finite set of reachable belief
+                                               P can be solved
+in place of P. Indeed, the value of an action in a state is the                    states, then the function that maps every history to its belief
+value of the action in any of the histories mapped to that state                   state is a Markov abstraction.
+[Hutter, 2016, Theorem 1]. In particular, if π is an -optimal
+policy for Mα P , then πα is an -optimal policy for P.
+                                                                                   Proof sketch. The function α(h) = B(·|h) is a Markov ab-
+                                                                                   straction, as it can be verified by inspecting the expression
+3.1    Related Classes of Decision Processes                                       of the dynamics function of a POMDP given above. Specifi-
+We discuss how Markov abstractions relate to existing classes                      cally, α(h1 ) = α(h2 ) implies B(·|h1 ) = B(·|h2 ), and hence
+of decision processes.                                                             D(·|h1 , a) = D(·|h2 , a) for every action a.
+MDPs. MDPs can be characterised as the class of NMDPs
+where histories can be abstracted into their last observation.                     4     Our Approach to Non-Markov RL
+Namely, they admit α(haor) = o as a Markov abstraction.                            Our approach combines automata learning with Markov RL.
+RDPs. A Regular Decision Process (RDP) can be defined                              We first describe the two modules separately, and then present
+in terms of the temporal logic on finite traces LDLf [Braf-                        the RL algorithm that combines them. For the section we fix
+man and De Giacomo, 2019] or in terms of finite transducers                        an NMDP P = hA, O, R, ζ, Di, and assume that it admits a
+[Ronca and De Giacomo, 2021]. The former case reduces to                           Markov abstraction α on states S.
+
+
+
+                                                                            3410
+                           Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+4.1   First Module: Automata Learning                                           and all transitions between safe states of Ai−1 ; (liveness) ev-
+Markov abstractions can be learned via automata learning due                    ery candidate s is either promoted or merged within reading
+to the following theorem.                                                       an expected number K(A, δ) of strings having a prefix that
+                                                                                maps to s; (boundedness) the number n of hypotheses is at
+Theorem 2. There exist a transition function τ : S×AOR →                        most N (A); (computational cost) every string x is processed
+S and an initial state s0 such that, for every Markov policy π                  in time Ts (A, δ, |x|).
+on S, the dynamics Dπα of P are represented by an automa-
+ton hS, AOR, Aζ, τ, λ, s0 i for some probability function λ.                       We will ensure that statistics for a state q are no longer
+Furthermore, τ ∗ = α.                                                           updated once it is promoted to safe. This preserves the guar-
+                                                                                antees, and makes the algorithm insensitive to changes in the
+Proof sketch. The start state is s0 = α(ε). The transition                      distribution λ(q 0 , ·) of the target state q 0 corresponding to q
+function is defined as τ (s, aor) = α(hs aor) where hs is an                    that take place after q is promoted.
+arbitrarily chosen history such that α(hs ) = s. Clearly τ ∗ =                     Since a hypothesis automaton Ai contains candidate states,
+α. Then, the probability function is defined as λ(s, aor) =                     that do not have outgoing transitions, the Markov abstraction
+π(a|s) · D(or|hs a) and λ(s, aζ) = π(a|s) · D(ζ|hs a). It can                   αi obtained as the iteration τi∗ of its transition function is not
+be shown by induction that the resulting automaton represents                   a complete Markov abstraction, but a partial one. As a con-
+Dπα regardless of the choice of the representative histories                    sequence, the MDP Mi induced by αi is also partial. Specif-
+hs , since all histories mapped to the same state determine the                 ically, it contains states from which one cannot proceed, the
+same dynamics function.                                                         ones deriving from candidate nodes.
+   We present an informal description of a generic PDFA-                        4.2     Second Module: Markov RL
+learning algorithm, capturing the essential features of the al-                 When a Markov RL agent is confined to operate in a subset
+gorithms in [Ron et al., 1998; Clark and Thollard, 2004;                        S 0 of the states S of an MDP, it can always achieve one of
+Palmer and Goldberg, 2007; Balle et al., 2013; Balle et al.,                    two mutually-exclusive results. The first result is that it can
+2014]. We will highlight the characteristics that have an im-                   find a policy that is near-optimal for the entire MDP, ignoring
+pact on the rest of the RL algorithm. To help the presentation,                 the states not in S 0 . Otherwise, there is a policy that leads to
+consider Figure 1. The figure shows the transition graph of a                   a state not in S 0 sufficiently often. This is the essence of the
+target automaton (left), and the hypothesis graph built so far                  Explore or Exploit lemma from [Kearns and Singh, 2002].
+by the algorithm (right). In the hypothesis graph we distin-                    The property is used explicitly in the E 3 algorithm [Kearns
+guish safe and candidate nodes. Safe nodes are circles in the                   and Singh, 2002], and more implicitly in algorithms such as
+figure. They are in a one-to-one correspondence with nodes                      RMax [Brafman and Tennenholtz, 2002]. Indeed, these algo-
+in the target, they have all transitions defined, and they are                  rithms can be employed to satisfy the following guarantees.
+not going to change. Candidate nodes are squares in the fig-
+                                                                                Guarantees 2. There are complexity functions E, Te such
+ure. Their transitions are not defined, and hence they form
+                                                                                that, for every , every δ, every non-negative integer B, and
+the frontier of the learned part of the graph. The graph is
+                                                                                every MDP M where the agent is restricted to operate in a
+extended by promoting or merging a candidate. If the algo-
+                                                                                subset S 0 the states, the two following conditions hold: (ex-
+rithm tests that a candidate node is distinct from every other
+                                                                                plore or exploit) within E(M, B, , δ) episodes, with prob-
+safe state in the hypothesis graph, then it is promoted to safe.
+                                                                                ability at least 1 − δ, either the agent finds an -optimal
+Upon promotion, a candidate is added for each possible tran-
+                                                                                policy or there is a state not in S 0 that is visited at least B
+sition from the just-promoted safe node. This effectively ex-
+                                                                                times; (computational cost) every episode e is processed in
+tends the automaton by pushing the frontier. If the algorithm
+                                                                                time Te (M, , δ, |e|).
+tests that a candidate is equivalent to a safe node already in the
+hypothesis, then the candidate is merged into the safe node.                    4.3     Overall Approach
+The merge amounts to deleting the candidate node and redi-                      We will have a Markov agent operating in the MDP induced
+recting all its incoming edges to the safe node. Thus, the sta-                 by the current partial abstraction, in order to either find a
+tistical core of the algorithm consists in the tests. The test be-              near-optimal policy (when the abstraction is sufficiently com-
+tween two nodes is based on the input strings having prefixes                   plete) or to visit candidate states (to collect strings to extend
+that map to the two nodes respectively. A sufficient number                     the abstraction). Concretely, we propose Algorithm 1, that
+of strings yields a good accuracy of the test. Assuming that                    employs the modules AutomataLearning and MarkovRL to
+all tests yield the correct result, it is easy to see that every new            solve non-Markov RL. It starts with an empty abstraction α
+hypothesis is closer to the target. We focus on the approach                    (Line 1), and then it loops, processing one episode per itera-
+in [Balle et al., 2014], which has the following guarantees.                    tion. Line 3 corresponds to the beginning of an episode, and
+Guarantees 1. There are complexity functions K, N, Ts such                      hence the algorithm sets the current history to the empty his-
+that, for every δ and every target automaton A, the au-                         tory. Lines 4–8 process the prefix of the episode that maps
+tomata learning algorithm builds a sequence of hypothe-                         to the safe states; on this prefix, the Markov RL agent is em-
+ses A1 , . . . , An satisfying the following conditions: (sound-                ployed. Specifically, the agent is first queried for the action to
+ness) with probability at least 1 − δ, for every i ∈ [1, n], there              take (Line 5), the action is then executed (Line 6), the result-
+is a transition-preserving bijection between the safe states of                 ing transition is shown to the agent (Line 7), and the current
+Ai and a subset of states of the target A; (incrementality) for                 history is extended (Line 8). Lines 9–12 process the remain-
+every i ∈ [2, n], the hypothesis Ai contains all safe states                    der of the episode, for which we do not have an abstraction
+
+
+
+                                                                         3411
+                           Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+   Algorithm 1: NonMarkovRL                                                     algorithm, and the N (AuP ) independent runs of the Markov
+                                                                                RL algorithm. Regarding the computation time, note that the
+ 1 α ← ∅;
+                                                                                algorithm performs one iteration per episode, it operates on
+ 2 loop
+                                                                                one episode in each iteration, calling the two modules and
+ 3     h ← ε;                                                                   performing some other operations having a smaller cost.
+ 4     while α(h) is safe and episode is not over do
+ 5         a ← MarkovRL.choose();
+ 6         o, r ← perform action a;                                             5       Empirical Evaluation
+ 7         MarkovRL.observe(α(h), a, r, α(haor));                               We show an experimental evaluation of our approach.2
+ 8         h ← haor;                                                            We employ the state-of-the-art stream PDFA learning al-
+ 9     while episode is not over do                                             gorithm [Balle et al., 2014] and the classic RMax algo-
+10         a ← pick an action according to πu ;                                 rithm [Brafman and Tennenholtz, 2002]. They satisfy Guar-
+11         o, r ← perform action a;                                             antees 1 and 2. We consider the domains from [Abadi and
+12         h ← haor;                                                            Brafman, 2020]: Rotating MAB, Malfunction MAB, Cheat
+                                                                                MAB, and Rotating Maze; a variant of Enemy Corridor
+13     α ← AutomataLearning.consume(h);
+                                                                                [Ronca and De Giacomo, 2021]; and two novel domains:
+14     MarkovRL.update(α);
+                                                                                Reset-Rotating MAB, and Flickering Grid. Reset-Rotating
+                                                                                MAB is a variant of Rotating MAB where failing to pull the
+                                                                                correct arm brings the agent back to the initial state. Flicker-
+yet. First, an action is chosen according to the uniform pol-                   ing Grid is a basic grid with an initial and a goal position, but
+icy πu (Line 10), the action is then executed (Line 11), and                    where at some random steps the agent is unable to observe
+the current history is extended (Line 12). Lines 13–14 pro-                     its position. All domains are parametrised by k, which makes
+cess the episode that has just been generated, before moving                    the domains more complex as it is assigned larger values.
+to the next episode. In Line 13 the automata learning algo-                        Figures 2–9 show our performance evaluation. Plots in-
+rithm is given the episode, and it returns the possibly-updated                 clude three different approaches. First, our approach referred
+abstraction α. Finally, in Line 14, the Markov agent is given                   to as RMax Abstraction, i.e., the RMax Markov agent pro-
+the latest abstraction, and it has to update its model and/or                   vided with partial Markov abstractions as they are incremen-
+statistics to reflect any change in the abstraction. We assume                  tally learned. Second, a Random Sampling approach, equiv-
+a naive implementation of the update function, that amounts                     alent to what is proposed in [Ronca and De Giacomo, 2021],
+to resetting the Markov agent when the given abstraction is                     that always explores at random. Third, the RMax agent as a
+different from the previous one.                                                baseline for the performance of a purely Markov agent, that
+   The algorithm has PAC guarantees assuming PAC guaran-                        does not rely on Markov abstractions. Results for each ap-
+tees for the employed modules. In particular, let K, N, Ts be                   proach are averaged over 5 trainings and show the standard
+as in Guarantees 1, and let E, Te be as in Guarantees 2. In the                 deviation. At each training, the agent is evaluated at every
+context of Algorithm 1, the target automaton is the automa-                     15k training episodes. Each evaluation is an average over 50
+ton AuP that represents the dynamics of P under the uniform                     episodes, where for each episode we measure the accumu-
+policy πu , and the MDP the Markov agent interacts with is                      lated reward divided by the number of steps. Note that the
+the MDP Mα     P induced by α. Furthermore, let LP be the ex-                   RMax Abstraction agent takes actions uniformly at random
+pected episode length for P.                                                    on histories where the Markov abstraction is not yet defined,
+Theorem 3. For any given  and δ, and for any NMDP P ad-                        and it takes actions greedily otherwise.
+mitting a Markov abstraction α, Algorithm 1 has probability                        The results for Reset-Rotating MAB (Figure 2) show the
+at least 1 − δ of solving the Episodic RL problem for P and ,                  advantage of the exploration strategy of our approach, com-
+using a number of episodes                                                      pared to Random Sampling. In fact, in this domain, random
+                                                    0                           exploration does not allow for exploring states that are far
+            O N (AuP ) · E(Mα          u
+                                                       
+                               P , K(AP , δ/2), , δ )                          from the initial state. The results for Enemy Corridor (Fig-
+with δ 0 = δ/(2 · N (AuP )), and a number of computation steps                  ure 3) show that our approach scales with the domain size.
+that is proportional to the number of episodes by a quantity                    Namely, in Enemy Corridor we are able to increase the corri-
+                                                0
+                                                                                dor size k up to 64. The results for Flickering Grid (Figure 4)
+          O Ts (AuP , δ/2, LP ) + Te (Mα
+                                                       
+                                        P , , δ , LP ) .                       show that our approach works in a domain with partial ob-
+Proof sketch. An execution of the algorithm can be split into                   servability, that is natural to model as a POMDP. This is in
+stages, with one stage for each hypothesis automaton. By                        line with our Theorem 1. The Markov abstraction for Flick-
+the boundedness condition, there are at most N (AuP ) stages.                   ering Grid maps histories to the current cell; intuitively, the
+                                                       0
+Consider an arbitrary stage. Within E(Mα       P , , δ ) episodes,                 2
+                                                                                     The results shown in this paper are reproducible. Source code,
+the Markov agent either exploits or explores. If it exploits,
+                                                                                instructions, and definitions of the experiments are available at:
+i.e., it finds an -optimal policy π for the MDP induced by                     github.com/whitemech/markov-abstractions-code-ijcai22. Experi-
+the current partial abstraction αi , then παi is -optimal for P.               ments were carried out on a server running Ubuntu 18.04.5 LTS,
+Otherwise, a candidate state is explored K(AuP , δ/2) times,                    with 512GB RAM, and an 80 core Intel Xeon E5-2698 2.20GHz.
+and hence it is promoted or merged. The probability δ of fail-                  Each training run takes one core. The necessary amount of compute
+ing is partitioned among the one run of the automata learning                   and time depends mostly on the number of episodes set for training.
+
+
+
+                                                                         3412
+                                      Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+                                                                                                              17.5
+                  90
+                                                                                                              15.0
+                  80
+                                                                                                              12.5
+
+
+
+
+ Average Reward                                                                              Average Reward
+                  70
+                                                                                                              10.0
+                  60
+                                                                                                               7.5
+
+                  50
+                                                                                                               5.0
+
+                  40                                                                                           2.5
+                                                            k=8 RMax                                                                                           RMax
+                                                            k=8 Random                                                                                         Random
+                  30                                        k=8 Abstraction                                    0.0                                             Abstraction
+
+                       0    10           20        30          40         50                                         0.0     2.5    5.0     7.5    10.0        12.5    15.0
+                                     Episodes (unit=105)                                                                            Episodes (unit=105)
+
+                           Figure 2: Reset-Rotating MAB.                                                                       Figure 4: Flickering Grid.
+
+
+                                                                                                               40                                           Non-safe states
+                  85                                                                                                                                        Safe states
+                  80
+                                                           k=8 RMax                                            30
+                  75                                       k=16 RMax
+
+
+
+
+ Average Reward                                                                              Episode length
+                                                           k=32 RMax
+                  70                                       k=64 RMax                                           20
+                                                           k=8 Random
+                  65                                       k=16 Random
+                                                           k=32 Random                                         10
+                  60
+                                                           k=64 Random
+                  55                                       k=8 Abstraction
+                                                           k=16 Abstraction                                     0
+                  50                                       k=32 Abstraction
+                                                           k=64 Abstraction
+                  45                                                                                           10
+                       0         5          10          15              20                                           0         2         4         6           8         10
+                                     Episodes (unit=104)                                                                             Episodes (unit=105)
+
+                             Figure 3: Enemy Corridor.                                                                     Figure 5: Safe vs. non-safe states.
+
+
+agent learns to compute its position even if sometimes it is                               tinguishability is high and independent of k. Therefore, we
+not explicitly provided by the environment. For this domain,                               conclude that a low distinguishability is the source of poor
+Figure 5 shows the number of steps the agent is in a safe state                            performance. In particular, it causes the automata learning
+against when it is not. The figure exemplifies the incremental                             module to require a large number of samples.
+process of learning a Markov abstraction, as the time spent                                   We compare our approach against two related approaches.
+by the agent out of the safe region is high during the first                               First, we compare against [Abadi and Brafman, 2020] that
+episodes, and it decreases as more histories are collected and                             combines deterministic finite automata learning with history
+more safe states get to be learned by the stream PDFA learn-                               clustering to build a Mealy Machine that represents the un-
+ing algorithm; we see the agent achieves optimal behaviour                                 derlying decision process, while employing MCTS to com-
+around 5 · 105 episodes, when it no longer encounters candi-                               pute policies for the learned models. Comparing to the results
+date states, since all relevant states have been learned.                                  published in [Abadi and Brafman, 2020] for Rotating MAB,
+   In the domains from [Abadi and Brafman, 2020] (Fig-                                     Malfuction MAB, and Rotating Maze, our approach has bet-
+ures 6-9) our approach has poor performance overall. We                                    ter performance in Rotating MAB, and worse performance in
+are able to show convergence in all domains except Rotating                                the other domains. Second, we compare against [Icarte et al.,
+Maze with k = 2, 3 and Malfunction MAB with k = 5. How-                                    2019], also based on automata learning. Our approach outper-
+ever, it requires a large number of episodes before achieving                              forms theirs in all the domains mentioned in this paper, and
+a close-to-optimal average reward. We observe that all these                               their approach outperforms ours in all their domains. Specif-
+domains have a low distinguishability between the probabil-                                ically, their algorithm does not converge in our domains, and
+ity distribution of the states. The performance of PDFA-                                   our algorithm does not converge in theirs. Our poor perfor-
+learning is greatly dependent on such parameter, cf. [Balle                                mance is explained by the fact that all domains in [Icarte et
+et al., 2013]. Furthermore, in these domains, the value of dis-                            al., 2019] have a low distinguishability, unfavourable to us.
+tinguishability decreases with k. On the contrary, in Reset-                               On the other hand, their poor performance in our domains
+Rotating MAB, Enemy Corridor, and Flickering Grid, dis-                                    might be due to their reliance on local search methods.
+
+
+
+                                                                                    3413
+                                             Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+                                                                                                                     80
+                     90
+
+                                                                                                                     70
+                     80
+
+                                                                                                                     60
+
+
+
+    Average Reward                                                                                  Average Reward
+                     70
+                                                                   k=2 RMax
+                                                                   k=4 RMax                                          50
+                     60
+                                                                   k=6 RMax
+                                                                   k=2 Random                                        40                                              k=3 RMax
+                     50
+                                                                   k=4 Random                                                                                        k=4 RMax
+                                                                   k=6 Random                                        30                                              k=3 Random
+                     40
+                                                                   k=2 Abstraction                                                                                   k=4 Random
+                                                                   k=4 Abstraction                                   20                                              k=3 Abstraction
+                     30                                            k=6 Abstraction                                                                                   k=4 Abstraction
+
+                          0   1         2        3     4     5         6         7                                          0       5          10      15      20        25        30
+                                            Episodes (unit=105)                                                                                Episodes (unit=105)
+
+                                   Figure 6: Rotating MAB.                                                                               Figure 8: Cheat MAB.
+
+                     75
+                                                                                                                     17.5
+                     70
+                                                                                                                     15.0
+                     65
+
+
+
+
+    Average Reward
+                                                                                                                     12.5
+
+
+
+                                                                                                    Average Reward
+                     60                                                                                                                                              k=1 RMax
+                                                                                                                     10.0
+                                                                                                                                                                     k=2 RMax
+                     55                                                                                                                                              k=3 RMax
+                                                                   k=3 RMax                                           7.5
+                                                                                                                                                                     k=1 Random
+                                                                   k=5 RMax                                                                                          k=2 Random
+                     50                                                                                               5.0
+                                                                   k=3 Random                                                                                        k=3 Random
+                                                                   k=5 Random                                                                                        k=1 Abstraction
+                     45                                                                                               2.5
+                                                                   k=3 Abstraction                                                                                   k=2 Abstraction
+                                                                   k=5 Abstraction                                                                                   k=3 Abstraction
+                     40                                                                                               0.0
+                          0         1              2          3              4                                                  0   2      4       6     8    10       12     14       16
+                                            Episodes (unit=105)                                                                                Episodes (unit=105)
+
+                                  Figure 7: Malfunction MAB.                                                                            Figure 9: Rotating Maze.
+
+6                Conclusion and Future Work                                                       and [Icarte et al., 2019] in some cases, and it is outperformed
+We have presented an approach for reinforcement learning                                          in some other cases. The difficulties encountered in some do-
+in non-Markov decision processes that admit a Markov ab-                                          mains suggest several directions for future work.
+straction. The approach combines standard Markov RL with                                             Performance issues related to state distinguishability re-
+PDFA learning, in a modular manner. A key aspect of the                                           quire to be further investigated. State distinguishability is
+approach is that exploration is based on the automaton as it is                                   at the core of all PDFA learning algorithms that have PAC
+still being learned. Our theoretical results show that the ap-                                    guarantees [Ron et al., 1998; Clark and Thollard, 2004;
+proach has PAC guarantees whenever the employed Markov                                            Balle et al., 2014]. In our setting, distinguishability is further
+RL and automata learning algorithms have PAC guarantees.                                          decreased by the use of the uniform policy as an exploration
+The experimental evaluation allows us to draw several con-                                        policy on histories that are not yet mapped to a safe state
+clusions. First, experiments on the Enemy Corridor domain                                         (see Line 10 of Algorithm 1). An improvement in this direc-
+show that our approach has a good scalability in terms of the                                     tion could be to identify an exploration strategy that ensures
+number of automaton states. Second, our novel exploration                                         a higher distinguishability. The algorithm could be given a
+strategy yields an improvement over random exploration; this                                      heuristic set of exploration policies to consider, or an explo-
+is particularly evident in the Reset-Rotating MAB domain.                                         ration policy could be learned as part of the RL algorithm.
+Third, the performance of the automata learning component                                         Furthermore, new PDFA-learning techniques could be devel-
+strongly degrade for lower values of state distinguishability.                                    oped, tailored towards their use in RL. They could be based
+Specifically, learning the automaton in domains with lower                                        on new principles, in order not to rely on state distinguisha-
+distinguishability such as Cheat MAB, Malfunction MAB,                                            bility. Finally, the experimental results in Cheat MAB and
+and Rotating Maze requires many more samples than in do-                                          Malfunction MAB provide evidence that our approach might
+mains with a higher distinguishability such as Enemy Corri-                                       benefit from relying less on the automata learning component.
+dor and Flickering Grid. Fourth, our approach outperforms                                         Specifically, an agent could operate directly on the histories
+the state-of-the-art apporaches [Abadi and Brafman, 2020]                                         for which the current Markov abstraction is yet undefined.
+
+
+
+                                                                                           3414
+                          Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence (IJCAI-22)
+
+
+
+Acknowledgments                                                                   Castro, and Sheila A. McIlraith. Learning reward ma-
+                                                                                  chines for partially observable reinforcement learning. In
+This work is partially supported by the ERC Advanced Grant
+                                                                                  NeurIPS, 2019.
+WhiteMech (No. 834228), by the EU ICT-48 2020 project
+TAILOR (No. 952215), by the PRIN project RIPER (No.                            [Kaelbling et al., 1998] Leslie Pack Kaelbling, Michael L.
+20203FFYLK), and by the JPMorgan AI Faculty Research                              Littman, and Anthony R. Cassandra. Planning and acting
+Award “Resilience-based Generalized Planning and Strategic                        in partially observable stochastic domains. Artif. Intell.,
+Reasoning”.                                                                       1998.
+                                                                               [Kearns and Singh, 2002] Michael J. Kearns and Satinder P.
+References                                                                        Singh. Near-optimal reinforcement learning in polynomial
+                                                                                  time. Mach. Learn., 2002.
+[Abadi and Brafman, 2020] Eden Abadi and Ronen I. Braf-
+   man. Learning and solving regular decision processes. In                    [Kearns and Vazirani, 1994] Michael J. Kearns and
+   IJCAI, 2020.                                                                   Umesh V. Vazirani. An Introduction to Computational
+                                                                                  Learning Theory. MIT Press, 1994.
+[Bacchus et al., 1996] Fahiem Bacchus, Craig Boutilier, and
+                                                                               [Lattimore et al., 2013] Tor Lattimore, Marcus Hutter, and
+   Adam J. Grove. Rewarding behaviors. In AAAI, 1996.
+                                                                                  Peter Sunehag. The sample-complexity of general rein-
+[Balle et al., 2013] Borja Balle, Jorge Castro, and Ricard                        forcement learning. In ICML, 2013.
+   Gavaldà. Learning probabilistic automata: A study in state                 [Maillard et al., 2011] Odalric-Ambrym Maillard, Rémi
+   distinguishability. Theor. Comp. Sci., 2013.
+                                                                                  Munos, and Daniil Ryabko.              Selecting the state-
+[Balle et al., 2014] Borja Balle, Jorge Castro, and Ricard                        representation in reinforcement learning. In NeurIPS,
+   Gavaldà. Adaptively learning probabilistic deterministic                      2011.
+   automata from data streams. Mach. Learn., 2014.                             [Majeed and Hutter, 2018] Sultan Javed Majeed and Marcus
+[Bellman, 1957] Richard Bellman. A markovian decision                             Hutter. On Q-learning convergence for non-markov deci-
+   process. J. Math. Mech., 1957.                                                 sion processes. In IJCAI, 2018.
+[Brafman and De Giacomo, 2019] Ronen I. Brafman and                            [Nguyen et al., 2013] Phuong Nguyen, Odalric-Ambrym
+   Giuseppe De Giacomo. Regular decision processes: A                             Maillard, Daniil Ryabko, and Ronald Ortner. Competing
+   model for non-markovian domains. In IJCAI, 2019.                               with an infinite set of models in reinforcement learning. In
+                                                                                  AISTATS, 2013.
+[Brafman and Tennenholtz, 2002] Ronen I. Brafman and
+   Moshe Tennenholtz. R-Max: A general polynomial time                         [Palmer and Goldberg, 2007] Nick Palmer and Paul W.
+   algorithm for near-optimal reinforcement learning. JMLR,                       Goldberg. PAC-learnability of probabilistic deterministic
+   2002.                                                                          finite state automata in terms of variation distance. Theor.
+                                                                                  Comp. Sci., 2007.
+[Brafman et al., 2018] Ronen I. Brafman, Giuseppe De Gia-
+                                                                               [Puterman, 1994] Martin L. Puterman. Markov Decision
+   como, and Fabio Patrizi. LTLf/LDLf non-Markovian re-
+   wards. In AAAI, 2018.                                                          Processes: Discrete Stochastic Dynamic Programming.
+                                                                                  Wiley, 1994.
+[Clark and Thollard, 2004] Alexander Clark and Franck
+                                                                               [Ron et al., 1998] Dana Ron, Yoram Singer, and Naftali
+   Thollard. PAC-learnability of probabilistic deterministic
+                                                                                  Tishby. On the learnability and usage of acyclic proba-
+   finite state automata. J. Mach. Learn. Res., 2004.
+                                                                                  bilistic finite automata. J. Comp. Syst. Sci., 1998.
+[De Giacomo et al., 2019] Giuseppe De Giacomo, Luca Ioc-                       [Ronca and De Giacomo, 2021] Alessandro Ronca and
+   chi, Marco Favorito, and Fabio Patrizi. Foundations for                        Giuseppe De Giacomo. Efficient PAC reinforcement
+   restraining bolts: Reinforcement learning with LTLf/LDLf                       learning in regular decision processes. In IJCAI, 2021.
+   restraining specifications. In ICAPS, 2019.
+                                                                               [Ronca et al., 2022] Alessandro Ronca, Gabriel Paludo
+[Gaon and Brafman, 2020] Maor Gaon and Ronen I. Braf-                             Licks, and Giuseppe De Giacomo. Markov abstractions
+   man. Reinforcement learning with non-markovian re-                             for PAC reinforcement learning in non-Markov decision
+   wards. In AAAI, 2020.                                                          processes. CoRR, abs/2205.01053, 2022.
+[Hutter, 2009] Marcus Hutter. Feature reinforcement learn-                     [Sutton and Barto, 2018] Richard S. Sutton and Andrew G.
+   ing: Part I. Unstructured MDPs. J. Artif. Gen. Intell., 2009.                  Barto. Reinforcement learning: An introduction. Adaptive
+[Hutter, 2016] Marcus Hutter. Extreme state aggregation be-                       computation and machine learning. MIT Press, 2018.
+   yond markov decision processes. Theor. Comp. Sci., 2016.                    [Veness et al., 2011] Joel Veness, Kee Siong Ng, Marcus
+[Icarte et al., 2018] Rodrigo Toro Icarte, Toryn Q. Klassen,                      Hutter, William T. B. Uther, and David Silver. A Monte-
+   Richard Anthony Valenzano, and Sheila A. McIlraith. Us-                        Carlo AIXI approximation. J. Artif. Intell. Res., 2011.
+   ing reward machines for high-level task specification and                   [Xu et al., 2020] Zhe Xu, Ivan Gavran, Yousef Ahmad, Ru-
+   decomposition in reinforcement learning. In ICML, 2018.                        pak Majumdar, Daniel Neider, Ufuk Topcu, and Bo Wu.
+[Icarte et al., 2019] Rodrigo Toro Icarte, Ethan Waldie, To-                      Joint inference of reward machines and policies for rein-
+                                                                                  forcement learning. In ICAPS, 2020.
+   ryn Q. Klassen, Richard Anthony Valenzano, Margarita P.
+
+
+
+                                                                        3415
+

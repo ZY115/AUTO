@@ -1,0 +1,1157 @@
+          Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+
+ Yun Hua * 1 Haosheng Chen * 2 Wenhao Li 3 Bo Jin 3 Baoxiang Wang 4 Hongyuan Zha 4 Xiangfeng Wang 2 5
+
+
+                          Abstract                                      autonomous driving (Zhu et al., 2018), and precision agricul-
+                                                                        ture management (Li et al., 2021). However, it is recognized
+      Addressing reward design complexities in deep                     that the effectiveness of current DRL methods hinges on
+      reinforcement learning is facilitated by knowl-                   the quality of the provided reward signals. Dense rewards
+      edge transfer across different domains. To this                   require significant engineering effort in practical applica-
+      end, we define reward translation to describe                     tions (Fickinger et al., 2021), and non-Markovian reward
+      the cross-domain reward transfer problem. How-                    signals are often produced by humans (MacGlashan et al.,
+      ever, current methods struggle with non-pairable                  2017), potentially hindering the training process. In light
+      and non-time-alignable incompatible MDPs. This                    of these challenges, it is important to consider how hu-
+      paper presents an adaptable reward translation                    mans excel at drawing on their own experiences to learn
+      framework neural reward translation featuring                     and apply skills across various domains. Specifically, hu-
+      semi-alignable MDPs, which allows efficient re-                   mans demonstrate a unique ability to recognize latent struc-
+      ward translation under relaxed constraints while                  tural similarities between tasks in related but distinct areas,
+      handling the intricacies of incompatible MDPs.                    which enables them to abstract skills from differences. They
+      Given the inherent difficulty of directly mapping                 adeptly learn from third-party observations that lack explicit
+      semi-alignable MDPs and transferring rewards,                     correspondence to internal self-representations (Stadie et al.,
+      we introduce an indirect mapping method through                   2017; Liu et al., 2018; Sermanet et al., 2018) —perform-
+      reward machines, created using limited human                      ing tasks like finding a path on a map and navigating to a
+      input or LLM-based automated learning. Graph-                     destination in real life—or imitating experts with different
+      matching techniques establish links between re-                   embodiments (Gupta et al., 2017; Rizzolatti and Craighero,
+      ward machines from distinct environments, thus                    2004; Liu et al., 2019) in unfamiliar environments (Liu et al.,
+      enabling cross-domain reward translation within                   2019). Endowing RL agents with this ability and transfer re-
+      semi-alignable MDP settings. This broadens the                    wards across different domains could greatly enhance their
+      applicability of DRL across multiple domains.                     learning efficiency and reduce the efforts in reward design.
+      Experiments substantiate our approach’s effec-
+      tiveness in tasks under environments with semi-                   Existing efforts for transferring rewards across various do-
+      alignable MDPs.                                                   mains primarily focus on cross-domain imitation learning,
+                                                                        including three main types of domain discrepancies: dy-
+                                                                        namics (Liu et al., 2019), embodiment (Gupta et al., 2017;
+                                                                        Hudson et al., 2022), and viewpoint mismatch (Jiang et al.,
+1. Introduction                                                         2020; Stadie et al., 2017). These approaches require paired
+Deep reinforcement learning (DRL) has made notable                      and time-aligned demonstrations, often hard to handle more
+strides in areas such as gaming (Mnih et al., 2015; Lam-                than one descriptor at once. Subsequent advances, such
+ple and Chaplot, 2017), robotic control (Kober et al., 2013),           as DAIL (Kim et al., 2020) and other works using Cycle-
+                                                                        GAN (Raychaudhuri et al., 2021) and Gromov-Wasserstein
+  *
+    Equal contribution 1 Antai College of Economics and Manage-         distance (Fickinger et al., 2021), relax some constraints,
+ment, Shanghai Jiao Tong University, Shanghai, China 2 School           allowing algorithms to automatically learn observation and
+of Computer Science and Technology, East China Normal Uni-
+versity, Shanghai, China 3 School of Software Engineering, Tongji       action mappings from unpaired and unaligned demonstra-
+University, Shanghai, China 4 School of Data Science, The Chi-          tions. However, they still struggle with incompatible MDPs
+nese University of Hong Kong, Shenzhen, Shenzhen, China 5 Key           which are non-pairable and non-time-alignable tasks.
+Laboratory of Mathematics and Engineering Applications, East
+China Normal University, Shanghai, China. Correspondence to:            In this paper, we introduce the concept of reward translation,
+Xiangfeng Wang <xfwang@cs.ecnu.edu.cn>.                                 describing cross-domain reward transfer in reinforcement
+                                                                        learning as a process akin to translation between differ-
+Proceedings of the 42 nd International Conference on Machine            ent languages. We further introduce semi-alignable MDPs,
+Learning, Vancouver, Canada. PMLR 267, 2025. Copyright 2025
+by the author(s).                                                       which describe incompatible MDPs sharing an abstract
+
+                                                                    1
+                                             Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+
+                                                                                                                                         State         “Goal”
+
+
+                                                                                                                                   ...                  ...
+
+                                                                                                                             ...                 ...
+
+
+
+                                               A                    B           C       D                E   F
+                                                                                                                                                                Semi-Alignable MDPs
+                            Environment
+                            HalfCheetah-v3
+
+
+           Environments
+           with same task   Environment             A                   B   C       D    E        F
+                                NChain                                                                           Samples
+                                                            Start                               Target
+
+
+                                                                                                                                                                 Alignable MDPs
+                            Environment              F       E          D   C       B            A
+                                NChain
+                                                   Target                               Start
+                                                                            G
+
+
+
+
+Figure 1. The distinction between alignable and semi-alignable MDPs involves injective mappings. In NChain environments and
+the HalfCheetah-v3, agents aim for point F. Alignable MDPs exhibit state and action space injections, seen in the NChain examples
+(Environment Y to X ). Semi-alignable MDPs, as in NChain-HalfCheetah pairings (Environment Y to Z), lack these injections but share
+a common goal, enabling mappings between abstract “goal” and “skill” spaces.
+
+
+alignment, as illustrated in Figure 1. By further abstracting                                                         environments operate under semi-aligned MDPs.
+tasks to focus on skills and sub-tasks, semi-alignable MDPs
+permit high-level mapping across domains, more similar to                                                             2. Related Works
+human learning processes. Our goal is to establish a frame-
+work capable of learning these high-level mappings within                                                            Domain transfer in RL. Various works have conducted
+generalized semi-alignable MDPs and reusing rewards to                                                               transfer learning in the reinforcement learning area (Taylor
+enhance training efficiency in new domains. To achieve this,                                                         and Stone, 2009; Zhu et al., 2023). To deal with trans-
+we must abstract tasks to obtain alignable skill and abstract                                                        fer learning between different domains, primitive meth-
+spaces. Reward machines (RMs) provide a bridge to dis-                                                               ods always try to use the hand-craft features along with
+cover task structures with non-Markovian reward functions                                                            a distance metric between the imitation agent and the ex-
+through the use of high-level events and abstract check-                                                             pert. For example, Ammar and Taylor (2011) established a
+points (Icarte et al., 2022). We propose the neural reward                                                           shared state space between MDP in different domains and
+translation (NRT) framework to tackle the reward transfer                                                            learns a map between states, while Ammar et al. (2015) ap-
+problem within semi-alignable MDPs. NRT leverages RMs                                                                plies unsupervised manifold alignment to learn linear maps
+to distill abstract alignments and transfer reward signals                                                           between states possessing similar local geometric proper-
+between domains.                                                                                                     ties. Existing efforts for domain transferring primarily fo-
+                                                                                                                     cus on cross-domain imitation learning, relying on three
+The primary contributions of this paper are as follows:
+                                                                                                                     key domain descriptors: dynamics (Liu et al., 2019), em-
+1) The introduction of semi-alignable Markov decision pro-                                                           bodiment (Gupta et al., 2017; Hudson et al., 2022), and
+cesses (MDPs), providing a crucial theoretical foundation                                                            viewpoint mismatch (Jiang et al., 2020; Stadie et al., 2017).
+for facilitating reward translation in cross-domain reinforce-                                                       Generally, these approaches acquire states corresponding to
+ment learning and extending beyond alignable MDPs.                                                                   proxy tasks and paired, time-aligned demonstrations to learn
+                                                                                                                     a state map or state encoder using deep learning methods.
+2) The development of a novel framework called neural
+                                                                                                                     DAIL (Kim et al., 2020) proposes a comprehensive frame-
+reward translation (NRT), designed to address the reward
+                                                                                                                     work encompassing all three types and employs GAMA
+translation problem within semi-alignable MDPs by build-
+                                                                                                                     to autonomously learn alignment between MDPs from dis-
+ing upon the foundation provided by reward machines.
+                                                                                                                     tinct domains. Moreover, xDIO (Raychaudhuri et al., 2021)
+Moreover, we incorporate an innovative reward machine
+                                                                                                                     uses CycleGAN for alignment with state-only demonstra-
+generator that utilizes large language models for the auto-
+                                                                                                                     tions, and GWIL (Fickinger et al., 2021) employs Gromov-
+matic generation of reward machines.
+                                                                                                                     Wasserstein distance to eliminate proxy task need. These
+3) The proposal of several semi-alignable environments 1 ,                                                           domain transfer approaches assume alignable MDPs, which
+showcasing the effectiveness of the Neural Reward Trans-                                                             are often scarce in real-world applications. In contrast, this
+lation approach in handling reward translation tasks where                                                           paper aims to distill abstract alignment from semi-alignable
+    1
+                                                                                                                     expert demonstrations and transfer it to the imitation agent
+      An early-stage version of the code is available at:
+https://github.com/hyyh28/reward translation. Note that the code-
+                                                                                                                     through an additional reward signal, circumventing the need
+base is still under development and may lack full documentation                                                      for alignable MDPs and contributing to a more general do-
+or polish.                                                                                                           main transfer in reinforcement learning.
+
+
+                                                                                                                 2
+                               Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+Reward Machine. Reward machines (RM) were initially                     the theoretical foundation.
+introduced as a class of finite state machines by (Icarte et al.,
+2018). These machines were designed to unveil the struc-                3.1. Reward Translation
+ture of non-Markovian reward functions in tasks represented
+by high-level events (i.e., propositional variables). Icarte            In this study, reward translation refers to cross-domain
+et al. (2018) combined Q-learning with reward machines,                 reward transfer in reinforcement learning. Formally, it
+proposing QRM, the first reinforcement learning method                  involves translating rewards from a source domain X to
+within RM. Subsequently, Icarte et al. (2022) introduced                a target domain Y . Conventional cross-domain methods
+counterfactual experiences for reward machines (CRM), a                 assume alignable MDPs, employing a formulation where
+modified version of QRM capable of learning a single Q-                 state-action alignment between source and target domains
+function that considers RM states as inputs, thus enhancing             is predefined:
+compatibility with deep neural networks. Icarte et al. (2022)                         ry (sy , ay ) = rx (T −1 (sy , ay )),       (1)
+proposed hierarchical reinforcement learning for reward ma-
+chines (HRM) to accelerate policy learning, albeit possibly             where s denotes the state, a represents the executed action,
+converging to sub-optimal solutions. Icarte et al. (2023)               and T −1 is an inverse transformation function mapping el-
+formulated a discrete optimization problem for experience-              ements in Y back to their counterparts in X. This direct
+based learning of reward machines in partially observable               mapping approach relies strictly on original state-action
+environments. Reward machines have been applied to solve                pairs, rendering it ineffective for non-alignable MDPs lack-
+problems in robotics (Camacho et al., 2021; DeFazio and                 ing pairability and time-alignability. To address this limi-
+Zhang, 2021; Shah et al., 2020), multi-agent reinforcement              tation, we propose a soft version reward translation, which
+learning (Neary et al., 2021), lifelong reinforcement learn-            enables reward transfer based on embedded state-action
+ing (Zheng et al., 2022), self-paced reinforcement learn-               representations:
+ing (Koprulu and Topcu, 2023) and offline reinforcement                            ry (e(sy , ay )) = rx (T −1 (e(sy , ay ))),    (2)
+learning (Sun and Wu, 2023). Unlike these studies, our
+paper seeks to employ reward machines to uncover task                   where e is an embedding function that projects state-action
+structures in reinforcement learning and facilitate reward              pairs from different domains into a shared latent space. Fig-
+signal transfer between tasks from different domains.                   ure 1 compares these translation approaches, illustrating
+                                                                        how high-level abstractions, ”Goal” and ”Skill,” serve as
+Reinforcement learning abstraction. Our work is also                    embeddings for state and action, facilitating reward transla-
+related to reinforcement learning abstraction, which aims to            tion in MDPs without strict pairability and time-alignability.
+improve the efficiency and scalability of reinforcement learn-          A detailed discussion of ”Goal” and ”Skill” follows in the
+ing algorithms when dealing with complex tasks by creat-                next subsection.
+ing abstract representations of environments or tasks (Abel,
+2022). Various types of abstractions have been explored,                3.2. Semi-Alignable MDPs
+including state (Zhang et al., 2020; Abel et al., 2019; Ka-
+malaruban et al., 2020; Cortese et al., 2021), action (Şimşek         To delineate the soft reward translation problem formulated
+et al., 2005; Machado et al., 2017), and temporal transi-               in Equation. (2), we present the notion of semi-alignable
+tion (Abel et al., 2020; Biza and Platt, 2019; Ma et al., 2021;         MDPs (Illustrated in Figure 1) to portray incompatible
+Yang et al., 2021). Reward machines can also be considered              MDPs with concealed maps. In this paper, we elegantly
+as a reinforcement learning abstraction method. However,                introduce the notions of ”goal” and ”skill,” symbolized as
+while these works mainly focus on creating abstract repre-              b and w. These concepts encapsulate the essence of high-
+sentations for a single environment or task to reduce the               level states and actions, which can be succinctly conveyed
+complexity of the state and action spaces, thus making the              through the equation (b, w) = e(s, a). To offer a tangi-
+task easier to learn, our paper aims to use abstraction to              ble interpretation, a ”goal” may be likened to a series of
+achieve high-level knowledge transfer between different                 checkpoints in games, representing coarse-grained states.
+reinforcement learning environments.                                    In contrast, ”skill” captures the nuances of incremental dif-
+                                                                        ferences between each step’s ”goals.” The infinite horizon
+                                                                        Markov decision process (MDP) M can be augmented to
+3. Preliminaries                                                        be described as a tuple S, A, B, W, Pr, PrB , r , where S
+Before a comprehensive introduction of the neural reward                signifies the state space, A represents the action space, Pr
+translation (NRT) framework, it is pertinent to present an              indicates the transition function based on state and action,
+overview of the problem context concerning reward transla-              while PrB denotes the deterministic transition function on
+tion, outline the principles of semi-alignable MDPs as well             “goal” and r refers to the reward function. The infinite
+as the introduction about reward machine, as this underpins             horizon Markov decision process (MDP) M can be aug-
+                                                                        mented to be described as a tuple S, A, B, W, Pr, PrB , r ,
+
+                                                                    3
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+where S signifies the state space, A represents the action
+space, B denotes the set of abstract states or ”goals”, W
+represents the set of possible transitions between abstract                A            B          C          D          E          F
+
+states, Pr indicates the transition function based on state
+and action, PrB denotes the deterministic transition func-            (a) HalfCheetah-v3 task. The target of the robot is to reach F.
+tion on abstract states, and r refers to the reward function.
+Let B = {bi }ni=0 and W = {wi }ni=0 denote the extended
+“goal” space and “skill” space, respectively. The augmented
+MDP for the environment within domain x can be defined as
+MTx = (Sx , Ax , Bx , Wx , Prx , PrB    T
+                                   x , rx ). Additionally, we
+introduce an intelligible albeit less rigorous definition of          (b) Reward machine for HalfCheetah-v3 task. f0 ∈ F de-
+                                                                      notes the terminal state.
+semi-alignable MDPs. For the extended MTx and MTy ,
+if there exist injections between (wxi ∈ Wx , bix ∈ Bx )            Figure 2. Example of reward machine for HalfCheetah-v3. The
+and (wyi ∈ Wy , biy ∈ By ), they are deemed semi-alignable          reward machine is designed by (Icarte et al., 2022).
+MDPs. While the precise definition of semi-alignable MDPs
+is an extension of the MDP alignability theory and the MDP
+reduction definition proposed by (Kim et al., 2020).                3.3. Reward Machine
+Definition 3.1. An MDP semi-reduction from MTx to                   The formulation of reward machines, which are designed to
+MTy , denoted as MTx ⪰ MTy can be represented by a tuple            unveil the organization of non-Markovian reward functions
+                                                                    related to tasks characterized by high-level events. Reward
+       r = (ϕ, ψ),    ϕ : Bx → By , ψ : Wx → Wy .                   machines is typically defined as (Icarte et al., 2018):
+                                                                    Definition 3.3. (Reward Machine). Given a set of propo-
+For all (bx , wx , by , wy ) ∈ Bx ×Wx ×By ×Wy we have
+                                                                    sitional symbols P, a set of (environment) states S, and
+1). w-optimality:                                                   an action domain x, a finite state reward machine (RM)
+                                                                   is defined as a tuple RP SA = ⟨U, u0 , F, P, δu , δr ⟩, where:
+     OMy (ϕ(bx ), ψ(wx )) = 1 ⇒ OMx (bx , wx ) = 1,                 U ⊆ S represents a finite collection of states, u0 ∈ U
+     OMy (by , wy ) = 1 ⇒ ϕ−1 (by ) ̸= ∅, ψ −1 (wy ) ̸= ∅,          denotes the initial state, F defines a restricted subset of
+                                                                    terminal states (F ∩ U = ∅), P signifies the set of proposi-
+where OM (b, w) = 1 implies that (b, w) exists in M and is          tional symbols, δu characterizes the state-transition function
+produced by the optimal policy;                                     δu : U → [U × P → U ], and δr embodies the state-reward
+                                                                    function δr : U → [U × P × U → R].
+2). b-dynamic: if OMy (by , wy ) = 1, we have
+
+                                           −1
+                                                                     It should be emphasized that employing a reward machine
+PrB                  B
+                                              (by ), wx ∈ ϕ−1 (wy ). in reinforcement learning necessitates the extension of the
+                                 
+  y (by , wy ) = ϕ Prx (bx , wx ) , bx ∈ ϕ
+                                                                    fundamental MDP.
+By distilling ”goals” and ”skills” for optimal policies Mx          Definition 3.4. (MDP with Reward Machine). An MDP
+and My , a graph of goal-skill trajectories emerges. Fig-           integrated with a Reward Machine is represented as a
+ure 3.2 displays this with HalfCheetah-v3 and NChain in-            tuple TRP SA = ⟨S, A, Pr, γ, P, L, U, u0 , δu , δr ⟩, where
+stances. When MDP semi-reduction is present, homomor-               S, A, Pr, γ pertain to the state space, action space, transi-
+phic trajectories reveal underlying structural similarities         tion function, and discount factor in the original MDP, while
+between Mx and My . We then define semi-alignable:                  P, U, u0 , δu , δr are determined by the RM. Additionally, L 2
+Definition 3.2. Two MDPs Mx and My are semi-alignable               symbolizes a labelling function L : S × A × S → 2P .
+if and only if Mx ⪰ My or My ⪰ Mx , where Mx and
+My are any two MDPs in domain X and domain Y, while                 In each step, the agent executes action a in the MDP, tran-
+Mx ⪰ My conveys that there exists a tuple (ϕ, ψ) enabling           sitioning from state s to s′ , while the RM changes to state
+semi-reduction from Mx to My .                                      u′ = δu (u, L(s′ )), rewarding r̂(s, a, s′ , u, u′ ). Figure 2 il-
+                                                                    lustrates an RM example for HalfCheetah, where the robot
+Efficiency in achieving the target within (2) improves after        aims to reach target F within a set number of steps. Unlike
+applying the semi-reduction definition. However, accessing          RL environmental states (s), RMs possess states (u) and
+abstract ”goal” and ”skill” directly is challenging, making         transitions depending on P, denoting the robot’s relative
+semi-reduction establishment difficult. Therefore, we utilize          2
+                                                                         L is a labeling function that assigns to each transition (s, a, s′ )
+the reward machine (RM) to indirectly link these two spaces.        a set of atomic propositions P, indicating which events are consid-
+                                                                    ered to have occurred during that transition.
+
+                                                                4
+                                                    Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+                       Target Task Training
+                                                                          Transferred Reward Function
+                                   Transferred Reward
+
+                                                                          Original reward   Transferred reward
+                    Observation                                                                                                              Reward Translation
+                                                    Environment Z (Target)
+                                                                                                                 Reward Machine
+            Agent   Action                 Environment
+                                           Description
+                                                                     Goal Description                              Generator
+                                                                                                                                          Reward machine for Environment Z
+
+                                                           Sample                                                   Expert
+                                                           ...                   ...                               Knowledge
+                                              ...                   ...
+
+
+                                                                                                                                                                Alignable Reward Machine
+                                  Semi-alignable MDPs
+
+                                    Without alignment                                                                                                Graph Matching
+
+
+                                                                                                                                                          and
+
+
+                                                           Sample                                  Reward Machine Generation
+                                                    Environment Y (Source)
+                                                                                                                 Reward Machine
+                                           Environment
+                                           Description
+                                                                     Goal Description                              Generator
+                                                                                                                                          Reward machine for Environment Y
+
+                                                                                                                    Expert
+                                                                                                                   Knowledge
+
+
+
+Figure 3. An overview of the Neural Reward Translation (NRT) framework: 1) Reward machine generation uses a generator to construct
+RMs based on task and environment descriptions through expert design. 2) Reward translation aligns source and target RMs using graph
+matching, facilitating reward transfer. 3) Target task training leverages transferred rewards for efficient learning.
+
+
+position to the target. The path has six checkpoints; cross-                                                         4. Reward Translation via Reward Machine
+ing one causes the RM state to advance. RMs decompose
+RL problems, providing coarse-grained disassembly to in-                                                             In this section, we introduce the primary framework, Neural
+form generalized cross-domain knowledge, crucial due to                                                              Reward Translation (NRT), devised to address the proposed
+significant differences among diverse tasks in fine-grained                                                          reward translation problem between reward machines. The
+states, actions, and transitions because such coarse-grained                                                         NRT framework comprises three core components: 1) re-
+disassembly will provide a channel to indirectly access to                                                           ward machine generation component; 2) reward translation
+the “goal” and “skill” within semi-alignable MDPs. Ulti-                                                             component; and 3) target task training component. The
+mately, the reward machine state space U materializes as an                                                          Reward Machine (RM) generation component constructs
+injective mapping originating from the agent state space S.                                                          RMs based on task and environment descriptions, leverag-
+We can now propose the following theorem to establish a                                                              ing expert knowledge and an RM Generator. This study
+rigorous connection between “goal” and “skill” with RMs:                                                             also integrates a Large Language Model (LLM) for auto-
+                                                                                                                     mated RM construction. The reward translation component
+ Theorem 3.5. Given a reward machine RxP SA for an en-                                                               employs standard graph matching algorithms to align gener-
+ vironment x, it is posited that a ”goal” space Bx and a                                                             ated RMs from the source task to the target task to transfer
+”skill” space Wx exist. Furthermore, injective mappings                                                              reward. During target task training, the agent learns within
+ Θx : Ux → Bx and Γx : Px → Wx are also postulated to                                                                the target environment, leveraging transferred rewards from
+ exist. Under these stipulations, the ensuing relationships                                                          the source task to enhance learning efficiency.
+ emerge:
+                                                                                                                     Reward Machine Generation. The primary role of this
+1) For any “goal” bix ∈ Bx , there exists a unique reward                                                            component is to construct reward machines by incorporating
+machine state uix ∈ U or fxi ∈ Fx such that Θx (uix ) = bix                                                          domain knowledge. Typically, experts manually design re-
+or Θx (uix ) = fxi ;                                                                                                 ward machines based on environment and target information
+2) For any “skill” wxi ∈ Wix , there exists a unique proposi-                                                        (Icarte et al., 2018). In this work, we also propose a method
+tional symbol pix ∈ Px such that Γx (pix ) = wxi .                                                                   to construct reward machines using large language models
+                                                                                                                     (LLMs). However, since this is not the core focus of our
+A comprehensive proof is in Appendix A.1. This theorem                                                               study, we provide only a brief discussion.
+enables recasting the reward translation problem into the                                                            The LLM is supplied with environment, observation, ac-
+more tractable reward machine transfer problem. Each re-                                                             tion, and target descriptions, detailing the task and domain
+ward machine, represented as a finite state machine by a                                                             alongside the definition of a reward machine. To facilitate
+graph, transforms the task into a graph matching problem                                                             few-shot learning in new tasks, examples of reward machine
+for transfer between two reward machines.
+
+                                                                                                                 5
+                                  Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+generation are also included. Due to the complexity of                        Reward Translation. The focus of this component is to
+learning reward machines, the LLM must consider various                       achieve effective reward translation between source and
+aspects such as the design of propositional symbols, the                      target tasks within distinct domains under semi-alignable
+injection between the agent’s observations and RM states,                     Markov Decision Processes (MDPs). Initially, during the
+and the RM transitions. We utilize a chain of thought (COT)                   reward machine generation component, the Neural Reward
+approach when designing the training prompt for the LLM.                      Translation (NRT) method constructs reward machines for
+Generally, our prompt sequentially poses three questions                      both source and target tasks. And the reward machine for
+to the LLM, enabling the development of an RM structure                       the source task incorporates a dense reward obtained from
+for a given environment: i) Design the set of propositional                   its learned optimal value function.
+symbols P for ⟨E NV⟩ environment; ii) Design the get event
+                                                                              Subsequently, this component transfers the dense reward
+function for ⟨E NV⟩ environment; iii) Design the reward
+                                                                              originating from the source task’s reward machine to the
+machine for ⟨E NV⟩ environment.
+                                                                              target task’s reward machine. As the reward machines are
+Firstly, to design the set of propositional symbols P, the                    aligned via graph matching, NRT defines two types of re-
+LLM needs to identify key events within the task description                  lationships between the reward machines and seeks to ac-
+and utilize them as a portion of the propositional symbols.                   complish reward translation based on these relationships.
+Next, in order to design the get event function, the LLM                      Definitions for isomorphic and homomorphic reward ma-
+must establish a mapping between events that are accessi-                     chines are presented accordingly (In the following of this
+ble in the environment code and the propositional symbols.                    paper, we use g and h to represent the map between reward
+Subsequently, Python code is generate by LLM, enabling                        machine states).
+the agent to access reward machine events and states. Fi-                     Definition 4.1. (Isomorphic reward machine). Let RxP SA
+nally, to construct the reward machine, the LLM reviews the                   and RyP SA denote two reward machines. RxP SA is a iso-
+propositional symbols and extracts general states u ∈ U as                    morphic reward machine to RyP SA if and only if there exist
+well as terminal states f ∈ F. The LLM formulates reward                      bijections h : Px → Py and g : Ux → Uy such that piy =
+machine transitions, including sparse rewards exclusively                     h(pix ), pix = h−1 (piy ) and uiy = g(uix ), uix = g −1 (uiy ).
+present upon task completion. Detailed prompts can be
+found in Appendix A.3.                                                        Considering the priorly introduced bijections bi = Θ(ui )
+However, the generated or expert designed reward machine                      and pi ∈ P : wi = Γ(pi ) in Theorem. 3.5, Theorem 4.2 is
+only contains sparse rewards; therefore, NRT introduces                       utilized to characterize the correlation among semi-alignable
+a denser reward for the source task’s reward machine. At                      MDPs with isomorphic reward machines.
+each stage, the agent operates within the environment and                     Theorem 4.2. If Mx and My are two MDPs satisfying
+executes action a, transitioning from state s to s′ in the MDP.               Mx ⪰ My and My ⪰ Mx , then their tasks possess isomor-
+The RM progresses from state u to u′ = δu (u, L(s′ )), and                    phic reward machines RxP SA and RyP SA .
+the agent acquires a reward comprised of the original reward
+and the reward from the RM:                                                   The comprehensive proof can be found in Appendix A.1.
+                                                                              For MDPs Mx and My , should isomorphic reward machines
+r̂(s, a, s′ , u, u′ ) = r(s, a, s′ )+δr (u, u′ ), u′ = δu (u, L(s′ )).        exist for their tasks, a reinforcement learning agent’s reward
+                                                                 (3)          function in My can be represented as:
+δr is depicted using a potential-based reward shaping frame-                       δx
+work to maintain policy consistency:                                           r̂yr (sy , ay , sy ′ , uy , uy ′ ) = ry (sy , ay , sy ′ ) + δry (uy , uy ′ ),
+                                                                                                                                                         (6)
+                 δu (u, u′ ) = γR ϕ(u′ ) − ϕ(u),                  (4)         and if My employs the transferred δrx , the reward function
+                                                                              will be indicated by:
+where γR represents the discount parameter. Moreover, to
+                                                                              δx
+compute the potential value of the corresponding reward                      r̂yr (sy , ay , sy ′ , uy , uy ′ ) = ry (sy , ay , sy ′ )+δrx (g(uy ), g(uy ′ )).
+machine state, NRT incorporates the expert of optimal value                                                                                            (7)
+function of the agent in source task g as follows:                             Given that both δrx and δry employ potential-based reward
+                                                                               shaping, we can deduce the following equation by examin-
+          ϕ(u) = Esi ∼S V ∗ si , ui ui = u .
+                                              
+                                                        (5)                    ing the following potential-based reward shaping properties:
+                                                                                                  T −1                   T −1
+Consequently, RMs for both source and target tasks are gen-                                                δy                    δx
+                                                                                                  X                      X
+                                                                                                         r̂yr (xiy ) =          r̂yr (xiy ),            (8)
+erated, while the obtained reward machine for the source                                          i=0                    i=0
+task possesses a dense reward derived from its learned opti-
+mal value function. The subsequent challenge involves the                     where T represents the task duration, and xiy donates
+transfer of dense rewards from the source task to target task.                ⟨siy , aiy , si+1  i    i+1
+                                                                                            y , uy , uy ⟩. The above relations also hold for
+
+
+                                                                         6
+                                Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+transferring state reward functions from My to Mx . How-                ward received from the source task within a distinct domain.
+ever, isomorphic reward machines impose restrictive condi-              In the stage, the agent operating in the target task has access
+tions demanding a bijection between semi-alignable MDPs’                to the transferred reward function. The agent acquires an ob-
+reward machines. Therefore, homomorphic reward ma-                      servation sy ′ from the target task environment at every step
+chines are introduced as a more flexible formulation.                   of training. This observation is subsequently fed into the
+Definition 4.3. (Homomorphic reward machine). Let                       reward machine, which yields the corresponding reward ma-
+RxP SA and RyP SA denote two reward machines. RxP SA                    chine state uy ′ . Given the observation and reward machine
+is a homomorphic reward machine to RyP SA if and only if                state (sy , ay , sy ′ , uy , uy ′ ), the agent acquires the transferred
+                                                                                  δx
+there exist injections h : Px → Py and g : U§ → U† such                 reward r̂yr (sy , ay , sy ′ , uy , uy ′ ) from the transferred reward
+that piy = h(pix ) and uiy = g(uix ).                                   function. Subsequently, the agent can employ diverse rein-
+                                                                        forcement learning algorithms to train its policy, aiming to
+Additionally, considering the bijections bi = Θ(ui ) and                maximize the aggregate transferred reward:
+pi ∈ P : wi = Γ(pi ) introduced in Theorem 3.5, Theo-
+rem 4.4 is utilized to characterize the correlation among                                      T −1 δrx i
+                                                                                          hP                                        i
+                                                                                                             i    i+1    i    i+1
+                                                                           J(θ) = Eτy ∼pθ      i=0 r̂y (s , a
+                                                                                                         y y y , s    , uy , uy   )   ,
+semi-alignable MDPs with homomorphic reward machines.
+                                                                                                                                      (10)
+Theorem 4.4. If Mx and My are two MDPs satisfying
+                                                                        where J(θ) denotes the objective function dependent on the
+either My ⪰ Mx or Mx ⪰ My , then their tasks possess
+                                                                        policy parameters θ, and T represents the time horizon.
+homomorphic reward machines RxP SA and RyP SA .
+
+The comprehensive proof can be found in Appendix A.1.                   5. Experiments
+For MDPs Mx and My , if Mx ⪰ My , the reinforcement
+learning agent’s reward function in My is denoted as in                 This section presents experiments addressing two primary re-
+Equation (6). When My employs the transferred state re-                 search questions: 1) Can the NRT framework effectively ex-
+ward functions from the reward machine of Mx , the re-                  tract abstract alignments from semi-alignable MDPs across
+ward function remains consistent with Equation (7) while                reinforcement learning domains? 2) Does transferred re-
+maintaining the characteristics described in Equation (8).              ward, based on abstract alignment, enhance efficiency and
+Nevertheless, transferring rewards from My to Mx necessi-               performance in target task training? To investigate these
+tates the development of a piecewise function as depicted in            questions, we evaluate the NRT framework in two sparse re-
+Equation (9), due to the absence of a bijection.                        ward settings: 3D Visual Navigation and MuJoCo, verifying
+                                                                        both isomorphic and homomorphic reward machines. We
+   δy
+ r̂xr (sx , ax , sx ′ , ux , ux ′ ) = rx (sx , ax , sx ′ )+             use the state-of-the-art Proximal Policy Optimization (PPO)
+     (                                                                  algorithm as the baseline and conduct an ablation study with
+       δry (uy , uy ′ ), if ux = g(uy ) and ux ′ = g(uy ′ ), (9)
+                                                                        three variants: PPO-RM, PPO-NRT(Reward), and PPO-
+        δrx (ux , ux ′ ), otherwise.                                    NRT(RM+Reward). PPO-RM augments the agent’s obser-
+                                                                        vation with the reward machine state but does not trans-
+As a result, a reward translation channel is established be-
+                                                                        fer rewards. PPO-NRT(Reward) transfers rewards without
+tween semi-alignable MDPs. To transfer the reward func-
+                                                                        incorporating the reward machine state in the observation.
+tion, corresponding reward machines are first constructed,
+                                                                        PPO-NRT(RM+Reward) integrates both reward transfer and
+and subsequently, the state reward function for the original
+                                                                        reward machine state information. Due to space constraints,
+task is computed using Equation 5.
+                                                                        detailed experimental descriptions are in Appendix A.4.
+
+                                                                        5.1. 3D Visual Navigation
+                                                                        In the 3D visual navigation environment, we selected the
+                                                                        Sign task in the Miniworld (Chevalier-Boisvert et al., 2023)
+                                                                        as the target task, with the Text-Sign task serving as the orig-
+                                                                        inal task. Figures. 4 depict the original and target tasks, re-
+                                                                        spectively. In the Miniworld-Sign environment, the agent re-
+   (a) Original task: Text-Sign (b) Target task: Miniworld-             ceive a sparse reward only if it reaches all the targets includ-
+                                Sign
+                                                                        ing the red key, the blue box and the red box. Figure. 5(a)
+                                                                        illustrates the reward transfer between the isomorphic re-
+Figure 4. The Sign task for the 3D Visual Navigation environment.
+                                                                        ward machines in the Text-Sign and Miniworld-Sign tasks.
+                                                                        From Figure. 5(b), our results show that in the Miniworld-
+Target Task Training. The primary goal of this component                Sign environment, where rewards are sparse, both PPO and
+is to instruct the target task by utilizing the transferred re-         PPO-RM—despite using original or extended observations
+
+                                                                    7
+                                    Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+                       Reward Machine For Miniworld-Sign                                                        NChain
+
+                                                                                                                   G
+
+
+                                                                                      A                  B          C         D     E        F
+                                                           Transfer
+                                                                                             Start                                          Target
+
+
+                                                                                               (a) Original task: NChain
+
+
+                         Reward Machine For Text-Sign
+
+
+                (a) Text-Sign to Miniworld-Sign                                   A           B                C             D          E            F
+
+
+
+                                                                                                                Ant-v3
+
+                                                                                            (b) Target task: Mujoco-Ant
+
+                                                                                 Figure 6. The Ant task in Mujcoco environments.
+
+
+
+
+            (b) Learning curve for Miniworld-Sign
+
+Figure 5. Experiment for the 3D Visual Navigation environment.
+(a) The isomorphic reward machines and the cross domain reward
+transfer process for Text-Sign and Miniworld-Sign; (b) The learn-
+ing curve for Miniworld-Sign environment.
+                                                                                          (a) Learning curve for Mujoco-Ant
+
+with reward machine information—struggle to overcome                                                  Reward Machine For Mujoco
+
+
+the sparse reward issue. In contrast, PPO-NRT(Reward)
+and PPO-NRT(RM+Reward), which leverage transferred
+rewards, significantly alleviate the problem and achieve                                                                                                 Transfer
+
+
+superior performance. These findings highlight the effec-
+tiveness of the NRT framework in extracting alignments
+from semi-alignable MDPs and improving training through
+the transfer of rewards within isomorphic reward machines.                                              Reward Machine For NChain
+
+
+                                                                                                     (b) NChain to Mujoco
+5.2. Mujoco Experiment
+We conducted experiments using Mujoco environments, se-                   Figure 7. Experiment for the Mujoco-Ant environment. (a)The ho-
+lecting HalfCheetah, Hopper, and Ant as target tasks, with                momorphic reward machine and the cross-domain reward transfer
+a simplified NChain game as the source task. Due to space                 process of NChain to Mujoco. (b) The learning curve for Ant task.
+constraints, we present only MuJoCo-Ant results in the main
+text, while the full results are included in the Appendix. A.4.
+Figure 12 in the Appendix illustrates the experimental en-                tasks. The reward machines for the source and target tasks
+vironments. All target tasks follow the standard OpenAI                   exhibit homomorphism, enabling the source task’s reward
+Gym settings (Brockman et al., 2016) but employ sparse                    signals to guide learning in the target environments. As
+rewards, where the agent receives r = 1000 only upon                      shown in Figure 7(a), our results indicate that in extremely
+reaching predefined goals. The source task involves navigat-              sparse reward settings, augmenting observations with re-
+ing a linear state sequence to reach point F, earning a sparse            ward machine information alone is insufficient. However,
+reward. Figure 6 presents the original and target tasks in                leveraging transferred rewards substantially mitigates the
+MuJoCo-Ant training. Figure 7(b) depicts the generated                    sparsity issue, significantly improving learning efficiency.
+reward machine and the cross-domain reward transfer pro-                  Notably, in Ant-v3 tasks, PPO-NRT(Reward) achieves the
+cess from NChain to MuJoCo, applicable to all three target                best performance.
+
+                                                                      8
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+6. Conclusion                                                        Haitham Bou Ammar and Matthew E Taylor. 2011. Rein-
+                                                                       forcement learning transfer via common subspaces. In
+In conclusion, this paper introduced the concept of semi-              International Workshop on Adaptive and Learning Agents.
+alignable MDPs alongside the Neural Reward Translation                 21–36.
+(NRT) framework to facilitate reward translation in rein-
+forcement learning to reduce reward design complexities.             Ondrej Biza and Robert Platt. 2019. Online Abstraction with
+NRT employs reward machines to address reward transla-                 MDP Homomorphisms for Deep Learning. In Proceed-
+tion challenges within semi-alignable MDPs and features                ings of the 18th International Conference on Autonomous
+an innovative large language model-based generator for                Agents and MultiAgent Systems. 1125–1133.
+the automatic generation of reward machines. Our method
+significantly enhances training efficiency across various en-        Greg Brockman, Vicki Cheung, Ludwig Pettersson, Jonas
+vironments. Although challenges persist in constructing                Schneider, John Schulman, Jie Tang, and Wojciech
+appropriate reward machines and deciphering relationships              Zaremba. 2016. OpenAI Gym. arXiv:arXiv:1606.01540
+in complex tasks, future research endeavors will continue to         Alberto Camacho, Jacob Varley, Andy Zeng, Deepali Jain,
+explore the vast potential of semi-alignable MDPs and work             Atil Iscen, and Dmitry Kalashnikov. 2021. Reward ma-
+towards broadening NRT’s applicability in a diverse range              chines for vision-based robotic manipulation. In ICRA.
+of situations and domains.                                             14284–14290.
+
+Impact Statement                                                     Maxime Chevalier-Boisvert, Bolun Dai, Mark Towers, Ro-
+                                                                      drigo de Lazcano, Lucas Willems, Salem Lahlou, Suman
+This paper presents work whose goal is to advance the field           Pal, Pablo Samuel Castro, and Jordan Terry. 2023. Mini-
+of Machine Learning. There are many potential societal                grid & Miniworld: Modular & Customizable Reinforce-
+consequences of our work, none which we feel must be                  ment Learning Environments for Goal-Oriented Tasks.
+specifically highlighted here.                                        CoRR abs/2306.13831 (2023).
+
+                                                                     Aurelio Cortese, Asuka Yamamoto, Maryam Hashemzadeh,
+Acknowledgement                                                        Pradyumna Sepulveda, Mitsuo Kawato, and Benedetto
+This work was supported by the National Natural Science                De Martino. 2021. Value signals guide abstraction during
+Foundation of China (NSFC, No. 62231019, 62406270,                     learning. Elife 10 (2021), e68943.
+72394361, 62106213), the Shanghai Science and Technol-               David DeFazio and Shiqi Zhang. 2021. Leveraging Human
+ogy Committee (STCSM, No. 24YF2748800), and an ex-                     Knowledge to Learn Quadruped Locomotion Policies.
+tended support project from the Shenzhen Science and Tech-             arXiv preprint arXiv:2107.10969 (2021).
+nology Program.
+                                                                     Arnaud Fickinger, Samuel Cohen, Stuart Russell, and Bran-
+References                                                             don Amos. 2021. Cross-Domain Imitation Learning via
+                                                                       Optimal Transport. arXiv preprint arXiv:2110.03684
+David Abel. 2022. A theory of abstraction in reinforcement             (2021).
+  learning. arXiv preprint arXiv:2203.00397 (2022).
+                                                                     Abhishek Gupta, Coline Devin, Yuxuan Liu, Pieter Abbeel,
+David Abel, Dilip Arumugam, Kavosh Asadi, Yuu Jinnai,                  and Levine Sergey. 2017. Learning Invariant Feature
+  Michael L Littman, and Lawson LS Wong. 2019. State                   Spaces to Transfer Skills with Reinforcement Learning.
+  abstraction as compression in apprenticeship learning. In            In ICLR.
+  Proceedings of the AAAI Conference on Artificial Intelli-
+                                                                     Eddy Hudson, Garrett Warnell, Faraz Torabi, and Peter
+  gence, Vol. 33. 3134–3142.
+                                                                       Stone. 2022. Skeletal Feature Compensation for Imitation
+David Abel, Nate Umbanhowar, Khimya Khetarpal, Dilip                   Learning with Embodiment Mismatch. In ICRA. 2482–
+  Arumugam, Doina Precup, and Michael Littman. 2020.                   2488.
+  Value preserving state-action abstractions. In Interna-            Rodrigo Toro Icarte, Toryn Klassen, Richard Valenzano,
+  tional Conference on Artificial Intelligence and Statistics.         and Sheila McIlraith. 2018. Using reward machines for
+  PMLR, 1639–1650.                                                     high-level task specification and decomposition in rein-
+                                                                       forcement learning. In ICML. 2107–2116.
+Haitham Bou Ammar, Eric Eaton, Paul Ruvolo, and
+  Matthew E Taylor. 2015. Unsupervised cross-domain                  Rodrigo Toro Icarte, Toryn Q Klassen, Richard Valenzano,
+  transfer in policy gradient reinforcement learning via               Margarita P Castro, Ethan Waldie, and Sheila A McIlraith.
+  manifold alignment. In AAAI.                                         2023. Learning reward machines: A study in partially
+
+                                                                 9
+                             Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+  observable reinforcement learning. Artificial Intelligence         Marlos C Machado, Marc G Bellemare, and Michael Bowl-
+  323 (2023), 103989.                                                 ing. 2017. A laplacian framework for option discovery in
+                                                                      reinforcement learning. In International Conference on
+Rodrigo Toro Icarte, Toryn Q Klassen, Richard Valenzano,              Machine Learning. PMLR, 2295–2304.
+  and Sheila A McIlraith. 2022. Reward machines: Exploit-
+  ing reward function structure in reinforcement learning.           Volodymyr Mnih, Koray Kavukcuoglu, David Silver, An-
+  Journal of Artificial Intelligence Research 73 (2022), 173–          drei A Rusu, Joel Veness, Marc G Bellemare, Alex
+  208.                                                                 Graves, Martin Riedmiller, Andreas K Fidjeland, Georg
+                                                                       Ostrovski, et al. 2015. Human-level control through deep
+Chong Jiang, Zongzhang Zhang, Zixuan Chen, Jiacheng                    reinforcement learning. Nature 518, 7540 (2015), 529–
+  Zhu, and Junpeng Jiang. 2020. Third-person imitation                 533.
+  learning via image difference and variational discrimina-
+  tor bottleneck. In AAAI. 13819–13820.                              Cyrus Neary, Zhe Xu, Bo Wu, and Ufuk Topcu. 2021. Re-
+                                                                       ward Machines for Cooperative Multi-Agent Reinforce-
+Parameswaran Kamalaruban, Rati Devidze, Volkan Cevher,                 ment Learning. In AAMAS.
+  and Adish Singla. 2020. Environment Shaping in Re-
+  inforcement Learning using State Abstraction. arXiv                Dripta S Raychaudhuri, Sujoy Paul, Jeroen van Baar, and
+  preprint arXiv:2006.13160 (2020).                                    Amit K Roy-Chowdhury. 2021. Cross-domain Imitation
+                                                                       from Observations. In ICML. 8902–8912.
+Kuno Kim, Yihong Gu, Jiaming Song, Shengjia Zhao, and
+  Stefano Ermon. 2020. Domain adaptive imitation learn-              Giacomo Rizzolatti and Laila Craighero. 2004. The mirror-
+  ing. In ICML. 5286–5295.                                             neuron system. Annual Review of Neuroscience 27 (2004),
+                                                                       169–192.
+Jens Kober, J Andrew Bagnell, and Jan Peters. 2013. Re-
+  inforcement learning in robotics: A survey. The Inter-             Pierre Sermanet, Corey Lynch, Yevgen Chebotar, Jasmine
+  national Journal of Robotics Research 32, 11 (2013),                 Hsu, Eric Jang, Stefan Schaal, Sergey Levine, and Google
+  1238–1274.                                                           Brain. 2018. Time-contrastive networks: Self-supervised
+                                                                       learning from video. In ICRA. 1134–1141.
+Cevahir Koprulu and Ufuk Topcu. 2023. Reward-Machine-
+  Guided, Self-Paced Reinforcement Learning. In UAI.                 Ankit Shah, Shen Li, and Julie Shah. 2020. Planning with
+                                                                       uncertain specifications (puns). IEEE Robotics and Au-
+Guillaume Lample and Devendra Singh Chaplot. 2017. Play-               tomation Letters 5, 2 (2020), 3414–3421.
+  ing FPS games with deep reinforcement learning. In
+ AAAI.                                                               Özgür Şimşek, Alicia P Wolfe, and Andrew G Barto. 2005.
+                                                                        Identifying useful subgoals in reinforcement learning by
+Wenhao Li, Xiangfeng Wang, Bo Jin, Dijun Luo, and                       local graph partitioning. In Proceedings of the 22nd inter-
+ Hongyuan Zha. 2021. Structured cooperative reinforce-                  national conference on Machine learning. 816–823.
+ ment learning with time-varying composite action space.
+ IEEE Transactions on Pattern Analysis and Machine In-               Bradly C Stadie, Pieter Abbeel, and Ilya Sutskever.
+ telligence 44, 11 (2021), 8618–8634.                                  2017. Third-person imitation learning. arXiv preprint
+                                                                       arXiv:1703.01703 (2017).
+Fangchen Liu, Zhan Ling, Tongzhou Mu, and Hao Su. 2019.
+  State Alignment-based Imitation Learning. In ICLR.                 Haoyuan Sun and Feng Wu. 2023. Less Is More: Refining
+                                                                       Datasets for Offline Reinforcement Learning with Reward
+YuXuan Liu, Abhishek Gupta, Pieter Abbeel, and Sergey                  Machines. In AAMAS.
+  Levine. 2018. Imitation from observation: Learning to
+  imitate behaviors from raw video via context translation.          Matthew E Taylor and Peter Stone. 2009. Transfer learning
+  In ICRA. 1118–1125.                                                 for reinforcement learning domains: A survey. Journal
+                                                                      of Machine Learning Research 10, 7 (2009).
+Zhihao Ma, Yuzheng Zhuang, Paul Weng, Hankz Han-
+  kui Zhuo, Dong Li, Wulong Liu, and Jianye Hao. 2021.               Yichen Yang, Jeevana Priya Inala, Osbert Bastani, Yewen
+  Learning symbolic rules for interpretable deep reinforce-            Pu, Armando Solar-Lezama, and Martin Rinard. 2021.
+  ment learning. arXiv preprint arXiv:2103.08228 (2021).               Program synthesis guided reinforcement learning for par-
+                                                                       tially observed environments. Advances in neural infor-
+James MacGlashan, Mark K Ho, Robert Loftin, Bei Peng,                  mation processing systems 34 (2021), 29669–29683.
+  Guan Wang, David L Roberts, Matthew E Taylor, and
+  Michael L Littman. 2017. Interactive learning from                 Amy Zhang, Rowan Thomas McAllister, Roberto Calandra,
+  policy-dependent human feedback. In ICML. 2285–2294.                Yarin Gal, and Sergey Levine. 2020. Learning Invariant
+
+                                                                10
+                           Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+  Representations for Reinforcement Learning without Re-
+  construction. In International Conference on Learning
+  Representations.
+Xuejing Zheng, Chao Yu, and Minjie Zhang. 2022. Lifelong
+  reinforcement learning with temporal logic formulas and
+  reward machines. Knowledge-Based Systems 257 (2022),
+ 109650.
+
+Meixin Zhu, Xuesong Wang, and Yinhai Wang. 2018.
+ Human-like autonomous car-following model with deep
+ reinforcement learning. Transportation research part C:
+ Emerging technologies 97 (2018), 348–368.
+
+Zhuangdi Zhu, Kaixiang Lin, Anil K. Jain, and Jiayu Zhou.
+  2023. Transfer Learning in Deep Reinforcement Learn-
+  ing: A Survey. IEEE Transactions on Pattern Analysis
+  and Machine Intelligence 45, 11 (2023), 13344–13362.
+
+
+
+
+                                                            11
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+A. Appendix
+A.1. Proof
+Theorem.3.5 Given a reward machine RxP SA for an environment x, it is posited that a ”goal” space Bx and a ”skill” space
+Wx exist. Furthermore, injective mappings Θx : Ux → Bx and Γx : Px → Wx are also postulated to exist. Under these
+stipulations, the ensuing relationships emerge:
+  1) For any “goal” bix ∈ Bx , there exists a unique reward machine state uix ∈ Ux or fxi ∈ Fx such that Θx (uix ) = bix or
+Θx (uix ) = fxi ;
+  2) For any “skill” wxi ∈ W x , there exists a unique propositional symbol pix ∈ Px such that Γx (pix ) = wxi .
+
+Proof. To prove the theorem, we need to show that the reward machine state space Ux is a valid ”goal” space Bx . Given the
+definitions of ”goal” bix , ”skill” wxi , and reward machine, we observe that goals and skills are embedded in state-action pairs
+as: (bix , wxi ) = ex (six , aix ),
+                                                                                                    Px
+with wxi being the difference between bix and bi−1
+                                               x . Since the labeling function Lx : Sx × Ax × Sx → 2   represents the
+transition of ux , we have:
+                                                 uix = Lx (six , aix , si+1
+                                                                        x ),
+
+                                                      si+1
+                                                       x   = Tr(six , aix ),
+so we can get:
+                                                       uix = Lx (six , aix ).
+
+By viewing reward machine state ux as ”goal” bx and the reward state difference as defined ”skills”, the labeling function
+Lx becomes an embedding ex for environment x. Hence, we demonstrate that reward machine state space Ux is a valid
+”goal” space Bx .
+
+
+
+Theorem. 4.2 If two MDPs Mx and My , Mx ⪰ My and My ⪰ Mx , then their tasks have isomorphic reward machine
+RxP SA and RyP SA .
+
+Proof. Theorem 4.2 can be proven by showing both necessity and sufficiency.
+1. Proof of necessity: If Mx ⪰ My and My ⪰ Mx , then their tasks have isomorphic reward machines.
+Let there exist semi-reductions rx→y = (ϕx→y , ψx→y ) from Mx to My and ry→x = (ϕx→y , ψy→x ) from My to Mx .
+According to Definition 3.1, these semi-reductions satisfy the π w -optimality and y-dynamic conditions for all beliefs and
+world-states.
+We now construct bijections h : Px → Py and g : Ux → Uy as follows:
+
+                                        h(pix ) = Γ−1        i       −1  i      i
+                                                   y (ϕx→y (wx )) = Γy (wy ) = py ,
+
+                                        g(uix ) = Θ−1        i       −1 i       i
+                                                   y (ψx→y (bx )) = Θy (by ) = uy .
+
+
+Since ϕx→y and ψx→y are functions, so are their inverses. Besides, and Γ and Θ are bijections. According to the transitivity
+of bijections. These bijections also satisfy the conditions of the isomorphic reward machines in Theorem 4.1, as both
+semi-reductions preserve the π w -optimality and y-dynamic properties.
+2. Proof of sufficiency: If the tasks have isomorphic reward machines, then Mx ⪰ My and My ⪰ Mx .
+Given the isomorphic reward machines RxP SA and RyP SA with established bijections h : Px → Py and g : Ux → Uy , we
+will prove that Mx ⪰ My and My ⪰ Mx .
+Define mapping functions ϕx→y (wxi ) = Γy (h(pix )) and ψx→y (bix ) = Θy (g(uix )). Since the task structures are isomorphic,
+these mappings can be used to construct the semi-reduction (ϕx→y , ψx→y ) from Mx to My that satisfies the π w -optimality
+and y-dynamic conditions in Definition 3.1, thus showing that Mx ⪰ My .
+
+                                                                12
+                               Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+Similarly, use the inverse of given bijections for the semi-reduction ry→x = (ϕy→x , ψy→x ). That is, set ϕy→x (wyi ) =
+Γx (h−1 (piy )) = Γx (pix ) = wxi and ψy→x (biy ) = Θx (g −1 (uiy )) = Θx (uix ) = bix . Since h and g are bijections, their inverses
+exist and are also bijections. By using these mappings, we can construct a semi-reduction from My to Mx that satisfies the
+conditions in Definition 3.1, showing that My ⪰ Mx .
+Having proven both necessity and sufficiency, we conclude the proof of Theorem 4.2.
+
+Theorem. 4.4 If two MDPs Mx and My , My ⪰ Mx or Mx ⪰ My , then their tasks have homomorphic reward machine
+RxP SA and RyP SA .
+
+Proof. To prove Theorem 4.4, we need to show both necessity and sufficiency:
+1. Proof of necessity: If My ⪰ Mx or Mx ⪰ My , then their tasks have homomorphic reward machines.
+Assume Mx ⪰ My . Let there exist a semi-reduction rx→y = (ϕx→y , ψx→y ) from Mx to My . According to Definition 3.1,
+these semi-reductions satisfy the π w -optimality and B-dynamic conditions for all beliefs and world-states.
+We now construct injection h : Px → Py and g : Ux → Uy as follows:
+
+                                         h(pix ) = Γ−1        i       −1  i      i
+                                                    y (ϕx→y (wx )) = Γy (wy ) = py ,
+
+                                         g(uix ) = Θ−1        i       −1 i       i
+                                                    y (ψx→y (bx )) = Θy (by ) = uy .
+
+
+Since ϕx→y and ψx→y are functions, so are their inverses. Besides, and Γ and Θ are bijections. According to the transitivity
+of bijections. These bijections also satisfy the conditions the homomorphic reward machines in Theorem 4.3 because
+semi-reductions preserve the π w -optimality and B-dynamic properties.
+2. Proof of sufficiency: If the tasks have homomorphic reward machines, then My ⪰ Mx or Mx ⪰ My .
+Given the homomorphic reward machines RxP SA and RyP SA that satisfy the established injections h : P x → P y and
+g : Ux → Uy , we will prove that either My ⪰ Mx or Mx ⪰ My .
+Assume without loss of generality that |Py | ≤ |Px | and |U† | ≤ |U§ |. Then we can define mapping functions ϕx→y (wxi ) =
+Γy (h(pix )) = Γy (piy ) = wyi for every element in the domain of h. Similarly, define ψx→y (bix ) = Θy (g(uix )) = Θy (uiy ) =
+biy for all elements in the domain of g
+These mappings can be used to construct a semi-reduction (ϕx→y , ψx→y ) from Mx to My that satisfies the π w -optimality
+and B-dynamic conditions in Definition 3.1. Thus, Mx ⪰ My .
+Having proven both necessity and sufficiency, we conclude that if two MDPs Mx and My , My ⪰ Mx or Mx ⪰ My , then
+their tasks have homomorphic reward machine RxP SA and RyP SA . This completes the proof of Theorem 4.4.
+
+
+
+
+                                                                 13
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+A.2. Experiments
+A.2.1. F RAMEWORK
+In this section, we present a comprehensive methodology for generating reward machines using a large language model
+(LLM), in our case, GPT-4, informed by domain-specific knowledge such as task manuals. As illustrated in Figure 8, we
+employ a few-shot learning strategy to familiarize the language model with reward machine design principles. This process
+involves defining the sets of propositional symbols P and reward machine states U, creating an event extraction function that
+integrates the reward machine with the environment, and developing the transition function δu as well as the state reward
+function δr .
+Next, we equip the LLM with domain knowledge, which comprises both reward machine definitions and environmental
+descriptions sourced from the task manual. The LLM then answers user-generated queries using its acquired knowledge to
+assist in the creation of the reward machine. Due to the complex nature of reward machine development, we implement a
+chain of thought framework to bolster the LLM’s reasoning capabilities.
+
+A.2.2. H AND - DEFINED RM FOR NC HAIN GAME
+
+
+                                                                               0     # initial state
+                                                                              [5]    # terminal state
+                                    ′    ′
+                             (0, 0, !a!c , ConstantRewardFunction(−0.67))
+                                  (0, 1,′ a′ , ConstantRewardFunction(−0.02))
+                                  (0, 3,′ c′ , ConstantRewardFunction(−1.29))
+                            (1, 1,′ !b!g ′ , ConstantRewardFunction(−0.75))
+                                   (1, 2,′ b′ , ConstantRewardFunction(0.01))
+                                   (1, 0,′ g ′ , ConstantRewardFunction(−1.4))
+                         (2, 2, !a!grab′ , ConstantRewardFunction(−0.83))
+                              ′
+
+                           (2, 5,′ grab′ , ConstantRewardFunction(−7.48))
+                                  (2, 1,′ a′ , ConstantRewardFunction(−1.58))
+                            (3, 3,′ !d!g ′ , ConstantRewardFunction(−0.61))
+                                  (3, 4,′ d′ , ConstantRewardFunction(−1.03))
+                                   (3, 0,′ g ′ , ConstantRewardFunction(0.01))
+                               (4, 4,′ !c′ , ConstantRewardFunction(−0.56))
+                                  (4, 3,′ c′ , ConstantRewardFunction(−0.14))
+
+A.2.3. E XAMPLE OF L EARNING RM BY LLM
+Reward Machine Description:
+You are familiar with automata theory. A reward machine is defined as following:
+Given a set of propositional symbols P, a set of (environment) states S, and a set of actions A, a reward machine (RM) is a
+tuple RP SA =< U, u0 , F, δu , δr >, where U is a finite set of states, u0 ∈ U is an initial state, F is a finite set of terminal
+states (where U ∩ F = ∅, terminal states are not existed in U ), δu is the state-transition function, U × 2P → U ∪ F , δr is
+the reward-transition function, U → [U × U → R]
+A reward machine RP SA starts in state u0 , and at each subsequent time is in some state ut ∈ U ∪ F . At every step t,
+the machine receives as input a truth assignment σt , which is a set that contains exactly those propositions in P that are
+currently true in the environment. For example, in an open door and get the key game, σt = {e} if the agent opens the door
+e, while σt = {k} if the agent gets the key k. Then the machine moves to the next state ut+1 = δu (ut , σt ) according to the
+state-transition function, and outputs a reward function rt = δr (ut ) according to the state-reward function. This process
+repeats until the machine reaches a terminal state. Note that reward machines can model never-ending tasks by defining
+F = ∅.
+
+                                                               14
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+A.3. Learning RM by LLM
+
+
+                                                           Few shot            RM Description   Env Description
+                                                           Examples
+
+
+
+
+                                                Question          Language Model                        Answer
+
+
+                                     User
+                                                                      COT
+
+                                                                        Thought
+
+
+                                                                            ......
+
+
+                                                                        Thought
+
+
+
+
+       Figure 8. An overview of the framework to learn reward machine by large language model through domain knowledge.
+
+# HalfCheetah
+Environment Description: HalfCheetah is part of the Mujoco environments. This environment is based on the work by P.
+Wawrzyński in ”A Cat-Like Robot Real-Time Learning to Run”. The HalfCheetah is a 2-dimensional robot consisting of
+9 body parts and 8 joints connecting them (including two paws). The goal is to apply a torque on the joints to make the
+cheetah run forward (right) as fast as possible, with a positive reward allocated based on the distance moved forward and a
+negative reward allocated for moving backward. The torso and head of the cheetah are fixed, and the torque can only be
+applied to the other 6 joints over the front and back thighs (connecting to the torso), shins (connecting to the thighs), and feet
+(connecting to the shins). The robot needs to go through 5 checkpoints c(x position=2), e(x position=4), f(x position=6),
+g(x position=8), and a(x position=10). The agent gets a reward of 1000 when it reaches a and the control penalization (CP)
+otherwise. Agent can get its current location by calling self.info[’x position’].
+Question: Design the set of propositional symbols P for HalfCheetah environment.
+ Think: To design the set of propositional symbols P, first I need to find the key events in the environment. The robot need
+to go through 6 checkpoints c(x position=2), e(x position=4), f(x position=6), g(x position=8), and a(x position=10). I
+can use them as the propositional symbols, if the agent reach some checkpoint, it will reach a new reward machine state.
+Besides, I need to consider situations when agent don’t reach the checkpoints.
+Answer: The set of propositional symbols can be a set including checkpoints in HalfCheetah-v3 and situations not reaching
+the next checkpoints . P = {c, !c, e, !e, f, !f, g, !g, a, !a}
+Question: Design the get event function for the HalfCheetah with reward machine.
+ Think: Here events is depended on the propositional symbols, so the events including reach the checkpoints, and call
+self.info[’x position’] can get the agent’s current x position. Compare it with checkpoints’ x position, we can get the events.
+Answer:
+
+def get_events(self):
+    events = ’’
+    if self.info[’x_position’] < -10:
+        events += ’b’
+    if self.info[’x_position’] > 10:
+        events += ’a’
+    if self.info[’x_position’] < -2:
+        events += ’d’
+    if self.info[’x_position’] > 2:
+
+                                                                      15
+                               Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+          events += ’c’
+      if self.info[’x_position’] > 4:
+          events += ’e’
+      if self.info[’x_position’] > 6:
+          events += ’f’
+      if self.info[’x_position’] > 8:
+          events += ’g’
+      return events
+
+Question: Design the reward machine for the HalfCheetah environment.
+ Think: To design the reward machine. I need to verify the reward machine states first. As P = {c, !c, e, !e, f, !f, g, !g, a, !a}.
+The reward machine including 5 states. As the agent reach checkpoint a, the game is finished. So these is one terminal state.
+Thus the reward machine state is {0, 1, 2, 3, 4, 5} based on P. Besides, as the agent gets a reward of 1000 when it reaches a
+and the control penalization (CP) otherwise. The δr can be designed based on it.
+Answer:
+
+                                                                            0     # initial state
+                                                                           [5]    # terminal state
+                                                    ′   ′
+                                              (0, 0, !c , RewardControl())
+                                               (0, 1,′ c′ , RewardControl())
+                                              (1, 1,′ !e′ , RewardControl())
+                                               (1, 2,′ e′ , RewardControl())
+                                              (2, 2,′ !f ′ , RewardControl())
+                                              (2, 3,′ f ′ , RewardControl())
+                                              (3, 3,′ !g ′ , RewardControl())
+                                               (3, 4,′ g ′ , RewardControl())
+                                              (4, 4,′ !a′ , RewardControl())
+                             (4, 5,′ a′ , ConstantRewardFunction(1000))
+
+
+
+
+                                                               16
+                               Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+A.4. Additional Experiment
+In order to present our experimental results more clearly and completely, we provide all the results of our experiments in
+this section of the appendix. In addition to the two sets of experiments given in the main text, we also provide a set of toy
+examples to show the migration between nchain tasks of different scales. In addition, we provide the results of the reward
+translation task under three different Mujoco tasks, including the Hopper-V3, HalfCheetah-V3 and Ant-V3.
+
+A.4.1. NC HAIN EXPERIMENT
+In the NChain game, an agent navigates through a linear sequence of states (where N denotes the number of states), aiming
+to reach the flag’s location and grab it. The agent receives a reward:
+                                                                  Used Steps
+                                                       (r = 1 −              ).                                               (11)
+                                                                  Max Steps
+The agent will receive the reward only upon grabbing the flag. At each state, the agent has three possible actions:
+
+                                            {move forward, move backward, grab the flag}.
+
+In this experiment, the NRT Framework attempts to transfer rewards from NChain(n=5) to NChain(n=9) (illustrated in
+Figure 9(a)). This experimental setup intends to verify the NRT model’s capacity for accurately extracting abstract alignments
+from semi-alignable MDPs; despite differing in observation space size, NChian(n=5) and NChain(n=9) share an isomorphic
+reward machine based on correspondingly aligned checkpoints, which can be treated as propositional symbols. Figure 9(a)
+
+
+
+
+                 D         C                      A       B
+                                    Start
+
+
+
+                          D    C             A    B
+                                   Start
+
+                          (a) Nchain(n=5) to NChain(n=9)                          (b) Learning curve for the NChain(n=9)
+
+Figure 9. Experiment for NChain game. (a) the environment setting and the isomorphic reward machine for NChain game, and the reward
+transition function is learned from NChain(n=5); (b) The learning curve for NChain game.
+
+also demonstrates the shared isomorphic reward machine, with reward transitions learned from the source task NChain(n=5).
+This reward machine effectively guides the agent in completing the NChain(n=9) tasks, providing a clear preference for
+the correct path to reach the target. For this experiment, we utilized the DQN as a baseline, and the training results are
+illustrated in Figure 9(b). Our findings indicate that the NRT Framework can successfully extract abstract alignments from
+semi-alignable MDPs, while the transferred rewards from the isomorphic reward machine facilitate and promote training.
+
+A.4.2. 3D V ISUAL NAVIGATION
+In the 3D visual navigation environment, we selected the Sign task in the Miniworld (Chevalier-Boisvert et al., 2023) as the
+target task, with the Text-Sign task serving as the original task. Figures. 4 depict the original and target tasks, respectively.
+In the Miniworld-Sign environment, the agent receive a sparse reward only if it reaches all the targets including the red key,
+the blue box and the red box. The sparse reward is formulated as:
+                                                              Max Steps − Used Steps
+                                                 r = 1000 ×                          .                                        (12)
+                                                                    Max Steps
+
+At each step, the agent’s observation is restricted to the information perceived in the direction of its movement, and it must
+
+                                                                  17
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+select from a limited action space consisting of four actions:
+
+                                       {turn left, turn right, move forward, move back}.
+
+Due to the partial observability and sparse reward problem, solving Miniworld-Sign with conventional reinforcement
+learning methods proves challenging. By contrast, the Text-Sign task is simpler, as the agent can observe the entire map
+and directly choose actions to move up, down, left, or right, making task completion significantly easier. The goal of the
+experiment is to transfer knowledge from the trained agent in the Text-Sign environment to the Miniworld-Sign environment
+within isomorphic reward machines.
+We also implemented a naive reward approach on the Sign task (shown in Figure 11, where each time the agent take one thing,
+it will get a reward +10), where the agent receives supplementary rewards when making progress toward the goal. The results
+show that while naive reward shaping does improve performance compared to sparse rewards, there remains a substantial
+performance gap when compared to our NRT method with transferred reward machines. This comparison highlights that
+while simple reward shaping can help, the structured knowledge transfer facilitated by NRT provides more substantial
+benefits for learning efficiency. The transferred reward structure itself inherently contains this shaping information but in a
+more principled way that captures the logical dependencies between subtasks, which explains the superior performance of
+our approach.
+
+
+
+
+                      (a) Sign-with-Trap Environment Diagram         (b) Learning curve for Sign-With-Trap
+
+                                                     Reward Machine For Sign-With-Trap
+
+
+
+
+                                                                                               Transfer
+
+
+
+
+                                                       Reward Machine For Text-Sign
+
+                            (c) Transferred reward machine from Text-Sign to Sign-with-Trap Environ-
+                            ment
+
+Figure 10. Experiment for Sign-with-Trap. (a) Sign-with-Trap Environment Diagram; (b) Transferred reward machine from Text-Sign to
+Sign-with-Trap Environment; (c) Learning curve for Sign-With-Trap
+
+
+Furthermore, we have expanded our evaluation by modifying the Text-Sign task to incorporate more complex disjunctions.
+In this enhanced environment, we added a ”trap” mechanism where the agent receives a -10 reward and terminates the
+episode if it falls into the trap at any point. From a reward machine perspective, this modification adds a branch from each
+
+                                                                18
+                                 Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+
+
+
+                                Figure 11. Learning curve for Miniworld-Sign-Add Naive Reward Basline
+
+
+state (U0, U1, U2, U3) to a terminal failure state, creating multiple disjunctive paths through the task. The environment
+diagram and transferred reward machine is shown in Figure 10(a) and Figure 10(c) in the additional experiment. The results
+(shown in Figure 10(b)) demonstrate that NRT continues to show significant performance improvements when transferring
+the reward machine and corresponding rewards from the original Text-Sign task, even with these more complex logical
+structures.
+
+A.4.3. M UJOCO
+In the Mujoco experiment, we selected HalfCheetah, Hopper, and Ant as the target tasks, with a simple NChain game serving
+as the source task. Figure. 12 depicts the environment used in this experiment. All target tasks employ the same settings as
+                                                                                      NChain
+
+                                                                                          G
+
+
+                                                              A                  B        C    D       E        F
+                                                                      Start                                    Target
+
+
+
+
+                      A     B      C          D   E   F   A       B              C        D        E       F     A      B   C        D   E   F
+
+
+
+
+                                  Hopper-v3                                   HalfCheetah-v3                                Ant-v3
+
+
+
+
+Figure 12. The environment for Mujoco environments. The source task is an NChain game where the agent need to reach the point F and
+get a reward. And Hopper-v3, HalfCheetah-v3 and Ant-v3 are the source tasks while their target point is F.
+
+
+
+
+            (a) NChain → Hopper                           (b) NChain → HalfCheetah                                                   (c) NChain → Ant
+
+Figure 13. The learning curves for mujoco experiment. To intuitively precept the learning process of the agent, we use the original reward
+provided by OpenAI-Gym which consists forward reward and control reward to show the learning curve.
+their respective OpenAI-Gym versions (Brockman et al., 2016); however, we adjusted the rewards to be sparse, receiving
+r = 1000 only upon achieving specific goals. The agent in the source task navigates through a linear sequence of states to
+reach point F, earning a sparse reward equivalent to Equation. 12. At each state, the agent has four possible actions: move
+left, move right, move up, and move down. The generated reward machine and the cross-domain reward transfer process
+
+                                                                                     19
+                              Reward Translation via Reward Machine in Semi-Alignable MDPs
+
+
+
+
+                                   Figure 14. Learning curve for Mujoco-Ant on SAC method
+
+
+from NChain to Mujoco are depicted in Figure. 7(b). The source task’s reward machine and target tasks’ reward machines
+are homomorphic reward machines. Our analysis suggests that the reward signal from the source task also provides guidance
+for the target tasks, similar to the NChain game experiment. Besides, compare the generated reward machine based on LLM
+and the hand-designed reward machine shown in Figure. 2(b), the reward machine generated by LLM maintains a same
+structure of the hand-designed reward machine, which shows the effectiveness of the reward machine generator based on
+LLM. The learning results are shown in Figure. 13. We still chose PPO as the baseline. PPO-RM, PPO-NRT(Reward), and
+PPO-NRT(RM+Reward) to perform an ablation study to exclude potential influences due to reward machine utilization. Our
+results demonstrate that in extremely sparse reward tasks, merely extending observation with reward machine information
+proves insufficient; in contrast, using transferred rewards significantly alleviates the sparse reward issue, enhancing learning
+performance. In Hopper-v3 and Ant-v3 tasks, PPO-NRT(Reward) achieves the best results, while in HalfCheetah-v3 tasks,
+PPO-NRT(Reward+RM) and PPO-NRT(Reward) attains similar performance.
+To further show the versatility of NRT, we have expanded our experiments to include SAC (Soft Actor-Critic) as an additional
+baseline for the Mujoco tasks. The result is shown in Figure 14.
+
+
+
+
+                                                              20
+

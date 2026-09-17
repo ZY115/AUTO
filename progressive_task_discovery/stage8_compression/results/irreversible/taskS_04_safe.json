@@ -1,0 +1,129 @@
+{
+  "task": "taskS",
+  "n": 4,
+  "d": 2,
+  "m": 1,
+  "m2": 4,
+  "pair": [
+    0,
+    1
+  ],
+  "L": 2,
+  "arm": 8,
+  "seed": 82007,
+  "orders": 4,
+  "cells": 35,
+  "forked": true,
+  "tag": "taskS_04_safe",
+  "target": "taskS_04_safe",
+  "fatal": false,
+  "horizon": 58,
+  "lengths": [
+    25,
+    27,
+    26,
+    29
+  ],
+  "starts": [
+    21,
+    2,
+    6,
+    0
+  ],
+  "tail_lengths": [
+    1,
+    4
+  ],
+  "failing_states": 0,
+  "history_states": 35,
+  "minimal_states": 22,
+  "denominator": "window3",
+  "denominator_states": 29,
+  "min_sufficient_window": 3,
+  "honest_ratio": 1.3181818181818181,
+  "feature_sizes": {
+    "count": 11,
+    "bag": 20,
+    "window1": 22,
+    "window2": 26,
+    "window3": 29,
+    "window4": 31,
+    "window5": 32,
+    "window6": 33,
+    "window7": 34,
+    "history": 35
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": true,
+    "window4": true,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      0,
+      2,
+      1,
+      3,
+      4,
+      5,
+      4
+    ],
+    [
+      1,
+      2,
+      3,
+      0,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6
+    ],
+    [
+      2,
+      3,
+      0,
+      1,
+      4,
+      5,
+      4
+    ],
+    [
+      3,
+      1,
+      2,
+      0,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6
+    ]
+  ],
+  "task_states": 29,
+  "minimal_total": 28,
+  "bridge": [
+    4,
+    5
+  ],
+  "tails": [
+    [
+      4
+    ],
+    [
+      6,
+      4,
+      5,
+      6
+    ]
+  ]
+}

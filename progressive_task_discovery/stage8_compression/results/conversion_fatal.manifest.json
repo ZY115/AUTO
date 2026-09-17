@@ -1,0 +1,16 @@
+{
+  "runner": "src/conversion_fatal.py",
+  "family": "irreversible",
+  "pairs": 60,
+  "budgets": {
+    "medium": 10000,
+    "ample": 40000
+  },
+  "seeds": 4,
+  "seed0": 9200,
+  "note": "re-run after the BFS reachability fix",
+  "rows": 1161728,
+  "source_sha256": "8d171de54408533e0d53780d85eb74691a5ff57dce7ea905ffc8b2b132122000",
+  "data_sha256": "d799f97ea435cc5da43a4a1710f6a0ea2e514f2c237d148d80d0c05f1ac59779",
+  "written": "2026-09-10"
+}

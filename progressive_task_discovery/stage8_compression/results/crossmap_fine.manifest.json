@@ -1,0 +1,19 @@
+{
+  "runner": "src/run_crossmap.py",
+  "note": "every=25, resolution control, 2x3 seeds",
+  "pairs": 25,
+  "source_budget": 40000,
+  "target_budget": 100000,
+  "arms": [
+    "scratch",
+    "dict",
+    "structure",
+    "aggressive",
+    "selective",
+    "oracle"
+  ],
+  "runs": 900,
+  "source_sha256": "92781a339ea0f37eb87351613018aea4836b45a61be808efdb8cf8e189c5e40d",
+  "data_sha256": "0ecc16e5dc666254f66143a0db3ba506f2b409fe78ed9528a90ab149ffcfba63",
+  "written": "2026-09-10"
+}

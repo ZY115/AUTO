@@ -1,0 +1,14 @@
+{
+  "runner": "src/run_mergerule.py",
+  "gap_tasks": 12,
+  "gap_seeds": 12,
+  "fatal_maps": 15,
+  "fatal_seeds": 8,
+  "budget": 100000,
+  "every": 250,
+  "note": "re-run after the failure-semantics fix",
+  "runs": 1320,
+  "source_sha256": "982737e762c5534da218fc5235e5d5839a418cc202c35ba2a322b8985aa182ce",
+  "data_sha256": "7cd5ee623a51b80c5b84770b12a7a3cd05deb90fbb42968fb0e4040a941268bc",
+  "written": "2026-09-10"
+}

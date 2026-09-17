@@ -1,0 +1,9 @@
+{
+  "name": "confirm",
+  "budget": 200000,
+  "seeds": 32,
+  "seed0": 100,
+  "jobs": 1344,
+  "source_sha256": "9347b50b67ab2e7bacd971caa71f460153317847bf0453fd18d0a370333c24f3",
+  "binary_sha256": "0c6effae00476fb7fba967e24a0e3d3fba2c70e0472417e1ee919626373f47a3"
+}

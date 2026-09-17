@@ -1,0 +1,278 @@
+{
+  "per_family": [
+    {
+      "tag": "c_n3d2m1_4L2a7",
+      "states": 19,
+      "minimal": 18,
+      "alphabet": 6,
+      "pairs": 170,
+      "d1": 159,
+      "d2": 6,
+      "d3plus": 5,
+      "maxd": 4
+    },
+    {
+      "tag": "c_n3d2m1_4L3a11",
+      "states": 19,
+      "minimal": 18,
+      "alphabet": 6,
+      "pairs": 170,
+      "d1": 159,
+      "d2": 6,
+      "d3plus": 5,
+      "maxd": 4
+    },
+    {
+      "tag": "c_n3d2m3_6L2a7",
+      "states": 23,
+      "minimal": 22,
+      "alphabet": 6,
+      "pairs": 252,
+      "d1": 228,
+      "d2": 9,
+      "d3plus": 15,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n3d2m3_6L3a11",
+      "states": 23,
+      "minimal": 22,
+      "alphabet": 6,
+      "pairs": 252,
+      "d1": 228,
+      "d2": 9,
+      "d3plus": 15,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n3d4m1_4L2a7",
+      "states": 23,
+      "minimal": 22,
+      "alphabet": 6,
+      "pairs": 252,
+      "d1": 229,
+      "d2": 10,
+      "d3plus": 13,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n3d4m1_4L3a11",
+      "states": 23,
+      "minimal": 22,
+      "alphabet": 6,
+      "pairs": 252,
+      "d1": 229,
+      "d2": 10,
+      "d3plus": 13,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n3d4m3_6L2a7",
+      "states": 27,
+      "minimal": 26,
+      "alphabet": 6,
+      "pairs": 350,
+      "d1": 308,
+      "d2": 15,
+      "d3plus": 27,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n3d4m3_6L3a11",
+      "states": 27,
+      "minimal": 26,
+      "alphabet": 6,
+      "pairs": 350,
+      "d1": 308,
+      "d2": 15,
+      "d3plus": 27,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n4d2m1_4L2a7",
+      "states": 29,
+      "minimal": 28,
+      "alphabet": 7,
+      "pairs": 405,
+      "d1": 392,
+      "d2": 6,
+      "d3plus": 7,
+      "maxd": 5
+    },
+    {
+      "tag": "c_n4d2m1_4L3a11",
+      "states": 29,
+      "minimal": 28,
+      "alphabet": 7,
+      "pairs": 405,
+      "d1": 392,
+      "d2": 6,
+      "d3plus": 7,
+      "maxd": 5
+    },
+    {
+      "tag": "c_n4d2m3_6L2a7",
+      "states": 33,
+      "minimal": 32,
+      "alphabet": 7,
+      "pairs": 527,
+      "d1": 501,
+      "d2": 9,
+      "d3plus": 17,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n4d2m3_6L3a11",
+      "states": 33,
+      "minimal": 32,
+      "alphabet": 7,
+      "pairs": 527,
+      "d1": 501,
+      "d2": 9,
+      "d3plus": 17,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n4d4m1_4L2a7",
+      "states": 33,
+      "minimal": 32,
+      "alphabet": 7,
+      "pairs": 527,
+      "d1": 502,
+      "d2": 10,
+      "d3plus": 15,
+      "maxd": 7
+    },
+    {
+      "tag": "c_n4d4m1_4L3a11",
+      "states": 33,
+      "minimal": 32,
+      "alphabet": 7,
+      "pairs": 527,
+      "d1": 502,
+      "d2": 10,
+      "d3plus": 15,
+      "maxd": 7
+    },
+    {
+      "tag": "c_n4d4m3_6L2a7",
+      "states": 37,
+      "minimal": 36,
+      "alphabet": 7,
+      "pairs": 665,
+      "d1": 621,
+      "d2": 15,
+      "d3plus": 29,
+      "maxd": 7
+    },
+    {
+      "tag": "c_n4d4m3_6L3a11",
+      "states": 37,
+      "minimal": 36,
+      "alphabet": 7,
+      "pairs": 665,
+      "d1": 621,
+      "d2": 15,
+      "d3plus": 29,
+      "maxd": 7
+    },
+    {
+      "tag": "c_n5d2m1_4L2a7",
+      "states": 49,
+      "minimal": 48,
+      "alphabet": 8,
+      "pairs": 1175,
+      "d1": 1158,
+      "d2": 6,
+      "d3plus": 11,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n5d2m1_4L3a11",
+      "states": 49,
+      "minimal": 48,
+      "alphabet": 8,
+      "pairs": 1175,
+      "d1": 1158,
+      "d2": 6,
+      "d3plus": 11,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n5d2m3_6L2a7",
+      "states": 53,
+      "minimal": 52,
+      "alphabet": 8,
+      "pairs": 1377,
+      "d1": 1347,
+      "d2": 9,
+      "d3plus": 21,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n5d2m3_6L3a11",
+      "states": 53,
+      "minimal": 52,
+      "alphabet": 8,
+      "pairs": 1377,
+      "d1": 1347,
+      "d2": 9,
+      "d3plus": 21,
+      "maxd": 6
+    },
+    {
+      "tag": "c_n5d4m1_4L2a7",
+      "states": 53,
+      "minimal": 52,
+      "alphabet": 8,
+      "pairs": 1377,
+      "d1": 1348,
+      "d2": 10,
+      "d3plus": 19,
+      "maxd": 8
+    },
+    {
+      "tag": "c_n5d4m1_4L3a11",
+      "states": 53,
+      "minimal": 52,
+      "alphabet": 8,
+      "pairs": 1377,
+      "d1": 1348,
+      "d2": 10,
+      "d3plus": 19,
+      "maxd": 8
+    },
+    {
+      "tag": "c_n5d4m3_6L2a7",
+      "states": 57,
+      "minimal": 56,
+      "alphabet": 8,
+      "pairs": 1595,
+      "d1": 1547,
+      "d2": 15,
+      "d3plus": 33,
+      "maxd": 8
+    },
+    {
+      "tag": "c_n5d4m3_6L3a11",
+      "states": 57,
+      "minimal": 56,
+      "alphabet": 8,
+      "pairs": 1595,
+      "d1": 1547,
+      "d2": 15,
+      "d3plus": 33,
+      "maxd": 8
+    }
+  ],
+  "distribution": {
+    "1": 16680,
+    "2": 240,
+    "3": 180,
+    "4": 114,
+    "5": 64,
+    "6": 46,
+    "7": 16,
+    "8": 4
+  }
+}

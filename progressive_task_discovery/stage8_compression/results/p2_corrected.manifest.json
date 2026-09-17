@@ -1,0 +1,30 @@
+{
+  "runner": "src/run_p2b.py",
+  "families": 24,
+  "free_arms": [
+    "count_raw",
+    "window2_raw",
+    "window4_raw",
+    "raw"
+  ],
+  "cache_keys": [
+    "node",
+    "fullprefix",
+    "truestate"
+  ],
+  "levels": [
+    20,
+    40,
+    80,
+    160,
+    320
+  ],
+  "seeds": 6,
+  "seed0": 10300,
+  "budget": 200000,
+  "runs": 2736,
+  "note": "supersedes results/p2_information.jsonl, whose count/window arms read the wrong history",
+  "source_sha256": "c28a80de91b5002703aa966146feb103f34a066a3c0e95c4cbe2a5a70dcdec0f",
+  "data_sha256": "35b7952bde38a5d5cf6bfc7cb8e8714c2a4e36f810a65f72f6d7f568b32e0823",
+  "written": "2026-09-11"
+}

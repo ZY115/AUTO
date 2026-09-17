@@ -1,0 +1,4 @@
+pilot
+__pycache__/
+.mplconfig/
+.DS_Store

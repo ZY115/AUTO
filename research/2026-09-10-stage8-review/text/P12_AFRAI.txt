@@ -1,0 +1,970 @@
+                                              Active Finite Reward Automaton Inference and
+                                               Reinforcement Learning Using Queries and
+                                                             Counterexamples
+
+                                                     Zhe Xu1 , Bo Wu2 , Aditya Ojha2 , Daniel Neider3 , Ufuk Topcu2
+                                                       1
+                                                         Arizona State University, Tempe AZ, USA xzhe1@asu.edu
+                                                 2
+                                                     University of Texas at Austin, Austin TX, USA bowu86@gmail.com,
+
+
+
+
+arXiv:2006.15714v4 [cs.LG] 3 Jul 2021
+                                                                 {adiojha629, utopcu}@utexas.edu
+                                                     3
+                                                       Max Planck Institute for Software Systems, Kaiserslautern, Germany
+                                                                           neider@mpi-sws.org
+
+
+
+                                               Abstract. Despite the fact that deep reinforcement learning (RL) has surpassed
+                                               human-level performances in various tasks, it still has several fundamental chal-
+                                               lenges. First, most RL methods require intensive data from the exploration of the
+                                               environment to achieve satisfactory performance. Second, the use of neural net-
+                                               works in RL renders it hard to interpret the internals of the system in a way that
+                                               humans can understand. To address these two challenges, we propose a frame-
+                                               work that enables an RL agent to reason over its exploration process and distill
+                                               high-level knowledge for effectively guiding its future explorations. Specifically,
+                                               we propose a novel RL algorithm that learns high-level knowledge in the form of
+                                               a finite reward automaton by using the L* learning algorithm. We prove that in
+                                               episodic RL, a finite reward automaton can express any non-Markovian bounded
+                                               reward functions with finitely many reward values and approximate any non-
+                                               Markovian bounded reward function (with infinitely many reward values) with
+                                               arbitrary precision. We also provide a lower bound for the episode length such
+                                               that the proposed RL approach almost surely converges to an optimal policy in
+                                               the limit. We test this approach on two RL environments with non-Markovian
+                                               reward functions, choosing a variety of tasks with increasing complexity for each
+                                               environment. We compare our algorithm with the state-of-the-art RL algorithms
+                                               for non-Markovian reward functions, such as Joint Inference of Reward machines
+                                               and Policies for RL (JIRP), Learning Reward Machine (LRM), and Proximal Pol-
+                                               icy Optimization (PPO2). Our results show that our algorithm converges to an
+                                               optimal policy faster than other baseline methods.
+
+
+                                        1   Introduction
+
+                                        Despite the fact that deep reinforcement learning (RL) has surpassed human-level per-
+                                        formances in various tasks, it still has several fundamental challenges. First, most RL
+                                        methods require intensive data from the exploration of the environment to achieve sat-
+                                        isfactory performance. Second, the use of neural networks in RL renders it hard to
+                                        interpret the internals of the system in a way that humans can understand [13].
+                                            To address these two challenges, we propose a framework that enables an RL agent
+                                        to reason over its exploration process and distill high-level knowledge for effectively
+2        Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+guiding its future explorations. Specifically, we learn high-level knowledge in the form
+of finite reward automata, a type of Mealy machine that encodes non-Markovian reward
+functions. The finite reward automata can be converted to a deterministic finite state
+machine, allowing a practitioner to more easily reason about what the agent is learning
+[14]. Thus, this representation is more interpretable than frameworks that use neural
+networks.
+     In comparison with other methods that also learn high-level knowledge during RL,
+the one proposed in this paper actively infers a finite reward automaton from the RL
+episodes. We prove that in episodic RL, a finite reward automaton can express any non-
+Markovian bounded reward functions with finitely many reward values and approximate
+any non-Markovian bounded reward function (with infinitely many reward values) with
+arbitrary precision. As the learning agent infers this finite reward automaton during
+RL, it also performs RL (specifically, q-learning) to maximize its obtained rewards
+based on the inferred finite reward automaton. The inference method is inspired by the
+L* learning algorithm [4], and modified to the framework of RL. We maintain two q-
+functions, one for incentivizing the learning agent to answer the membership queries
+during the explorations and the other one for obtaining optimal policies for the inferred
+finite reward automaton (in order to answer the equivalence queries). Furthermore, we
+prove that the proposed RL approach almost surely converges to an optimal policy in
+the limit, if the episode length is longer than a theoretical lower bound value.
+     We implement the proposed approach and three baseline methods (JIRP-SAT [33],
+LRM-QRM [24], and PPO2 [22]) in the Office world [33] and Minecraft world [3]
+scenarios. The results show that, at worst the approach converges to an optimal policy
+88.8% faster than any of the baselines, and at best the approach converges while the
+other baselines do not.
+
+
+1.1   Related works
+
+Our work is closely related to the use of formal methods in RL, such as RL for finite
+reward automata [17] and RL with temporal logic specifications [1,19,24,9,27,2]. The
+current methods assume that high-level knowledge, in the form of reward machines or
+temporal logic specifications, is known a priori. However, in real-life use cases, such
+knowledge is implicit and must be inferred from data.
+     Towards the end of inferring high-level knowledge, several approaches have been
+proposed [37], [33], [16], [20]. In these methods, the agent jointly learns the high-
+level knowledge and RL-policies concurrently. In [37], the inferred high-level knowl-
+edge is represented by temporal logic formulas and used for RL-based transfer learn-
+ing. The methods for inferring temporal logic formulas from data can be found in
+[15,11,18,7,5,21,36,34,25,35,23,32,35,31,8,10].
+     In comparison with temporal logic formulas, the finite reward automata used in this
+paper are more expressive in representing the high-level structural relationships. More-
+over, even if the inferred finite reward automaton is incorrect during the first training
+loop, the agent is still able to self-correct and learn more complex tasks. In order to
+learn finite reward automata, the authors in [33] proposed using passive inference of
+finite reward automata and utilizing the inferred finite reward automata to expedite RL.
+                                           Title Suppressed Due to Excessive Length        3
+
+In [16], the authors proposed a method to infer reward machines to represent the mem-
+ories of Partially observable Markov decision processes (POMDP) and perform RL for
+the POMDP with the inferred reward machines.
+     In contrast, our method actively infers the finite reward automaton in environments
+with non-Markovian reward functions. The active inference is facilitated by L* learning.
+This algorithm assumes the existence of a teacher who can answer the membership and
+equivalence queries [4,28,29,30]. In our approach, an RL engine fulfills the role of the
+teacher, and the queries are answered through interaction with the environment through
+the RL engine.
+     During the submission of this paper, an interesting method was proposed by the
+authors of [12] which also used L* learning for non-Markovian Rewards. While super-
+ficially similar to our work, the two approaches differ in three ways:
+     (1) The proposed approach in this paper uses finite reward automata, while [12]
+works with deterministic finite automata (DFAs) and general automata. This is a no-
+table distinction because we prove that finite reward automata can express any non-
+Markovian bounded reward function with finitely many reward values in episodic RL.
+     (2) The authors of [12] use only maintain one type of DFA for answering the equiva-
+lence queries. The proposed approach in this paper maintains two types of finite reward
+automata, using one to answer equivalence queries, and the other to answer member-
+ship queries. This additional finite reward automaton can incentivize the agent to answer
+membership queries during the exploration.
+     (3) We provide a lower bound for the episode length such that the proposed RL
+approach almost surely converges to an optimal policy in the limit.
+
+
+2     Finite Reward Automata
+
+In this section we introduce necessary background on reinforcement learning and finite
+reward automata.
+
+
+2.1   Markov Decision Processes and Finite Reward Automata
+
+Let M = (X, xinit , A, p, P, R, L) be a labeled Markov decision process (labeled
+MDP) with a non-Markovian reward function, where the state space X and action set A
+are finite, xinit ∈ X is a set of initial states, p : X × A × X → [0, 1] is a probabilistic
+transition relation, P is a set of propositional variables (i.e., labels), R : (2P )+ → R is
+a non-Markovian reward function where the reward depends on the history of the propo-
+sitional variables (i.e., labels) that has been encountered, and L : X × A × X → 2P is
+a labeling function.
+     We define the size of M, denoted as |M|, to be |X| (i.e., the cardinality of the set
+X). A policy π : X × A → [0, 1] specifies the probability of taking each action for
+each state. The action-value function, denoted as qπ (x, a), is the expected discounted
+reward if an agent applies policy π after taking action a from state x. A finite sequence
+x0 a0 . . . xk ak xk+1 generated by M P under certain policy π is called a trajectory, start-
+ing from x1 = xinit and satisfies a∈A π(xk , a)P (xk , a, xk+1 ) > 0 for all k ≥ 1. Its
+corresponding label sequence is `0 `1 . . . `k where L(xi , ai , xi+1 ) = `i for each i ≤ k.
+4           Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+Similarly, the corresponding reward sequence is r1 . . . rk , where ri = R(`0 `1 . . . `k ),
+for each i ≤ k. We call the pair (λ, ρ) := (`1 . . . `k , r1 . . . rk ) a trace.
+
+Definition 1. Let M = (X, xinit , A, p, P, R, L) be a labeled Markov decision pro-
+cess. We define a sequence (`1 , r1 ), . . . , (`k , rk ) to be attainable if k ≤ eplength and
+p(xi , ai , xi+1 ) > 0 for each i ∈ {0, . . . , k}.
+
+Definition 2. A finite reward automaton A = (W, winit , 2P , R, δ, η) consists of a fi-
+nite, nonempty set W of states, an initial state winit ∈ W , an input alphabet 2P , an
+output alphabet R, a (deterministic) transition function δ : W × 2P → W , and an out-
+put function η : W × 2P → R, where R is a finite set of reward values (R ⊂ R). We
+define the size of A, denoted as |A|, to be |W | (i.e., the cardinality of the set W ).
+
+Remark 1. A finite reward automaton is actually a Mealy machine (Shallit 2008) where
+the output alphabet is a finite set of values. When the output alphabet is an infinite set
+of values, it is called a reward machine in [33,17].
+
+     The run of a finite reward automaton A on a sequence of labels `1 . . . `k ∈ (2P )∗ is a
+sequence w0 (`1 , r1 )w1 (`2 , r2 ) . . . wk−1 (`k , rk )wk of states and label-reward pairs such
+that w0 = winit and for all i ∈ {0, . . . , k}, we have δ(wi , `i ) = wi+1 and η(wi , `i ) =
+ri . We write A[`1 . . . `k ] = r1 . . . rk to connect the input label sequence to the sequence
+of rewards produced by the machine A [33].
+
+Definition 3. We define that a finite reward automaton A encodes the reward function
+R of a labeled MDP M if for every trajectory x0 a0 . . . xk ak xk+1 of finite length and
+the corresponding label sequence `1 . . . `k , the reward sequence equals A[`1 . . . `k ].
+
+Definition 4 (Reward Product MDP). Let M = (X, xinit , A, p, P, R, L) be a la-
+beled MDP with a non-Markovian reward function and A = (W, winit , 2P , R, δ, η)
+a finite reward automaton encoding its reward function. We define the product MDP
+MA = (X 0 , x0I , A0 , p0 , P 0 , R0 , L0 ) by
+
+    – X0 = X × W ;
+    – x0I = (xinit , winit );
+    – A0 = A;
+    – p0 ((x, w), a, (x0 , w0 )
+                               
+
+           p(x, a, x0 ) if w0 = δ(w, L(x, a, x0 ));
+      =
+           0             otherwise;
+    – P 0 = P;
+    – R0 (x, w), a, (x0 , w0 ) = η w, L(x, a, x0 ) ; and
+                                                 
+
+    – L0 = L.
+
+
+It can be seen from Definition 4 that the reward function of the product MDP MA is
+actually Markovian.
+                                                 Title Suppressed Due to Excessive Length    5
+
+2.2     Reinforcement Learning With Finite Reward Automata
+
+Q-learning [26] is a form of model-free reinforcement learning (RL). Starting from state
+x, the system selects an action a, which takes it to state x0 and obtains a reward R. The
+Q-function values will be updated by the following rule:
+
+                      q(x, a) ← (1 − α)q(x, a) + α(R + γ max q(x0 , a)).                    (1)
+                                                                     a
+
+    The q-learning algorithm can be modified to learn an optimal policy when the gen-
+eral reward function is encoded by a finite reward automaton [17]. Starting from state
+(x, w) in the product space, the system selects an action a, which takes it to state (x0 , w0 )
+and obtains a reward R. The Q-function values will be updated by the following rule.
+
+                q(x, w, a) ← (1 − α)q(x, w, a) + α(R + γ max q(x0 , w0 , a)).               (2)
+                                                                         a
+
+We consider episodic Q-learning in this paper, and we use eplength to denote the
+episode length.
+
+
+3      Expressivity of Finite Reward Automata
+
+In this section, we show that any non-Markovian reward function in episodic RL which
+has finitely many reward values can be encoded by finite reward automata, while any
+non-Markovian bounded reward function in episodic RL can be approximated by finite
+reward automata with arbitrary precision.
+
+Theorem 1. For a labeled MDP M = (X, xinit , A, p, P, R, L) with a non-Markovian
+reward function R : (2P )+ → Rf in episodic RL, where Rf is a finite set of values
+in R, there exists at least one finite reward automaton A = (W, winit , 2P , R, δ, η) that
+can encode the reward function R.
+
+Proof. We use I to denote the set of trajectories of length at most eplength and Ti
+to denote the maximal time index for trajectory i ∈ I. We construct a finite reward
+automaton A = (W, winit , 2P , R, δ, η),
+
+    – W = winit ∪ {wi,t }i∈I,1<t≤Ti , wi,1 = winit , ∀i ∈ I;
+    – R = Rf ;                                   
+    – ∀t ≤ Ti , δ wi,t , L(xi,t , ai,t , xi,t+1 ) = wi,t+1 ; and
+                 
+    – η wi,t , `i = R(`i,1 , . . . , `i,t ), where `i,t = L(xi,t , ai,t , xi,t+1 ).
+
+Then, it can be easily shown that for every trajectory x0 a0 . . . xi,k ai,k xi,k+1 and corre-
+sponding label sequence `1 . . . `k (k ≤ eplength), the reward sequence equals A[`1 . . . `k ],
+i.e., A encodes the reward function R.
+
+Remark 2. For a labeled MDP M = (X, xinit , A, p, P, R, L) with a finite horizon,
+there can only be finitely many reward values, each corresponding to finitely many
+possible trajectories for the reward value.
+6           Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+Theorem 2. For a labeled MDP M = (X, xinit , A, p, P, R, L) with a non-Markovian
+bounded reward function R : (2P )+ → R in episodic RL, there exists at least one
+finite reward automaton A = (W, winit , 2P , R, δ, η) that can approximate the non-
+Markovian reward function R with arbitrary precision.
+Proof. For a bounded reward function taking values in [rmin , rmax ], where rmin , rmax ∈
+R, rmin ≤ rmax , we construct a finite set R = {rmin , rmin +, rmin +2, . . . , rmin +nmax ],
+where  ∈ R,  > 0, nmax = max{n | rmin + n ≤ rmax }. We use I to denote the set
+of trajectories of length at most eplength generated from the labeled MDP M and Ti
+to denote the maximal time index for trajectory i ∈ I. We construct a finite reward
+automaton A = (W, winit , 2P , R, δ, η), where
+    – W = winit ∪ {wi,t }i∈I,1<t≤Ti , wi,1 = winit , ∀i ∈ I;
+    – R = R ;                                    
+    – ∀t ≤ Ti , δ wi,t , L(xi,t , ai,t , xi,t+1 ) = wi,t+1 ; and
+    – η wi,t , `i,t = arg min |r − R(`i,1 , . . . , `i,t )|, where `i,t = L(xi,t , ai,t , xi,t+1 ).
+                            r∈R
+
+Then, it can be easily shown that for any  > 0 and every trajectory x0 a0 . . . xi,k ai,k xi,k+1
+(k ≤ eplength), we have |A[`i,1 , . . . , `i,t )]−R[`i,1 , . . . , `i,t ]| < , i.e., A approximates
+the reward function R with arbitrary precision.
+
+
+4      Active Finite Reward Automaton Inference and Reinforcement
+       Learning (AFRAI-RL)
+In this section, we introduce the Active Finite Reward Automaton Inference and Re-
+inforcement Learning (AFRAI-RL) algorithm. Figure 1 shows the block diagram of
+the AFRAI-RL approach, and Algorithm 1 shows the procedures of the AFRAI-RL
+approach. The AFRAI-RL approach consists of an active finite reward automaton infer-
+ence engine and an RL engine. In the following two subsections, we will introduce the
+two engines and their interactions for obtaining the optimal RL policy for tasks with
+non-Markovian rewards.
+
+4.1     Active Finite Reward Automaton Inference Engine
+In this subsection, we introduce the active finite reward automaton inference engine
+which is based on L* learning [4], which is an algorithm that learns a minimal deter-
+ministic finite automaton (DFA) that accepts an unknown regular language L by in-
+teracting with a teacher. In the setting of this paper, the role of teacher is fulfilled by
+the RL engine. For simplicity, we only consider RL tasks with non-Markovian reward
+functions with finitely many reward values (hence there exists at least one finite reward
+automaton that can encode the non-Markovian reward function).
+    We first show that a finite reward automaton can be converted to a DFA.
+Definition 5. A deterministic finite automaton (DFA) is a five-tuple A = (V, vI , Σ, δ, F )
+consisting of a nonempty, finite set v of states, an initial state vI ∈ V , an input alphabet
+Σ,a transition function δ : V × Σ → V , and a set F ⊆ V of final states.The size of an
+DFA, denoted by |A|, is the number |V | of its states.
+                                                 Title Suppressed Due to Excessive Length               7
+
+
+                                                     rewards
+              RL engine                                           Active RL engine     Is abc getting
+           (random policy)                                                            reward 0 or 1?
+                                                                                     membership
+                     counterexample                                                   queries
+                                                    hypothesis          No
+                                                   FRA inferred?
+
+
+
+
+                        No                                Yes
+
+
+                                   equivalence
+                                      query         hypothesis
+                   RL engine                       FRA correct?
+
+
+
+                             Yes
+                                                       inference engine
+              until RL convergence
+
+
+Fig. 1: Block diagram of the AFRAI-RL approach. Initially, a random RL engine is
+used generate counterexample traces for the inference engine. The inference engine al-
+ternately performs two tasks: (a) it creates membership queries for the RL engine if
+there are counterexamples that are inconsistent with the inferred Finite Reward Au-
+tomaton (FRA); (b) it generates and sends equivalence queries to the RL-Engine. The
+active RL Agent will obtain rewards from the environment to answer the membership
+queries and the equivalence queries.
+
+
+     A run of an DFA A = (V, vI , Σ, δ, F ) on an input word τ = τ1 . . . τn is a sequence
+v0 . . . vn of states such that v0 = vI and vi = δ(vix , ai ) for each i ∈ {1, . . . , n}. A
+run v0 . . . vn of A on a word u is accepting if vn ∈ F , and a word u is accepted if
+there exists an accepting run. The language of an DFA A is the set L(A) = {u ∈ Σ ∗ |
+A accepts u}. As usual, we call two DFAs A1 and A2 equivalent if L(A1 ) = L(A2 ).
+     We show that every finite reward automaton over the input alphabet 2P and output
+alphabet R can be translated into an “equivalent” DFA as defined below. This DFA
+operates over the combined alphabet 2P × R and accepts a word (`0 , r0 ) . . . (`k , rk )
+if and only if A outputs the reward sequence r0 . . . rk on reading the label sequence
+`0 . . . `k .
+Lemma 1. Given a finite reward automaton A = (W, winit , 2P , R, δ, η), one can con-
+struct a DFA AA with |A| + 1 states such that
+
+                 (`0 , r0 ) . . . (`k , rk ) ∈ (2P × R)∗ | A[`0 . . . `k ] = r0 . . . rk .
+                
+  L(AA ) =
+
+Proof. Let A = (WA , winit A , 2P , R, δA , ηA ) be a finite reward automaton. Then, we
+define a DFA AA = (V, vI , Σ, δ, F ) over the combined alphabet 2P × R by
+ – V = WA ∪ {⊥} with ⊥ ∈
+                       / WA ;
+ – vI = winit A ;
+8          Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+    – Σ = 2P × R; (
+                   w0       if δA (w, `) = w0 and ηA (w, `) = r;
+    – δ w, (`, r) =
+                    ⊥        otherwise;
+    – F = WA .
+
+    In this definition, ⊥ is a new sink state to which AA moves if its input does not
+correspond to a valid input-output pair produced by A. A straightforward induction
+over the length of inputs to AA shows that it indeed accepts the desired language. In
+total, AA has |A| + 1 states.
+
+    During the learning process, the inference engine maintains an observation table
+O = (S, E, T ) where S ⊆ Σ ∗ is a set of prefixes (Σ = 2P ), E ⊆ Σ ∗ is a set of
+suffixes and T : (S ∪ S · Σ) × E → {0, 1}. Σ ∗ denotes finite traces from alphabet
+set Σ. For s ∈ S ∪ S · Σ, e ∈ E, if s · e ∈ L, then T (s, e) = 1 and if s · e ∈       / L
+then T (s, e) = 0. Membership queries assign the correct value (0 or 1) to T (s, e).
+For simplicity, we denote row(s) = (T (s, e1 ), ..., T (s, en )) ∈ {0, 1}n , |E| = n. The
+inference engine will always keep the observation table closed and consistent as defined
+below.
+
+
+Definition 6. An observation table O = (S, E, T ) is closed if for each t ∈ S · Σ, we
+can find some s ∈ S such that row(s) = row(t).
+
+Definition 7. O is consistent if whenever for s1 , s2 ∈ S, row(s1 ) = row(s2 ), then for
+any σ ∈ Σ, we have row(s1 σ) = row(s2 σ).
+
+Remark 3. If an observation table O = (S, E, T ) is closed and consistent, it is possible
+to construct a DFA M(O) = (Q, Σ, δ, Q0 , F ) as the acceptor, where
+
+    – Q = {row(s)|s ∈ S};
+    – q0 = row();
+    – δ(row(s), σ) = row(sσ), ∀σ ∈ Σ;
+    – F = {row(s)|s ∈ S, T (s) = 1}.
+
+Definition 8. For a closed and consistent observation table O = (S, E, T ), we define a
+corresponding hypothesis finite reward automaton Ah (O) = (W h , winit
+                                                                   h
+                                                                       , 2P , R, δ h , η h )
+as follows:
+
+    – W h = {row(s) : s ∈ S},
+         h
+    – winit  = row(),
+       h
+    – δ (row(s), σ) = row(sσ),
+    – η h (w, λ) = 1, if T (λ) = 1; and η h (w, λ) = 0, otherwise.
+                                            Title Suppressed Due to Excessive Length          9
+
+Algorithm 1 AFRAI-RL
+ 1: Initialize O = (S, E, T ), sample, N sample, C, qm , qh
+ 2: while there exists counterexample (λ, ρ) do
+ 3:     Add (λ, ρ) and its prefixes to S
+ 4:     ChangeT ← 0
+ 5:     while O is neither closed nor consistent ∧ (ChangeT = 0) do
+ 6:          χ ← CheckObsT able(O)
+ 7:          T, sample, N sample, qm ← M Query(T, χ, sample, N sample, C, qm )
+ 8:     end while
+ 9:     (λ, ρ), O, sample, N sample, qh ← EQuery(O, sample, N sample, qh )
+10: end while
+
+
+
+
+    Algorithm 1 shows the AFRAI-RL algorithm. Algorithm 1 starts by checking whether
+there are any counterexample traces that need to be added to the observation table.
+These traces and their suffixes are added to the observation table (Algorithm 1, Line
+3), and the subroutine CheckObsT able (see Algorithm 4) is used to find membership
+query traces (noted as χ in all algorithms).
+   Then, Algorithm 1 proceeds to answer two types of queries, namely the membership
+query (Algorithm 1, Line 7) and the equivalence query (Algorithm 1, Line 9).
+Answering Membership Queries: The detailed procedures to answer membership
+queries are shown in Algorithm 2. The subroutine sets T (ζ) to 1 if the trace ζ can
+be accepted by the DFA converted from a finite reward automaton (that can encode
+an unknown non-Markovian reward function), and sets T (ζ) to 0 otherwise. We main-
+tain a set sample of accepted traces and use the subroutine CheckSample (see Al-
+gorithm 5) to check whether a membership query can already be answered by the set
+sample (Algorithm 2, Lines 6 to 8). If it can, we provide the answer to T (ζ) in the
+observation table O (Algorithm 2, Line 8); otherwise, we perform RL to answer the
+membership query (see Algorithm 7 for details). If the membership query trace ζ is
+inconsistent with a trace in RL from the environment (e.g., the membership query trace
+ζ = (`1 , 0), (`2 , 1), (`3 , 1), while a trace (`1 , 0), (`2 , 0) is observed from the environ-
+ment), then a flag is set (Algorithm 2, Line 14) to stop the loop, T (ζ) is set to zero
+immediately (Algorithm 2, Line 25), and move on to the next trace. Otherwise we add
+the trace to sample (Algorithm 2, Line 16). To boost efficiency, we set a limit on how
+many episodes we perform to answer a membership query. This limit is C ∈ Z>0 . We
+answer the membership query as 0 if after C episodes the membership query still cannot
+be answered (Algorithm 2, Lines 24-25). Such traces are recorded in the set N sample
+(Algorithm 2, Line 26). Afterwards, if the trace for the membership query is encoun-
+tered in the environment, we use the subroutine CheckN Sample (see Algorithm 6) to
+change the original answers in the observation table O accordingly. This is performed
+during both membership (Algorithm 2, Line 17) and equivalence queries (Algorithm 3,
+Line 7). If the answer was changed during a membership query(i.e., ChangeT = 1),
+we exit the Algorithm 2 (Line 19) to generate the additional membership query traces
+created from changing the table (Algorithm 1, Line 5).
+10      Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+Algorithm 2 MQuery
+ 1: Input: T, χ, sample, N sample, C, qm
+ 2: Query ← membership
+ 3: for each ζ ∈ χ do
+ 4:     Construct a query finite reward automaton Am (ζ)
+ 5:     counter ← 0
+ 6:     P revAnswer ← check(ζ, sample)
+ 7:     if P revAnswer 6= N ull then
+ 8:         T (ζ) = P revAnswer
+ 9:     else
+10:          Inconsistent ← 0
+11:          while check(ζ, sample) = N ull ∧ (counter < C) ∧ Inconsistent = 0 do
+12:               λ, ρ, qm ← RL-Engine(Query, Am (ζ), qm )
+13:               if ζ is inconsistent with (λ, ρ) then
+14:                    Inconsistent ← 1
+15:               else
+16:                    Add (λ, ρ) to sample
+17:                    ChangeT, T ←CheckNSample((λ, ρ),N sample,T )
+18:                    if ChangeT = 1 then
+19:                        return T, sample, N sample, qm
+20:                    end if
+21:                    counter ← counter + 1
+22:               end if
+23:          end while
+24:          if (counter > C) ∨ (Inconsistent = 1) then
+25:               T (ζ) ← 0
+26:               Add ζ to N sample
+27:          else
+28:               T (ζ) ← 1
+29:          end if
+30:     end if
+31: end for
+32: return T, sample, N sample, qm
+
+
+
+
+Algorithm 3 EQuery
+1: Input O, sample, N sample, qh
+2: Construct a hypothesis finite reward automaton Ah (O)
+3: Query ← equivalence
+4: Do
+5: λ, ρ, qh ← RL-Engine(Query,Ah , qh )
+6: Add (λ, ρ) to sample
+7: ChangeT, T ←CheckNSample((λ, ρ),N sample,T )
+8: Until Find counterexample (λ, ρ)
+9: Return (λ, ρ), O, sample, N sample, qh
+                                                Title Suppressed Due to Excessive Length   11
+
+Answering Equivalence Queries: The detailed procedures to answer equivalence queries
+are shown in Algorithm 3. We perform RL with the hypothesis finite reward automa-
+ton, updating sample along the way (Algorithm 3, Line 6), until a counterexample is
+found (Algorithm 3, Line 8). A counterexample is a trace where the rewards given by
+environment are different from the rewards given by hypothesis finite reward automa-
+ton. Specifically, there are two types of counterexamples. A positive counterexample
+is a trace that is accepted by the DFA converted from the current hypothesis finite
+reward automaton, but is not accepted by the DFA converted from any finite reward
+automaton that can encode the unknown non-Markovian reward function. A negative
+counterexample is a trace that is not accepted by the DFA converted from the current
+hypothesis finite reward automaton, but is accepted by the DFA converted from any
+finite reward automaton that can encode the unknown non-Markovian reward function.
+The RL-engine returns counterexamples to the inference engine for another round of
+inference (Algorithm 3, Line 5 and 9).
+
+
+Algorithm 4 CheckObsTable
+ 1: Input: O
+ 2: if O is not consistent then
+ 3:     Find s1 , s2 ∈ S, σ ∈ Σ and e ∈ E such that row(s1 ) = row(s2 ) and T (s1 σe) 6=
+    T (s2 σe)
+ 4:     add σe to E
+ 5:     χ ← (S ∪ SΣ)σe
+ 6: else if O is not closed then
+ 7:     Find s ∈ S and σ ∈ Σ such that ∀s ∈ S, row(sσ) 6= row(s)
+ 8:     add sσ to S
+ 9:     χ ← (sσ ∪ sσΣ)E
+10: end if
+11: Return χ
+
+
+
+
+Algorithm 5 CheckSample
+ 1: Input: ζ, sample
+ 2: for each trace (λ, ρ) in sample do
+ 3:     if ζ is prefix of (λ, ρ) then
+ 4:          Return 1
+ 5:     end if
+ 6:     if ζ is inconsistent with (λ, ρ) then
+ 7:          Return 0
+ 8:     end if
+ 9: end for
+10: Return N ull
+12        Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+Algorithm 6 CheckNSample
+ 1: Input: (λ, ρ), N sample, T
+ 2: for each ζ 0 ∈ N sample do
+ 3:     if ζ 0 is a prefix of (λ, ρ) then
+ 4:          ChangeT = 1, T (ζ 0 ) = 1
+ 5:     end if
+ 6: end for
+ 7: Return ChangeT , T
+
+
+
+    Algorithm 4 generates membership query traces based on whether or not the obser-
+vation table O is closed or consistent. If the table is not consistent, then we add σe to E
+and each ζ ∈ (S ∪ SΣ)σe forms a membership query trace. If the table is not closed,
+then we add add sσ to S and each ζ ∈ (sσ ∪ sσΣ)E forms a membership query trace.
+    Algorithm 5 shows the subroutine CheckSample. It returns 1 or 0 if the mem-
+bership query for ζ has already been answered, and N ull otherwise. For each trace
+(λ, ρ) in sample, if a membership query trace ζ is prefix of (λ, ρ), then ζ must be
+accepted by the DFA converted from the finite reward automaton that encodes the un-
+known non-Markovian reward function; hence CheckSample returns 1. If ζ is incon-
+sistent with a trace in sample, then ζ cannot be accepted by the DFA mentioned above
+and CheckSample returns 0.
+    Algorithm 6 shows the subroutine CheckN Sample. Each trace ζ 0 in N sample is
+checked to see if it is a prefix of (λ, ρ) (the recent answer from the RL-Engine). If
+the trace is a prefix, then its answer in the observation table is changed (Line 4). A
+flag, ChangeT , is set so that the observation table is rechecked for being closed and
+consistent in Algorithm 1.
+    By answering the membership and equivalence queries, L∗ algorithm is guaranteed
+to converge to the minimum DFA accepting the unknown regular language L using
+O(|Σ|n2 + n log c) membership queries and at most n − 1 equivalence queries, where
+n denotes the number of states in the final DFA and c is the length of the longest coun-
+terexample from the RL engine when answering equivalence queries [4].
+
+4.2   Active Reinforcement Learning Engine
+In this subsection, we introduce the active reinforcement learning engine. We first
+define a query finite reward automaton corresponding to a membership query trace
+ζ = (`1 , r1 ), . . . , (`k , rk ) as follows.
+Definition 9. For a membership query trace ζ = (`1 , r1 ), . . . , (`k , rk ), we define a
+corresponding query finite reward automaton Am (ζ) = (W m , winitm
+                                                                     , 2P , R, δ m , η m ) as
+follows:
+ – W m = {w0m , w1m , . . . , wkm },
+     m
+ – winit = w0m ,
+ – for any i ∈ [0, k − 1], δ m (wim , `i+1 ) = wi+1
+                                                m
+                                                    , δ m (wim , `) = wim for any ` 6= `i , and
+                                        P
+ – for any w ∈ W and any ` ∈ 2 , η (w , `) = 1, if δ m (wm , `) 6= wm ; and η m (wm , `) =
+             m       m                       m  m
+
+   0, otherwise.
+                                            Title Suppressed Due to Excessive Length         13
+
+    Intuitively, the query finite reward automaton corresponding to a membership query
+trace ζ = (`1 , r1 ), . . . , (`k , rk ) is a finite reward automaton that outputs a reward of
+one every time a new label `i (i ∈ [1, k]) is achieved (and the state of the finite reward
+automaton moves from wim to wi+1        m
+                                            ). Therefore, in performing RL with the query finite
+reward automaton, the rewards obtained from the query finite reward automaton serve
+as incentives to encounter the label sequence in the membership query trace and hence
+to answer the membership query.
+    In the RL engine, we maintain two different types of q-functions: query q-functions
+for answering membership queries, denoted as qm ; and hypothesis q-functions for max-
+imizing the cumulative rewards from the environment (also answering equivalence
+queries), denoted as qh .
+    We update the query q-functions as follows:
+
+                    qm (x, wm , a) ←(1 − α)qm (x, wm , a)
+                                                                                            (3)
+                                      + α(rm + γ max qm (x0 , w0m , a)),
+                                                      a
+
+    Similarly, we update the hypothesis q-functions as follows:
+
+                     qh (x, wh , a) ←(1 − α)qh (x, wh , a)
+                                                                                            (4)
+                                      + α(rh + γ max qh (x0 , w0h , a)),
+                                                      a
+
+
+
+
+Algorithm 7 RL-Engine
+ 1: Hyperparameters: learning rate α, discount factor γ, episode length eplength
+ 2: Input: Variable Query, a reward automaton A, q-function q
+ 3: x ← InitialState(); (λ, ρ) ← []
+ 4: w ← winit
+ 5: for 0 ≤ t < eplength do
+ 6:     x0 ,w0 ,q ← Step(Query, A, q, x, w)
+ 7:     append (L(x, a, x0 ), r) to (λ, ρ)
+ 8:     x ← x0 , w ← w 0 , t ← t + 1
+ 9: end for
+10: return (λ, ρ, q)
+
+
+
+    Algorithm 7 shows the procedure to run each RL episode to answer an member-
+ship query or equivalence query. Algorithm 7 first initializes the initial state x of the
+MDP, the initial state of the (query or hypothesis) finite state automaton w and the trace
+                                                            m
+(as the empty trace). Specifically, w is initialized as winit    if it is in the membership
+                                              h
+query phase (A = Am ), and initialized as winit if it is in the equivalence query phase
+(A = Ah ) (Line 6). Algorithm 8 is used to run one step through the environment (see
+next paragraph for details). We feed the query q-function and finite reward automaton
+into algorithm 8 if a membership query is being asked, and the hypothesis q-function
+and automaton otherwise. Algorithm 7 returns the trace, the query q-function and the
+hypothesis q-function (Line 10).
+14        Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+Algorithm 8 Step
+ 1: Input: Variable Query, a finite reward automaton A, a q-function q, an MDP state x,and an
+    FRA state w
+ 2: a = GetEpsilonGreedyAction(q, w, x)
+ 3: x0 = ExecuteAction(x, a)
+ 4: if Query = membership then
+ 5:     r ← η(w, L(x, a, x0 ));
+ 6: else
+ 7:     Observe r from the environment;
+ 8: end if
+ 9: w0 = δ(w, L(x, a, x0 ))
+10: q(x, w, a) ← (1 − α)q(x, w, a) + α(r + γ max q(x0 , w0 , a))
+                                                   a
+11: for ŵ ∈ W \ {w} do
+12:     ŵ0 = δ(ŵ, L(x, a, x0 ))
+13:     r̂ = η(ŵ, L(x, a, x0 ))
+14:     q(x, ŵ, a) ← (1 − α)q(x, ŵ, a) + α(r̂ + γ max q(x0 , ŵ0 , a))
+                                                       a
+15: end for
+16: return x0 , w0 , q
+
+
+
+    Algorithm 8 runs one step through the environment, updating the q-function for
+either a membership or equivalence query. First, at state x an action a is selected ac-
+cording to the q-function using the epsilon-greedy approach and executed to reach a
+new state x0 (Line 2). Then rewards are collected based on the type of query being
+asked. If a membership query is being asked, then the automaton’s reward function is
+used; otherwise the reward is observed from the environment. The next mealy state for
+the automaton is calculated (Line 9) and the q-function supplied is updated (Line 10).
+
+Lemma 2. Let M be a labeled MDP and A the finite reward automaton encoding the
+reward function of M. Then, AFRAI with eplength ≥ 2|M|+1 (|A|+1)−1 almost surely
+learns a finite reward automaton in the limit that is equivalent to A on all attainable
+label sequences.
+
+Proof. Given a eplength = 2|M|+1 (|A| + 1) − 1, we are almost sure to experience
+every possible attainable trace from the environment. The proof of this is similar to the
+proof provided for Lemma 2 in [33] (Proof is located in Appendix C of [33]). Given
+every attainable trace, AFRAI-RL will answer all membership and equivalence queries
+correctly with probability 1 in the limit, because the observation table O can be changed
+as the algorithm 1 runs (Algorithm 1, Lines 7 and 9). Furthermore, the author in [4]
+shows that if all membership and equivalence queries can be answered, a DFA can be
+formed from the observation table (as in Remark 3). This DFA will be the smallest DFA
+that can accept the language defined in Lemma 1. In this RL context, this language will
+match the language of the DFA converted from the finite reward automaton; i.e., the
+language will encode the finite reward automaton that is equivalent to A. Therefore, the
+observation table encodes the finite reward automaton that is equivalent to A.
+
+With Lemma 2, we can proceed to prove Theorem 3.
+                                          Title Suppressed Due to Excessive Length   15
+
+Theorem 3. Let M be a labeled MDP and A the reward machine encoding of the
+reward function of M. Then, AFRAI-RL with eplength ≥ 2|M|+1 · (|A| + 1) − 1 almost
+surely converges to an optimal policy in the limit.
+
+Proof. Lemma 2 shows that, eventually, the reward machine learned by AFRAI-RL,
+will be equivalent to A on all attainable label sequences. Let H be the reward machine
+learned by AFRAI-RL and MH be the product MDP.
+    Thus an optimal policy for MH will also be optimal for M. When running episodes
+of QRM (Algorithm 7) under the reward machine H, an update of a q-function con-
+nected to a state of H corresponds to updating the q function for MH . Since eplength ≥
+|M |, the fact that QRM uses the epsilon-greedy strategy and that updates are done
+in parallel for all states of H implies that every state-action pair of the MH will be
+seen infinitely often. Hence, the convergence of q-learning for MH to an optimal pol-
+icy is guaranteed by [26]. Therefore, as the number of episodes goes to infinity, with
+eplength ≥ 2|M|+1 · (|A| + 1) − 1, AFRAI-RL converges towards an optimal policy.
+
+
+5     Case Studies
+
+In this section, we apply the proposed approach to the office world scenario adapted
+from [17] and the craft world scenario from [3]. We perform the following four different
+methods:
+
+    – AFRAI-RL: We use the libalf [6] implementation of active automata learning as
+      the algorithm to infer finite reward automata.
+
+    – JIRP-SAT: We use the libalf [6] implementation of SAT-solving (see Section 3.2 of
+      [33]) as the algorithm to infer finite reward automata.
+
+    – LRM-QRM: We use the QRM implementation from [17], adapted to test the agent
+      at the end of each episode.
+
+    – PPO2: We use the Stable Baselines implementation of PPO2 [22]. The state space
+      is a history of the past states the agent has been in. This was added because PPO2
+      doesn’t have any way of remembering it’s previous states.
+
+    In [33], the authors have shown that JIRP-SAT and JIRP-RPNI outperform q-learning
+in augmented state space (QAS), hierarchical reinforcement learning (HRL), and deep
+reinforcement learning with double q-learning (DDQN) in three case studies. There-
+fore, if we can show that AFRAI-RL outperforms JIRP-SAT and JIRP-RPNI, then we
+can deduce that AFRAI-RL outperforms QAS, HRL and DDQN as well.
+
+
+5.1    Office World Scenario
+
+We consider the office world scenario in the 9×12 grid-world. Figure 2 shows the map
+in the office world scenario. We use the triangle to denote the initial position of the
+agent. The agent has four possible actions at each time step: move north, move south,
+16       Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+
+
+
+                      Fig. 2: The map in the office world scenario.
+
+
+move east and move west. After each action, the robot may slip to each of the two
+adjacent cells with probability of 0.05. In Algorithm 1, we set C = 500.
+    We consider the following three tasks:
+Task 1: first go to a, then go to b and a in this order, and finally return to c. Episode
+Length was set to 200, and total training time was set to 1,000,000.
+Task 2: first go to b, then go to c and a in this order, then repeat the sequence. Episode
+length was set to 800, and total training time was set to 2,000,000.
+Task 3: first go to c, then go to b and a in this order, then go to b and c in this order and
+return to a. Episode length was set to 800, and total training time was set to 6,000,000.
+    Figure 3 shows the attained rewards of 10 independent simulation runs for each task,
+averaged every 10 training steps. For task 1, it can be seen that, on average, the proposed
+AFRAI-RL approach converges to an optimal policy in about 0.2 million training steps,
+while JIRP-SAT, LRM-QRM, and PPO2 do not converge to an optimal policy. For task
+2, on average the proposed AFRAI-RL approach converges to an optimal policy in about
+1.8 million training steps, while JIRP-SAT, LRM-QRM, and PPO2 do not converge to
+an optimal policy. For task 3, on average the proposed AFRAI-RL approach converges
+to an optimal policy in about 4.0 million training steps, while JIRP-SAT converges to
+an optimal policy in about 4.5 million training steps and LRM-QRM, and PPO2 do not
+converge to an optimal policy.
+
+
+5.2   Minecraft world scenario
+
+We consider the Minecraft world scenario in the 21×21 grid-world [3]. The four actions
+and the slip rates are the same as in the office world scenario. We train on two tasks:
+making a hammer and spear. In Algorithm 1, we set C = 500.
+    We consider the following two tasks, noting the symbol used for each object in
+parenthesis:
+Task 1: Build a Hammer. Agent must collect string (b), stone (e), iron (f), stone (e) (in
+this order) and travel to the workbench (c) to make the hammer. Episode length was set
+to 400, and total training time was set to 400,000.
+Task 2: Build a Spear. The agent must collect string, stone, wood (a), string and travel to
+the workbench to make the spear. Episode length was set to 400, and total training time
+was set to 250,000. Figure 4 shows the attained rewards of 10 independent simulation
+runs for each task, averaged every 10 training steps. For task 1, it can be seen that, on
+                                      Title Suppressed Due to Excessive Length   17
+
+
+
+
+          (a) Task 1                 (b) Task 2                   (c) Task 3
+
+Fig. 3: Attained rewards of 10 independent simulation runs of the office world sce-
+nario, averaged for every 10 training steps in AFRAI-RL (First row), JIRP-SAT (Sec-
+ond Row), LRM-QRM (Third Row), and PPO2 (Fourth Row): (a) Task 1; (b) Task 2;
+(c) Task 3.
+18      Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+
+
+
+                       (a) Task 1                     (b) Task 2
+
+Fig. 4: Attained rewards of 10 independent simulation runs of the Minecraft world sce-
+nario, averaged for every 10 training steps in AFRAI-RL (First row), JIRP-SAT (Second
+Row), LRM-QRM (Third Row) and PPO2 (Fourth Row): (a) Task 1; (b) Task 2.
+                                           Title Suppressed Due to Excessive Length        19
+
+average, the proposed AFRAI-RL approach converges to an optimal policy in about
+190,000 training steps, while JIRP-SAT, LRM-QRM, and PPO2 do not converge to an
+optimal policy. For task 2, on average the proposed AFRAI-RL approach converges to
+an optimal policy in about 170,000 million training steps, while JIRP-SAT, LRM-QRM,
+and PPO2 do not converge to an optimal policy.
+
+
+6   Conclusions
+We propose an active reinforcement learning approach that infers finite reward automata
+during the RL process through interaction with the environment. The algorithm can
+actively guide the RL towards finding answers to the queries needed for inferring the
+finite reward automata, thus making the finite reward automaton learning process more
+efficient. The case studies show that this algorithm is more efficient than recent baseline
+algorithms for the environments used.
+     This work has potential in multiple future directions. First, we assume that the same
+state-action sequences lead to the same reward values in this paper (i.e., the method
+depends on the correct labeling of the trajectories). We will investigate the scenarios
+where incorrect labels can occur and the same state-action sequences may lead to dif-
+ferent reward values. Second, current active RL work usually adopts a model-based
+framework and search for states that are less visited, thus improving the sample ef-
+ficiency of RL. Our proposed approach adopts a model-free framework and actively
+recovers the reward structure, which turns out to be effective in the non-Markov RL
+scenarios. To make connections with the other work in active RL, we will investigate
+model-based RL with active finite reward automaton inference. Finally, as we consider
+RL for a single agent in this paper, we will extend the work to multi-agent settings for
+collaborative or non-collaborative games.
+
+
+7   Acknowledgment
+This material is based upon work supported by the Defense Advanced Research Projects
+Agency (DARPA) under Contract No. HR001120C0032, ARL W911NF2020132, ARL
+ACC-APG-RTP W911NF, NSF 1646522, and Deutsche Forschungsgemeinschaft (DFG,
+German Research Foundation) - grant no. 434592664. Any opinions, findings and con-
+clusions or recommendations expressed in this material are those of the author(s) and
+do not necessarily reflect the views of DARPA.
+
+
+References
+ 1. D. Aksaray, A. Jones, Z. Kong, M. Schwager, and C. Belta, “Q-learning for robust satisfac-
+    tion of signal temporal logic specifications,” in IEEE CDC’16, Dec 2016, pp. 6565–6570.
+ 2. M. Alshiekh, R. Bloem, R. Ehlers, B. Könighofer, S. Niekum, and U. Topcu, “Safe rein-
+    forcement learning via shielding,” in AAAI’18, 2018.
+ 3. J. Andreas, D. Klein, and S. Levine, “Modular multitask reinforcement learning with policy
+    sketches,” in Proceedings of the 34th International Conference on Machine Learning-Volume
+    70. JMLR. org, 2017, pp. 166–175.
+20       Zhe Xu, Bo Wu, Aditya Ojha, Daniel Neider, Ufuk Topcu
+
+ 4. D. Angluin, “Learning regular sets from queries and counterexamples,” Information and
+    computation, vol. 75, no. 2, pp. 87–106, 1987.
+ 5. N. Baharisangari, J.-R. Gaglion, D. Neider, U. Topcu, and Z. Xu, “Uncertainty-aware signal
+    temporal logic inference,” 2021. [Online]. Available: https://arxiv.org/abs/2105.11545
+ 6. B. Bollig, J. Katoen, C. Kern, M. Leucker, D. Neider, and D. R. Piegdon, “libalf: The au-
+    tomata learning framework,” in Computer Aided Verification, 22nd International Conference,
+    CAV 2010, Edinburgh, UK, July 15-19, 2010. Proceedings, 2010, pp. 360–364.
+ 7. G. Bombara, C.-I. Vasile, F. Penedo, H. Yasuoka, and C. Belta, “A decision tree approach to
+    data classification using signal temporal logic,” in Proc. HSCC’16, 2016, pp. 1–10.
+ 8. M. Cai, M. Hasanbeig, S. Xiao, A. Abate, and Z. Kan, “Modular deep reinforcement learning
+    for continuous motion planning with temporal logic,” 2021.
+ 9. J. Fu and U. Topcu, “Probably approximately correct MDP learning and control with tempo-
+    ral logic constraints,” Robotics: Science and Systems, vol. abs/1404.7073, 2014.
+10. D. Furelos-Blanco, M. Law, A. Russo, K. Broda, and A. Jonsson, “Induction of
+    subgoal automata for reinforcement learning,” Proceedings of the AAAI Conference on
+    Artificial Intelligence, vol. 34, no. 04, pp. 3890–3897, Apr. 2020. [Online]. Available:
+    https://ojs.aaai.org/index.php/AAAI/article/view/5802
+11. J.-R. Gaglion, D. Neider, R. Roy, U. Topcu, and Z. Xu, “Learning linear temporal properties
+    from noisy data: A maxsat-based approach,” in ATVA 2021, Gold Coast, Australia, October
+    18-22, ser. Lecture Notes in Computer Science. Springer, 2021.
+12. M. Gaon and R. Brafman, “Reinforcement learning with non-markovian rewards,”
+    Proceedings of the AAAI Conference on Artificial Intelligence, vol. 34, no. 04, pp. 3980–
+    3987, Apr. 2020. [Online]. Available: https://ojs.aaai.org/index.php/AAAI/article/view/5814
+13. A. Holzinger, B. Malle, A. Saranti, and B. Pfeifer, “Towards multi-modal causability
+    with graph neural networks enabling information fusion for explainable AI,” Information
+    Fusion, vol. 71, pp. 28–37, 2021. [Online]. Available: https://www.sciencedirect.com/
+    science/article/pii/S1566253521000142
+14. J. E. Hopcroft, R. Motwani, and J. D. Ullman, Introduction to Automata Theory, Languages,
+    and Computation (3rd Edition). Boston, MA, USA: Addison-Wesley Longman Publishing
+    Co., Inc., 2006.
+15. B. Hoxha, A. Dokhanchi, and G. Fainekos, “Mining parametric temporal logic
+    properties in model-based design for cyber-physical systems,” International Journal on
+    Software Tools for Technology Transfer, pp. 79–93, Feb 2017. [Online]. Available:
+    http://dx.doi.org/10.1007/s10009-017-0447-4
+16. R. A. T. Icarte, E. Waldie, T. Klassen, R. Valenzano, M. P. Castro, and S. A. McIlraith,
+    “Learning reward machines for partially observable reinforcement learning,” in NeurIPS,
+    2019.
+17. R. T. Icarte, T. Q. Klassen, R. A. Valenzano, and S. A. McIlraith, “Using reward machines for
+    high-level task specification and decomposition in reinforcement learning,” in ICML 2018,
+    Stockholmsmässan, Stockholm, Sweden, July 10-15, 2018, 2018, pp. 2112–2121.
+18. Z. Kong, A. Jones, and C. Belta, “Temporal logics for learning and detection of anomalous
+    behavior,” IEEE TAC, vol. 62, no. 3, pp. 1210–1222, Mar. 2017.
+19. X. Li, C.-I. Vasile, and C. Belta, “Reinforcement learning with temporal logic rewards,” in
+    Proc. IROS’17, Sept 2017, pp. 3834–3839.
+20. D. Neider, J.-R. Gaglione, I. Gavran, U. Topcu, B. Wu, and Z. Xu, “Advice-guided reinforce-
+    ment learning in a non-markovian environment,” in AAAI’21, 2021.
+21. D. Neider and I. Gavran, “Learning linear temporal properties,” in Formal Methods in Com-
+    puter Aided Design (FMCAD), 2018, pp. 1–10.
+22. J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, “Proximal policy optimiza-
+    tion algorithms,” 2017.
+                                             Title Suppressed Due to Excessive Length         21
+
+23. A. Shah, P. Kamath, J. A. Shah, and S. Li, “Bayesian inference of temporal task
+    specifications from demonstrations,” in NeurIPS, S. Bengio, H. Wallach, H. Larochelle,
+    K. Grauman, N. Cesa-Bianchi, and R. Garnett, Eds. Curran Associates, Inc., 2018,
+    pp. 3808–3817. [Online]. Available: http://papers.nips.cc/paper/7637-bayesian-inference-
+    of-temporal-task-specifications-from-demonstrations.pdf
+24. R. Toro Icarte, T. Q. Klassen, R. Valenzano, and S. A. McIlraith, “Teaching multiple tasks to
+    an RL agent using LTL,” in AAMAS’18, Richland, SC, 2018, pp. 452–461.
+25. M. Vazquez-Chanlatte, S. Jha, A. Tiwari, M. K. Ho, and S. A. Seshia, “Learning task speci-
+    fications from demonstrations,” in NeurIPS, 2018, pp. 5372–5382.
+26. C. J. C. H. Watkins and P. Dayan, “Q-learning,” Machine Learning, vol. 8, no. 3, pp.
+    279–292, May 1992. [Online]. Available: https://doi.org/10.1007/BF00992698
+27. M. Wen, I. Papusha, and U. Topcu, “Learning from demonstrations with high-level side
+    information,” in Proc. IJCAI’17, 2017, pp. 3055–3061.
+28. B. Wu and H. Lin, “Counterexample-guided permissive supervisor synthesis for probabilistic
+    systems through learning,” in 2015 American Control Conference (ACC). IEEE, 2015, pp.
+    2894–2899.
+29. B. Wu, X. Zhang, and H. Lin, “Permissive supervisor synthesis for markov decision pro-
+    cesses through learning,” IEEE Transactions on Automatic Control, vol. 64, no. 8, pp. 3332–
+    3338, 2018.
+30. ——, “Supervisor synthesis of pomdp based on automata learning,” Automatica, 2021, to
+    appear. [Online]. Available: https://arxiv.org/abs/1703.08262
+31. Z. Xu, M. Birtwistle, C. Belta, and A. Julius, “A temporal logic inference approach for model
+    discrimination,” IEEE Life Sciences Letters, vol. 2, no. 3, pp. 19–22, Sept 2016.
+32. Z. Xu, C. Belta, and A. Julius, “Temporal logic inference with prior information: An appli-
+    cation to robot arm movements,” in Proc. Anal. and Des. of Hybrid Syst., vol. 48, no. 27,
+    Atlanta, GA, USA, Oct., 2015, pp. 141 – 146.
+33. Z. Xu, I. Gavran, Y. Ahmad, R. Majumdar, D. Neider, U. Topcu, and B. Wu, “Joint inference
+    of reward machines and policies for reinforcement learning,” in Proceedings of the Interna-
+    tional Conference on Automated Planning and Scheduling, vol. 30, 2020, pp. 590–598.
+34. Z. Xu and A. Julius, “Census signal temporal logic inference for multiagent group behavior
+    analysis,” IEEE Trans. Autom. Sci. Eng., vol. 15, no. 1, pp. 264–277, Jan. 2018.
+35. Z. Xu, M. Ornik, A. Julius, and U. Topcu, “Information-guided temporal logic inference
+    with prior knowledge,” in Proc. IEEE Amer. Control Conf., 2019. [Online]. Available:
+    https://arxiv.org/abs/1811.08846
+36. Z. Xu, S. Saha, B. Hu, S. Mishra, and A. Julius, “Advisory temporal logic inference and
+    controller design for semiautonomous robots,” IEEE Trans. Autom. Sci. Eng., pp. 1–19, 2018.
+37. Z. Xu and U. Topcu, “Transfer of temporal logic formulas in reinforcement learning,” in
+    IJCAI-19. International Joint Conferences on Artificial Intelligence Organization, 7 2019,
+    pp. 4010–4018. [Online]. Available: https://doi.org/10.24963/ijcai.2019/557
+

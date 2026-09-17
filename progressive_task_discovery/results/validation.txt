@@ -1,0 +1,14 @@
+clang++ -O3 -std=c++17 -Wall -Wextra src/pilot.cpp -o pilot
+python3 -m unittest discover -s tests -v
+test_behavior_regression_against_stage1_snapshot (test_pilot.PilotTests) ... ok
+test_budget_discovery_and_reproducibility (test_pilot.PilotTests) ... ok
+test_count_scheduler_needs_no_edge_labels (test_pilot.PilotTests) ... ok
+test_cpp_semantics (test_pilot.PilotTests) ... ok
+test_equal_compute_control (test_pilot.PilotTests) ... ok
+test_equivalent_state_interfaces (test_pilot.PilotTests) ... ok
+test_independent_exact_evaluator (test_pilot.PilotTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.494s
+
+OK

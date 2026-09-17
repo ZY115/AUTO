@@ -1,0 +1,230 @@
+[
+  {
+    "task": "c_n3d2m1_4L2a7",
+    "ktrue": 19,
+    "kmin": 8,
+    "n": 55,
+    "redundant": 11,
+    "stats": {
+      "0": {
+        "queries": 55,
+        "redundant": 11,
+        "reuse": 11,
+        "reuse_redundant": 3,
+        "verdict_ok": 6,
+        "identity_ok": 2
+      },
+      "1": {
+        "queries": 55,
+        "redundant": 11
+      },
+      "2": {
+        "queries": 55,
+        "redundant": 11
+      }
+    }
+  },
+  {
+    "task": "c_n3d2m1_4L3a11",
+    "ktrue": 19,
+    "kmin": 12,
+    "n": 99,
+    "redundant": 41,
+    "stats": {
+      "0": {
+        "queries": 99,
+        "redundant": 41,
+        "reuse": 39,
+        "reuse_redundant": 25,
+        "verdict_ok": 33,
+        "identity_ok": 14,
+        "unknown": 24
+      },
+      "1": {
+        "queries": 99,
+        "redundant": 41,
+        "reuse": 2,
+        "reuse_redundant": 0,
+        "verdict_ok": 1,
+        "unknown": 16
+      },
+      "2": {
+        "queries": 99,
+        "redundant": 41
+      }
+    }
+  },
+  {
+    "task": "c_n3d2m3_6L2a7",
+    "ktrue": 23,
+    "kmin": 8,
+    "n": 69,
+    "redundant": 15,
+    "stats": {
+      "0": {
+        "queries": 69,
+        "redundant": 15,
+        "reuse": 14,
+        "reuse_redundant": 4,
+        "verdict_ok": 8,
+        "identity_ok": 4
+      },
+      "1": {
+        "queries": 69,
+        "redundant": 15
+      },
+      "2": {
+        "queries": 69,
+        "redundant": 15
+      }
+    }
+  },
+  {
+    "task": "c_n3d2m3_6L3a11",
+    "ktrue": 23,
+    "kmin": 12,
+    "n": 121,
+    "redundant": 55,
+    "stats": {
+      "0": {
+        "queries": 121,
+        "redundant": 55,
+        "reuse": 30,
+        "reuse_redundant": 17,
+        "verdict_ok": 23,
+        "identity_ok": 14,
+        "unknown": 14
+      },
+      "1": {
+        "queries": 121,
+        "redundant": 55,
+        "reuse": 14,
+        "reuse_redundant": 13,
+        "verdict_ok": 13,
+        "identity_ok": 13,
+        "unknown": 7
+      },
+      "2": {
+        "queries": 121,
+        "redundant": 55
+      }
+    }
+  },
+  {
+    "task": "c_n3d4m1_4L2a7",
+    "ktrue": 23,
+    "kmin": 8,
+    "n": 82,
+    "redundant": 27,
+    "stats": {
+      "0": {
+        "queries": 82,
+        "redundant": 27,
+        "reuse": 32,
+        "reuse_redundant": 20,
+        "verdict_ok": 28,
+        "identity_ok": 18
+      },
+      "1": {
+        "queries": 82,
+        "redundant": 27,
+        "reuse": 3,
+        "reuse_redundant": 0,
+        "verdict_ok": 1
+      },
+      "2": {
+        "queries": 82,
+        "redundant": 27
+      }
+    }
+  },
+  {
+    "task": "c_n3d4m1_4L3a11",
+    "ktrue": 23,
+    "kmin": 10,
+    "n": 116,
+    "redundant": 55,
+    "stats": {
+      "0": {
+        "queries": 116,
+        "redundant": 55,
+        "reuse": 28,
+        "reuse_redundant": 15,
+        "verdict_ok": 21,
+        "identity_ok": 10,
+        "unknown": 9
+      },
+      "1": {
+        "queries": 116,
+        "redundant": 55,
+        "unknown": 6
+      },
+      "2": {
+        "queries": 116,
+        "redundant": 55,
+        "unknown": 3
+      }
+    }
+  },
+  {
+    "task": "c_n3d4m3_6L2a7",
+    "ktrue": 27,
+    "kmin": 8,
+    "n": 106,
+    "redundant": 40,
+    "stats": {
+      "0": {
+        "queries": 106,
+        "redundant": 40,
+        "reuse": 37,
+        "reuse_redundant": 22,
+        "verdict_ok": 32,
+        "identity_ok": 16
+      },
+      "1": {
+        "queries": 106,
+        "redundant": 40,
+        "reuse": 2,
+        "reuse_redundant": 0,
+        "verdict_ok": 1,
+        "unknown": 8
+      },
+      "2": {
+        "queries": 106,
+        "redundant": 40
+      }
+    }
+  },
+  {
+    "task": "c_n3d4m3_6L3a11",
+    "ktrue": 27,
+    "kmin": 10,
+    "n": 144,
+    "redundant": 69,
+    "stats": {
+      "0": {
+        "queries": 144,
+        "redundant": 69,
+        "reuse": 45,
+        "reuse_redundant": 28,
+        "verdict_ok": 38,
+        "identity_ok": 18,
+        "unknown": 6
+      },
+      "1": {
+        "queries": 144,
+        "redundant": 69,
+        "reuse": 1,
+        "reuse_redundant": 1,
+        "verdict_ok": 1,
+        "identity_ok": 1,
+        "unknown": 8
+      },
+      "2": {
+        "queries": 144,
+        "redundant": 69,
+        "unknown": 5
+      }
+    }
+  }
+]

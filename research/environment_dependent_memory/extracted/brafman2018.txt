@@ -1,0 +1,527 @@
+                                       LTLf /LDLf Non-Markovian Rewards
+
+                           Ronen I. Brafman                            Giuseppe De Giacomo & Fabio Patrizi
+                Ben-Gurion University, Beer-Sheva, Israel                   Sapienza Università di Roma, Italy
+                     brafman@cs.bgu.ac.il                             {degiacomo,patrizi}@dis.uniroma1.it
+
+
+
+
+                            Abstract                                   of the last state and action. With non-Markovian rewards, an
+                                                                       explicit representation is no longer possible, as the number of
+  In Markov Decision Processes (MDPs), the reward obtained in
+  a state is Markovian, i.e., depends on the last state and action.    possible histories or futures of a state is infinite. Hence, we
+  This dependency makes it difficult to reward more interesting        must use an implicit specification that can express properties
+  long-term behaviors, such as always closing a door after it          of past (or future) states. To date, two specification languages
+  has been opened, or providing coffee only following a request.       have been proposed. (Bacchus, Boutilier, and Grove 1996)
+  Extending MDPs to handle non-Markovian reward functions              suggest using a temporal logic of the past. Whether a state
+  was the subject of two previous lines of work. Both use LTL          satisfies such a past temporal formula depends on the en-
+  variants to specify the reward function and then compile the         tire sequence of states leading to the state. Thus, we can
+  new model back into a Markovian model. Building on recent            reward appropriate response to a “bring-coffee” command
+  progress in temporal logics over finite traces, we adopt LDLf        by associating a reward with the property: the “bring-coffee”
+  for specifying non-Markovian rewards and provide an elegant
+                                                                       command was issued in the past, and now I have coffee. A
+  automata construction for building a Markovian model, which
+  extends that of previous work and offers strong minimality           second proposal, by (Thiébaux et al. 2006), uses a temporal
+  and compositionality guarantees.                                     logic of the future with a special symbol to denote awarding
+                                                                       a reward. At each step, one checks whether this symbol must
+                                                                       be true in the current state, for the reward formula to be satis-
+                        Introduction                                   fied in the initial state. If that is the case, the current state is
+Markov Decision Processes (MDPs) are a central model for               rewarded. This language is not often used in other areas, and
+sequential decision making under uncertainty. They are used            its semantics is more involved.
+to model and solve many real-world problems, and to ad-                   Existing MDP solution methods, possibly with the ex-
+dress the problem of learning to behave well in unknown                ception of Monte-Carlo tree search algorithms (Kocsis and
+environments. The Markov assumption is a key element of                Szepesvári 2006), rely heavily on the Markov assumption,
+this model. It states that the effects of an action depend only        and cannot be applied directly with non-Markovian rewards.
+on the state it was executed in, and that a reward given at a          To address this, both proposals above transform the non-
+state depends only on the previous action and state. It has            Markovian model to an equivalent Markovian one that can be
+long been observed (Bacchus, Boutilier, and Grove 1996;                solved using existing algorithms, by enriching the state with
+Thiébaux et al. 2006) that many performance criteria call             information about the past. For example, if we extend our
+for more sophisticated reward functions that do not depend             state to record whether a “bring-coffee” command was issued
+on the last state only. For example, we may want to reward             earlier, a reward for bringing coffee in states indicating that
+a robot that eventually delivers coffee each time it gets a            “bring-coffee” was issued in the past, is now Markovian. It
+request; or, to ensure it will access restricted areas only af-        rewards the same behaviors as the non-Markovian reward on
+ter having acquired the right permission. Such rewards are             the original state. We call a model obtained by extending the
+non-Markovian. Interestingly, Littman has advocated at IJ-             state space of the original non-Markovian MDP, an extended
+CAI 2015 that it may actually be more convenient, from a               MDP.
+design perspective, to assign rewards to the satisfaction of              Using extended MDPs is a well-known idea. Since state
+(non-Markovian) declarative temporal properties, rather than           space size affects the practical and theoretical complexity of
+to states (Littman et al. 2017).                                       most MDP solution algorithms, the main question is how to
+   To extend MDPs with non-Markovian rewards we need                   minimally enrich the state so as to make rewards Markovian.
+a language for specifying such rewards. Markovian rewards              (Bacchus, Boutilier, and Grove 1996) provide algorithms
+are specified as a function R from the previous state and ac-          for constructing an extended MDP that attempt to minimize
+tion to the reals. R can be specified using an explicit reward         size by reducing the amount of information about the past
+matrix, or implicitly, by associating a reward with properties         that is maintained. While their construction does not gener-
+Copyright © 2018, Association for the Advancement of Artificial        ate a minimal extended MDP, they allude to using automata
+Intelligence (www.aaai.org). All rights reserved.                      minimization techniques to accomplish this. (Thiébaux et
+al. 2006), instead, use a construction that works well with           states only, as in (Thiébaux et al. 2006). Moreover, we can
+forward search based algorithms, such as LAO* (Hansen and             combine progression in the space of MDPs with precomputed
+Zilberstein 2001) and LRTDP (Bonet and Geffner 2003). Un-             automata minimization to obtain the best of both worlds.
+like classical dynamic programming methods that require the
+entire state space a-priori, these algorithms generate reach-                                 Background
+able states only. With a good heuristic function, they often          MDPs. A Markov Decision Process (MDP) M =
+generate only a fraction of the state space. So, while the            ⟨S, A, T r, R⟩ contains a set S of states, a set A of actions,
+augmented search space they obtain is not minimal, because            and a transition function T r ∶ S × A → P rob(S) that returns
+states are constructed on the fly during forward search, their        for every state s and action a a distribution over the next state.
+approach does not require a-priori enumeration of the state           We can further restrict actions to be defined on a subset of S
+space, and never generates an unreachable state.                      only, and use A(s) to denote the actions applicable in s. The
+   The aim of this paper is to bring to bear developments in          reward function, R ∶ S × A → R, specifies the real-valued
+the theory of temporal logic over finite traces to the prob-          reward received by the agent when applying action a in state
+lem of specifying and solving MDPs with non-Markovian                 s. In this paper, states in S are truth assignments to a set P of
+rewards. With these tools, which were unavailable to ear-             primitive propositions. Hence, if φ is a propositional formula
+lier work, we are able to provide a cleaner, more elegant             and s a state, we can check whether s ⊧ φ.
+approach that builds on well understood semantics, much                  A solution to an MDP, called a policy, assigns an action
+more expressive languages, and enjoys good algorithmic                to each state, possibly conditioned on past states and actions.
+properties. We adopt LDLf , a temporal logic of the future            The value of policy ρ at s, v ρ (s), is the expected sum of (pos-
+interpreted over finite traces, which extends LTLf , the clas-        sibly discounted) rewards when starting at s and selecting
+sical linear-time temporal logic over finite traces (De Gia-          actions based on ρ. Every MDP has an optimal policy, ρ∗ , i.e.,
+como and Vardi 2013). LDLf has the same computational fea-            one that maximizes the expected sum of rewards for every
+tures of LTLf but is more expressive, as it captures monadic          starting state s ∈ S. When the horizon is infinite, there exists
+second-order logic (MSO) on finite traces (i.e., inductively          an optimal policy ρ∗ ∶ S → A that is stationary and determin-
+defined properties), instead of first-order logic (FO), as LTLf .     istic (i.e., ρ∗ depends only on the current state) (Puterman
+A number of techniques based on automata manipulation                 2005). There are diverse methods for computing an optimal
+have been developed for LDLf , to address tasks such as sat-          policy. With the exception of online simulation-based meth-
+isfiability, model checking, reactive synthesis, and planning         ods, they rely on the Markov assumption, and their theoretical
+under full/partial observability (De Giacomo and Vardi 2013;          and practical complexity is strongly impacted by ∣S∣.
+2015; De Giacomo and Vardi 2016; Torres and Baier 2015;
+Camacho et al. 2017c). We exploit such techniques to gener-           LTLf and LDLf . LTLf is essentially the standard Linear-
+ate an extended MDP with good properties.1                            time Temporal Logic LTL (Pnueli 1977) interpreted over fi-
+   Our formalism has three important advantages: 1. En-               nite, instead of infinite, traces (De Giacomo and Vardi 2013).
+hanced expressive power. We move from linear-time tempo-              LTL f is as expressive as FO over finite traces and star-free
+ral logics used by past authors to LDLf , paying no additional        regular expressions (RE), thus strictly less expressive than
+(worst-case) complexity costs. LDLf can encode in polyno-             RE, which in turn are as expressive as MSO over finite traces.
+mial time LTLf , regular expressions (RE), the past LTL (PLTL)        RE themselves are not convenient for expressing temporal
+of (Bacchus, Boutilier, and Grove 1996), and all examples             specifications, since, e.g., they miss direct constructs for nega-
+of (Thiébaux et al. 2006). Moreover, LDLf can naturally              tion and conjunction. For this reason, (De Giacomo and Vardi
+represent “procedural constraints” (Baier et al. 2008), i.e.,         2013) introduced LDLf (linear dynamic logic on finite traces),
+sequencing constraints expressed as programs, using “if” and          which merges LTLf with RE, through the syntax of the well-
+“while”. In fact, future logics are more commonly used in             known logic of programs PDL, propositional dynamic logic
+the model checking community, as they are considered more             (Fischer and Ladner 1979; Harel, Kozen, and Tiuryn 2000;
+natural for expressing desirable properties. This is especially       Vardi 2011), but interpreted over finite traces.
+true with complex properties that require the power of LDLf .            We consider a variant of LDLf that works also on empty
+2. Minimality and Compositionality. We generate a mini-               traces. Formally, LDLf formulas ϕ are built as follows:
+mal equivalent extended MDP, exploiting existing techniques                        ϕ ∶∶= tt ∣ ¬ϕ ∣ ϕ1 ∧ ϕ2 ∣ ⟨%⟩ϕ
+for constructing automata that track the satisfiability of an                      % ∶∶= φ ∣ ϕ? ∣ %1 + %2 ∣ %1 ; %2 ∣ %∗
+LDL f formula. This construction is relatively simple and
+compositional: if a new reward formula is added, we only              where tt stands for logical true; φ is a propositional formula
+need to optimize its automaton and add it to the current (ex-         over P (including true, not to be confused with tt); % denotes
+tended) MDP. If the current MDP was minimal, the resulting            path expressions, which are RE over propositional formulas
+(extended) MDP is minimal too. 3. Forward Construction                φ with the addition of the test construct ϕ? typical of PDL.
+via Progression. The automaton used to identify when a re-            We use abbreviations [%]ϕ ≐ ¬⟨%⟩¬ϕ as in PDL, ff ≐ ¬tt
+ward should be given can be constructed in a forward manner           for false, and φ ≐ ⟨φ⟩tt to denote occurence of propositional
+using progression. This ensures the generation of reachable           formula φ.
+                                                                         Intuitively, ⟨%⟩ϕ states that, from the current step in the
+   1                                                                  trace, there exists an execution satisfying the RE % such that
+     We share this objective with work independently carried out in
+(Camacho et al. 2017b; 2017a).                                        its last step satisfies ϕ, while [%]ϕ states that, from the current
+step, all executions satisfying the RE % are such that their last     computing the NFA given the LDLf formula, which is a vari-
+step satisfies ϕ. Tests are used to insert into the execution         ant of that in (De Giacomo and Vardi 2015), is reported below.
+path checks for satisfaction of additional LDLf formulas.             Its correctness relies on the fact that (i) every LDLf formula
+   The semantics of LDLf is given in terms of finite traces,          ϕ can be associated with a polynomial alternating automaton
+i.e., finite sequences π = π0 , . . . , πn of elements from the       on words (AFW) accepting exactly the traces that satisfy ϕ
+alphabet 2P . We define π(i) ≐ πi , length(π) ≐ n + 1, and            (De Giacomo and Vardi 2013), and (ii) every AFW can be
+π(i, j) ≐ πi , πi+1 , . . . , πj−1 . When j > length(π), π(i, j) ≐    transformed into an NFA, see, e.g., (De Giacomo and Vardi
+π(i, length(π)).                                                      2013).
+   In decision processes, traces are usually sequences                   The algorithm assumes the LDLf formula is in negation
+of states and actions, i.e., they have the form:                      normal form (NNF), i.e., with negation symbols occurring
+⟨s0 , a1 , s1 , . . . , sn−1 , an ⟩. These can still be represented   only in front of propositions (any LDLf formula can be rewrit-
+as traces of the form π = π0 , . . . , πn , by extending the set      ten in NNF in linear time). Let ∂ be the following auxiliary
+P to include one proposition pa per action a, and setting             function, which takes as input an (implicitly quoted) LDLf
+πi ≐ si ∪ {pa ∣ a = ai+1 }. In this way, πi denotes the pair          formula ϕ (in NNF), extended with auxiliary constructs F ψ
+(si , ai+1 ). We will always assume this form, even if referring      and T ψ , and a propositional interpretation Θ for P, and re-
+to sequences of states and actions. Given a finite trace π, an        turns a positive boolean formula whose atoms are (implicitly
+LDL f formula ϕ, and a position i, we define when ϕ is true           quoted) ϕ subformulas (not including F ψ or T ψ ):
+at step i, written π, i ⊧ ϕ, by (mutual) induction, as follows:
+                                                                                      ∂(tt, Θ)      =   true
+ • π, i ⊧ tt;                                                                         ∂(ff , Θ)     =   false
+ • π, i ⊧ ¬ϕ iff π, i ⊧       / ϕ;                                                     ∂(φ, Θ)      =   ∂(⟨φ⟩tt, Θ) (φ prop.)
+ • π, i ⊧ ϕ1 ∧ ϕ2 iff π, i ⊧ ϕ1 and π, i ⊧ ϕ2 ;                                  ∂(ϕ1 ∧ ϕ2 , Θ)     =   ∂(ϕ1 , Θ) ∧ ∂(ϕ2 , Θ)
+                                                                                 ∂(ϕ1 ∨ ϕ2 , Θ)         ∂(ϕ1 , Θ) ∨ ∂(ϕ2 , Θ)
+ • π, i ⊧ ⟨%⟩ϕ iff there exists i ≤ j such that π(i, j) ∈
+                                                                                                    =
+                                                                                                        ⎧
+                                                                                                        ⎪ E(ϕ) if Θ ⊧ φ (φ prop.)
+                                                                                                        ⎪
+   L(%) and π, j ⊧ ϕ, where the relation π(i, j) ∈ L(%) is as                        ∂(⟨φ⟩ϕ, Θ)     =   ⎨
+                                                                                                        ⎪
+                                                                                                        ⎪ false if Θ /
+                                                                                                                     ⊧φ
+   follows:                                                                        ∂(⟨%?⟩ϕ, Θ)      =
+                                                                                                        ⎩
+                                                                                                        ∂(%, Θ) ∧ ∂(ϕ, Θ)
+   – π(i, j) ∈ L(φ) if j=i+1, i < length(π), and π(i) ⊧ φ                      ∂(⟨%1 + %2 ⟩ϕ, Θ)    =   ∂(⟨%1 ⟩ϕ, Θ) ∨ ∂(⟨%2 ⟩ϕ, Θ)
+       (φ propositional);                                                       ∂(⟨%1 ; %2 ⟩ϕ, Θ)   =   ∂(⟨%1 ⟩⟨%2 ⟩ϕ, Θ)
+                                                                                   ∂(⟨%∗ ⟩ϕ, Θ)         ∂(ϕ, Θ) ∨ ∂(⟨%⟩F ⟨%∗ ⟩ϕ , Θ)
+   – π(i, j) ∈ L(ϕ?) if j = i and π, i ⊧ ϕ;                                                         =
+                                                                                                        ⎧
+                                                                                                        ⎪ E(ϕ) if Θ ⊧ φ (φ prop.)
+   – π(i, j) ∈ L(%1 +%2 ) if π(i, j) ∈ L(%1 ) or π(i, j) ∈
+                                                                                                        ⎪
+                                                                                     ∂([φ]ϕ, Θ)     =   ⎨
+                                                                                                        ⎪ true if Θ ⊧
+                                                                                                                    /φ
+       L(%2 );
+                                                                                                        ⎪
+                                                                                                        ⎩
+                                                                                   ∂([%?]ϕ, Θ)      =   ∂(nnf (¬%), Θ) ∨ ∂(ϕ, Θ)
+   – π(i, j) ∈ L(%1 ; %2 ) if there exists k ∈ [i, j] such that                ∂([%1 + %2 ]ϕ, Θ)    =   ∂([%1 ]ϕ, Θ) ∧ ∂([%2 ]ϕ, Θ)
+       π(i, k) ∈ L(%1 ) and π(k, j) ∈ L(%2 );                                   ∂([%1 ; %2 ]ϕ, Θ)   =   ∂([%1 ][%2 ]ϕ, Θ)
+   – π(i, j) ∈ L(%∗ ) if j = i or there exists k such that                         ∂([%∗ ]ϕ, Θ)     =   ∂(ϕ, Θ) ∧ ∂([%]T [%∗ ]ϕ , Θ)
+       π(i, k) ∈ L(%) and π(k, j) ∈ L(%∗ ).                                            ∂(F ψ , Θ)   =   false
+                                                                                       ∂(T ψ , Θ)       true
+Note that if i ≥ length(π), the above definitions still apply;
+                                                                                                    =
+
+though, ⟨φ⟩ϕ (φ prop.) and ⟨%⟩ϕ become trivially false.               where E(ϕ) recursively replaces in ϕ all occurrences of
+   We say that a trace π satisfies an LDLf formula ϕ, written         atoms of the form T ψ and F ψ by E(ψ); and ∂(ϕ, ) is de-
+π ⊧ ϕ, if π, 0 ⊧ ϕ. Also, sometimes we denote by L(ϕ) the             fined inductively exactly as above, except for the following
+set of traces that satisfy ϕ: L(ϕ) = {π ∣ π ⊧ ϕ}.                     base cases:
+   LDL f is as expressive as MSO over finite words. It cap-
+tures LTLf , by seeing next and until as the abbreviations                ∂(⟨φ⟩ϕ, ) = false        ∂([φ]ϕ, ) = true        (φ prop.)
+○ϕ ≐ ⟨true⟩(ϕ ∧ ¬end ) and ϕ1 U ϕ2 ≐ ⟨(ϕ1 ?; true)∗ ⟩(ϕ2 ∧            Note that ∂(ϕ, ) is always either true or false.
+¬end ), and any RE r, with the formula ⟨r⟩end , where
+                                                                      The NFA Aϕ for an LDLf formula ϕ is then built in a forward
+end ≐ [true]ff expresses that the trace has ended. Note that
+                                                                      fashion as shown in Figure 1, where: states of Aϕ are sets of
+in addition to end we can also denote the last element of the
+                                                                      atoms (each atom is a quoted ϕ subformula) to be interpreted
+trace as last ≐ ⟨true⟩end . Section Non-Markovian Rewards
+                                                                      as conjunctions; the empty conjunction ∅ stands for true;
+illustrates several examples of LDLf formulas in our context.
+                                                                      q ′ is a set of quoted subformulas of ϕ denoting a minimal
+                                                                      interpretation such that q ′ ⊧ ⋀(ψ∈q) ∂(ψ, Θ) (notice that we
+        Computing DFA for LDLf formulas
+                                                                      trivially have (∅, a, ∅) ∈ δ for every a ∈ 2P ).
+As standard, an NFA is a tuple A = ⟨Σ, Q, q0 , δ, F ⟩, where:
+(i) Σ is the input alphabet; (ii) Q is the finite set of states;      Theorem 1. (De Giacomo and Vardi 2015) Algorithm
+(iii) q0 ∈ Q is the initial state; (iv) δ ⊆ Q × Σ × Q is the          LDL f 2 NFA is correct, i.e., for every finite trace π: π ⊧
+transition relation; (v) F ⊆ Q is the set of final states. A DFA      ϕ iff π ∈ L(Aϕ ). Moreover, it terminates in at most an ex-
+is an NFA where δ is a function δ ∶ Q × Σ → Q. By L(A) we             ponential number of steps, and generates a set of states S
+mean the set of all traces over Σ accepted by A.                      whose size is at most exponential in the size of the formula ϕ.
+   We can associate each LDLf formula ϕ with an (exponen-                The NFA Aϕ can be transformed into a DFA, in exponential
+tially large) NFA Aϕ = ⟨2P , Q, q0 , δ, F ⟩ that accepts exactly      time, following the standard procedure, and then possibly put
+the traces satisfying ϕ. A direct algorithm (LDLf 2 NFA) for          in (the unique) minimal form, in polynomial time (Rabin
+  1: algorithm LDLf 2 NFA                                             where 0 < γ ≤ 1 is the discount factor and π(i) denotes the
+  2: input LDLf formula ϕ                                             pair (si−1 , ai ). Since every policy ρ ∶ S ∗ → A induces a
+  3: output NFA Aϕ = (2P , Q, q0 , δ, F )                             distribution over the set of possible infinite traces, we can
+  4: q0 ← {ϕ}                                                         now define the value of a policy ρ given an initial state s0 as:
+  5: F ← {∅}                                                                              v ρ (s) = Eπ∼M,ρ,s0 v(π).
+  6: if (∂(ϕ, ) = true) then
+  7:    F ← F ∪ {q0 }                                                 That is, v ρ (s) is the expected value of infinite traces, where
+  8: Q ← {q0 , ∅}, δ ← ∅                                              the distribution over traces is defined by the initial state s0 ,
+  9: while (Q or δ change) do                                         the transition function T r, and the policy ρ.
+ 10:    for (q ∈ Q) do                                                   Specifying a non-Markovian reward function explicitly is
+ 11:      if (q ′ ⊧ ⋀(ψ∈q) ∂(ψ, Θ) then                               cumbersome and unintuitive, even if we only want to reward
+ 12:         Q ← Q ∪ {q ′ }                                           a finite number of traces. But, typically, we want to reward
+ 13:         δ ← δ ∪ {(q, Θ, q ′ )}                                   behaviors that correspond to various patterns. LDLf provides
+ 14:         if (⋀(ψ∈q′ ) ∂(ψ, ) = true) then                        an intuitive and convenient language for specifying R im-
+                 F ← F ∪ {q ′ }                                       plicitly, using a set of pairs {(ϕi , ri )m  i=1 }. Intuitively, if the
+ 15:
+                                                                      current (partial) trace is π = ⟨s0 , a1 , . . . , sn−1 , an ⟩, the agent
+               Figure 1: LDLf 2 NFA algorithm                         receives at sn a reward ri for every formula ϕi satisfied by π.
+                                                                      Formally:
+                                                                                            R(π) =       ∑           ri
+and Scott 1959). Thus, we can transform any LDLf formula                                               1≤i≤m∶π⊧ϕi
+into a DFA of double exponential size. While this is a worst-         From now on, we assume R is thus specified. Note that we
+case complexity, in most cases the size of the DFA is actually        use LDLf to reward partial traces. Sometimes, we may want
+manageable (Tabakov and Vardi 2005).                                  to reward complete traces only, this is studied later.
+Computing the DFA on-the-fly. All operations above can be             Examples. To illustrate the power of LDLf as a mechanism
+performed on-the-fly, without the need for constructing Aϕ .          to specify non-Markovian rewards, we show some examples.
+To do so, we progress all possible states that the NFA can be in,        The properties mentioned in the introduction are
+after consuming the next trace symbol, and accept the trace           LDL f -expressible: [true ∗ ](request p → ⟨true ∗ ⟩coffee p ) (all
+iff, once it has been completely read, the set of possible states     coffee requests from person p will eventually be served);
+contains a final state. More formally, call a set of possible         ⟨((¬restr a )∗ ; perm a ; (¬restr a )∗ ; restr a )∗ ; (¬restr a )∗ ⟩end
+states for the NFA a macro state, let Q = {q1 , . . . , qn } be the   (before entering restricted area a the robot must have permis-
+current macro state (initially Q = Q0 = {q0 } = {{ϕ}}), and           sion for a). Note that the first formula can be easily rewritten
+let Θ be the next trace symbol. Then, the successor macro             in LTLf , as ◻(request p → ◇coffee p ), but not the second one.
+state is the set Q′ = {q ′ ∣ ∃q ∈ Q s.t. q ′ ⊧ ⋀(ψ∈q) ∂(ψ, Θ)}.          Also the formulas from (Bacchus, Boutilier, and Grove
+Given an input trace π, we decide whether π ⊧ ϕ by iterating          1996) and (Thiébaux et al. 2006) are LDLf -expressible:
+the above procedure, starting from the initial state Q = Q0 ,         1. ⟨¬g ∗ ; g⟩end, reward offered only at the first state where g
+and accepting π iff the last state obtained includes {true}.          holds; 2. ⟨true∗ ; g; true∗ ⟩end, reward offered at every state
+   The following observations are in order. Firstly, to com-          that follows g (included); 3. ⟨¬g ∗ ; g; (¬g k ; ¬g ∗ ; g)∗ )⟩end,
+pute Q′ , only function ∂ is needed. Neither the set of states        achievement of g is rewarded periodically, at most once every
+Q nor the transition relation δ of the NFA are required. In           k steps; 4. ⟨true∗ ; ¬g; g+((¬g 1 +. . .+¬g k ); g)⟩end, achieve-
+other words, the on-the-fly progression does not require the          ment of g is rewarded whenever it occurs within k steps
+construction of Aϕ . Secondly, the progression step produces          (k ≥ 1) of a state where ¬g holds; 5. ⟨true∗ ; g1 ; g2 ; g3 ⟩end,
+only one successor macro state Q′ , thus transitions are de-          reward issued whenever g1 is achieved and followed im-
+terministic. Indeed, it is immediate to see that the on-the-fly       mediately by g2 and then by g3 ; 6. ⟨true∗ ; c; true∗ ; g⟩end
+progression includes the determinization of Aϕ . As it turns          achievement of g is rewarded whenever it follows c;
+out, the on-the-fly approach performs, in fact, the execution         7. ⟨true∗ ; c; ¬g; ¬g ∗ ; g⟩end, only the first achievement of
+and the determinization at once and in a lazy way, i.e., avoid-       g that follows c is rewarded; 8. ⟨true∗ ; c; g⟩end, g is re-
+ing the construction of the entire resulting DFA.                     warded whenever it follows c immediately; 9. ⟨true∗ ; c; g +
+                                                                      ((true 1 + . . . + true k ); g)⟩end, achievement of g is re-
+               Non-Markovian Rewards                                  warded whenever occurring within k steps (k ≥ 1) of c;
+In this section we extend MDPs with LDLf -based reward                10. ⟨true∗ ; c; g + ((¬g 1 + . . . + ¬g k ); g)⟩end, only the first
+functions resulting in a non-Markovian-reward decision pro-           achievement of g occurring within k steps (k ≥ 1) of c is
+cess (NMRDP). Specifically, a NMRDP is a tuple M =                    rewarded; 11. ⟨g ∗ ⟩end, reward issued if g has always been
+⟨S, A, T r, R⟩, where S, A and T r are as in an MDP, and R            true; 12. ⟨c∗ ; g⟩end, the holding of c until g is rewarded.
+is redefined as R ∶ (S × A)∗ → R. The reward is now a real-              To appreciate the power of LDLf , consider the follow-
+valued function over finite state-action sequences. Given a           ing example. Suppose one prefers policies for a physician
+(possibly infinite) trace π, the value of π is:                       with the following structure (on top of whatever other re-
+                                                                      quirements/rewards exist): the physician should work in clear
+                  ∣π∣
+                                                                      phases: check patient (a) then update patient record (b) re-
+         v(π) = ∑ γ i−1 R(⟨π(1), π(2), . . . , π(i)⟩),
+                 i=1
+                                                                      peatedly. Occasionally, and always in the end, after treating
+a patient and updating her record, upload updated records             2. ∀s1 , s2 ∈ S and s′1 ∈ S ′ : if T r(s1 , a, s2 ) > 0 and τ (s′1 ) =
+to server (c). This can be concisely captured in LDLf by                 s1 , there exists a unique s′2 ∈ S ′ such that τ (s′2 ) = s2 and
+⟨((a; b)∗ ; c)∗ ⟩end . The equivalent LTLf formula would be:             T r(s′1 , a, s′2 ) = T r(s1 , a, s2 );
+                                                                      3. For any feasible trajectory ⟨s0 , a1 , . . . , sn−1 , an ⟩ of M
+                   (¬b W a) ∧                                            and ⟨s′0 , a1 , . . . , s′n−1 , an ⟩ of M′ , such that τ (s′i ) = si
+                   ◻(b → ○(¬b W a)) ∧                                    and σ(s0 ) = s′0 , we have R(⟨s0 , a1 , . . . , sn−1 , an ⟩) =
+                   ◻((c ∧ ○true) → ◇c) ∧                                 R′ (⟨s′0 , a1 , . . . , s′n−1 , an ⟩).
+                   ◻(a → ○b) ∧
+                   ◻(b → ○(c ∨ a))                                       As in previous work, we restrict our attention to extended
+                                                                      MDPs such that S ′ = Q × S, for some set Q.
+If a,b and c are non exclusive formulas (they can be true                Given an NMRDP M = ⟨S, A, T r, R⟩, we now show
+simultaneously), the equivalent LTLf formula can be much              how to construct an equivalent extended MDP. First, us-
+more complex (depending on the actual formulas a, b, c),              ing the methods described earlier, construct for each re-
+and in some cases it may not exist at all (as in the limit case       ward formula ϕi its corresponding (minimal) DFA, Aϕi =
+where a = b = c = true).                                              ⟨2P , Qi , qi0 , δi , Fi ⟩ (notice that S ⊆ 2P and δi is total).
+   LDL f , differently from LTL f , can also easily express pro-         Then, define the equivalent extended MDP M′ =
+cedural constraints (De Giacomo and Vardi 2015; Fritz and             ⟨S ′ , A′ , T r′ , R′ ⟩ where:
+McIlraith 2007; Baier et al. 2008), so one can reward the
+traces satisfying such constraints. To see this, consider a sort       • S ′ = Q1 × ⋯ × Qm × S is the set of states;
+of propositional variant of G OLOG (Levesque et al. 1997):             • A′ = A;
+                                                                       • Tr ′ ∶ S ′ × A′ × S ′ → [0, 1] is defined as follows:
+     %    ∶∶= A ∣ φ? ∣ %1 + %2 ∣ %1 ; %2 ∣ %∗ ∣ (A prop.)
+              if φ then %1 else %2 ∣ while φ do %,                                  Tr ′ (q1 , . . . , qm , s, a, q1′ , . . . , qm
+                                                                                                                                 ′
+                                                                                                                                   , s′ ) =
+                                                                                          T r(s, a, s ) if ∀i ∶ δi (qi , s) = qi′
+                                                                                                         ′
+   These programs correspond to LDLf path expressions, with                           {
+                                                                                          0                     otherwise;
+if and while abbreviations (Fischer and Ladner 1979):
+         if φ then %1 else %2 ≐ (φ?; %1 ) + (¬φ?; %2 )                • R′ ∶ S ′ × A → R is defined as:
+                while φ do % ≐ (φ?; %)∗ ; ¬φ?                                          R(q1 , . . . , qm , s, a) =          ∑            ri
+                                                                                                                       i∶δi (qi ,s)∈Fi
+   We can reward the traces that follow such (nondetermin-
+istic) programs. E.g.: At every point, if it is hot then, if the      That is, the state space is a product of the states of the original
+air-conditioning is off, turn it on, else do not turn it off :        MDP and the various automata. The action set is the same.
+           [true ∗ ]⟨if (hot) then                                    Given action a, the S-component of the state progresses
+                          if (¬airOn) then turnOnAir                  according to the original MDP dynamics, and the other com-
+                          else ¬turnOffAir⟩true                       ponents progress according to the transition function of the
+                                                                      corresponding automaton. Finally, in every state, and for ev-
+   As another example: Alternate the following two instruc-           ery 1 ≤ i ≤ m, the agent receives the reward associated with
+tions: while it is hot, if the air-conditioning is off then turn it   ϕi if the DFA Aϕi reached a final state.
+on, else do not turn it off; do something for one step:               Theorem 2. The NMRDP M = ⟨S, A, T r, R⟩ is equivalent
+                                                                      to the extended MDP M′ = ⟨S ′ , A′ , T r′ , R′ ⟩.
+              ⟨(while (hot) do
+                  if (¬airOn) then turnOnAir                          Proof. Recall that every s′ ∈ S ′ has the form (q1 , . . . , qm , s).
+                  else ¬turnOffAir; true)∗ ⟩end                       Define δ(q1 , . . . , qm , s) = s. Define σ(s) = (q10 , . . . , qm0 , s).
+                                                                      We have δ(σ(s)) = s. Condition 2 of Def. 1 is easily verifi-
+   Building an Equivalent Markovian Model                             able by inspection. For condition 3, consider a possible trace
+When the rewards are Markovian, one can compute v ρ                   π = ⟨s0 , a1 , . . . , sn−1 , an ⟩. We use σ to obtain s′0 = σ(s0 )
+(for stationary ρ) and an optimal policy ρ∗ using Bell-               and given si , we define s′i (for 1 ≤ i < n) to be the unique
+man’s dynamic programming equations (Puterman 2005).                  state (q1i , . . . , qmi , si ) such that qji = δ(qji−1 , ai ) for all
+However, this is not the case when the reward is non-                 1 ≤ j ≤ m. We now have a corresponding possible trace of
+Markovian, and thus the optimal policy may not be sta-                M′ , i.e., π ′ = ⟨s′0 , a1 , s′1 . . . , s′n−1 , an ⟩. This is the only feasi-
+tionary. The standard solution is to formulate an extended            ble trajectory of M′ that satisfies Condition 3. The reward at
+MDP (with Markvian rewards) that is equivalent to the                 π = ⟨s0 , a1 , s1 . . . , sn−1 , an ⟩ depends only on whether or not
+original NMRDP (Bacchus, Boutilier, and Grove 1996;                   each formula ϕi is satisfied by π. However, by construction
+Thiébaux et al. 2006).                                               of the automaton Aϕi and the transition function T r′ , π ⊧ ϕi
+                                                                      iff s′n−1 = (q1 , . . . , qm , s′n ) and qi ∈ Fi .
+Definition 1 ((Bacchus, Boutilier, and Grove 1996)). An                   Let ρ′ be a policy for the Markovian M′ . It is easy to define
+NMRDP M = ⟨S, A, T r, R⟩ is equivalent to an extended                 an equivalent policy on M: Let π = ⟨s0 , a1 , s1 . . . , sn−1 , an ⟩
+MDP M′ = ⟨S ′ , A, T r′ , R′ ⟩ if there exist two functions τ ∶       be the current history of the process leading to state sn . Let
+S ′ → S and σ ∶ S → S ′ such that                                     qin denote the current state of automaton Aϕi given input π.
+1. ∀s ∈ S ∶ τ (σ(s)) = s;                                             Define ρ(π) ∶= ρ′ (q1n , . . . , qmn , sn ).
+Theorem 3 ((Bacchus, Boutilier, and Grove 1996)). Given                          Hence if there are two distinct states (q1 , . . . , qm ) ∼
+an NMRDP M, let ρ′ be an optimal policy for an equivalent                     (t1 , . . . , tm ) then at least for one i it must be the case that qi
+MDP M′ . Then, policy ρ for M that is equivalent to ρ′ is                     and ti are distinct and bisimilar and hence equivalent. But
+optimal for M.                                                                this is impossible since each DFA Aϕi is minimal.
+
+          Minimality and Compositionality                                        In general, the synchronous product of minimal DFA’s can
+                                                                              be minimized further. The theorem shows that no further
+One of the main aims of previous work on NMRDP specifi-                       minimization is possible if the final states of the automata are
+cation methods was to help minimize the size of the resulting                 kept distinct, to assign proper rewards. This is not required
+MDP. We now explain the attractive minimality properties                      if one does not need to distinguish between multiple reward
+supported by our construction. Note that the minimization                     formulas (in which case, final states can be conjoined).
+discussed below is w.r.t. the extended MDP. It is quite possi-                   This theorem also implies that the construction is compo-
+ble that the original NMRDP can be minimized by removing                      sitional and, hence, incremental: If a new formula is added,
+duplicate states. Its minimization is orthogonal to the issue                 we need not change the MDP, but simply extend it with one
+of minimizing the extended MDP, and hence, we assume that                     additional component. If the original MDP was minimal and
+the NMRDP itself is already minimal.                                          the new component is minimal, so is the resulting MDP.
+Constructing a Minimal MDP. The Markovian model is                            Generating Reachable States Only. Minimizing the state
+obtained by taking the synchronous product of the original                    space of the extended MDP is important if one wants to apply
+MDP and a DFA that is itself the synchronous product of                       classical dynamic programming algorithms such as value
+smaller DFA’s, one for each formula. We can apply the sim-                    iteration (Bellman 1957) and policy iteration (Howard 1960).
+ple, standard automaton minimization algorithm to obtain                      However, these methods typically do not scale up as the size
+a minimal automaton, thus obtaining a minimal MDP. But                        of S increases. Instead, search-based algorithms, such as
+even better, as we show below, it is enough to ensure that                    LAO∗ (Hansen and Zilberstein 2001), LRTDP (Bonet and
+each DFA Aϕi in the above construction is minimal to ensure                   Geffner 2003), or MCTS (Kocsis and Szepesvári 2006) are
+the overall minimality of the extended MDP.                                   preferred. Their main advantage is that they explore only a
+                                                                              subset of the reachable states. These states are generated by
+Theorem 4. If every automaton Aϕi (1 ≤ i ≤ m) is minimal                      progressing the initial state with a sequence of actions. For
+then the extended MDP defined above is minimal.                               this reason, (Thiébaux et al. 2006) developed an approach
+                                                                              in which progression can be applied to generate the states
+Proof. Let As be the synchronous product of Aϕi (1 ≤ i ≤                      of the extended MDP, as well. That is, one does not need to
+m). We show that no two distinct states of the synchronous                    enumerate the entire set S of the original NMRDP and the
+product As are equivalent, and therefore, all of them are                     entire set S ′ of the extended MDP a priori.
+needed, hence the thesis.                                                        We, too, support progression, and in a manner that is sim-
+   Suppose two distinct states of the synchronous product As                  pler to understand and analyze. Recall that the automaton that
+are equivalent. Then, being As a DFA, such two states are                     tracks the satisfaction of a reward formula can be constructed
+bisimilar. Two states of As are bisimilar (denoted by ∼) iff:                 by progression, and that the states of the extended MDP are
+(q1 , . . . , qn ) ∼ (t1 , . . . , tm ) implies                               simply vectors that represent the state of the NMRDP and
+                                                                              the state of the automaton for each reward formula. Hence,
+• for all i. qi ∈ Fi iff ti ∈ Fi ;                                            we can trivially support progression by simply progressing
+• for all a. δs (q1 , . . . , qm ) = (q1′ , . . . , qm     ′
+                                                               ) implies      each component of this vector in the standard manner.
+  δs (t1 , . . . , tm , a) = (t1 , . . . , tm ) and (q1 , . . . , qm
+                               ′             ′          ′             ′
+                                                                        ) ∼      As observed by (Thiébaux et al. 2006), when progression
+  (t1 , . . . , tm );
+    ′            ′
+                                                                              is used, the constructed states may not be minimal. That is,
+• for all a. δs (t1 , . . . , tm ) = (t′1 , . . . , t′m ) implies             one may generate two extended states that have an identical
+  δs (q1 , . . . , qm , a) = (q1′ , . . . , qm′
+                                                ) and (q1′ , . . . , qm
+                                                                      ′
+                                                                        ) ∼   underlying MDP state but a different extended part, yet both
+  (t1 , . . . , tm ).
+    ′            ′                                                            states are equivalent in the sense that we get the same reward
+                                                                              behavior from both. This issue is easy to understand with our
+   Now we show that (q1 , . . . , qm ) ∼ (t1 , . . . , tm ) implies           automata-based construction: It is simply a result of the fact
+qi = ti , for all i. To check this we show that the relation                  that the automaton constructed by progression is not minimal.
+“project on i”, Πi ((q1 , . . . , qm ) ∼ (t1 , . . . , tm )) extracting       Our construction provides the user with a clear set of options:
+the i-th component on the left and on the right of ∼ is a
+bisimulation for states in Ai . Indeed it is immediate to verify              1. Apply simple progression, possibly generating a non-
+that Πi ((q1 , . . . , qm ) ∼ (t1 , . . . , tm )) implies                        minimal automaton for some of the formulas. This is es-
+                                                                                 sentially the approach of (Thiébaux et al. 2006). (But see
+• qi ∈ Fi iff ti ∈ Fi ;                                                          the discussion in Section .)
+                                                                              2. Build the automata for the reward formulas and mini-
+• for all a, δi (qi , a) = qi′ implies δi (ti , a) = t′i and                     mize them off-line before starting search. Then, apply
+  Πi ((q1′ , . . . , qm
+                      ′
+                        ) ∼ (t′1 , . . . , t′m ));                               progression using the minimal automata. This approach is
+• for all a, δi (ti , a) = t′i implies δi (qi , a) = qi and                      attractive because the reward formulas are typically much
+  Πi ((q1′ , . . . , qm
+                      ′
+                        ) ∼ (t′1 , . . . , t′m )).                               smaller than the MDP and so is the size of their automata.
+   Hence the effort of constructing and minimizing them will          us to use information about the initial state to prevent the
+   not be significant. Yet, by minimizing them a-priori, we           generation of unreachable states.
+   can reduce the size of the combined state space (which is
+                                                                      Comparing with $FLTL rewards. In (Thiébaux, Kabanza,
+   a product of the two) significantly.
+                                                                      and Slaney 2002; Gretton, Price, and Thiébaux 2003;
+3. Apply a more complex progression algorithm that gen-               Thiébaux et al. 2006) a sophisticated temporal logic, called
+   erates a minimal automaton on-the-fly in time quadratic            $FLTL is introduced, which is able to specify explicitly when
+   in the size of the minimal automata for the reward formu-          a partial (finite) trace gets a reward. In fact, many formulas
+   las (Lee and Yannakakis 1992).                                     in this logic cannot naturally be interpreted as specifying rea-
+                                                                      sonable rewards. Thus, the results of (Thiébaux et al. 2006)
+Getting rewards for complete traces only. We may want                 focus on a class of formulas called reward-normal. This class
+to reward an agent for its entire behavior rather than for            has been further studied in (Slaney 2005) and in (Gretton
+each prefix of it. This means that the value of a sequence            2014). In this work it is first shown that a notable fragment
+π = ⟨s0 , a1 , s1 . . . , sn−1 , an ⟩ is defined as follows:          of reward-perfect formulas is equivalent in expressive power
+                                                                      to star-free RE, and hence equivalent to LTLf . Then, reward-
+                        v(π) = ∑ ri                                   normal formulas are shown to be expressible as RE, and
+                                 i∶π⊧ϕi
+                                                                      hence expressible in LDLf . Moreover, in (Gretton 2014), a
+   Behaviors optimal w.r.t. this definition may differ from           variant of reward-normal formulas is introduced with exactly
+those optimal w.r.t. the original definition in which rewards         the same expressive power as REf , and hence equivalent to
+are collected following each action. Now, an agent must               LDLf . Interestingly, the reduction to RE is based on an actual
+attempt to make as many formulas true at once, as it does not         translation into finite state automata.
+get any “credit” for having achieved them in the past.                   Besides the useful ability to build the extended MDP by
+   Given an NMRDP M with the above reward semantics,                  progression, (Thiébaux et al. 2006) discuss a minimality
+we can easily generate an equivalent MDP using the above              notion called blind minimality where no two states in the
+construction, preceded by the following steps:                        extended MDP lead to the same reward behavior under all
+                                                                      conceivable futures (where a “conceivable future” is any
+1. Add a special action stop to A.                                    future sequence of states and actions, including ones that are
+2. Add a new proposition done to S.                                   not reachable). Observe that if one considers an NMRDP
+3. No action is applicable in a state in which done is true.          with a single state, this amounts to being able to generate the
+4. The only effect of the stop action is to make done be true.        minimal automata for the reward formulas by progression.
+5. Convert every reward formula ϕi to done ∧ ϕi .                     We are unaware of any general method for providing such
+   Interestingly, when focussing on complete traces, our              a construction in linear time, which further hints that the
+framework becomes an extension of Goal MDP planning                   set of formulas for which this result holds is rather limited.
+that handles temporally extended goals, see, e.g., Chapter 6          Given the above, we cannot claim to provide blind minimality.
+and Chapter 4 of (Geffner and Bonet 2013).                            We can only speculate that given the similarity between their
+                                                                      progression algorithm and the standard progression algorithm
+       Comparison with previous proposals                             in cases where they are both defined, we should be able to
+                                                                      offer similar guarantees. Thus, the formalism developed here
+Capturing PLTL rewards. Our proposal can be seen as ex-               is simpler syntactically and semantically, most likely more
+tending (Bacchus, Boutilier, and Grove 1996). There, rewards          expressive, can support minimization without requiring the
+are assigned to partial traces whenever the last state of the         construction of the NMRDP, but supports progression as well,
+trace satisfies past-LTL (PLTL) formulas. Without introducing         and is compositional.
+explicitly PLTL, but given a partial trace π0 , . . . , πn we re-
+verse it into πn , . . . , π0 and evaluate it over the LTLf formula
+ϕ obtained from the PLTL formula by simply replacing the
+                                                                                              Conclusion
+past operators with the corresponding future operators (e.g.,         We presented a new language for specifying non-Markovian
+replace since with eventually). Then, the setting remains anal-       rewards in MDPs. Our language is based on LTLf /LDLf and
+ogous to the one shown above. In particular, we can construct         is more expressive than previous proposals and being based
+the NFA Aϕ associated with ϕ and, instead of reversing the            on a standard temporal logic of the future, is likely to be
+partial traces, reverse Aϕ , thus getting an NFA A−ϕ , by simply      more intuitive to use. We showed how to construct a minimal
+reversing the edge directions and switching initial and final         equivalent MDP, and since we rely on general methods for
+states. This can be done in linear time. If we now determinize        tracking temporal formulas, the construction is cleaner. Being
+(and minimize) A−ϕ , getting the (minimal) DFA A−ϕ , we can           based on progression, it can use information about the initial
+proceed exactly as above.                                             state to prune unreachable states.
+   Given this essential equivalence of PLTL and LTLf , and               In future work we intend to examine the use of monitoring
+the fact that LDLf is strictly more expressive than LTLf , we         notions developed for LTLf and LDLf (Bauer, Leucker, and
+conclude that our setting is strictly more expressive than the        Schallhart 2010; De Giacomo et al. 2014; Maggi et al. 2011).
+one in (Bacchus, Boutilier, and Grove 1996). In addition,             Using such monitors one could extract early rewards that
+unlike (Bacchus, Boutilier, and Grove 1996), our automata             guide the process to get full rewards later. Another impor-
+construction algorithm is based on progression, allowing              tant direction for future work is exploiting non-Markovian
+rewards in reinforcement learning (RL) to provide better guid-     Gretton, C.; Price, D.; and Thiébaux, S. 2003. Implemen-
+ance to the learning agent, as well as extending inverse RL        tation and comparison of solution methods for decision pro-
+methods to learn to assign non-Markovian rewards in a state.       cesses with non-markovian rewards. In UAI.
+   Finally, we observe that LDLf can capture all co-safe LTL       Gretton, C. 2014. A more expressive behavioral logic for
+formulas, i.e., LTL formulas whose automaton is a DFA (in-         decision-theoretic planning. In PRICAI, 13–25.
+stead of a Büchi automaton). Co-safe LTL formulas were            Hansen, E. A., and Zilberstein, S. 2001. LAO*: A heuristic
+used in Robotics to select traces of an MDP that represent         search algorithm that finds solutions with loops. Artificial
+behaviors of interest (Lacerda, Parker, and Hawes 2014;            Intelligence 129(1-2):35–62.
+2015). Thus, instead of co-safe LTL, we can use LDLf to            Harel, D.; Kozen, D.; and Tiuryn, J. 2000. Dynamic Logic.
+gain expressivity in trace specification at essentially no cost.   MIT Press.
+                                                                   Howard, R. A. 1960. Dynamic Programming and Markov
+Acknowledgements: The first author is supported in part by         Processes. MIT Press.
+ISF grant 933/13 and the Lynn and William Frankel Center           Kocsis, L., and Szepesvári, C. 2006. Bandit based monte-
+for Computer Science. The work was partially supported by          carlo planning. In ECML.
+the Sapienza project “Immersive Cognitive Environments”.           Lacerda, B.; Parker, D.; and Hawes, N. 2014. Optimal
+                                                                   and dynamic planning for Markov decision processes with
+                        References                                 co-safe LTL specifications. In IROS.
+                                                                   Lacerda, B.; Parker, D.; and Hawes, N. 2015. Optimal Policy
+Bacchus, F.; Boutilier, C.; and Grove, A. J. 1996. Rewarding       Generation for Partially Satisfiable Co-Safe LTL Specifica-
+behaviors. In AAAI.                                                tions. In IJCAI.
+Baier, J. A.; Fritz, C.; Bienvenu, M.; and McIlraith, S. A.        Lee, D., and Yannakakis, M. 1992. Online minimization of
+2008. Beyond classical planning: Procedural control knowl-         transition systems (extended abstract). In Proceedings of the
+edge and preferences in state-of-the-art planners. In AAAI.        24th Annual ACM Symposium on Theory of Computing.
+Bauer, A.; Leucker, M.; and Schallhart, C. 2010. Com-              Levesque, H. J.; Reiter, R.; Lesperance, Y.; Lin, F.; and Scherl,
+paring LTL semantics for runtime verification. Logic and           R. 1997. GOLOG: A logic programming language for
+Computation.                                                       dynamic domains. J. of Logic Programming 31.
+Bellman, R. 1957. Dynamic Programming. Princeton Uni-              Littman, M. L.; Topcu, U.; Fu, J.; Jr., C. L. I.; Wen, M.;
+versity Press.                                                     and MacGlashan, J. 2017. Environment-independent task
+Bonet, B., and Geffner, H. 2003. Labeled RTDP: Improv-             specifications via GLTL. CoRR abs/1704.04341.
+ing the convergence of real-time dynamic programming. In           Maggi, F. M.; Montali, M.; Westergaard, M.; and van der
+ICAPS.                                                             Aalst, W. M. P. 2011. Monitoring business constraints with
+Camacho, A.; Chen, O.; Sanner, S.; and McIlraith, S. A.            linear temporal logic: An approach based on colored au-
+2017a. Decision-making with non-markovian rewards: From            tomata. In Proc. of BPM.
+ltl to automata-based reward shaping. In RLDM, 279–283.            Pnueli, A. 1977. The temporal logic of programs. In FOCS.
+Camacho, A.; Chen, O.; Sanner, S.; and McIlraith, S. A.            Puterman, M. L. 2005. Markov Decision Processes: Discrete
+2017b. Non-markovian rewards expressed in LTL: guiding             Stochastic Dynamic Programming. Wiley.
+search via reward shaping. In SOC, 159–160.                        Rabin, M. O., and Scott, D. 1959. Finite automata and their
+Camacho, A.; Triantafillou, E.; Muise, C.; Baier, J. A.; and       decision problems. IBM J. Res. Dev. 3:114–125.
+McIlraith, S. 2017c. Non-deterministic planning with tempo-        Slaney, J. K. 2005. Semipositive LTL with an uninterpreted
+rally extended goals: LTL over finite and infinite traces. In      past operator. Logic Journal of the IGPL 13(2):211–229.
+AAAI.                                                              Tabakov, D., and Vardi, M. Y. 2005. Experimental evaluation
+De Giacomo, G., and Vardi, M. Y. 2013. Linear temporal             of classical automata constructions. In LPAR.
+logic and linear dynamic logic on finite traces. In IJCAI.         Thiébaux, S.; Gretton, C.; Slaney, J. K.; Price, D.; and Ka-
+De Giacomo, G., and Vardi, M. Y. 2015. Synthesis for LTL           banza, F. 2006. Decision-theoretic planning with non-
+and LDL on finite traces. In IJCAI.                                markovian rewards. J. Artif. Intell. Res. (JAIR) 25:17–74.
+De Giacomo, G., and Vardi, M. Y. 2016. LTLf and LDLf               Thiébaux, S.; Kabanza, F.; and Slaney, J. K. 2002. Anytime
+synthesis under partial observability. In IJCAI.                   state-based solution methods for decision processes with non-
+                                                                   markovian rewards. In UAI.
+De Giacomo, G.; De Masellis, R.; Grasso, M.; Maggi, F. M.;
+                                                                   Torres, J., and Baier, J. A. 2015. Polynomial-time reformula-
+and Montali, M. 2014. Monitoring business metaconstraints
+                                                                   tions of LTL temporally extended goals into final-state goals.
+based on LTL and LDL for finite traces. In BPM.
+                                                                   In IJCAI.
+Fischer, M. J., and Ladner, R. E. 1979. Propositional dynamic      Vardi, M. Y. 2011. The rise and fall of linear time logic. In
+logic of regular programs. J. Com. Systems and Science 18.         GandALF.
+Fritz, C., and McIlraith, S. A. 2007. Monitoring plan opti-
+mality during execution. In ICAPS.
+Geffner, H., and Bonet, B. 2013. A Coincise Introduc-
+tion to Models and Methods for Automated Planning. Mor-
+gan&Claypool.
+

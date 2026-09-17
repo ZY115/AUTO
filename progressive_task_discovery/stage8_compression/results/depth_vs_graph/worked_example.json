@@ -1,0 +1,15 @@
+{
+  "zcell": [
+    0,
+    -6
+  ],
+  "eventsA": 1,
+  "eventsB": 4,
+  "stepsA": 2,
+  "stepsB": 5,
+  "wrongA": 5,
+  "wrongB": 2,
+  "mapmarg": 11.428571428571429,
+  "taskmargA": 6.535714285714286,
+  "taskmargB": 11.392857142857142
+}

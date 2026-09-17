@@ -1,0 +1,1208 @@
+                                             Expediting Reinforcement Learning by Incorporating
+                                                 Knowledge About Temporal Causality in the
+                                                                Environment
+
+                                                    Jan Corazza1,2 , Hadi Partovi Aria3 , Daniel Neider1,2 , and Zhe Xu3⋆
+                                                                             1
+                                                                           TU Dortmund University
+                                                             2
+                                                             Research Center Trustworthy Data Science and Security
+
+
+
+
+arXiv:2510.15456v1 [cs.LG] 17 Oct 2025
+                                                          {jan.corazza,daniel.neider}@tu-dortmund.de
+                                                                         3
+                                                                           Arizona State University
+                                                                     {hpartovi,xzhe1}@asu.edu
+
+
+
+                                                  Abstract. Reinforcement learning (RL) algorithms struggle with learning optimal
+                                                  policies for tasks where reward feedback is sparse and depends on a complex
+                                                  sequence of events in the environment. Probabilistic reward machines (PRMs)
+                                                  are finite-state formalisms that can capture temporal dependencies in the reward
+                                                  signal, along with nondeterministic task outcomes. While special RL algorithms
+                                                  can exploit this finite-state structure to expedite learning, PRMs remain difficult
+                                                  to modify and design by hand. This hinders the already difficult tasks of utilizing
+                                                  high-level causal knowledge about the environment, and transferring the reward
+                                                  formalism into a new domain with a different causal structure. This paper pro-
+                                                  poses a novel method to incorporate causal information in the form of Temporal
+                                                  Logic-based Causal Diagrams into the reward formalism, thereby expediting pol-
+                                                  icy learning and aiding the transfer of task specifications to new environments.
+                                                  Furthermore, we provide a theoretical result about convergence to optimal policy
+                                                  for our method, and demonstrate its strengths empirically.
+
+                                                  Keywords: Temporal Causality · Reinforcement Learning · Probabilistic Reward
+                                                  Machines · Formal Methods.
+
+
+                                         1     Introduction
+
+                                         Reinforcement Learning (RL) has emerged as the forefront method in providing a robust
+                                         and general framework for intelligent, autonomous decision-making and learning within
+                                         complex environments. One of the biggest challenges in Reinforcement Learning is
+                                         integrating high-level, causal knowledge into the learning process. Causal reasoning may
+                                         come naturally to humans, assisting them in navigating the world by making decisions
+                                         based on more than just observed outcomes; it involves an understanding of how those
+                                         outcomes come about. This is in contrast to traditional RL techniques, which often
+                                         lack the ability to capture temporal cause-effect relationships and hence offer inefficient
+                                         ⋆
+                                             A peer-reviewed version appears in the Proceedings of the Third Conference on Causal Learning
+                                             and Reasoning (PMLR 236:643-664, 2024) [2]. Please cite the proceedings version. Source
+                                             code: https://github.com/corazza/tcrl.
+2       J. Corazza et al.
+
+learning and decision-making. For instance, the knowledge of the likely consequences
+of actions in terms of future states and rewards can dramatically reduce the amount of
+exploration that needs to take place to learn effective policies. This problem is most
+evident in settings with long-term consequences, which calls for RL methods that could
+incorporate causal knowledge directly into their decision process.
+    In RL the interaction between the agent and the environment happens step by step.
+Starting in state s the agent chooses an action a with probability π(a | s) (the policy),
+and the environment transitions into a new state s′ and gives a reward r. This interaction
+is formalized in the concept of an MDP, a tuple M = (S, A, R, p, γ) where S is the
+set of states, A the set of actions available to the agent, R : (S × A)⋆ × S → R the
+reward function mapping trajectories in the MDP to rewards, p(s′ | s, a) a probabilistic
+transition function, and γ ∈ (0, 1) the discount
+                                             P∞factor. The agent’s goal is to maximize
+the expected discounted return, maxπ Eπ [ i=0 γ i ri ]. A labeling function L(s, a, s′ )
+can be provided to attach descriptive propositional variables to transitions in the MDP.
+An MDP together with a labeling function is called a labeled MDP.
+    Although MDPs can have a large number of states and a complex transition function,
+one often has access to high-level causal knowledge of the environment. Figure 1(a)
+illustrates this point on a small example MDP. To complete the task, the agent must
+choose to bring either coffee or a soda to the office. The high-level knowledge one
+may supply is that any path from the soda to the office is later blocked by a flower pot,
+which the agent must avoid. This is due to walls and a one-way door, which constrain
+the agent’s movement. Although special RL algorithms can find the optimal policy for
+this task, they will not take these temporal-causal constraints into account, and will
+explore the environment in an inefficient manner. Unfortunately, employing high-level
+knowledge about causality has shown to be a difficult task, as the current causal RL
+approaches (e.g., [16,9,14,1,7,10,4,8]) mostly do not take into account the temporal
+aspect of the causal knowledge. This paper aims to address this issue by proposing
+a novel method that incorporates knowledge about causality directly into the reward
+function. On the other hand, den Hengst et al. [5] propose an approach for safe RL that
+incorporates symbolic reasoning and a temporal domain. However, their primary focus
+is on ensuring safety rather than expediting the learning process, distinguishing their
+work from ours, which specifically targets efficient learning by leveraging causality.
+
+1.1   Probabilistic Reward Machines
+Common RL algorithms such as Q-learning struggle with tasks where rewards are
+sparse and depend on a complex sequence of actions that the agent must perform in
+a specific order. Reward machines, introduced by Icarte et al. [6], are a finite-state
+formalism that can capture the reward function in such cases. Q-learning for Reward
+Machines (QRM), as proposed by Icarte et al. [6], can exploit this reward structure to
+expedite learning the optimal policy. The QRM algorithm employs reward machines
+to significantly enhance the efficiency of problem-solving processes. This algorithm
+applies an off-policy Q-learning strategy to the reward machine by decomposing it into
+relevant components at the same time, thereby facilitating the simultaneous learning of
+each distinct subpolicy. This methodological approach has been empirically validated,
+demonstrating the algorithm’s capability to converge towards an optimal policy in tabular
+                                       Temporal Causality and Reinforcement Learning                      3
+
+
+                                                       ¬(c ∨ s), 0                           ¬o, 0
+                                                                                 c ∧ ¬s, 0
+                     f            o                                q0                               q1
+                                                                                    0.9
+                                                                            c
+              s                                                                  ,0
+                                                                            ∧ ¬s
+                                                                                0.1
+                           c
+                                                                     s, 0           q2                   o, 1
+                                                                                           o
+                                                                                             ,0
+                                                                                ¬o, 0          .1
+                    Æ                                 ¬o, 0        q3               o, 1            q4
+
+(a) A labeled 5x5 Gridworld with coffee (c),
+soda (s), an office (o), and a flower pot (f).
+                                                     (b) A PRM for the task in Figure 1(a) (left).
+The agent can move in the four cardinal direc-
+                                                     Transitions are labeled with propositional
+tions, and starts in the cell labeled Æ. Other
+                                                     formulas and reward outputs. Only transi-
+shaded cells are impassable walls. One-way
+                                                     tion probabilities different from 1 are shown.
+doors are represented by the upwards arrow.
+                                                     State q4 is a terminal state which ends the
+The flower pot acts as a sink state.
+                                                     task. Formulas on transitions from q0 to q1
+                                                     and q2 (c∧¬s) contain ¬s in order to disam-
+                                                     biguate the transition function in state q0 on
+                                                     the input {c, s}. The same could be achieved
+                                                     by using the formula ¬c∧s for the transition
+                                                     from q0 to q3 , and just c for transitions into
+                                                     q1 , q2 .
+
+Fig. 1. An MDP (left) and a PRM (right) that captures the task of bringing either coffee or soda to
+the office. The coffee machine has a probability of 10% to malfunction and produce bad coffee,
+leading to a reduced reward of 0.1 instead of 1. Bringing soda to the office results in a reward of
+1 deterministically. An example input for the PRM is {c, s}, ∅, {o, c} (a sequence of three
+labels), which will induce the run q0 7→ q3 7→ q3 7→ q4 with a reward of 1. It is important to note
+that inputs for PRMs are sets of descriptive propositional variables that are true in a given step,
+hence why a single label such as {c, s} can include multiple (or 0) variables.
+
+
+case. Velasquez et al. [13] introduced a more general variant of reward machines called
+probabilistic reward machines (PRMs). PRMs use a nondeterministic transition function
+that can capture uncertainty in task outcomes. In the example from Figure 1, uncertainty
+comes from the fact that the coffee machine may malfunction. Definition 1 formalizes
+this notion of a finite-state representation of a temporally extended task with probabilistic
+outcomes.
+
+Definition 1 (Probabilistic Reward Machine (PRM)). A PRM A = (U, uI , 2AP , Γ, τ,
+σ, F ) is a tuple where U is a finite set of states with a distinguished initial state uI ∈ U ,
+AP is a set of atomic propositions and 2AP is the set of labels, Γ ⊂ R is a finite
+set of rewards, τ : (U × 2AP × U ) → [0, 1] is a probabilistic transition function,
+σ : (U × 2AP × U ) → Γ is a function mapping each transition to a reward in Γ , and
+F ⊆ U is a finite set of terminal states that signal the end of the interaction.
+4        J. Corazza et al.
+
+     The agent-environment interaction generates a trajectory s0 , a0 , s1 , . . . , an−1 , sn
+and the corresponding label sequence ℓ0 ℓ1 · · · ℓn−1 , where L(si , ai , si+1 ) = ℓi for all
+i = 0, . . . , n − 1. The state s0 may be a unique initial state, or drawn from an initial
+distribution. After reading a label ℓ in state u, the PRM executes a nondeterministic
+transition into a new state u′ with probability τ (u, ℓ, u′ ), and the agent receives a reward
+r = σ(u, ℓ, u′ ). A run of a PRM A on a label sequence ℓ0 ℓ1 · · · ℓn−1 is a sequence
+u0 , r0 , u1 , . . . , rn−1 , un where u0 = uI , and for all i = 0, . . . , n−1, τ (ui , ℓi , ui+1 ) > 0
+and σ(ui , ℓi , ui+1 ) = ri .
+
+1.2   Temporal Logic-based Causal Diagrams
+Linear temporal logic over finite sequences (LTLf ) is a formal reasoning system that
+can capture causal and temporal properties of label sequences and labeled MDPs. Aside
+from Boolean operators like ¬ and ∨, LTLf introduces temporal operators such as Gψ
+(true if and only if ψ holds for every element in the sequence), Xψ (true iff. ψ holds
+for the next element of the sequence), and ψUφ (true iff. ψ holds until φ becomes true,
+and φ is true in some element of the sequence). We also rely on the weak until operator
+ψWφ (true iff. ψ holds until φ becomes true, but φ is not required to become true).
+    In order to encode knowledge about causality in the underlying MDP, we rely on
+Temporal Logic-based Causal Diagrams (TL-CDs) introduced in Paliwal et al. [11].
+TL-CDs are a special notation that expresses the causal relationship between formulas in
+LTLf . The first conjunct induced by the TL-CD in Figure 2(a), G(s → ¬oWf), means
+that if the agent observes s (soda) in any step, then it will not observe o (the office)
+before it observes f (the flower pot). This part of the TL-CD encodes knowledge that
+soda may only be reached via a one-way door, and the only other exit towards the office
+will be blocked by the flower pot.
+
+
+
+            s             ¬oWf
+
+                                                                     a              G¬b
+
+            f                G¬o                                      (b) G(a → G¬b)
+
+    (a) G(s → ¬oWf) ∧ G(f → G¬o)
+
+Fig. 2. Figure 2(a) (left) is the TL-CD which captures relevant causal information in the environ-
+ment from Figure 1(a). Figure 2(b) (right) is a TL-CD that holds for the case study in Figure 6.
+
+
+   Formally, a TL-CD is a directed graph whose nodes are labeled with LTLf formulas.
+For a TL-CD C one may construct an equivalent LTLf formula φC through Equation 1,
+where φ ▶ ψ iterates over edges that connect formulas φ and ψ in the TL-CD.
+                                       ^
+                               φC =       G(φ → ψ)                              (1)
+                                              φ▶ψ
+                                        Temporal Causality and Reinforcement Learning               5
+
+     If φC is true for a label sequence ℓ, we will write ℓ |= φC . A label sequence
+ℓ = ℓ0 ℓ1 · · · ℓn−1 is attainable in an MDP M = (S, A, R, p, γ) if there exists a trajectory
+s0 , a0 , s1 , . . . , an−1 , sn in M such that L(si , ai , si+1 ) = ℓi and p(si , ai , si+1 ) > 0 for
+all i = 0, 1, . . . , n − 1. We will say that a TL-CD C holds for an MDP M if for every
+label sequence ℓ attainable in M , we have ℓ |= φC . In order to simplify working with
+TL-CDs, we leverage the notion of deterministic finite automata (DFAs). We formalize
+this notion in Definition 2.
+Definition 2 (Deterministic Finite Automaton (DFA)). A DFA is a tuple C = (Q, qI , Σ,
+δ, F ) consisting of a finite set of states Q with an initial state qI , input alphabet Σ, deter-
+ministic transition function δ : Q × Σ → Q, and a finite set of accepting states F ⊆ Q.
+
+
+    If the run of the DFA C on an input string ℓ ends in an accepting state q ∈ F , we
+will write ℓ ∈ L(C). Every TL-CD C can be converted into an equivalent DFA C, in the
+sense that for every ℓ, we have ℓ ∈ L(C) ⇐⇒ ℓ |= φC . We will refer to C as the causal
+DFA.
+
+
+2    Problem statement
+One may use QRM to find the optimal policy for the task in Figure 1. However, the PRM
+in Figure 1(b) does not take flower pots and one-way doors into account. Because the
+agent does not know that knocking over flower pots is forbidden or that choosing soda
+causes him to enter a room blocked by a flower pot, it will waste time exploring those
+fruitless trajectories. As PRMs are in essence task specifications, and one may also wish
+to transfer them into a new environment while preserving the overall goal. In both cases,
+high-level insights about causality, especially its temporal aspects, could prove helpful
+by reflecting the dynamics of the MDP in condensed form.
+     Unfortunately, incorporating knowledge about temporal causality into the reward
+function remains a difficult and error-prone manual task. In PRMs, this would necessitate
+adding new states and reasoning about a different, more complicated transition function.
+Some methods such as JIRP, proposed by Xu et al. [15] and SRMI, proposed by Corazza
+et al. [3] assume that a suitable but unknown representation of the reward function exists,
+and attempt to recover it from interaction traces. This work proposes an alternative
+method that leverages TL-CDs in order to automate the process of incorporating knowl-
+edge about causality into PRMs. More formally, the problem can be stated as follows.
+Given a TL-CD C which holds for an MDP M and a PRM A, produce a PRM B that
+induces the same optimal policy as A, but utilizes causal information in C to expedite
+learning.
+
+
+3    Method
+This section introduces a novel approach for incorporating causal information from a
+TL-CD into the reinforcement learning process via a PRM. By creating a product of a
+TL-CD, represented as a causal DFA, with a PRM, we aim to enhance the RL agent’s
+ability to efficiently learn and make decisions in complex environments.
+6        J. Corazza et al.
+
+    We first consider the equivalent causal DFA for a given TL-CD. As explained
+in Section 1.2, the equivalent causal DFA captures the same semantics as the given
+TL-CD. While TL-CDs are an intuitive notational tool, DFAs are easier to work with
+computationally. The causal DFA for the TL-CD in Figure 2(a) is shown in Figure 3
+(in two parts for convenience). State u3 is a sink state, meaning that any run of the
+DFA which enters u3 will never leave it. It is also a rejecting state. Taken together, this
+means that any label sequence for which the causal DFA enters u3 is not the prefix of an
+attainable sequence in an MDP M if we assume that the TL-CD holds for M .
+
+
+      ¬s            ¬f ∧ ¬o           ⊤
+
+               s              f                                   f               o
+      u0               u1             u2                  t0              t1             t2
+
+                      o
+                                                          ¬f             ¬o               ⊤
+                       u3      ⊤
+                                                                (b) G(f → G¬o)
+
+           (a) G(s → ¬oWf)
+
+Fig. 3. Two factors of the causal DFA for the TL-CD in Figure 2(a). Rejecting sink states are
+diamond-shaped. Their parallel composition is the true causal DFA, and its states come from the
+Cartesian product of states in this Figure. For example, the initial state is (u0 , t0 ).
+
+
+
+    In other words, when a causal DFA run reaches a rejecting sink state on some prefix
+of input labels, then the entire input label sequence is unattainable. The reason is that
+there is no suffix of labels which can cause the run to transition into an accepting state.
+From now on we will implicitly consider causal DFAs to have at most one rejecting sink
+state, and that an accepting state is reachable from all other states. This can be achieved
+by minimization [12].
+    We propose to incorporate causal information from a TL-CD C into a PRM A by
+computing state values in a new PRM B1 = C × A, which is a product of the TL-CD
+(represented by the causal DFA C) and A. The product PRM B1 synchronizes the runs
+of the original PRM A and the causal DFA C. B1 mirrors the output of A, except when
+C transitions into a rejecting sink state. Then the output of B1 is set to a minimal value
+m that is lesser than any possible immediate reward and resulting future gain, and will
+remain there for the rest of the run as C will not leave the sink state. We also compute
+state values in a “pessimistic” PRM B2 = C × (−A) in order to uncover temporal-causal
+information about worst-case reward outcomes. While B1 outputs the same rewards as A,
+B2 negates outputs of A (but also gives minimal outputs m for transitions into rejecting
+sink states). Because of the minimal reward output m, value iteration in either B1 or
+B2 will disregard transitions that lead C into a rejecting sink state, as explained under
+Figure 4. Due to negating reward outputs, label sequences that maximize return in B2 ,
+minimize the return in B1 . We combine state value information from B1 and B2 into a
+                                            Temporal Causality and Reinforcement Learning            7
+
+final PRM B. To obtain B, we start from B1 , and add all states u ∈ U B1 that have 0 value
+in both the machine B1 and B2 (vB⋆ 1 (u) = vB⋆ 2 (u) = 0) into the set of terminal states F B1 .
+Such states have the property that no matter the policy, the future return is constrained
+with 0 from above and below (and thus, the choice of actions is of no consequence). The
+product C × A is formalized in Definition 3. We define the value of a PRM state u via
+the Bellman optimality equation 2, where γ matches the discount factor in the MDP.
+                              X
+               v ⋆ (u) = max         τ (u, ℓ, u′ ) · (σ (u, ℓ, u′ ) + γv ⋆ (u′ ))          (2)
+                            ℓ∈2AP
+                                    u′ ∈U
+
+    As Equation 2 is an optimality equation, v ⋆ (u) is the expected return of a PRM
+run starting in u and following the most optimistic label sequence (which may or
+may not be attainable in the MDP). We define the minimal reward output m as m =
+−1 − maxr∈Γ A |r| − maxu∈U A v ⋆ (u). While it may be simpler to use m = −∞, we
+compute a concrete bound in order to better communicate how our method makes use of
+state value information. In brief, the formula for m is inspired by the Bellman optimality
+operator used in value iteration. The terms can be explained in the following way. First,
+− maxr∈Γ A |r| ensures that the reward is lower than any other immediate reward in
+the original PRM. Second, − maxu∈U A v ⋆ (u) ensures that the reward is lower than any
+possible future gain starting from a state in the original PRM. Taken together, these two
+terms ensure that transitions that correspond to rejecting sink states do not contribute to
+state values.
+
+Definition 3 (PRM & TL-CD product). Let M = (S, A, R, p, γ) be an MDP where
+the reward function R : (2AP )⋆ → Γ is given by the PRM A = (U A , uAI , 2AP , Γ A , τ A , σ A ,
+F A ), C a TL-CD that holds for M , and C = (Q, qI , 2AP , δ, FC ) its equivalent minimal
+causal DFA with states Q, initial state qI , a set of accepting states FC ⊆ Q, and
+transition function δ. Let Qr.s. ⊆ Q \ FC be the set of rejecting sink states of C.
+    We define the product C × A as a new PRM (U, uI , 2AP , Γ, τ, σ, F ), where
+
+ 1. U = U A × Q, a state of C × A is a pair of states (u, q) with u ∈ U A and q ∈ Q;
+ 2. uI = (uAI , qI ), the initial state in C × A is the pair of initial states of A and C;
+ 3. Γ = Γ A ∪ {m}, the output alphabet of C × A is expanded with a possible reward
+    output that is 1 less than any output in the original set of rewards from A;
+ 4. τ ((u, q), ℓ, (u′ , q ′ )) = τ A (u, ℓ, u′ ) · 1{δ(q,ℓ)=q′ } , the probability of C × A transi-
+    tioning from (u, q) to (u′ , q ′ ) upon reading ℓ is the same as the probability of A
+    transitioning from u to u′ , given that C transitions from q to q ′ (otherwise, the
+    probability is 0);            (
+                                     σ A (u, ℓ, u′ )                                     q ′ ̸∈ Qr.s.
+ 5. σ((u, q), ℓ, (u′ , q ′ )) =                                                                       ,
+                                     m = −1 − maxr∈Γ A |r| − maxu∈U A v ⋆ (u) otherwise
+    the output of the product PRM agrees with A except when C transitions into a
+    rejecting sink state; and
+ 6. F = {(u, q) : u ∈ F A }, terminal states in C × A correspond to terminal states in A.
+
+
+   Performing value iteration acts as a form of look-ahead in the product C × A, whose
+output function is defined so that transitions which lead the causal DFA into a rejecting
+8          J. Corazza et al.
+
+sink state do not contribute to overall state value. The same is true for B2 = C × (−A),
+which is defined in the same way, except the output function −σ A (u, ℓ, u′ ) provides
+look-ahead information about the worst-case future outcome. Our method, given in
+Algorithm 1, improves the convergence speed of QRM by utilizing information about
+expected rewards that better reflects the temporal causal structure of the environment. In
+Theorem 1 we show that our method converges to the optimal policy in the limit.
+
+
+                                    ¬(o ∨ f), 0                   x2
+                                                             1
+                                                       o, −
+                                      s, 0
+                               x0               x1                                  x4
+                                                         f, 0                 1
+                                                                         o, −
+                                                     ¬o, 0        x3
+
+
+Fig. 4. A fragment of the product of the PRM from Figure 1(b) and the TL-CD from Figure 2(a).
+Inheriting the q, u, and t names of PRM and causal DFA states from previous figures, x0 =
+(q0 , u0 , t0 ), x1 = (q3 , u1 , t0 ), x2 = (q4 , u3 , t0 ), x3 = (q3 , u2 , t1 ), and x4 = (q4 , u2 , t2 ). Due
+to the maximum in Equation 2, dashed transitions do not contribute to state value. Dashed states
+x1 and x3 have 0 value in both B1 (depicted) and B2 , and will be added to the set of terminal
+states.
+
+
+
+
+    Require :MDP M , PRM A, minimal causal DFA C with rejecting sink states Qr.s.
+    B1 , B2 ← computeProduct(A, C), computeProduct(−A, C)
+    1
+     ⋆     ⋆
+  2 vB1 , vB2 ← valueIteration(B1 , γ), valueIteration(B2 , γ)
+  3 B ← B1
+                     B
+  4 for each u ∈ U do
+  5      if vB1 (u) = vB⋆2 (u) = 0 then
+             ⋆
+
+  6           Add u to the set of terminal states of B
+  7      end
+  8 end
+  9 Q ← initializeQFunction()
+ 10 while termination criteria not met do
+ 11      Q ← RunQRMEpisode(Q, B)
+ 12 end
+ 13 return Q
+        Algorithm 1: Reinforcement Learning With Temporal-Causal Information
+
+
+
+Theorem 1 (Convergence to Optimal Policy) Let M be an MDP with a non-Markovian
+reward function captured by PRM A. Let C be a TL-CD that holds for M , and C the
+corresponding minimal causal DFA with rejecting sink states Qr.s. . Then Algorithm 1
+converges to an optimal policy for M with respect to A. In particular, we can easily
+                                   Temporal Causality and Reinforcement Learning         9
+
+recover the optimal policy for (M, A) from the optimal policy for (M, B) found in the
+algorithm.
+
+    In the full proof of Theorem 1, we introduce 3 transformations on PRMs that realize
+our method of combining a PRM with a TL-CD. In brief, these transformations allow
+us to (1) take the parallel composition of a PRM and a DFA, (2) change the outputs of
+PRMs on transitions into unreachable states, and (3) add states into the set of terminal
+states of the PRM (under certain conditions); all the while preserving the optimal policy.
+We then show how Algorithm 1 applies these transformations in order to arrive at the
+desired PRM B. Since these transformations preserve the optimal policy (or allow for
+easy recovery of it), we conclude that QRM using the transformed PRM B converges
+to the optimal policy. In brief, the core contribution of the modifications we propose
+lies in the ability to exploit causal knowledge contained in the TL-CD. Although we
+significantly change the structure of PRM by combining it with the TL-CD, we prove
+that the optimal policy remains the same. However, the changed structure allows for a
+more nuanced calculation of PRM state values that is not blind to the temporal-causal
+relations that hold for the MDP. More precisely, we are able to obtain upper and lower
+bounds on state values, and prove that under certain conditions one does not need to
+explore the MDP (specifically, when both the upper and lower value bounds are 0). In
+doing so, we improve the balance between exploration and exploitation and increase
+the sample efficiency of our algorithm. See the Appendix for further details about the
+function that computes the PRM and causal DFA intermediate product, and the full proof
+of Theorem 1.
+
+
+4   Case Studies
+
+Our method shows promising results across two case studies. The first case study (results
+in Figure 5(a)) is based on the coffee vs. soda example from Figure 1. The second case
+study (results in Figure 5(b)) is described in Figure 2.
+    We compared our method against QRM without access to knowledge about causality.
+In both case studies, our method takes significantly fewer steps to converge to the optimal
+policy.
+    For a more thorough comparison and analysis of the method’s efficiency, we im-
+plemented it across two distinct case studies: a four-door task and a small office world
+domain. The third case study entails an agent navigating through a scenario where it
+must open four doors in any arbitrary order, as illustrated in Figure 7(a). This task
+involves a significantly more complex PRM owing to the number of possible orders.
+To evaluate the method’s performance and its efficacy in this case study, we use a grid
+world configuration of 6 × 6.
+    The agent here must open door A, door B, door C, and door D in any order. However,
+door D is a trap, and the agent cannot see doors A, B, or even C after seeing door D.
+This knowledge, in fact, is encoded in Figure 7(b). As this task requires a complex
+Probabilistic Reward Machine (PRM), we deemed it prudent to relegate its detailed
+explanation to the Appendix.
+10                    J. Corazza et al.
+
+
+                                  No causal
+
+
+
+
+  Reward per step
+                    100            Causal                  60
+
+                                                           40
+                     50
+                                                           20
+
+                      0                                     0
+                           0                 1         2        0            2             4
+                                            Step       4
+                                                     ·10                    Step         ·104
+                          (a) Coffee vs. soda task                  (b) Two-doors task
+
+Fig. 5. Reward per step averaged over 20 runs. “No causal” refers to using QRM with the original
+PRM that does not account for additional causal information in the environment. “Causal” are the
+results for our method. Both graphs showcase QRM convergence to the optimal policy.
+
+
+
+
+    Furthermore, Figure 9(a) compares our method on the four-doors task to QRM
+without additional causal information. It can be seen that QRM with causal information
+results in much higher rewards with faster convergence.
+    Another case study in which we implemented this method is the small office world
+domain. For this specific exploration, we considered a small office world with a spatial
+layout of 17 × 9, similar to the setup in Paliwal et al. [11]. Within the scope of this
+case study, the procedure to exit the grid entails a two-step process for the agent: first,
+it must obtain one of the two available keys, denoted as k1 or k2 , and then navigate to
+exit e1 or e2 , correspondingly aligned with the key acquired. Through one-way doors
+(indicated by blue arrows), keys, and walls, the agent interacts with the environment.
+A graphical illustration of this environment, capturing the elements and challenges the
+agent faces, is provided in Figure 8(a), providing a better understanding of the structural
+and operational complexities of the small office world being explored.
+     As a result of c being a one-way door, the agent will not be able to pick up key k2
+and exit at e2 , due to the information encoded in Figure 8(c). In addition, if the agent
+passes through the door b, it will not be able to exit through the door e1 . Furthermore,
+Figure 8(b) displays the PRM, omitting the causal information regarding the small office
+world. In order to succeed in exiting the maze and receiving reward 1, the agent must
+complete both sequences a−k1 − e1 (open door a, pick up key k1 , and leave at e1 ) or
+b−k2 − e2 (open door b, pick up key k2 , and exit at e2 ). However, a probability of 0.9
+suggests a likelihood of the agent exiting through e1 , while a probability of 0.1 indicates
+a risk of the agent getting stuck.
+   Figure 9(b) depicts the performance comparison of our method on the small office
+world scenario to QRM without additional causal information. In the figure, it can be
+seen that if the RL agent knows the causal DFA and learns never to open door b, the
+agent can obtain their optimal reward faster with higher accumulated rewards.
+                                       Temporal Causality and Reinforcement Learning               11
+
+
+                                                        ¬(a ∨ b), 0           q1
+             a               b                                         0              b,
+                                                                   a ,                    1
+                                                                         . 9       0. 9
+                                                                       0
+                                                            q0               ¬b, 0            q4
+                                                                     b,                 1
+                                                                         0         a  ,
+                                                                  0.9
+                    Æ                                                                   0.9
+                                                                              q2        ¬a, 0
+
+(a) 3x3 Gridworld environment where the               (b) The PRM without causal info about the
+agent must open both door A (a) and door              two-door task. Missing transitions are all self-
+B (b) in any order. However, the cell with            loops with probability 0.1.
+door A traps the agent. The agent can fail at
+opening the doors with probability 0.1.
+
+Fig. 6. The MDP and PRM for the second case study. The TL-CD that adds causal information
+regarding the sink door A can be found on Figure 2(b). It states that after seeing door A, the agent
+can not later see door B.
+
+
+4.1   Performance Impact of Proposed Modifications
+Our method makes significant structural changes to the underlying PRM in order to
+incorporate temporal-causal information contained in TL-CDs. One of the primary effects
+of these changes is increasing the size of the state space. Despite this increase in size,
+experimental results demonstrate that our algorithm improves convergence properties on
+realistic examples when the provided information is useful (allows for pruning redundant
+paths from the PRM where exploration is not necessary). Strictly speaking, however, we
+only require that the causal diagrams are correct (that they hold for the MDP), not that
+they contain useful information.
+    Being robust to mistakes and imprecisions in user-provided causal information (or
+even malicious inputs) is beneficial. We hypothesize that our algorithm possesses this
+property, in the sense that its performance does not diminish in the presence of useless
+or redundant knowledge. In order to check this, we re-ran our experiments in this
+more difficult setting of perturbed user input. We added useless and redundant causal
+knowledge, by including an additional factor in the causal DFA product. More precisely,
+we called computeProduct an additional time with a redundant causal DFA with no
+rejecting sink states. This factor injects no new useful causal information, but increases
+the state space size 5 times. The results we obtained were fully in line with the ones
+presented in our case studies, i.e. the improved convergence rate enabled by our method
+was retained. In conclusion, our algorithm can handle useless or redundant knowledge,
+and its performance is not diminished by it. We showcase these results in Figure 10.
+    We make two additional observations relating to state space size.
+ 1. PRMs themselves already provide an immense reduction in state space size, because
+    the policy no longer has to consider the whole history. Instead, the PRM state acts
+    as a form of finite memory in the MDP.
+ 2. Our method is based on removing redundant paths from the PRM (those where
+    exploration is not necessary).
+12        J. Corazza et al.
+
+                                  c
+
+
+                       Æ                                  d             G¬(a ∨ b ∨ c)
+                                  d
+
+
+         a                        b
+                                                    (b) TL-CD that holds for the case study of
+(a) 6x6 Gridworld environment where the             four-doors task.
+agent must open door A (a), door B (b), door
+C (c), and door D (d) in any order. However,
+the cell with door D traps the agent. The
+agent may fail to open door B with a proba-
+bility of 0.1, and it will go to door D instead.
+
+                    Fig. 7. The MDP and Causal DFA for the third case study.
+
+
+    We want to further drive home the point that while using PRMs and incorporating
+causal information as we propose does contribute to an increased state space, the resulting
+performance benefits more than outweigh the costs (and, as our additional analysis shows,
+some costs are fully avoided).
+
+
+5     Conclusion and Further Work
+
+The method proposed in this paper addresses the difficult problem of accounting for
+knowledge about temporal causality in the RL environment. We have shown that an
+expressive and concise description of temporal and causal relations in the form of
+a Temporal Logic-based Causal Diagram can be integrated into the reward function
+formalism. Furthermore, we have shown how the added information about temporal
+and causal relations can be leveraged to expedite learning without changing the optimal
+policy.
+    While our method performs well in case studies, we are convinced that this work can
+be continued to integrate knowledge about causality even more tightly into the reward
+function. In particular, look-ahead information contained in state-values of the product
+PRM may be further utilized by methods like reward shaping. We are also interested in
+further exploring the interplay between probabilistic outcomes and causal information.
+
+Acknowledgments. This work was supported in part by the National Science Foundation (NSF)
+under Grants CNS 2304863 and CNS 2339774, and in part by the Office of Naval Research (ONR)
+under Grant N00014-23-1-2505. Additionally, this work has been financially supported by the
+Research Center Trustworthy Data Science and Security 4 , one of the Research Alliance centers
+within the UA Ruhr 5 .
+ 4
+     https://rc-trust.ai
+ 5
+     https://uaruhr.de
+                                                      Temporal Causality and Reinforcement Learning            13
+
+
+                   e1                                                             e2
+                                                                                             k2
+
+
+                               k1
+                                                                a Æ b                    c
+
+
+
+
+               (a) Map of the small office world. Shaded cells are impassable walls.
+
+                        ¬k1 , 0         ¬e1 , 0
+                          1               1
+
+                                k1 , 0
+                          q1              q2                    ⊤
+                   0                                  e1
+               ¬b,                  1                      ,1
+                                                                                             c
+          a∧       1
+                                                  0.9                         b                        k2
+     q0                                  e1 , 0                 q5
+               b,                         0.1          ,1
+                  0                                   2
+                                                  e                                    XXXXk2
+          1                                                 1
+                                k2 , 0
+¬(a ∨ b), 0               q3              q4                                G¬e1                      G¬e2
+    1                               1
+
+                        ¬k2 , 0         ¬e2 , 0                         (c) TL-CD that holds for the case study of
+                                                                        the small office.
+                          1               1
+
+
+(b) The PRM without causal info about the
+small office world.
+
+Fig. 8. The PRM and Causal DFA for the fourth case study, alongside the office map for reference.
+
+
+
+References
+
+ 1. Bareinboim, E., Forney, A., Pearl, J.: Bandits with unobserved confounders: A
+    causal approach. In: Cortes, C., Lawrence, N., Lee, D., Sugiyama, M., Garnett, R.
+    (eds.) Advances in Neural Information Processing Systems. vol. 28. Curran Asso-
+    ciates, Inc. (2015), https://proceedings.neurips.cc/paper/2015/file/
+    795c7a7a5ec6b460ec00c5841019b9e9-Paper.pdf
+ 2. Corazza, J., Aria, H.P., Neider, D., Xu, Z.: Expediting reinforcement learning by incorporating
+    knowledge about temporal causality in the environment. In: Locatello, F., Didelez, V. (eds.)
+    Proceedings of the Third Conference on Causal Learning and Reasoning. Proceedings of
+    Machine Learning Research, vol. 236, pp. 643–664. PMLR (01–03 Apr 2024), https:
+    //proceedings.mlr.press/v236/corazza24a.html
+14                          J. Corazza et al.
+
+
+                                                                        60
+
+                       30
+
+
+
+     Reward per step
+                                                        No causal
+                                                           Causal       40
+                       20
+
+                                                                        20
+                       10
+
+                       0                                                 0
+                              0       2      4      6           8             0             2                  4
+                                            Step            ·10     4                      Step          ·104
+                            (a) Four-doors task results.                     (b) Small office world results.
+
+Fig. 9. Comparison of task results, using the same reward per step metric averaged over 20 runs.
+
+
+ 3. Corazza, J., Gavran, I., Neider, D.: Reinforcement learning with stochastic reward ma-
+    chines. Proceedings of the AAAI Conference on Artificial Intelligence 36(6), 6429–6436
+    (Jun 2022). https://doi.org/10.1609/aaai.v36i6.20594, https://ojs.
+    aaai.org/index.php/AAAI/article/view/20594
+ 4. Forney, A., Pearl, J., Bareinboim, E.: Counterfactual data-fusion for online reinforcement
+    learners. In: Precup, D., Teh, Y.W. (eds.) Proceedings of the 34th International Conference
+    on Machine Learning. Proceedings of Machine Learning Research, vol. 70, pp. 1156–1164.
+    PMLR (06–11 Aug 2017), https://proceedings.mlr.press/v70/forney17a.
+    html
+ 5. den Hengst, F., François-Lavet, V., Hoogendoorn, M., et al.: Planning for potential: ef-
+    ficient safe reinforcement learning. Machine Learning 111, 2255–2274 (2022). https:
+    //doi.org/10.1007/s10994-022-06143-6, https://doi.org/10.1007/
+    s10994-022-06143-6
+ 6. Icarte, R.T., Klassen, T.Q., Valenzano, R.A., McIlraith, S.A.: Reward machines: Exploiting
+    reward function structure in reinforcement learning. CoRR abs/2010.03950 (2020), https:
+    //arxiv.org/abs/2010.03950
+ 7. Lee, S., Bareinboim, E.: Structural causal bandits: Where to intervene? In: Ben-
+    gio, S., Wallach, H., Larochelle, H., Grauman, K., Cesa-Bianchi, N., Garnett, R.
+    (eds.) Advances in Neural Information Processing Systems. vol. 31. Curran Asso-
+    ciates, Inc. (2018), https://proceedings.neurips.cc/paper/2018/file/
+    c0a271bc0ecb776a094786474322cb82-Paper.pdf
+ 8. Li, J., Luo, Y., Zhang, X.: Causal reinforcement learning: An instrumental variable approach.
+    ERN: Computational Techniques (Topic) (2021)
+ 9. Lu, Y., Meisami, A., Tewari, A.: Causal Markov decision processes: Learning good inter-
+    ventions efficiently. CoRR abs/2102.07663 (2021), https://arxiv.org/abs/2102.
+    07663
+10. Mesnard, T., Weber, T., Viola, F., Thakoor, S., Saade, A., Harutyunyan, A., Dabney, W., Steple-
+    ton, T.S., Heess, N., Guez, A., Moulines, E., Hutter, M., Buesing, L., Munos, R.: Counterfac-
+    tual credit assignment in model-free reinforcement learning. In: Meila, M., Zhang, T. (eds.)
+    Proceedings of the 38th International Conference on Machine Learning, ICML 2021, 18-24
+    July 2021, Virtual Event. Proceedings of Machine Learning Research, vol. 139, pp. 7654–7664.
+    PMLR (2021), http://proceedings.mlr.press/v139/mesnard21a.html
+                                                Temporal Causality and Reinforcement Learning   15
+
+                                                No causal
+                                                 Causal
+                                      100
+
+
+
+                    Reward per step   50
+
+
+
+
+                                       0
+                                            0    0.5        1       1.5        2
+                                                            Step             ·104
+
+Fig. 10. The Coffee vs. soda task. “Causal” are the results for our method, but with additional,
+redundant causal knowledge added. The resulting PRM has 5 times more states than the one from
+Figure 5(a), but our method achieves the same performance. Like before, “No causal” refers to
+using QRM with the original PRM (which has neither causal information nor redundancy added).
+
+
+11. Paliwal, Y., Roy, R., Gaglione, J.R., Baharisangari, N., Neider, D., Duan, X., Topcu, U., Xu,
+    Z.: Reinforcement learning with temporal-logic-based causal diagrams. In: Holzinger, A.,
+    Kieseberg, P., Cabitza, F., Campagner, A., Tjoa, A.M., Weippl, E. (eds.) Machine Learning
+    and Knowledge Extraction. pp. 123–140. Springer Nature Switzerland, Cham (2023)
+12. Sipser, M.: Introduction to the Theory of Computation. Course Technology, Boston, MA,
+    third edn. (2013)
+13. Velasquez, A., Beckus, A., Dohmen, T., Trivedi, A., Topper, N., Atia, G.K.: Learning
+    probabilistic reward machines from non-markovian stochastic reward processes. CoRR
+    abs/2107.04633 (2021), https://arxiv.org/abs/2107.04633
+14. Wang, L., Yang, Z., Wang, Z.: Provably efficient causal reinforcement learning with con-
+    founded observational data. In: Ranzato, M., Beygelzimer, A., Dauphin, Y.N., Liang, P.,
+    Vaughan, J.W. (eds.) Advances in Neural Information Processing Systems 34: Annual Confer-
+    ence on Neural Information Processing Systems 2021, NeurIPS 2021, December 6-14, 2021,
+    virtual. pp. 21164–21175 (2021), https://proceedings.neurips.cc/paper/
+    2021/hash/b0b79da57b95837f14be95aaa4d54cf8-Abstract.html
+15. Xu, Z., Gavran, I., Ahmad, Y., Majumdar, R., Neider, D., Topcu, U., Wu, B.: Joint inference
+    of reward machines and policies for reinforcement learning. CoRR abs/1909.05912 (2019),
+    http://arxiv.org/abs/1909.05912
+16. Zhang, J.: Designing optimal dynamic treatment regimes: A causal reinforcement learning
+    approach. In: III, H.D., Singh, A. (eds.) Proceedings of the 37th International Conference on
+    Machine Learning. Proceedings of Machine Learning Research, vol. 119, pp. 11012–11022.
+    PMLR (13–18 Jul 2020), https://proceedings.mlr.press/v119/zhang20a.
+    html
+16       J. Corazza et al.
+
+    Section A contains the algorithm for the computeProduct function used in
+Algorithm 1. Section B contains the proof of Theorem 1. In Section C, the PRM related
+to the four-door task is depicted.
+
+
+A     Computing the PRM and causal DFA product
+
+Algorithm 2 computes the (intermediate) product B1 (B2 ) of a PRM A and causal DFA C.
+This function is called in Line 1 of Algorithm 1 in Section 3. Note that this function does
+not perform value iteration, this is done in Line 2 of Algorithm 1. The set of terminal
+states in the intermediate product B1 is a subset of the set of terminal states in the final
+product B.
+    The transitions dictionary used in Algorithm 2 represents the transition and
+output functions of B1 . It maps triplets ((u, q), ℓ, (u′ , q ′ )) to to pairs (p, r), where
+p = τ B1 ((u, q), ℓ, (u′ , q ′ )), and r = σ B1 ((u, q), ℓ, (u′ , q ′ )).
+
+
+B    Formal Statements and Proofs
+
+Throughout this Section, let M = (S, A, R, p, L, γ) be a labeled MDP, and let A =
+(U, uI , 2AP , Γ, τ, σ, F ) be a PRM that encodes R in M . A state s ∈ S is reachable if
+there exists an attainable trajectory s0 , a0 , s1 , . . . , an−1 , sn in M such that s = si for
+some i = 0, . . . , n.
+
+Lemma 1 (Transformation 1) Let A = (U, uI , 2AP , Γ, τ, σ, F ) be a PRM, C a DFA
+with transition function δ, and A × C their parallel composition with output function
+σ A×C ((u, q), ℓ, (u′ , q ′ )) = σ(u, ℓ, u′ ). Let π ⋆ (s, (u, q)) be an optimal policy in the
+product MDP M × (A × C). Then π(s, u) = π ⋆ (s, (u, F (u))) is an optimal policy in
+the product MDP M × A, where Fs : U → Q is a tiebreaking reachability function that
+maps u to a fixed but arbitrary q such that (s, u, q) is reachable in M × (A × C).
+
+Proof. Since Q-learning with an ϵ-greedy exploration strategy visits every reachable
+state infinitely often in the limit, we can learn a mapping Fs along with the optimal
+policy for M × (A × C), by setting Fs (u) = q once we reach (s, u, q) for the first time,
+and we have not yet observed (s, u, q ′ ) for any q ′ ∈ Q. Then, from the fact that
+
+ 1. Q-learning learns the optimal Q-function in all reachable states, and
+ 2. the optimal Q-function q ⋆ (s, u, q, a) for M × (A × C) is the same as q ⋆ (s, u, a) for
+    M × A once we project out the DFA component q ∈ Q,
+
+     it will follow that we can use Fs to construct the optimal policy in M × A.
+     Let q ⋆ (s, u, a) be the optimal Q-function for M × A, and q ⋆ (s, u, q, a) the opti-
+mal Q-function for M × (A × C). We will proceed by showing that q ⋆ (s, u, q1 , a) =
+q ⋆ (s, u, q2 , a) for all q1 , q2 ∈ Q.
+     Let q̃(s, u, q, a) = q ⋆ (s, u, a). We will show that q̃ is a solution to the state value
+Bellman optimality equation for M × (A × C), given in Equation 3. In the following
+formulas, let ℓ = L(s, a, s′ ).
+                                   Temporal Causality and Reinforcement Learning          17
+
+    Input :PRM A, minimal causal DFA C with rejecting sink states Qr.s.
+1   appears ← A.appears ∪ C.appears ;                 // M.appears is the set of
+     relevant atomic propositions in M.
+ 2 pairToSelfStateMap ← {} ;           // Dictionary mapping pairs of states
+     in A and C to a single state in B′
+ 3 selfToPairStateMap ← {}
+ 4 nonTerminalStates ← ∅ ;            // Contains non-terminal states of the
+     intermediate product PRM.
+ 5 terminalStates ← ∅ ;                    // Contains terminal states of the
+     intermediate product PRM.
+ 6 transitions ← {} ;               // Dictionary representation of τ and σ
+     functions of B′ .
+ 7 stateCounter ← 0
+ 8 for u in A.states do
+  9     for q in C.states do
+10          pairToSelfStateMap[(u, q)] ← stateCounter
+11          selfToPairStateMap[stateCounter] ← (u, q)
+12          if u in A.terminalStates then
+13               terminalStates ← {stateCounter} ∪ terminalStates
+14          end
+15          else
+16               nonTerminalStates ← {stateCounter} ∪ nonTerminalStates
+17          end
+18          stateCounter ← stateCounter + 1
+19      end
+20 end
+21 for u in A.nonTerminalStates do
+22      for q in C.states do
+23          state ← pairToSelfStateMap[(u, q)]
+24          transitions[state] ← {}
+25          for inputSymbol in GENERATE I NPUTS(appears) do
+26               inputSymbolPrm ← A.appears ∩ inputSymbol
+27               inputSymbolDfa ← C.appears ∩ inputSymbol
+28               transitions[state][inputSymbol] ← {}
+29               nextDfaState ← C.transitions[q][inputSymbolDfa]
+30               for nextPrmState in A.transitions[u][inputSymbolPrm] do
+ 31                  nextState ← pairToSelfStateMap[(nextPrmState, nextDfaState)]
+ 32                  probability, reward ←
+                       A.transitions[u][inputSymbolPrm][nextPrmState]
+ 33                  if nextDfaState in Qr.s. then
+ 34                       reward ← m
+ 35                  end
+ 36                  transitions[state][inputSymbol][nextState] ← (probability, reward)
+37               end
+38          end
+39      end
+40 end
+41 return PRM(transitions, appears, terminalStates)
+                       Algorithm 2: computeProduct(A, C)
+18         J. Corazza et al.
+
+
+
+q ⋆ (s, u, q, a) =
+        X                                                                                             
+     =        p(s′ , u′ , q ′ | s, u, q, a) σ A×C ((u, q), ℓ, (u′ , q ′ )) + γ max
+                                                                                ′
+                                                                                   q ⋆ ′
+                                                                                      (s , u′ ′ ′
+                                                                                             , q , a )
+                                                                              a ∈A
+         s′ ∈S
+         u′ ∈U
+         q ′ ∈Q
+         X                                                                              
+     =            p(s′ , u′ | s, u, a) σ A (u, ℓ, u′ ) + γ max
+                                                            ′
+                                                               q ⋆ ′
+                                                                  (s , u′
+                                                                          , δ(q, ℓ), a′
+                                                                                        )
+                                                          a ∈A
+         s′ ∈S
+         u′ ∈U
+                                                                                                     (3)
+     The second equality holds because
+
+ 1. p(s′ , u′ , q ′ | s, u, q, a) = 0 for δ(q, ℓ) ̸= q ′ ,
+ 2. p(s′ , u′ , q ′ | s, u, q, a) = p(s′ , u′ | s, u, a) for δ(q, ℓ) = q ′ , and
+ 3. σ A×C ((u, q), ℓ, (u′ , q ′ )) = σ A (u, ℓ, u′ ).
+
+     by definition of A × C. Equation 3 shows that the Bellman optimality equation for
+q ⋆ (s, u, q, a) reduces to the Bellman optimality equation for q ⋆ (s, u, a). More precisely,
+the parameters for the system of nonlinear equations given in Equation 3 are the same
+as those in the system for q ⋆ (s, u, a), except that each individual equation is repeated
+|Q| times (once for every DFA state). Therefore, we have q̃(s, u, q, a) = q ⋆ (s, u, a) as a
+solution.
+     Now all that is left is the fact that Q-learning in M × (A × C) will converge to the
+optimal Q-function that is independent of the q ∈ Q component, and that Q-learning
+will converge to the same Q-function in M × A. Values in unreachable states will remain
+unaffected by learning updates, and will not affect the return from the optimal policy.
+
+Definition 4 (Unreachable PRM state). Let A = (U, uI , 2AP , Γ, τ, σ, F ) be a PRM. A
+                                                                                   λ
+state u ∈ U is M -unreachable if for every input sequence λ s.t. A −       → u (A transitions
+into u upon reading λ) we have that every trajectory s0 , a0 , s1 , . . . , an−1 , sn such that
+L(s0 , a0 , s1 , . . . , an−1 , sn ) = λ is unattainable in M (has probability 0 according to
+the transition function p of M ).
+
+Lemma 2 (Transformation 2) Let α ∈ R be an arbitrary real. Let A = (U, uI , 2AP , Γ,
+τ, σ, F ) be a PRM, and let V ⊂ U be a set of M -unreachable PRM states of A. Let
+                                                ′
+A′ = A/V → α = (U, uI , 2AP , Γ ∪ {α}, τ, σ A , F ) be a PRM obtained by setting
+the output of every transition into an unreachable state u ∈ V to α. In other words,
+   ′
+σ A (u, u′ ) = α for all u ∈ U and u ∈ V . Let π ⋆ (s, u) be an optimal policy in the
+product MDP M × A′ . Then π ⋆ (s, u) is also an optimal policy in the product MDP
+M × A.
+
+Proof. MDPs M ×A and M ×A′ share the same state space S×U , probabilistic transition
+function p, and initial state distribution. They may differ only in their (Markovian) reward
+function, specifically, on transitions into unreachable states (s, u) ∈ S × U for all s ∈ S
+and u ∈ V ⊂ U . By definition 4, trajectories that induce a PRM transition into an
+M -unreachable state in A are unattainable.
+                                         Temporal Causality and Reinforcement Learning                      19
+
+    This proof proceeds similarly to proof of Lemma 1, except it is even easier because
+we can work with a system of linear (not optimality) equations. The statement of the
+lemma concerning optimality will follow from the general reduction, i.e. the lemma
+holds for an arbitrary policy π not just the optimal one. In Equation 4 we set out the
+system of Bellman equations in M × A′ , and show that it reduces to the one for M × A.
+
+      ′
+qπM ×A (s, u, a) =
+                                                                                                            !
+                                          A′                                             ′
+              X                                             X
+                         ′       ′                  ′                     ′
+          =           p(s , u | s, u, a) σ (u, ℓ, u ) + γ           π(a       | s )qπM ×A (s′ , u′ , a′ )
+                                                                                  ′
+
+              s′ ∈S                                         a′ ∈A
+               ′
+              u ∈U
+                                                                                                              !
+                X                                              X                             ′
+                             ′       ′                  ′                     ′
+          =                                    A
+                         p(s , u | s, u, a) σ (u, ℓ, u ) + γ           π(a        | s )qπM ×A (s′ , u′ , a′ )
+                                                                                      ′
+
+                s′ ∈S                                          a′ ∈A
+              u′ ∈U \V
+                                                                                                          !
+                                          A′                                             ′
+              X                                             X
+                         ′   ′                     ′                    ′
+          +           p(s , u | s, u, a) σ (u, ℓ, u ) + γ           π(a       | s )qπM ×A (s′ , u′ , a′ )
+                                                                                  ′
+
+              s′ ∈S                                         a′ ∈A
+               ′
+              u ∈V
+                                                                                         (4)
+    If u is an M -reachable state, the second sum vanishes because pM ×A (s′ , u′ |
+s, u, a) = pM (s′ , | s, a) · τ A (u, L(s, a, s′ ), u′ ) = 0 for u′ ∈ V (otherwise, u′ would
+be M -reachable if u was M reachable). Therefore, solutions in rows corresponding to
+M -reachable states are independent of rows corresponding to M -unreachable states,
+and the equations are the same as in the system for q M ×A , where the second sum also
+vanishes. Therefore, as Q-learning explores all reachable states infinitely often, and the
+reachable states in both product MDPs are the same and share the same Q-function,
+Q-learning will find the same optimal policy in both MDPs. The values of Q-functions
+corresponding to unreachable states are of no consequence.
+
+    Definition 5 captures the structure of the set of M -unreachable states in a PRM A
+induced by rejecting sinks states of a causal DFA. This property of a set of unreachable
+states V models the deterministic transition function of a causal DFA.
+
+Definition 5 (Dependent Set of Unreachable PRM States). Let A = (U, uI , 2AP , Γ, τ,
+σ, F ) be a PRM, and V a subset of M -unreachable states in A. We say that V is
+a dependent set of M -unreachable states in A if it is a set of M -unreachable states
+and the following property holds for all labels ℓ ∈ 2AP and states u ∈ U A : (∃u′ ∈
+V ) τ A (u, ℓ, u′ ) > 0 =⇒ (∀u′′ ̸∈ V ) τ A (u, ℓ, u′′ ) = 0.
+
+    Intuitively, a set of M -unreachable states V is dependent if it is not possible to
+transition into both V and U \ V from any u ∈ U .
+
+Lemma 3 (Transformation 3) Let A = (U, uI , 2AP , Γ, τ, σ, F ) be a PRM, V a depen-
+dent set of M -unreachable states in A, and m = −1 − maxr∈Γ A |r| − maxu∈U A v ⋆ (u).
+Let B1 = A/V → m be a PRM that mirrors the output of A, (except on transitions
+into unreachable states in V where the output is m), and B2 = (−A)/V → m a
+20       J. Corazza et al.
+
+PRM that negates the output of A (except on transitions into unreachable states in V
+where the output is m). Let u0 ∈ U be a state in A such that vB⋆ 1 (u) = vB⋆ 2 (u) = 0.
+Let B = (U, uI , 2AP , Γ, τ, σ, F ∪ {u0 }) be a PRM obtained by adding u0 to the set of
+terminal states in A. Let π ⋆ (s, u) be an optimal policy in the product MDP M × B. Then
+π ⋆ (s, u) is also an optimal policy in the product MDP M × A.
+
+Proof. Let π be a policy in M × B. We will show that vπM ×A = vπM ×B , i.e. that an
+arbitrary policy π has the same value in M × A. From there, it follows that if π is optimal
+in M × B, then it is optimal in M × A.
+    To make analysis easier, we will model terminal states as absorbing states (sinks
+with output 0). For easier notation, s̃ will refer to states in S M , and s = (s̃, u) will refer
+to states in S M ×A .
+    We will first show vπM ×A (s0 ) = vπM ×B (s0 ) for every state s0 = (s̃, u0 ). We have
+ M ×B 0
+vπ     (s ) = 0 because s0 is an absorbing state in M × B. We must show that
+ M ×A 0
+vπ     (s ) = 0. Intuitively, this is the case because in M × A, the expected return
+when starting in s0 = (s̃, u0 ) and following an arbitrary policy π is bounded with 0 from
+above and below. It is enough to show that vπM ×B1 (s0 ) = 0, because by the proof of
+Lemma 2 we have vπM ×A (s0 ) = vπM ×B1 (s0 ). We will show this via Equation 5.
+
+                         0 = −vB⋆ 2 (u0 ) ≤ vπM ×B1 (s0 ) ≤ vB⋆ 1 (u0 ) = 0                         (5)
+    Equalities in Equation 5 hold by assumption. The second inequality holds trivially.
+The first inequality holds because the “pessimistic” machine B2 realizes the minimal
+value of every state (negated to obtain the discounted return in terms of B1 ). More
+precisely, for a given state s = (s̃, u) we have
+                            X
+           vB⋆ 2 (u) = max      τ B2 (u, ℓ, u′ )(σ B2 (u, ℓ, u′ ) + γvB⋆ 2 (u′ ))
+                         ℓ∈2AP
+                                 u′ ∈U
+                     = (⋆)
+                                          X
+                     =       max               τ B2 (u, ℓ, u′ )(σ B2 (u, ℓ, u′ ) + γvB⋆ 2 (u′ ))
+                             ℓ∈2AP        ′                                                         (6)
+                         τ (u,ℓ,u )=0 u ∈U
+                                ′
+
+                            ∀u′ ∈V
+                                          X
+                     =       max               τ B1 (u, ℓ, u′ )(−σ B1 (u, ℓ, u′ ) + γvB⋆ 2 (u′ ))
+                             ℓ∈2AP        ′
+                         τ (u,ℓ,u )=0 u ∈U
+                                ′
+
+                            ∀u′ ∈V
+
+     and similarly
+                                  X
+            vB⋆ 1 (u) = max               τ B1 (u, ℓ, u′ )(σ B1 (u, ℓ, u′ ) + γvB⋆ 2 (u′ ))
+                          ℓ∈2AP
+                                  u′ ∈U
+                                                                                                    (7)
+                                          X
+                     =        max               τ B1 (u, ℓ, u′ )(σ B1 (u, ℓ, u′ ) + γvB⋆ 1 (u′ ))
+                              ℓ∈2AP      ′
+                          τ (u,ℓ,u′ )=0 u ∈U
+                                ′
+                             ∀u ∈V
+.
+    (⋆): By assumption, when τ B2 (u, ℓ, u′ ) > 0 for any u′ ∈ V then τ B2 (u, ℓ, u′′ ) = 0
+for all u′′ ̸∈ V . Intuitively, if reading input ℓ from state u induces a transition to
+                                     Temporal Causality and Reinforcement Learning           21
+
+u′ ∈ V with positive probability in B2 , since the transitions of the causal DFA are not
+probabilistic, every other state u′′ such that τ B2 (u, ℓ, u′′ ) > 0 must also transition into
+the same rejecting sink state in the causal DFA. In that case, σ B2 (u, ℓ, u′ ) = m for all u′ ,
+which is lower than any possible immediate reward and resulting state value. Therefore,
+the maximum is not attained for the input ℓ. Similar reasoning is applied in Equation 7.
+    Equation 6 and Equation 7 show that −vB⋆ 2 bounds the value of any policy in M × B1
+from below, that is −vB⋆ 2 (u) ≤ vπM ×B1 (s). The argument is that vB⋆ 2 is a solution to the
+Bellman optimality equation in B1 with negated rewards. In particular, Equation 6 and
+Equation 7 show that one can disregard transitions into unreachable states in V when
+computing state values. In that case, −vB⋆ 2 is the pessimal state value in B1 . Intuitively,
+one attains a discounted return of −vB⋆ 2 (u) when starting in u and minimizing the
+expected discounted sum of rewards along transitions in B1 , while ignoring transitions
+into V .
+    We proceed to show vπM ×A (s) = vπM ×B (s) in all components (not just for s = s0 ).
+    When we fix an arbitrary policy π, we obtain the immediate reward vector RA;π          s
+   B;π                                         A;π     B;π
+(Rs ) and probabilistic transition matrix Ps,s    ′ (Ps,s′ ) for M × A (M × B).
+
+    The state value Bellman equation for π in M × A can then be expressed in matrix
+form as in Equation 8 (and similarly for M × B).
+
+                                  vπA = RA;π + γP A;π vπA                                   (8)
+    We proceed to show that vπB also solves Equation 8, that is that Equation 9 holds.
+
+                                  vπB = RA;π + γP A;π vπB                                   (9)
+                                                                                 0          0
+    We already know that the Equation 9 holds in rows corresponding to s ∈ {(s̃, u ) :
+s̃ ∈ S M }, as we have shown vπA (s0 ) = vπB (s0 ) = 0. For s ∈ S \ {(s̃, u0 ) : s̃ ∈ S M },
+we have RA;πs   = RB;π
+                    s   (B does not change the immediate reward on transitions from
+      0                            A;π       B;π
+s ̸= s ). However, we also have Ps,:    = Ps,:    (M × B transitions in the same way as
+                   0
+M × A from s ̸= s ).
+
+    Now we can prove Theorem 1.
+
+Proof. Algorithm 1 starts with a PRM A and applies a series transformations in order to
+obtain a new PRM B. Then, it runs QRM for (M, B) instead of (M, A). Lemmas 1, 2,
+and 3 show that the optimal policy either remains the same when the transformations are
+applied (Transformation 2, 3), or that the optimal policy for the initial PRM can be easily
+recovered from the transformed PRM (Transformation 1). Line 1 applies Transformation
+1 and 2. Lines 2-6 apply Transformation 3. Finally, convergence to optimal policy of
+Algorithm 1 then follows from the convergence to optimal policy of QRM.
+
+
+C    Four Doors Case Study
+
+Figure 11 depicts the PRM for the 4-door task. As can be seen, increasing the number of
+doors leads to an exponential increase in the number of states.
+              22         J. Corazza et al.
+
+
+
+
+                                                                                               ¬(c ∨ d), 0
+                                                                                                   1
+                                                                    ), 0
+                                                              (c ∨ d
+                                                      b∧¬                                                                 c¬d, 0
+                                                                     1                                  q5
+                                                                     d, 0                                                      1
+                    ¬(b ∨ c ∨ d), 0
+                          1     q1                                            1                                                    d,
+                                                                                                                                     0
+                                                                                                                              1
+                                                                    c∧                                  q7
+                                            ,0                                    ¬d                                                                       q11
+                                         c)                                         ,0                           b¬                                                      ¬d, 0
+                                                                                                                          c,
+                              0        b∨                                     1                                              0                                           1
+                            d),                                                                                      1
+                                   ((       1                                                  ¬(b ∨ c), 0
+                         c∨       a¬             ¬(a ∨ b ∨ d), 0                                                          d, 0
+   ,0                                                                                              1             b¬
+ ∨ d)
+                                                       1                                                                     1            q12             1      d, 0
+                    ¬(b       1                                                                                      c,
+        0.9             ∨                                             a¬((b ∨ d), 0                     q6                0
+a¬(c                a∧                                 q3
+                                                                                                                1
+                                                                                                                                 0
+                                                                                        1                                      d,        ¬c, 0
+                                                                                                                     d,                              c,
+                                                                                                                          0         1                    0
+                                                                                               ¬(b ∨ d), 0                                1      1
+                           d, 0                                                                      1           1
+                         c¬                                                        d,        b¬
+                             1                   ¬(a ∨ b ∨ c), 0                        0       d,                                                                        true
+                                                       1         1                                 0                                             b, 0
+               q0                                                                            1                                            q13                    q15
+                                  d, 0                                                                             0
+                                                                                                              a¬b,                                   1
+                                   1                                               c, 0                                   ¬(
+                                                       q4                                               q10      1
+                                                                                     1                                        a∨         ¬b, 0
+  ¬(a ∨ b ∨ c ∨ d), 0
+                                                                                                                                 d)
+                                                                                   b¬                                                                                             0
+            1                                                                                                                      ,0     1                              a¬d,
+                                                                                                                  q8     1
+                                   b∧                                                 c,
+                                        ¬(                                               0     ¬(a ∨ b), 0                                                                  1
+                                                                                   1
+                                          d)                                                       1
+
+
+                                                               a¬(c ∨ d), 0
+                                       c∨                                                                                                                a, 0
+                                         1                                                                                                                      1
+                                                 ,0                                                                           b,                                        a¬
+                                                        0.1                                                                      0                                         c,
+                                                                                                    0                     1                                             1     0
+                                                                                               d,
+                                                                                             c¬
+                                                                                                    1
+                                                                                                                  q9
+                                                                                             d, 0                                     c, 0
+                                                                                               1
+                                                       q2                                                     ¬(a ∨ c), 0 1                       q14
+                                                                                                                  1
+
+                                                 ¬(a ∨ c ∨ d), 0                                                                                 ¬a, 0
+                                                       1                                                                                          1
+
+
+
+
+                                  Fig. 11. The PRM without causal info about the four-door task
+

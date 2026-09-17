@@ -1,0 +1,34 @@
+[
+  {
+    "trace_hash": true,
+    "checkpoints": true,
+    "first90": true,
+    "auc": true,
+    "merge_precision": true,
+    "arm": "history"
+  },
+  {
+    "trace_hash": true,
+    "checkpoints": true,
+    "first90": true,
+    "auc": true,
+    "merge_precision": true,
+    "arm": "history+shape"
+  },
+  {
+    "trace_hash": true,
+    "checkpoints": true,
+    "first90": true,
+    "auc": true,
+    "merge_precision": true,
+    "arm": "history+shape_oracle"
+  },
+  {
+    "trace_hash": true,
+    "checkpoints": true,
+    "first90": true,
+    "auc": true,
+    "merge_precision": true,
+    "arm": "merged+scarcest"
+  }
+]

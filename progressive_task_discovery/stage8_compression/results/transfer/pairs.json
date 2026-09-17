@@ -1,0 +1,267 @@
+[
+  {
+    "pair_id": "pair00",
+    "n": 3,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "mapA": {
+      "seed": 78001,
+      "tag": "pair00A",
+      "orders": 4,
+      "cells": 28,
+      "horizon": 44,
+      "lengths": [
+        22,
+        15,
+        21,
+        16
+      ],
+      "history_states": 31,
+      "minimal_states": 19
+    },
+    "mapB": {
+      "seed": 78003,
+      "tag": "pair00B",
+      "orders": 5,
+      "cells": 28,
+      "horizon": 44,
+      "lengths": [
+        17,
+        18,
+        21,
+        22,
+        22
+      ],
+      "history_states": 40,
+      "minimal_states": 20
+    }
+  },
+  {
+    "pair_id": "pair01",
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "m2": 3,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 7,
+    "mapA": {
+      "seed": 78978,
+      "tag": "pair01A",
+      "orders": 5,
+      "cells": 28,
+      "horizon": 52,
+      "lengths": [
+        21,
+        22,
+        23,
+        26,
+        21
+      ],
+      "history_states": 33,
+      "minimal_states": 17
+    },
+    "mapB": {
+      "seed": 78979,
+      "tag": "pair01B",
+      "orders": 4,
+      "cells": 28,
+      "horizon": 56,
+      "lengths": [
+        24,
+        26,
+        28,
+        28
+      ],
+      "history_states": 28,
+      "minimal_states": 15
+    }
+  },
+  {
+    "pair_id": "pair02",
+    "n": 4,
+    "d": 3,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "mapA": {
+      "seed": 79954,
+      "tag": "pair02A",
+      "orders": 4,
+      "cells": 31,
+      "horizon": 54,
+      "lengths": [
+        26,
+        26,
+        27,
+        23
+      ],
+      "history_states": 40,
+      "minimal_states": 22
+    },
+    "mapB": {
+      "seed": 79955,
+      "tag": "pair02B",
+      "orders": 6,
+      "cells": 31,
+      "horizon": 62,
+      "lengths": [
+        27,
+        17,
+        25,
+        18,
+        31,
+        20
+      ],
+      "history_states": 53,
+      "minimal_states": 25
+    }
+  },
+  {
+    "pair_id": "pair03",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      1
+    ],
+    "L": 2,
+    "arm": 8,
+    "mapA": {
+      "seed": 80932,
+      "tag": "pair03A",
+      "orders": 5,
+      "cells": 31,
+      "horizon": 44,
+      "lengths": [
+        20,
+        17,
+        22,
+        21,
+        20
+      ],
+      "history_states": 37,
+      "minimal_states": 22
+    },
+    "mapB": {
+      "seed": 80934,
+      "tag": "pair03B",
+      "orders": 5,
+      "cells": 31,
+      "horizon": 62,
+      "lengths": [
+        24,
+        29,
+        31,
+        31,
+        27
+      ],
+      "history_states": 43,
+      "minimal_states": 22
+    }
+  },
+  {
+    "pair_id": "pair04",
+    "n": 3,
+    "d": 4,
+    "m": 1,
+    "m2": 4,
+    "pair": [
+      0,
+      2
+    ],
+    "L": 2,
+    "arm": 8,
+    "mapA": {
+      "seed": 81910,
+      "tag": "pair04A",
+      "orders": 4,
+      "cells": 31,
+      "horizon": 54,
+      "lengths": [
+        19,
+        21,
+        21,
+        27
+      ],
+      "history_states": 38,
+      "minimal_states": 22
+    },
+    "mapB": {
+      "seed": 81911,
+      "tag": "pair04B",
+      "orders": 4,
+      "cells": 31,
+      "horizon": 62,
+      "lengths": [
+        19,
+        23,
+        31,
+        22
+      ],
+      "history_states": 38,
+      "minimal_states": 22
+    }
+  },
+  {
+    "pair_id": "pair05",
+    "n": 4,
+    "d": 2,
+    "m": 1,
+    "m2": 5,
+    "pair": [
+      0,
+      2
+    ],
+    "L": 3,
+    "arm": 8,
+    "mapA": {
+      "seed": 82887,
+      "tag": "pair05A",
+      "orders": 4,
+      "cells": 31,
+      "horizon": 48,
+      "lengths": [
+        18,
+        12,
+        14,
+        24
+      ],
+      "history_states": 32,
+      "minimal_states": 22
+    },
+    "mapB": {
+      "seed": 82888,
+      "tag": "pair05B",
+      "orders": 5,
+      "cells": 31,
+      "horizon": 38,
+      "lengths": [
+        18,
+        12,
+        19,
+        19,
+        18
+      ],
+      "history_states": 39,
+      "minimal_states": 22
+    }
+  }
+]

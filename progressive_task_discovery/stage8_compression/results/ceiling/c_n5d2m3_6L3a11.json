@@ -1,0 +1,165 @@
+{
+  "n": 5,
+  "d": 2,
+  "m": 3,
+  "m2": 6,
+  "pair": [
+    0,
+    1
+  ],
+  "L": 3,
+  "arm": 11,
+  "seed": 90000,
+  "tag": "c_n5d2m3_6L3a11",
+  "target": "c_n5d2m3_6L3a11",
+  "horizon": 70,
+  "lengths": [
+    29,
+    19,
+    27,
+    28,
+    35
+  ],
+  "starts": [
+    7,
+    0,
+    5,
+    9,
+    36
+  ],
+  "tail_lengths": [
+    3,
+    6
+  ],
+  "fatal": false,
+  "failing_states": 0,
+  "history_states": 59,
+  "minimal_states": 31,
+  "denominator": "window4",
+  "denominator_states": 44,
+  "min_sufficient_window": 4,
+  "honest_ratio": 1.4193548387096775,
+  "orders": 5,
+  "feature_sizes": {
+    "count": 14,
+    "bag": 27,
+    "window1": 29,
+    "window2": 36,
+    "window3": 40,
+    "window4": 44,
+    "window5": 47,
+    "window6": 50,
+    "window7": 52,
+    "window8": 54,
+    "window9": 56,
+    "window10": 57,
+    "history": 59
+  },
+  "feature_sufficient": {
+    "count": false,
+    "bag": false,
+    "window1": false,
+    "window2": false,
+    "window3": false,
+    "window4": true,
+    "window5": true,
+    "window6": true,
+    "window7": true,
+    "window8": true,
+    "window9": true,
+    "window10": true,
+    "history": true
+  },
+  "optimal_histories": [
+    [
+      1,
+      3,
+      0,
+      2,
+      4,
+      5,
+      6,
+      7,
+      5,
+      6,
+      7,
+      5,
+      6
+    ],
+    [
+      2,
+      0,
+      1,
+      3,
+      4,
+      5,
+      6,
+      5,
+      6,
+      7
+    ],
+    [
+      3,
+      1,
+      0,
+      2,
+      4,
+      5,
+      6,
+      7,
+      5,
+      6,
+      7,
+      5,
+      6
+    ],
+    [
+      4,
+      0,
+      3,
+      1,
+      2,
+      5,
+      6,
+      5,
+      6,
+      7
+    ],
+    [
+      4,
+      3,
+      2,
+      1,
+      0,
+      5,
+      6,
+      7,
+      5,
+      6,
+      7,
+      5,
+      6
+    ]
+  ],
+  "task_states": 53,
+  "minimal_total": 52,
+  "bridge": [
+    5,
+    6
+  ],
+  "tails": [
+    [
+      5,
+      6,
+      7
+    ],
+    [
+      7,
+      5,
+      6,
+      7,
+      5,
+      6
+    ]
+  ]
+}

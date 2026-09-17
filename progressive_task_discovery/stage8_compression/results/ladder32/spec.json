@@ -1,0 +1,8 @@
+{
+  "name": "ladder32",
+  "budget": 200000,
+  "seeds": 32,
+  "jobs": 1152,
+  "source_sha256": "8dec43b6da72599f4244e10a708a23bce4185fe6d1c87eac004274a3e5308142",
+  "binary_sha256": "1f9515a2cd67b749fad2a9742518cbe75f186e7b10f88a444889749c2fc1f6d1"
+}

@@ -1,0 +1,268 @@
+{
+  "gate1": [
+    {
+      "tag": "rung_1.3",
+      "full": {
+        "\u672c\u9879\u76ee \u5bbd\u677e": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 29,
+          "true_classes": 29
+        },
+        "\u672c\u9879\u76ee \u4e25\u683c": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 29,
+          "true_classes": 29
+        },
+        "RPNI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 29,
+          "true_classes": 29
+        },
+        "EDSM": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 29,
+          "true_classes": 29
+        }
+      }
+    },
+    {
+      "tag": "rung_1.6",
+      "full": {
+        "\u672c\u9879\u76ee \u5bbd\u677e": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 15,
+          "true_classes": 15
+        },
+        "\u672c\u9879\u76ee \u4e25\u683c": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 15,
+          "true_classes": 15
+        },
+        "RPNI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 15,
+          "true_classes": 15
+        },
+        "EDSM": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 15,
+          "true_classes": 15
+        }
+      }
+    },
+    {
+      "tag": "rung_1.8",
+      "full": {
+        "\u672c\u9879\u76ee \u5bbd\u677e": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 27,
+          "true_classes": 27
+        },
+        "\u672c\u9879\u76ee \u4e25\u683c": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 27,
+          "true_classes": 27
+        },
+        "RPNI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 27,
+          "true_classes": 27
+        },
+        "EDSM": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 27,
+          "true_classes": 27
+        }
+      }
+    },
+    {
+      "tag": "rung_2",
+      "full": {
+        "\u672c\u9879\u76ee \u5bbd\u677e": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 19,
+          "true_classes": 19
+        },
+        "\u672c\u9879\u76ee \u4e25\u683c": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 19,
+          "true_classes": 19
+        },
+        "RPNI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 19,
+          "true_classes": 19
+        },
+        "EDSM": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 19,
+          "true_classes": 19
+        }
+      }
+    },
+    {
+      "tag": "rung_2.2",
+      "full": {
+        "\u672c\u9879\u76ee \u5bbd\u677e": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 33,
+          "true_classes": 33
+        },
+        "\u672c\u9879\u76ee \u4e25\u683c": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 33,
+          "true_classes": 33
+        },
+        "RPNI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 33,
+          "true_classes": 33
+        },
+        "EDSM": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 33,
+          "true_classes": 33
+        }
+      }
+    },
+    {
+      "tag": "rung_2.6",
+      "full": {
+        "\u672c\u9879\u76ee \u5bbd\u677e": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 31,
+          "true_classes": 31
+        },
+        "\u672c\u9879\u76ee \u4e25\u683c": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 31,
+          "true_classes": 31
+        },
+        "RPNI": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 31,
+          "true_classes": 31
+        },
+        "EDSM": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "classes": 31,
+          "true_classes": 31
+        }
+      }
+    }
+  ],
+  "gate2": {
+    "\u672c\u9879\u76ee \u5bbd\u677e": {
+      "1.0": {
+        "recall": 1.0,
+        "precision": 1.0
+      },
+      "0.9": {
+        "recall": 0.44584192174077114,
+        "precision": 0.6909525881607701
+      },
+      "0.8": {
+        "recall": 0.1565258984998761,
+        "precision": 0.3152638096612602
+      },
+      "0.65": {
+        "recall": 0.1342753803813473,
+        "precision": 0.1338280335836385
+      },
+      "0.5": {
+        "recall": 0.13545329815377008,
+        "precision": 0.08562828166608018
+      }
+    },
+    "\u672c\u9879\u76ee \u4e25\u683c": {
+      "1.0": {
+        "recall": 1.0,
+        "precision": 1.0
+      },
+      "0.9": {
+        "recall": 0.06904395769607138,
+        "precision": 1.0
+      },
+      "0.8": {
+        "recall": 0.02014449899273091,
+        "precision": 1.0
+      },
+      "0.65": {
+        "recall": 0.0013949954293584232,
+        "precision": 1.0
+      },
+      "0.5": {
+        "recall": 1.868460388639761e-05,
+        "precision": 1.0
+      }
+    },
+    "RPNI": {
+      "1.0": {
+        "recall": 1.0,
+        "precision": 1.0
+      },
+      "0.9": {
+        "recall": 0.28744085664826924,
+        "precision": 0.7719683580884067
+      },
+      "0.8": {
+        "recall": 0.07049314738906,
+        "precision": 0.47992957705180506
+      },
+      "0.65": {
+        "recall": 0.008081394257841394,
+        "precision": 0.15517892725795354
+      },
+      "0.5": {
+        "recall": 0.0006571217534919386,
+        "precision": 0.13295268805829508
+      }
+    },
+    "EDSM": {
+      "1.0": {
+        "recall": 1.0,
+        "precision": 1.0
+      },
+      "0.9": {
+        "recall": 0.2874969104599284,
+        "precision": 0.7712575302407886
+      },
+      "0.8": {
+        "recall": 0.073139672789261,
+        "precision": 0.4857639610354729
+      },
+      "0.65": {
+        "recall": 0.010530963118508903,
+        "precision": 0.17305295065086324
+      },
+      "0.5": {
+        "recall": 0.00067884655853199,
+        "precision": 0.1350764944707776
+      }
+    }
+  }
+}

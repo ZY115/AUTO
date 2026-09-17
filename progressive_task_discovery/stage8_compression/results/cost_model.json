@@ -1,0 +1,29 @@
+[
+  {
+    "name": "step 3 ladder",
+    "points": 18,
+    "affine_intercept": 3127.9938365818575,
+    "affine_slope": 413.18424837451596,
+    "power_exponent": 0.9100372929160213,
+    "joint_length": 1.8621703435302486,
+    "joint_states": 0.791955097820479
+  },
+  {
+    "name": "depth-versus-graph tasks",
+    "points": 24,
+    "affine_intercept": 1131.4584197406716,
+    "affine_slope": 396.55732342683166,
+    "power_exponent": 0.876261474346171,
+    "joint_length": 1.1274444407628519,
+    "joint_states": 0.7807917803614226
+  },
+  {
+    "name": "both pooled",
+    "points": 36,
+    "affine_intercept": 1964.9411491055855,
+    "affine_slope": 398.150281650426,
+    "power_exponent": 0.8752507706784926,
+    "joint_length": 1.1960366901522146,
+    "joint_states": 0.7904756647622484
+  }
+]

@@ -1,0 +1,191 @@
+{
+  "name": "stage3_skill_reuse",
+  "defaults": {
+    "budget": 60000,
+    "every": 1000
+  },
+  "conditions": [
+    {
+      "name": "benign",
+      "args": {
+        "slip": 0,
+        "hfactor": 24
+      }
+    },
+    {
+      "name": "tight",
+      "args": {
+        "slip": 0,
+        "hfactor": 12
+      }
+    },
+    {
+      "name": "noisy_tight",
+      "args": {
+        "slip": 0.15,
+        "hfactor": 12
+      }
+    }
+  ],
+  "lengths": [
+    4,
+    8
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "variants": [
+    {
+      "name": "count",
+      "args": {
+        "method": "count",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "progressive",
+      "args": {
+        "method": "progressive",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "learned_qrm",
+      "args": {
+        "method": "learned_qrm",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "option_count",
+      "args": {
+        "method": "option_count",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "option_progressive",
+      "args": {
+        "method": "option_progressive",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "option_qrm",
+      "args": {
+        "method": "option_qrm",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "option_progressive_qrm",
+      "args": {
+        "method": "option_progressive_qrm",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "goal_reuse",
+      "args": {
+        "method": "goal_reuse",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "progressive_goal",
+      "args": {
+        "method": "progressive_goal",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "oracle_goal",
+      "args": {
+        "method": "oracle_goal",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "count_replay",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "option_replay",
+      "args": {
+        "method": "option_replay",
+        "epsilon": 0.05,
+        "high": 0.2
+      }
+    },
+    {
+      "name": "count_a0.1",
+      "args": {
+        "method": "count",
+        "epsilon": 0.05,
+        "high": 0.2,
+        "alpha": 0.1
+      }
+    },
+    {
+      "name": "learned_qrm_a0.1",
+      "args": {
+        "method": "learned_qrm",
+        "epsilon": 0.05,
+        "high": 0.2,
+        "alpha": 0.1
+      }
+    },
+    {
+      "name": "goal_reuse_a0.1",
+      "args": {
+        "method": "goal_reuse",
+        "epsilon": 0.05,
+        "high": 0.2,
+        "alpha": 0.1
+      }
+    },
+    {
+      "name": "count_replay_a0.1",
+      "args": {
+        "method": "count_replay",
+        "epsilon": 0.05,
+        "high": 0.2,
+        "alpha": 0.1
+      }
+    },
+    {
+      "name": "option_replay_a0.1",
+      "args": {
+        "method": "option_replay",
+        "epsilon": 0.05,
+        "high": 0.2,
+        "alpha": 0.1
+      }
+    }
+  ]
+}

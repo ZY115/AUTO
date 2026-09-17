@@ -1,0 +1,17 @@
+{
+  "name": "explore",
+  "budget": 200000,
+  "seeds": 32,
+  "seed0": 300,
+  "arms": [
+    "history",
+    "history+random",
+    "history+scarcest",
+    "automaton",
+    "automaton+random",
+    "automaton+scarcest",
+    "merged+scarcest"
+  ],
+  "jobs": 1344,
+  "source_sha256": "0613f497e3cdee4c0d063a9c8fbdf762e9ac5d1f7bcbdc690495692f85349641"
+}

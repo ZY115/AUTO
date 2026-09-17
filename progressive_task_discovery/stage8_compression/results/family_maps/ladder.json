@@ -1,0 +1,140 @@
+[
+  {
+    "ratio": 1.3,
+    "orders": 3,
+    "max_length": 25,
+    "n": 4,
+    "d": 4,
+    "m": 1,
+    "L": 2,
+    "arm": 7,
+    "seed": 73464,
+    "pair": [
+      1,
+      3
+    ],
+    "H": 28,
+    "Q": 20,
+    "denom": "window5",
+    "D": 26,
+    "minw": 5,
+    "cells": 28,
+    "target": 1.3,
+    "tag": "rung_1.3"
+  },
+  {
+    "ratio": 1.6,
+    "orders": 4,
+    "max_length": 25,
+    "n": 3,
+    "d": 2,
+    "m": 1,
+    "L": 2,
+    "arm": 7,
+    "seed": 73086,
+    "pair": [
+      0,
+      2
+    ],
+    "H": 24,
+    "Q": 15,
+    "denom": "window4",
+    "D": 24,
+    "minw": 4,
+    "cells": 28,
+    "target": 1.6,
+    "tag": "rung_1.6"
+  },
+  {
+    "ratio": 1.8,
+    "orders": 5,
+    "max_length": 26,
+    "n": 4,
+    "d": 3,
+    "m": 1,
+    "L": 2,
+    "arm": 8,
+    "seed": 73435,
+    "pair": [
+      0,
+      2
+    ],
+    "H": 40,
+    "Q": 20,
+    "denom": "window5",
+    "D": 36,
+    "minw": 5,
+    "cells": 31,
+    "target": 1.8,
+    "tag": "rung_1.8"
+  },
+  {
+    "ratio": 2.0,
+    "orders": 5,
+    "max_length": 25,
+    "n": 3,
+    "d": 4,
+    "m": 1,
+    "L": 2,
+    "arm": 8,
+    "seed": 73132,
+    "pair": [
+      1,
+      2
+    ],
+    "H": 39,
+    "Q": 19,
+    "denom": "window6",
+    "D": 38,
+    "minw": 6,
+    "cells": 31,
+    "target": 2.0,
+    "tag": "rung_2"
+  },
+  {
+    "ratio": 2.206896551724138,
+    "orders": 6,
+    "max_length": 25,
+    "n": 4,
+    "d": 6,
+    "m": 1,
+    "L": 2,
+    "arm": 7,
+    "seed": 73527,
+    "pair": [
+      0,
+      2
+    ],
+    "H": 64,
+    "Q": 29,
+    "denom": "window9",
+    "D": 64,
+    "minw": 9,
+    "cells": 28,
+    "target": 2.2,
+    "tag": "rung_2.2"
+  },
+  {
+    "ratio": 2.5925925925925926,
+    "orders": 8,
+    "max_length": 27,
+    "n": 4,
+    "d": 5,
+    "m": 1,
+    "L": 3,
+    "arm": 8,
+    "seed": 73499,
+    "pair": [
+      0,
+      1
+    ],
+    "H": 76,
+    "Q": 27,
+    "denom": "window7",
+    "D": 70,
+    "minw": 7,
+    "cells": 31,
+    "target": 2.6,
+    "tag": "rung_2.6"
+  }
+]

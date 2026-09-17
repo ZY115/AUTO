@@ -1,0 +1,724 @@
+                                                                               SoftwareX 35 (2026) 102889
+
+
+                                                                         Contents lists available at ScienceDirect
+
+
+                                                                                     SoftwareX
+                                                            journal homepage: www.elsevier.com/locate/softx
+
+
+
+
+PyCRM: A Python library for reward machine-based reinforcement learning
+Tristan Bester a,∗ iD, Geraud Nangue Tasse a, b , Benjamin Rosman a, b , Steven James a, b
+a University of the Witwatersrand, Johannesburg, Gauteng, South Africa
+b
+    Machine Intelligence and Neural Discovery (MIND) Institute, Johannesburg, Gauteng, South Africa
+
+
+
+
+ARTICLE INFO                                                  A B S T R ACT
+
+Keywords:                                                     Reinforcement Learning (RL) research often models environments as Markov decision processes. Yet many
+Reinforcement learning                                        real-world tasks are non-Markovian, requiring memory of past events. A common approach encodes these history-
+Reward machines                                               dependent rewards as finite automata, but these are difficult to integrate into standard RL pipelines. We present
+Counterfactual learning                                       PyCRM, a Python framework for non-Markovian RL built on two automata classes: Reward Machines and their
+Non-markovian decision processes
+                                                              Turing-complete generalisation, Counting Reward Machines. PyCRM supports automatic environment construc­
+                                                              tion and integrates seamlessly with popular RL libraries. This lowers the barrier to entry, allowing researchers to
+                                                              focus on task design and theory while exploring more complex, temporally extended problems.
+
+
+
+
+Metadata
+
+
+                Code metadata (mandatory).
+                   Nr.                                     Code metadata description                                           Metadata
+
+                   C1                                      Current code version                                                v1.1.0
+                   C2                                      Permanent link to code/repository used for this code version        https://github.com/TristanBester/pycrm
+                   C3                                      Permanent link to Reproducible Capsule                              N/A
+                   C4                                      Legal Code License                                                  MIT License
+                   C5                                      Code versioning system used                                         git
+                   C6                                      Software code languages, tools, and services used                   Python
+                   C7                                      Compilation requirements, operating environments & dependencies     gymnasium, numpy, stable-baselines3
+                   C8                                      If available Link to developer documentation/manual                 Documentation: https://pycrm.xyz
+                   C9                                      Support email for questions                                         tristanbester@gmail.com
+
+
+
+
+1. Motivation and significance
+
+    Recent advancements in Reinforcement Learning (RL) have enabled                                   is shifting towards temporally extended problems, with non-Markovian
+agents to solve increasingly complex tasks, but most RL methods rely                                  reward modelling emerging as a key approach [5–7]. Defining rewards
+on the Markov assumption, where decisions depend only on the current                                  over sequences of subgoals rather than individual states enables agents
+state [1]. This assumption limits their applicability in many real-world                              to tackle richer, more realistic tasks.
+scenarios, such as robotic manipulation or strategic planning, where op­                                  Reward Machines (RMs) offer a structured and expressive framework
+timal behaviour depends on the sequence of past events [2–4]. These                                   for specifying non-Markovian reward functions [8]. By representing
+non-Markovian problems require more expressive models capable of rea­                                 tasks as finite-state machines, RMs track progress and assign rewards
+soning over history. As Markovian tasks become more tractable, the field                              based on the satisfaction of high-level temporal conditions, naturally
+
+
+
+
+    ∗
+        Corresponding author.
+        Email address: tristanbester@gmail.com (T. Bester).
+
+https://doi.org/10.1016/j.softx.2026.102889
+Received 15 December 2025; Received in revised form 22 March 2026; Accepted 12 July 2026
+Available online 22 July 2026
+2352-7110/© 2026 Published by Elsevier B.V. This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/).
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                                  SoftwareX 35 (2026) 102889
+
+
+supporting constructs like loops and conditionals. Counting Reward
+Machines (CRMs) extend this paradigm by integrating counters, achiev­
+ing Turing-complete expressiveness and allowing the specification of
+any reward structure definable by an algorithm [9,10]. Both RMs and
+CRMs enhance sample efficiency by enabling agents to reason over
+sub-tasks in parallel, leveraging techniques such as counterfactual ex­
+perience generation. A formal introduction to these concepts and the
+notation used throughout this paper is provided in Appendix A.
+    Despite their theoretical appeal, the practical adoption of RMs and
+CRMs has been hindered by significant implementation complexity.
+Integrating these automata into RL pipelines requires extensive mod­
+ifications to the environment, state tracking, observation spaces, and
+learning algorithms, creating a substantial barrier to entry. As a result,
+non-Markovian tasks are often implemented using ad-hoc reward func­
+tions that are brittle, difficult to debug, and fail to leverage the benefits       Fig. 1. The standard agent–environment interaction loop in Gymnasium. (1) the
+of structured representations [11]. Existing public implementations are             environment is reset, yielding an initial state 𝑠. (2) the agent selects an action
+typically designed for reproducibility rather than general use, limiting            𝑎, which results in a new state 𝑠′ (3). The labelling function L then maps each
+                                                                                    low-level transition ⟨𝑠, 𝑎, 𝑠′ ⟩ to a set of high-level propositional symbols 𝜎 ∈ 2P ,
+their flexibility and customizability [8–10,12–15]. To overcome these
+                                                                                    providing a compact description of the events that occurred.
+challenges, we introduce a unified software framework that makes RMs
+and CRMs accessible and practical, allowing researchers to utilise their
+advantages without prohibitive implementation costs.
+    To address these challenges, we present PyCRM, a Python software                Ground Environment                                               RM/CRM
+framework designed to facilitate efficient research and development                                            Labelling Function
+                                                                                      Gym Environment
+in non-Markovian RL. Our framework overcomes the critical obsta­
+cles associated with non-Markovian reward specification by offering a                      reset()
+modular and rigorously engineered system. It enables users to express
+                                                                                         step(action)
+temporally extended tasks declaratively and compiles these specifi­
+cations automatically into Gymnasium-compatible environments [16],
+thereby removing significant engineering overhead. This design facil­
+itates straightforward integration with existing RL pipelines such as
+Stable Baselines 3 (SB3) [17], allowing users to benefit from well-
+tested, sample-efficient algorithms without requiring modifications to
+their learning core. Specifically, PyCRM makes the following key con­
+tributions:
+                                                                                                                        Compiler
+
+     1. A high-level abstraction layer that cleanly separates reward speci­
+        fication from RL implementation, substantially lowering the entry
+        barrier for non-Markovian RL research.
+                                                                                                                  Cross-product MDP
+     2. Integrated support for counterfactual experience generation in
+        off-policy learning, enabling users to exploit the sample efficiency                                        Gym Environment
+
+        advantages of RMs/CRMs without manually defining alternative
+                                                                                                                         reset()
+        experience trajectories [8,9].
+     3. Seamless interoperability with SB3, including extended imple­                                                  step(action)
+        mentations of all off-policy algorithms with native support for
+                                                                                                                       cfeg(action)
+        counterfactual-enhanced learning.
+     4. Comprehensive documentation and worked examples spanning
+        tabular domains to deep RL in both discrete and continuous action           Fig. 2. The core architecture of PyCRM. The framework takes a standard
+        spaces, thereby bridging the gap between theoretical advances               Gymnasium environment, a user-defined labelling function, and a RM/CRM
+        and practical deployment.1                                                  specification as input. The compiler automatically constructs a new, augmented
+                                                                                    Gymnasium environment that encapsulates the task logic and is compatible with
+                                                                                    standard RL agents. The new environment also exposes a method for counter­
+2. Software description
+                                                                                    factual experience generation (cfeg—illustrated in blue). (For interpretation of
+   PyCRM is a Python framework that simplifies solving complex,                     the references to colour in this figure legend, the reader is referred to the web
+non-Markovian RL problems using RMs and CRMs. By offering a high-                   version of this article.)
+level interface and seamless integration with popular libraries like
+Gymnasium and SB3, it lowers the implementation barrier, enabling                   user first defines a labelling function, L, which acts as a perception layer
+researchers to focus on task design rather than low-level coding.                   that maps low-level environment transitions ⟨𝑠, 𝑎, 𝑠′ ⟩ to a set of high-
+                                                                                    level propositional events (Fig. 1). The RM or CRM then defines the task
+2.1. Software architecture                                                          logic, prescribing how sequences of these events translate into rewards.
+   PyCRM’s modular architecture augments the standard agent–                            The PyCRM compiler automatically wraps these components, trans­
+environment loop by compiling three user-defined components—a                       parently handling the evaluation of the labelling function and the
+ground environment, a labelling function, and a reward machine (RM or               execution of the RM/CRM logic. To maintain the Markov property for
+CRM)—into a single, augmented Gymnasium environment (Fig. 2). The                   the learning agent, the wrapper augments the observation space with
+                                                                                    the current machine state. The resulting environment is compatible with
+                                                                                    any standard RL algorithm and exposes methods for generating coun­
+ 1   PyCRM documentation is available here.                                         terfactual experiences to accelerate learning. Crucially, PyCRM imposes
+
+                                                                                2
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                                    SoftwareX 35 (2026) 102889
+
+
+no constraints on the ground environment beyond compliance with
+the standard Gymnasium interface (reset(), step(action)), making it
+inherently agnostic to the environment’s internal dynamics, including
+stochasticity, partial observability, and the structure of the state and
+action spaces.
+
+2.2. Software functionalities
+
+    PyCRM provides a suite of functionalities to minimise implementa­
+tion overhead while maximising flexibility and sample efficiency.
+
+2.2.1. High-level specification and automatic wrapping
+    PyCRM offers a declarative, high-level API for defining RMs and
+CRMs, cleanly separating task specification from the learning algorithm.
+The framework automatically constructs a Gymnasium-compatible en­
+vironment from these components, which transparently integrates the
+automaton’s dynamics and augments the observation space to ensure
+that the Markov property is satisfied.
+
+2.2.2. Counterfactual experience generation and algorithm integration
+    While the environment generated by PyCRM is compatible with any
+standard RL library, unlocking the full sample efficiency gains requires
+leveraging counterfactual experiences. A central feature of PyCRM is                     Fig. 3. Illustration of the extended PuckWorld environment [10]. The agent
+native support for counterfactual reasoning. For each transition, the                    (green) must track a sequence of targets (𝑇1 , 𝑇2 , 𝑇3 ) while avoiding the adver­
+framework generates counterfactual experiences by evaluating what                        sary (red). An episode terminates if the agent enters the adversary’s proximity
+would have happened if the automaton had been in a different state, dra­                 zone (shaded red). (For interpretation of the references to colour in this figure
+matically improving sample efficiency. To leverage these experiences,                    legend, the reader is referred to the web version of this article.)
+PyCRM provides modified implementations of all off-policy algorithms
+in SB3 (DQN [18], DDPG [19], TD3 [20], and SAC [21]) as drop-in
+replacements equipped with specialised replay buffers. PyCRM addition­
+ally provides support for vectorized training to accelerate large-scale
+experiments (Appendix E).
+
+3. Illustrative examples
+
+     We demonstrate the capabilities of PyCRM through two case studies
+in the PuckWorld environment [10], a continuous-state control problem
+featuring an agent, multiple moving targets, and an adversary (Fig. 3).
+Both discrete- and continuous-action variants of this environment ex­
+ist. The first case study illustrates the core workflow for specifying and
+solving a sequential task with a standard RM in the discrete-action
+setting. The second case study highlights the framework’s full expres­
+sive power by defining and solving a temporally extended task in the
+continuous-action setting using a CRM. While we focus on PuckWorld
+for narrative coherence—as it conveniently demonstrates both discrete
+and continuous action spaces as well as both RMs and CRMs within a
+single domain—additional environments, including stochastic settings,
+are provided in the repository and documentation.2
+
+3.1. Case study 1: Reward machines
+
+3.1.1. Problem description
+    We first consider a simple sequential task: the agent must track target
+1, then target 2, and finally target 3, in that exact order. In this context,
+tracking is defined as staying within a specified distance of the target.
+This specification corresponds to the regular language 𝐿 = {𝑝(1)   𝑝(2) 𝑝(3) }.3
+                                                                 𝑇 𝑇 𝑇
+                                                                                         Listing 1. Defining the labelling function and RM for the sequential
+3.1.2. Representing the task in PyCRM
+                                                                                         tracking task. High-level events are defined as an Enum and detected by
+   To model this task, we first define the set of high-level events,
+                                                                                         methods decorated with @event. The RM is specified declaratively via
+P = {𝑝(1) , 𝑝(2) , 𝑝(3) }, corresponding to the agent successfully tracking
+        𝑇    𝑇      𝑇                                                                    state-transition and state-reward dictionaries.
+each target. This is implemented by subclassing LabellingFunction
+
+
+ 2  See https://pycrm.xyz and the examples/ directory in the repository.
+                                                                                         and defining event-detector methods decorated with @event, as shown
+ 3
+    The formal language representation of a task describes the sequences of              in parts (1) and (2) of Listing 1. Each detector evaluates an environment
+events that constitute successful task completion using symbols and syntactic            transition ⟨𝑠, 𝑎, 𝑠′ ⟩ and returns the corresponding event symbol if its con­
+rules. In this case, each target corresponds to a symbol, and the language defines       dition is met—in this case, if the agent is within a threshold distance of
+the valid sequence of symbols.                                                           the target.
+
+                                                                                     3
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                                      SoftwareX 35 (2026) 102889
+
+
+
+
+Fig. 4. Reward machine for the sequential tracking task 𝐿 = {𝑝(1)    𝑝(2) 𝑝(3) }. Green arrows denote successful transitions with positive rewards. Orange arrows denote
+                                                                  𝑇 𝑇 𝑇
+self-loops that provide dense navigation rewards (𝑅(𝑖) 𝑇
+                                                         ) when the desired     event is not observed. (For interpretation of the references to colour in this figure legend,
+the reader is referred to the web version of this article.)
+
+
+
+
+Listing 2. Solving the task by instantiating the user-defined cross-
+product MDP and training an RL agent.
+
+                                                                                          Fig. 5. Learning performance on the sequential PuckWorld task. Counterfactual-
+    Next, we specify the task logic and reward structure using an RM,                     DQN (C-DQN) from PyCRM achieves significantly higher sample efficiency
+whose structure is illustrated in Fig. 4. In PyCRM, this is achieved by                   than the standard DQN baseline from SB3. On-policy baselines (A2C, PPO) are
+                                                                                          included for completeness. Results are averaged over 10 independent seeds;
+subclassing the RewardMachine base class and implementing two meth­
+                                                                                          shaded regions indicate ±1 standard deviation.
+ods that declaratively define the automaton’s structure, as shown in part
+(3) of Listing 1.
+    The_get_state_transitions method defines the automaton’s state-
+transition function. It returns a nested dictionary where outer keys                      cross-product MDP [2,22,23], which can be solved by an RL agent. In
+represent non-terminal RM states (𝑢0 , 𝑢1 , …) and inner dictionaries map                 PyCRM, this is implemented by subclassing CrossProduct. The base
+logical formulas over events to the next state. For example, the entry                    class provides a default implementation of the _get_obs method that
+                                                                                          concatenates the ground observation with a one-hot encoding of the
+0 ∶ {"T_1" ∶ 1, "NOT T_1" ∶ 0}                                                            machine state and the raw counter values—the standard encoding used
+                                                                                          in the literature [8,9]. A corresponding to_ground_obs method is also
+specifies that from state 𝑢0 , observing the event 𝑝(1)
+                                                    𝑇
+                                                        transitions the au­               provided, which inverts this encoding to extract the original ground
+tomaton to state 𝑢1 , while observing any other event (¬𝑝(1) 𝑇
+                                                                ) results in              observation. Users may override these methods to implement custom
+a self-loop. For convenience, the state index −1 is treated as a terminal                 observation encodings.
+state. Additional information related to the syntax of transition formulae                    The resulting PuckWorldCP class can then be instantiated to create
+is provided in Appendix B.                                                                a standard Gymnasium environment, making it compatible with off-
+    The _get_reward_transitions method defines the rewards associ­                        the-shelf RL libraries.4 Listing 2 demonstrates this instantiation and
+ated with these transitions, following an identical structure. This method                subsequent training with a Deep Q-learning agent from SB3 [17,18].
+highlights the framework’s flexibility: rewards can be simple scalar val­                 PyCRM also provides implementations of common off-policy algorithms
+ues (e.g., 10 for a correct step or 1000 for task completion) or entire                   that leverage the counterfactual experiences generated by the cross-
+callable functions. Here, self._nav_to_t1_reward() returns a function                     product MDP to improve sample efficiency. As PyCRM fully implements
+that provides a dense reward signal based on the agent’s distance to the                  the SB3 interface, all existing code—including training routines, eval­
+target, guiding the agent when it is not actively tracking the correct tar­               uation scripts, and utilities—works immediately with PyCRM agents;
+get. Additional details on the structure of reward functions are available                switching to a counterfactual-enabled agent requires only changing the
+in Appendix C.                                                                            class import. We additionally include on-policy baselines (A2C [24],
+
+3.1.3. Implementation and results
+   With the ground environment, labelling function, and RM defined,                        4 As this class defines an MDP, it can be used with any RL algorithm, and all
+
+the final step is to combine them into a single MDP, known as the                         associated theoretical guarantees are preserved.
+
+                                                                                      4
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                                SoftwareX 35 (2026) 102889
+
+
+
+
+Fig. 6. Counting reward machine for the temporally extended task. The agent must decrement the first counter to zero (Z) by observing 𝑝(1)
+                                                                                                                                       𝑇
+                                                                                                                                           while it is non-zero (NZ)
+before it can transition to 𝑢1 . The same logic applies to 𝑝(2)
+                                                            𝑇
+                                                                and the second counter.
+
+
+
+                                                                                     number of timesteps, 𝑛 ∈ N, and then track target 𝑇2 for another
+                                                                                     𝑛 timesteps. Formally, this task is described by the language 𝐿 =
+                                                                                             𝑛       𝑛
+                                                                                     {(𝑝(1)
+                                                                                        𝑇
+                                                                                            ) (𝑝(2)
+                                                                                                𝑇
+                                                                                                    ) ∣ 𝑛 ∈ N}, which requires counting and is therefore non-
+                                                                                     regular, placing it beyond the expressive capacity of standard RMs, and
+                                                                                     thus necessitating the use of a CRM.5
+
+                                                                                     3.2.2. Representing the task in PyCRM
+                                                                                        Such tasks are naturally modelled using a CRM, such as the
+                                                                                     one employed for this case study, illustrated in Fig. 6. A CRM
+                                                                                     extends the RM formalism with a set of internal counters, allow­
+                                                                                     ing it to represent non-regular languages. Transitions in a CRM
+                                                                                     are governed by a more expressive rule, defined by a tuple:
+                                                                                     ⟨event, [counter conditions], [counter updates], reward⟩. A transition is taken
+                                                                                     only if both the event formula is satisfied and all counter conditions are
+                                                                                     met. The conditions for each counter can be:
+
+                                                                                        • Z: The counter’s value must be Zero.
+                                                                                        • NZ: The counter’s value must be Non-Zero.
+                                                                                        • -: The counter’s value is irrelevant.
+
+                                                                                     When a transition is taken, the counters are modified according to the
+                                                                                     additive updates specified in the tuple. The CRM for our task (Fig. 6) uses
+                                                                                     two counters, 𝑐0 and 𝑐1 , initialized to 𝑛 ∈ N at the start of each episode.
+                                                                                     To progress from state 𝑢0 to 𝑢1 , the agent must first satisfy the condition
+                                                                                     of the green self-loop on 𝑢0 : ⟨𝑝(1)
+                                                                                                                      𝑇
+                                                                                                                          , [NZ, −], [−1, 0], +10⟩. This rule specifies
+                                                                                     that if event 𝑝(1)
+                                                                                                    𝑇
+                                                                                                        is observed while counter 𝑐0 is Non-Zero, the automaton
+                                                                                     remains in 𝑢0 , 𝑐0 is decremented by 1, and a reward of +10 is provided.
+                                                                                     For all other cases in which 𝑐0 is not yet zero, the self-loop transition re­
+                                                                                     turns a function that provides a dense reward signal based on the agent’s
+                                                                                     distance to the target, guiding the agent towards the correct target. Once
+                                                                                     𝑐0 reaches zero, this transition is no longer possible, and the transition
+                                                                                     from 𝑢0 to 𝑢1 becomes possible: ⟨𝑝(1)  𝑇
+                                                                                                                              , [Z, −], [0, 0], +10⟩. This transition
+Listing 3. Declarative specification of the CRM for the temporally ex­               requires 𝑐0 to be Zero, and upon observing 𝑝(1)
+                                                                                                                                 𝑇
+                                                                                                                                     , the automaton moves to
+tended task. The CRM is defined using dictionaries for state-transition,             𝑢1 . A similar process with 𝑐1 and 𝑝(2)
+                                                                                                                           𝑇
+                                                                                                                              is required to complete the task.
+state-reward, and counter-update functions. The counter-update func­                 This logic is specified declaratively in PyCRM as shown in Listing 3.
+tion encodes the counting logic, specifying how each counter is incre­
+mented or modified after the corresponding transition.                               3.2.3. Implementation and results
+                                                                                         Despite the increased task complexity, the solution procedure re­
+                                                                                     mains similar to the RM case. A cross-product class compiles the ground
+PPO [25]) for comparison. On-policy algorithms are inherently incom­                 environment, labelling function, and CRM into a unified MDP. To en­
+patible with counterfactual experience generation [8,9]; consequently,               sure the state representation is Markovian, the agent’s observation is
+no counterfactual variants exist for these methods. Fig. 5 compares the              constructed by concatenating the ground observation with the CRM’s
+performance of standard DQN with its counterfactual-enhanced coun­                   state and internal counter values [8–10].
+terpart, as well as the on-policy baselines, showing a clear improvement                 This case study uses the continuous-action variant of PuckWorld.
+in learning speed and final performance.                                             We evaluate off-policy algorithms (DDPG, TD3, and SAC) alongside
+                                                                                     on-policy baselines (A2C, PPO). Fig. 7 compares the performance of
+3.2. Case study 2: Counting reward machines
+
+3.2.1. Problem description                                                             5
+                                                                                         As with Case Study 1, the formal language encodes sequences of events
+   We now increase task complexity to demonstrate the full expressive                that define successful task completion. Here, the language additionally requires
+power of PyCRM. The agent must track target 𝑇1 for a pre-specified                   maintaining a count of repeated events, illustrating the need for CRMs.
+
+                                                                                 5
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                             SoftwareX 35 (2026) 102889
+
+
+                                                                                     Reward Machine-based reinforcement learning. By providing a high-
+                                                                                     level declarative interface for specifying RMs and CRMs, seamless inte­
+                                                                                     gration with standard RL libraries like Gymnasium and Stable Baselines
+                                                                                     3, and built-in support for sample-efficient counterfactual learning,
+                                                                                     PyCRM automates the most complex aspects of the non-Markovian RL
+                                                                                     workflow.
+                                                                                        By abstracting away the implementation complexity of automata-
+                                                                                     based reward specifications, our framework enables researchers to focus
+                                                                                     on high-level task design and algorithmic innovation rather than low-
+                                                                                     level engineering. Future work will extend PyCRM to support richer
+                                                                                     automata classes, tighter integration with emerging RL paradigms,
+                                                                                     and broader environment backends, further bridging the gap between
+                                                                                     theoretical models and practical deployment.
+
+                                                                                     CRediT authorship contribution statement
+
+                                                                                         Tristan Bester: Visualization, Validation, Software, Project adminis­
+                                                                                     tration, Methodology, Investigation, Formal analysis, Conceptualization.
+                                                                                     Geraud Nangue Tasse: Writing – review & editing, Supervision,
+                                                                                     Formal analysis, Conceptualization. Benjamin Rosman: Writing – re­
+                                                                                     view & editing, Supervision, Formal analysis, Conceptualization. Steven
+                                                                                     James: Writing – review & editing, Supervision, Formal analysis,
+Fig. 7. Learning performance on the temporally extended, continuous-action           Conceptualization.
+PuckWorld task. All counterfactual-enabled agents successfully solve the task,
+demonstrating the significant sample efficiency gains of counterfactual meth­        Declaration of competing interest
+ods in complex control problems when compared to standard off-policy and
+                                                                                         The authors declare that they have no known competing financial
+on-policy baselines. Results are averaged over 10 independent seeds; shaded
+regions indicate ±1 standard deviation.                                              interests or personal relationships that could have appeared to influence
+                                                                                     the work reported in this paper.
+
+                                                                                     Declaration of Generative AI and AI-assisted technologies in the
+standard SB3 agents with PyCRM’s counterfactual-enabled counterparts,                writing process
+which are fully API-compatible and act as drop-in replacements. The re­                  During the preparation of this work, the authors used Gemini 2.5
+sults show that while standard agents and on-policy baselines fail to                Pro to enhance the readability and language of the manuscript. After
+solve the complex, temporally extended task within the training bud­                 utilising this tool/service, the authors reviewed and edited the content
+get, the counterfactual agents succeed with significantly higher sample              as needed and take full responsibility for the content of the published
+efficiency. As noted in Section 3, counterfactual experience genera­                 article.
+tion is incompatible with on-policy methods [8,9], so no counterfactual
+variants are provided for A2C and PPO. This highlights the advan­                    Appendix A. Background
+tages of PyCRM’s counterfactual learning across multiple state-of-the-art
+algorithms in challenging, high-dimensional continuous control settings.                This appendix provides a concise overview of the key concepts and
+    Importantly, the sample-efficiency gains of counterfactual learning              notation used throughout the paper, including Markov decision pro­
+come at a modest computational cost. Across both case studies, the                   cesses, labelling functions, Reward Machines, and Counting Reward
+wall-clock overhead of PyCRM’s counterfactual agents relative to their               Machines.
+standard SB3 counterparts ranges from approximately 2% to 15%, with
+throughput remaining comparable (Appendix D).                                        A.1. Markov decision processes
+
+                                                                                         Reinforcement learning formalises sequential decision-making as an
+4. Impact                                                                            agent interacting with an environment modelled as a Markov decision
+                                                                                     process (MDP) [1,27]. An MDP is defined as a tuple M = ⟨𝑆, 𝐴, 𝑃 , 𝛾, 𝑅⟩,
+    PyCRM significantly lowers the barrier to entry for non-Markovian                where 𝑆 is the state space, 𝐴 is the action space, 𝑃 (𝑠′ ∣ 𝑠, 𝑎) = P(𝑠𝑡+1 =
+RL by offering a user-friendly framework for specifying and using RMs                𝑠′ ∣ 𝑠𝑡 = 𝑠, 𝑎𝑡 = 𝑎) defines the transition dynamics, 𝛾 ∈ [0, 1) is the
+and CRMs, reducing development time for both newcomers and experts.                  discount factor, and 𝑅 ∶ 𝑆 × 𝐴 × 𝑆 → [𝑟min , 𝑟max ] is the bounded reward
+The framework accelerates experimentation by simplifying environment                 function. At each timestep, an agent in state 𝑠 ∈ 𝑆 selects an action
+creation and integrating sample-efficient learning algorithms from SB3,              𝑎 ∈ 𝐴, transitions to a successor state 𝑠′ according to 𝑃 , and receives a
+enabling rapid prototyping and rigorous testing. PyCRM streamlines ex­               scalar reward 𝑅(𝑠, 𝑎, 𝑠′ ).
+isting pipelines by eliminating the need for custom wrappers and has                     When the environment dynamics are specified independently of any
+already proven essential for scaling experiments with complex reward                 particular task, we use the notation M ⧵ 𝑅 = ⟨𝑆, 𝐴, 𝑃 , 𝛾⟩ to denote an
+structures in published work [9,10,26]. It enables previously impractical            MDP without reward [8]. Different tasks can then be induced over the
+research directions, including zero-shot generalisation and hierarchical             same environment by introducing different reward functions.
+RL. Future extensions aim to bridge theoretical models and practical
+tools, transforming non-Markovian RL from a niche challenge into an                  A.2. Labelling functions and propositional events
+accessible and scalable research direction.
+                                                                                         To bridge the gap between low-level environment transitions and
+                                                                                     high-level task specifications, we define a finite set of propositions P rep­
+5. Conclusion
+                                                                                     resenting abstract events of interest (e.g., “target reached” or “obstacle
+   We have introduced PyCRM, a Python software framework designed                    hit”). A labelling function L ∶ 𝑆 × 𝐴 × 𝑆 → 2P maps each environ­
+to address the significant implementation challenges associated with                 ment transition ⟨𝑠, 𝑎, 𝑠′ ⟩ to the subset of propositions that hold after
+
+                                                                                 6
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                              SoftwareX 35 (2026) 102889
+
+
+that transition. This abstraction provides a compact, symbolic descrip­                  is determined by the automaton’s output function. Since the resulting
+tion of the events that occurred, which can then be consumed by an                       MDP is fully Markovian, standard RL algorithms can be applied directly,
+automaton-based reward specification.                                                    and all associated convergence guarantees are preserved.
+
+A.3. Reward machines                                                                     Appendix B. Transition formulae
+
+   A Reward Machine (RM) [8] is a finite-state machine that specifies                        PyCRM supports a flexible syntax for defining the transition condi­
+a non-Markovian reward function over sequences of high-level events.                     tions of RMs/CRMs, allowing for the creation of complex task structures
+Formally, given an MDP without reward M ⧵ 𝑅 with propositions P, an                      based on logical combinations of high-level events. These formulas are
+RM is defined as a tuple ⟨𝑈 , 𝐹 , 𝑢0 , 𝛿𝑢 , 𝛿𝑟 ⟩, where:                                 evaluated at each step to determine which state transition should occur
+                                                                                         in the automaton. The syntax is designed to be intuitive and expressive,
+    • 𝑈 is a finite set of non-terminal machine states,
+                                                                                         accommodating a wide range of logical constructs.
+    • 𝐹 is a finite set of terminal states (𝑈 ∩ 𝐹 = ∅),
+    • 𝑢0 ∈ 𝑈 is the initial state,                                                       B.1. Propositional events
+    • 𝛿𝑢 ∶ 𝑈 × 2P → 𝑈 ∪ 𝐹 is the state-transition function, and
+    • 𝛿𝑟 ∶ 𝑈 × 2P → (𝑆 × 𝐴 × 𝑆 → [𝑟min , 𝑟max ]) is the state-reward function,               The fundamental building blocks of transition formulae are propo­
+      which outputs a reward function after each transition.                             sitional events. These are user-defined symbols, represented as strings
+                                                                                         (e.g., “T_1”, “door_open”), that correspond to specific events detected
+    At each timestep, the labelling function produces an event set 𝜎 =
+                                                                                         in the environment by the LabellingFunction. A formula is constructed
+L(𝑠, 𝑎, 𝑠′ ) ∈ 2P , which drives the RM to transition from its current state
+                                                                                         by combining these propositions with logical operators.
+𝑢 to 𝑢′ = 𝛿𝑢 (𝑢, 𝜎) and emit a reward function 𝛿𝑟 (𝑢, 𝜎). This reward func­
+tion is then evaluated on the ground transition ⟨𝑠, 𝑎, 𝑠′ ⟩ to produce the               B.2. Logical operators
+scalar reward. In the common simple formulation, 𝛿𝑟 outputs a constant
+scalar rather than a function (see Appendix C). Since RMs are based on                      The framework supports standard Boolean operators to create ex­
+finite-state machines, they can represent exactly the class of regular lan­              pressive formulae:
+guages, enabling the specification of tasks involving sequences, loops,
+                                                                                            • NOT: The negation operator is denoted by the prefix NOT. It inverts
+and conditionals over high-level events.
+                                                                                              the truth value of a proposition. For example, NOT T_1 is true only
+                                                                                              if the event T_1 did not occur.
+A.4. Counting reward machines
+                                                                                            • AND: The conjunction operator, represented by AND, is used to com­
+    Counting Reward Machines (CRMs) [9,10] generalise RMs by aug­                             bine two or more propositions. The resulting formula is true only
+menting the finite-state machine with a set of 𝑘 integer-valued counters,                     if all constituent propositions are true. For example, T_1 AND T_2
+yielding a formalism based on 𝑘-counter machines. A 2-counter ma­                             is true if both T_1 and T_2 events occur simultaneously.
+chine operating without temporal constraints is Turing-complete [28],                       • OR: The disjunction operator, represented by OR, is also used to
+and CRMs inherit this property, enabling them to express any reward                           combine propositions. The formula is true if at least one of the
+function definable by a well-defined algorithm.                                               constituent propositions is true. For example, T_1 OR T_2 is true if
+    Formally, given an MDP without reward M ⧵ 𝑅 with propositions P,                          T_1 occurred, T_2 occurred, or both occurred.
+a CRM is defined as a tuple ⟨𝑈 , 𝐹 , 𝑢0 , 𝛿𝑢 , 𝛿𝑐 , 𝛿𝑟 ⟩, where 𝑈 , 𝐹 , and 𝑢0 are
+                                                                                         Parentheses () can be used to group expressions and enforce a specific
+as in an RM, and:
+                                                                                         order of operations.
+    • 𝛿𝑢 ∶ 𝑈 × 2P × {0, 1}𝑘 → 𝑈 ∪ 𝐹 is the state-transition function,
+    • 𝛿𝑐 ∶ 𝑈 × 2P × {0, 1}𝑘 → {+𝑚 ∶ 𝑚 ∈ Z}𝑘 is the counter-update                        B.3. Example formulae
+      function, and
+                                                                                            Here are some examples of transition formulae supported by PyCRM,
+    • 𝛿𝑟 ∶ 𝑈 × 2P × {0, 1}𝑘 → (𝑆 × 𝐴 × 𝑆 → [𝑟min , 𝑟max ]) is the state-reward
+                                                                                         ranging from simple to complex:
+      function.
+                                                                                            • Simple Propositions:
+    Each function additionally depends on the zero-tested counter values
+𝑍(𝒄) ∈ {0, 1}𝑘 , where 𝑍(𝒄)𝑖 = 0 if 𝑐𝑖 = 0 and 1 otherwise. This zero-                        – “T_1”: The machine transitions if the event T_1 is detected.
+test mechanism enables the machine to branch on whether a counter                             – “NOT T_1”: The machine transitions if the event T_1 is not
+has reached zero, providing the counting capability that elevates CRMs                          detected.
+beyond regular languages. Given a machine configuration ⟨𝑢, 𝒄⟩ and an                       • Compound Formulae:
+event set 𝜎 = L(𝑠, 𝑎, 𝑠′ ), the CRM updates as:                                               – “T_1 AND T_2”: Transition occurs if both T_1 and T_2 occur.
+                                                                                              – “T_1 OR T_2”: Transition occurs if either T_1 or T_2 (or both)
+𝑢′ = 𝛿𝑢 (𝑢, 𝜎, 𝑍(𝒄)),                                                                           occur.
+𝒄 ′ = 𝒄 + 𝛿𝑐 (𝑢, 𝜎, 𝑍(𝒄)),                                                                    – “(T_1 OR T_2) AND NOT T_3”: Transition occurs if the agent
+                                                                                                has reached either target 1 or target 2, but has not reached
+ 𝑟 = 𝛿𝑟 (𝑢, 𝜎, 𝑍(𝒄))(𝑠, 𝑎, 𝑠′ ).
+                                                                                                target 3.
+                                                                                            • De Morgan’s Laws: PyCRM’s syntax is expressive enough to sup­
+A.5. Cross-product MDP                                                                        port logical equivalences such as De Morgan’s laws, which are
+                                                                                              useful for simplifying complex conditions:
+    Since the reward generated by an RM or CRM depends on the ma­
+                                                                                              – “NOT (T_1 OR T_2)” is equivalent to “NOT T_1 AND NOT T_2”.
+chine’s internal state (and counter values), the ground environment
+                                                                                                This formula is true only when neither T_1 nor T_2 occurs.
+observation alone is insufficient for Markovian decision-making. To re­
+                                                                                              – “NOT (T_1 AND T_2)” is equivalent to “NOT T_1 OR NOT T_2”.
+store the Markov property, the ground environment is combined with
+                                                                                                This formula is true if at least one of T_1 or T_2 does not occur.
+the automaton into a cross-product MDP [2,22,23]. The state space of the
+cross-product MDP is the Cartesian product 𝑆 × C, where C denotes the
+                                                                                         B.4. Counter conditions for CRMs
+set of automaton configurations (machine state for RMs; machine state
+and counter values for CRMs). The transition dynamics jointly evolve                         When using Counting Reward Machines (CRMs), the transition logic
+both the ground state and the automaton configuration, and the reward                    is extended to depend not only on propositional events but also on the
+
+                                                                                     7
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                          SoftwareX 35 (2026) 102889
+
+
+current values of the internal counters. This allows for the specifica­                  function takes the low-level environment transition (𝑠, 𝑎, 𝑠′ ) as in­
+tion of non-regular tasks that require memory or counting. The syntax                    put and returns a reward. The reward can therefore depend on the
+for a transition formula is augmented to include these counter condi­                    specific states and actions that caused the high-level event to occur.
+tions. The general format for a CRM transition is: “<event_formula> /
+                                                                                    The simple formulation is a special case of the full formulation. A simple
+(<counter_conditions>)”
+                                                                                    RM with a scalar reward 𝑟 for a given transition can be expressed in the
+    Here, the <event_formula> is the same logical expression over
+                                                                                    full formulation by defining a constant reward function 𝑅(𝑠, 𝑎, 𝑠′ ) = 𝑟
+propositions as used in standard RMs. The <counter_conditions> part
+                                                                                    that ignores its inputs and always returns 𝑟.
+is a tuple of characters, where each character specifies a condition that
+the corresponding counter must satisfy for the transition to be valid. The
+                                                                                    C.2. Unified implementation in PyCRM
+conditions are specified as a comma-separated string, with the position
+corresponding to the counter’s index (e.g., the first condition applies                 PyCRM leverages this relationship to provide a powerful yet user-
+to 𝑐0 , the second to 𝑐1 , and so on). The supported conditions for each            friendly API. The framework’s internal architecture is built around
+counter are:                                                                        the more general “full” formulation, allowing it to handle dynamic,
+                                                                                    state-dependent rewards natively. However, for user convenience, it
+    • Z (Zero): The counter’s current value must be exactly 0.
+                                                                                    seamlessly accepts rewards specified in the simple style. When a user
+    • NZ (Non-Zero): The counter’s current value must be anything other
+                                                                                    provides a scalar value (e.g., 1000) for a transition reward, PyCRM
+      than 0.
+                                                                                    internally compiles this simple specification into the full format. It au­
+    • - (Irrelevant): The counter’s value does not affect the transition; it
+                                                                                    tomatically constructs a constant “reward function callable” that wraps
+      acts as a wildcard.
+                                                                                    the scalar. This internal function conforms to the required signature but
+B.5. Example CRM formulae                                                           simply returns the fixed reward value for any input. This design offers
+                                                                                    two key advantages:
+   Building on the previous examples, here is how counter conditions
+can be integrated:                                                                      1. User Convenience: Researchers can use simple, intuitive scalar
+    • Simple Counter Condition:                                                            rewards for most cases without needing to define trivial functions.
+                                                                                        2. Internal Consistency: The core learning algorithms only need
+      – "T_1 / (NZ, -)": The machine transitions if event T_1 is de­
+                                                                                           to handle one type of reward signal—the output of a callable
+        tected AND the first counter (𝑐0 ) is non-zero. The value of the
+                                                                                           function—which simplifies the internal logic and reduces redun­
+        second counter (𝑐1 ) is ignored.
+                                                                                           dancy.
+    • Zero-Check Condition:
+      – "T_1 / (Z, -)": The transition occurs if the event T_1 is de­
+                                                                                    C.3. Reward function callable signature
+        tected AND the first counter (𝑐0 ) is zero. This is useful for
+        triggering an event only after a countdown has been completed.                 For transitions that require dynamic rewards, users can provide a
+    • Complex Combined Conditions:                                                  Python callable (e.g., a function or a class method). This function is
+      – "T_2 / (Z, NZ)": The transition is taken if event T_2 occurs,               executed at every transition, and its return value is used as the reward
+        the first counter (𝑐0 ) is zero, AND the second counter (𝑐1 ) is non-       signal. The signature for a reward function callable is as follows:
+        zero. This allows for creating sequential dependencies based on
+                                                                                    reward_function(s, a, s_prime) -> float
+        multiple counters.
+      – "(T_1 OR T_2) / (NZ, NZ)": The transition occurs if either                     The function receives a comprehensive set of arguments that describe
+        event T_1 or T_2 is detected, provided that both counter 𝑐0 and             the full transition:
+        counter 𝑐1 are non-zero.
+      – "NOT T_1 / (-, Z)": The transition is taken if event T_1 does                  • s: The state of the ground environment before the action was taken.
+        not occur AND the second counter (𝑐1 ) is zero.                                • a: The action executed by the agent.
+                                                                                       • s_prime: The state of the ground environment after the action was
+This extended syntax provides the expressive power needed to formally                    taken.
+specify complex, history-dependent tasks that are beyond the scope of
+standard Reward Machines.                                                           These arguments can then be used to compute a feedback signal for the
+                                                                                    agent in the form of a reward scalar.
+Appendix C. Reward specification: simple and full formulations
+                                                                                    Appendix D. Computational overhead analysis
+   PyCRM provides a flexible reward specification mechanism that sup­
+ports both the “simple” and “full” formulations of RMs and CRMs.                        To quantify the computational cost of counterfactual experience gen­
+This design allows users to define straightforward, constant rewards for            eration, we measure wall-clock training time and throughput (frames
+most transitions while offering the expressive power of dynamic reward              per second) for one representative algorithm per action-space type: DQN
+functions for more complex reward shaping scenarios.                                for discrete actions (Case Study 1) and SAC for continuous actions (Case
+                                                                                    Study 2). SAC is chosen as representative because the counterfactual
+C.1. The “Simple” vs. “Full” formulations                                           overhead is identical across continuous-action algorithms—it stems from
+                                                                                    evaluating the labelling function and reward transitions for every non-
+  In the literature, Reward Machines can be defined in two primary
+                                                                                    current machine state, which is independent of the policy update rule.
+ways:
+                                                                                    TD3 and DDPG therefore exhibit comparable overhead. All runs use
+    • Simple Formulation: In this version, each transition in the au­               identical hyperparameters and hardware, with 10 independent seeds per
+      tomaton is associated with a fixed, scalar reward value. For                  algorithm. We report medians and interquartile ranges (IQR) to provide
+      example, successfully tracking target 1 might always yield a re­              robust estimates.
+      ward of +10. This is the most common and intuitive formulation,                   Table D.1 summarises the results. For the discrete-action setting
+      where the reward is a property of the automaton’s state change                (Case Study 1), C-DQN incurs a 14.7% wall-clock overhead relative to
+      itself, independent of the underlying environment dynamics.                   standard DQN (median 322.9 s vs. 281.5 s), corresponding to a through­
+    • Full Formulation: The more general or “full” formulation asso­                put reduction from 889 to 806 frames per second. In the continuous-
+      ciates each transition with a reward function, not just a scalar. This        action setting (Case Study 2), the overhead is substantially smaller:
+
+                                                                                8
+T. Bester, G. Nangue Tasse, B. Rosman et al.                                                                                                      SoftwareX 35 (2026) 102889
+
+
+Table D.1                                                                         References
+Computational overhead of counterfactual experience generation. Wall-clock
+                                                                                   [1] Sutton RS, Barto AG, et al. Reinforcement learning. In: An introduction, vol. 1. MIT
+time and throughput (FPS) are reported as median (IQR) over 10 runs.                   Press Cambridge; 1998.
+                                                                                   [2] Gaon M, Brafman R. Reinforcement learning with non-Markovian rewards. In:
+ Metric        Algorithm       Standard           Counterfactual     Δ (%)
+                                                                                       Proceedings of the AAAI conference on artificial intelligence, vol. 34; 2020. p.
+ Time (s)      DQN             282 (280–283)      323 (320–327)      +14.7%            3980–7.
+               SAC             1037 (1025–1038)   1057 (1039–1078)   +1.9%         [3] Gupta G, Yin C, Deshmukh JV, Bogdan P. Non-Markovian reinforcement learning
+ FPS           DQN             889 (855–928)      806 (767–828)      −9.3%             using fractional dynamics. In: 2021 60th IEEE conference on decision and control
+                                                                                       (CDC). IEEE; 2021. p. 1542–7.
+               SAC             48 (48–49)         47 (46–48)         −3.0%
+                                                                                   [4] Huang R, Liang Y, Yang J. Robust offline reinforcement learning for non-Markovian
+                                                                                       decision processes. IEEE Trans Inf Theory 2025;71(9):7208–28. https://ieeexplore.
+                                                                                       ieee.org/document/11075721.
+                                                                                   [5] Tang Y, Cai X-Q, Pang J-C, Wu Q, Ding Y-X, Sugiyama M. Beyond simple sum of
+                                                                                       delayed rewards: arXiv preprint arXiv:2410.20176. 2024.
+                                                                                   [6] Early J, Bewley T, Evers C, Ramchurn S. Non-Markovian reward modelling from
+                                                                                       trajectory labels via interpretable multiple instance learning. Adv Neural Inf Process
+                                                                                       Syst 2022;35:27652–63.
+                                                                                   [7] Dohmen T, Topper N, Atia G, Beckus A, Trivedi A, Velasquez A. Inferring prob­
+                                                                                       abilistic reward machines from non-Markovian reward signals for reinforcement
+                                                                                       learning. In: Proceedings of the international conference on automated planning and
+                                                                                       scheduling, vol. 32; 2022. p. 574–82.
+                                                                                   [8] Icarte RT, Klassen TQ, Valenzano R, McIlraith SA. Reward machines: exploit­
+                                                                                       ing reward function structure in reinforcement learning. J Artif Intell Res
+                                                                                       2022;73:173–208.
+                                                                                   [9] Bester T, Rosman B, James S, Tasse GN. Counting reward automata: sample effi­
+                                                                                       cient reinforcement learning through the exploitation of reward function structure.
+                                                                                       In: NuCLeaR workshop at the 38th AAAI conference on artificial intelligence;
+                                                                                       2024.
+                                                                                  [10] Bester T. Counting reward automata: exploiting structure in reward functions ex­
+Listing 4. Example usage of DispatchSubprocVecEnv to create a vec­                     pressible in decidable formal languages [Master’s thesis]. Johannesburg: University
+torized environment for parallel training with a counterfactual-enabled                of the Witwatersrand; 2024.
+                                                                                  [11] Ibrahim S, Mostafa M, Jnadi A, Salloum H, Osinenko P. Comprehensive overview of
+agent.
+                                                                                       reward engineering and shaping in advancing reinforcement learning applications.
+                                                                                       IEEE Access; 2024.
+                                                                                  [12] Icarte RT, Klassen T, Valenzano R, McIlraith S. Using reward machines for high-level
+C-SAC adds only 1.9% to SAC’s training time (median 1056.5 s vs.                       task specification and decomposition in reinforcement learning. In: International
+1036.8 s), with throughput decreasing marginally from 48.4 to 47.0 FPS.                conference on machine learning. PMLR; 2018. p. 2107–16.
+                                                                                  [13] Furelos-Blanco D, Law M, Jonsson A, Broda K, Russo A. Hierarchies of reward
+The higher relative overhead for DQN is expected: DQN’s gradient up­
+                                                                                       machines. In: International conference on machine learning. PMLR; 2023. p.
+date is considerably cheaper than SAC’s (which optimises an actor, a                   10494–541.
+critic, and an entropy coefficient), so the fixed cost of counterfactual          [14] Umili E, Argenziano F, Capobianco R. Neural reward machines. In: ECAI 2024 –
+experience generation constitutes a larger fraction of the total per-step              27th European conference on artificial intelligence, Vol. 392 of frontiers in artificial
+                                                                                       intelligence and applications, IOS Press; 2024. p. 3055–62. https://doi.org/10.3233/
+computation.                                                                           FAIA240847
+    Crucially, this modest overhead must be weighed against the sub­              [15] Corazza J, Gavran I, Neider D. Reinforcement learning with stochastic reward ma­
+stantial sample-efficiency gains demonstrated in Figs. 5 and Fig. 7. The               chines. In: Proceedings of the AAAI conference on artificial intelligence, vol. 36;
+                                                                                       2022. p. 6429–36.
+overhead arises from evaluating the labelling function and reward tran­           [16] Towers M, Kwiatkowski A, Terry J, Balis JU, De Cola G, Deleu T, Goulão M,
+sitions for every non-current machine state at each environment step,                  Kallinteris A, Krimmel M, Kg A, et al. Gymnasium: a standard interface for reinforce­
+and therefore scales linearly with the number of RM/CRM states—a                       ment learning environments. In: Advances in neural information processing systems
+                                                                                       38 (NeurIPS), datasets and benchmarks track; 2024.
+quantity that remains small for typical task specifications. In practice,         [17] Raffin A, Hill A, Gleave A, Kanervisto A, Ernestus M, Dormann N. Stable-
+the net effect is faster convergence in wall-clock time despite the per-               baselines3: reliable reinforcement learning implementations. J Mach Learn Res
+step cost increase, as far fewer environment interactions are needed to                2021;22(268):1–8.
+                                                                                  [18] Mnih V, Kavukcuoglu K, Silver D, Rusu AA, Veness J, Bellemare MG, Graves A,
+reach a given performance level.                                                       Riedmiller M, Fidjeland AK, Ostrovski G, et al. Human-level control through deep
+                                                                                       reinforcement learning. Nature 2015;518(7540):529–33.
+Appendix E. Vectorized environment support                                        [19] Lillicrap TP, Hunt JJ, Pritzel A, Heess N, Erez T, Tassa Y, Silver D, Wierstra
+                                                                                       D. Continuous control with deep reinforcement learning. In: 4th international
+    To support large-scale experiments and accelerate training with                    conference on learning representations (ICLR); 2016.
+modern off-policy algorithms, PyCRM provides specialised support for              [20] Fujimoto S, Hoof H, Meger D. Addressing function approximation error in actor-
+                                                                                       critic methods. In: International conference on machine learning. PMLR; 2018. p.
+vectorized environments. This is crucial for leveraging parallel hard­                 1587–96.
+ware to improve sample throughput. The core of this support is the                [21] Haarnoja T, Zhou A, Abbeel P, Levine S. Soft actor-critic: off-policy maximum
+DispatchSubprocVecEnv, located in the crm.agents.sb3.vec module.                       entropy deep reinforcement learning with a stochastic actor. In: International
+                                                                                       conference on machine learning. Pmlr; 2018. p. 1861–70.
+This class is an extension of Stable Baselines 3’s standard SubprocVecEnv         [22] Abate A, Almulla Y, Fox J, Hyland D, Wooldridge M. Learning task automata for
+and is specifically designed to enable the efficient, parallel generation              reinforcement learning using hidden Markov models. In: ECAI 2023 – 26th European
+of counterfactual experiences across multiple environment instances. By                conference on artificial intelligence, Vol. 372 of frontiers in artificial intelligence and
+                                                                                       applications, IOS Press; 2023. p. 3–10. https://doi.org/10.3233/FAIA230247
+dispatching the counterfactual generation logic to the subprocesses, it
+                                                                                  [23] Brafman R, De Giacomo G, Patrizi F. LTLf/LDLf non-Markovian rewards.
+minimises the communication overhead that would otherwise create a                     In: Proceedings of the AAAI conference on artificial intelligence, vol. 32;
+bottleneck.                                                                            2018.
+    This      allows    counterfactual-enabled        agents,   such   as         [24] Mnih V, Badia AP, Mirza M, Graves A, Lillicrap T, Harley T, Silver D, Kavukcuoglu K.
+                                                                                       Asynchronous methods for deep reinforcement learning. In: International conference
+CounterfactualSAC, to scale effectively, combining the sample                          on machine learning. PMLR; 2016. p. 1928–37.
+efficiency gains from counterfactual learning with the throughput                 [25] Schulman J, Wolski F, Dhariwal P, Radford A, Klimov O, arXiv preprint
+benefits of vectorization. The implementation is designed for seam­                    arXiv:1707.06347. 2017.
+                                                                                  [26] Varricchione G, Klassen TQ, Alechina N, Dastani M, Logan B, McIlraith SA.
+less integration, requiring minimal changes to the standard training                   Pushdown reward machines for reinforcement learning. In: Proceedings of the 22nd
+workflow, as shown in Listing 4. By using DispatchSubprocVecEnv,                       international conference on principles of knowledge representation and reasoning
+researchers can significantly speed up convergence. The agent ben­                     (KR); 2025. p. 566–76. https://doi.org/10.24963/kr.2025/55
+                                                                                  [27] Puterman ML. Markov decision processes: discrete stochastic dynamic programming.
+efits from both a higher volume of environment interactions per                        John Wiley & Sons; 2014.
+second and the enhanced sample efficiency provided by learning from               [28] Fischer PC, Meyer AR, Rosenberg AL. Counter machines and counter languages.
+counterfactual experiences generated in parallel.                                      Math. Syst. Theory 1968;2(3):265–83.
+
+                                                                              9
+

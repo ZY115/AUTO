@@ -1,0 +1,645 @@
+                               Universal Value Function Approximators
+
+
+Tom Schaul                                                                                          SCHAUL @ GOOGLE . COM
+Dan Horgan                                                                                          HORGAN @ GOOGLE . COM
+Karol Gregor                                                                                        KAROLG @ GOOGLE . COM
+David Silver                                                                                    DAVIDSILVER @ GOOGLE . COM
+Google DeepMind, 5 New Street Square, EC4A 3TW London
+                         Abstract                                 how to evaluate or control a specific aspect of the environ-
+     Value functions are a core component of rein-                ment (e.g. progress toward a waypoint). A collection of
+     forcement learning systems. The main idea is                 general value functions provides a powerful form of knowl-
+     to to construct a single function approximator               edge representation that can be utilised in several ways. For
+     V (s; θ) that estimates the long-term reward from            example, the Horde architecture (Sutton et al., 2011) con-
+     any state s, using parameters θ. In this paper               sists of a discrete set of value functions (‘demons’), all of
+     we introduce universal value function approx-                which may be learnt simultaneously from a single stream
+     imators (UVFAs) V (s, g; θ) that generalise not              of experience, by bootstrapping off-policy from successive
+     just over states s but also over goals g. We de-             value estimates (Modayil et al., 2014). Each value function
+     velop an efficient technique for supervised learn-           may also be used to generate a policy or option, for example
+     ing of UVFAs, by factoring observed values into              by acting greedily with respect to the values, and terminat-
+     separate embedding vectors for state and goal,               ing at goal states. Such a collection of options can be used
+     and then learning a mapping from s and g to                  to provide a temporally abstract action-space for learning
+     these factored embedding vectors. We show how                or planning (Sutton et al., 1999). Finally, a collection of
+     this technique may be incorporated into a re-                value functions can be used as a predictive representation
+     inforcement learning algorithm that updates the              of state, where the predicted values themselves are used as
+     UVFA solely from observed rewards. Finally, we               a feature vector (Sutton & Tanner, 2005; Schaul & Ring,
+     demonstrate that a UVFA can successfully gener-              2013).
+     alise to previously unseen goals.                            In large problems, the value function is typically repre-
+                                                                  sented by a function approximator V (s, θ), such as a linear
+1. Introduction                                                   combination of features or a neural network with param-
+Value functions are perhaps the most central idea in rein-        eters θ. The function approximator exploits the structure
+forcement learning (Sutton & Barto, 1998). The main idea          in the state space to efficiently learn the value of observed
+is to cache knowledge in a single function V (s) that repre-      states and generalise to the value of similar, unseen states.
+sents the utility of any state s in achieving the agent’s over-   However, the goal space often contains just as much struc-
+all goal or reward function. Storing this knowledge enables       ture as the state space (Foster & Dayan, 2002). Consider
+the agent to immediately assess and compare the utility of        for example the case where the agent’s goal is described by
+states and/or actions. The value function may be efficiently      a single desired state: it is clear that there is just as much
+learned, even from partial trajectories or under off-policy       similarity between the value of nearby goals as there is be-
+evaluation, by bootstrapping from value estimates at a later      tween the value of nearby states. Our main idea is to ex-
+state (Precup et al., 2001).                                      tend the idea of value function approximation to both states
+                                                                  s and goals g, using a universal value function approxima-
+However, value functions may be used to represent knowl-
+                                                                  tor (UVFA1 ) V (s, g, θ). A sufficiently expressive function
+edge beyond the agent’s overall goal. General value func-
+                                                                  approximator can in principle identify and exploit structure
+tions Vg (s) (Sutton et al., 2011) represent the utility of any
+                                                                  across both s and g. By universal, we mean that the value
+state s in achieving a given goal g (e.g. a waypoint), repre-
+                                                                  function can generalise to any goal g in a set G of possible
+sented by a pseudo-reward function that takes the place of
+                                                                  goals: for example a discrete set of goal states; their power
+the real rewards in the problem. Each such value function
+                                                                  set; a set of continuous goal regions; or a vector represen-
+represents a chunk of knowledge about the environment:
+                                                                  tation of arbitrary pseudo-reward functions.
+Proceedings of the 32 nd International Conference on Machine      This UVFA effectively represents an infinite Horde of
+Learning, Lille, France, 2015. JMLR: W&CP volume 37. Copy-           1
+right 2015 by the author(s).                                             Pronounce ‘YOU-fah’.
+                                           Universal Value Function Approximators
+
+demons that summarizes a whole class of predictions in a               V(s,g)                  V(s,g)
+single object. Any system that enumerates separate value                                                       ˆφ(s)      ˆψ(g)       V(s,g)
+
+functions and learns each individually (like the Horde) is                                       h
+hampered in its scalability, as it cannot take advantage of
+                                                                           F                                    φ          ψ              h
+any shared structure (unless the demons share parameters).                                 φ            ψ
+In contrast, UVFAs can exploit two kinds of structure be-
+tween goals: similarity encoded a priori in the goal rep-                                                       s          g      ˆφ(s)        ˆψ(g)
+                                                                   s            g          s            g
+resentations g, and the structure in the induced value func-
+tions discovered bottom-up. Also, the complexity of UVFA         Figure 1. Diagram of the presented function approximation ar-
+learning does not depend on the number of demons but on          chitectures and training setups. In blue dashed lines, we show the
+the inherent domain complexity. This complexity is larger        learning targets for the output of each network (cloud). Left: con-
+than standard value function approximation, and represent-       catenated architecture. Center: two-stream architecture with two
+ing a UVFA may require a rich function approximator such         separate sub-networks φ and ψ combined at h. Right: Decom-
+as a deep neural network.                                        posed view of two-stream architecture when trained in two stages,
+                                                                 where target embedding vectors are formed by matrix factoriza-
+Learning a UVFA poses special challenges. In general, the
+                                                                 tion (right sub-diagram) and two embedding networks are trained
+agent will only see a small subset of possible combinations      with those as multi-variate regression targets (left and center sub-
+of states and goals (s, g), but we would like to generalise in   diagrams).
+several ways. Even in a supervised learning context, when
+the true value Vg (s) is provided, this is a challenging re-     π : S 7→ A and each g, and under some technical reg-
+gression problem. We introduce a novel factorization ap-         ularity conditions, we define a general value function that
+proach that decomposes the regression into two stages. We        represents the expected cumulative pseudo-discounted fu-
+view the data as a sparse table of values that contains one      ture pseudo-return, i.e.,
+row for each observed state s and one column for each ob-                        "∞                         t
+                                                                                                                             #
+served goal g, and find a low-rank factorization of the table
+                                                                                  X                         Y
+                                                                   Vg,π (s) := E       Rg (st+1 , at , st )   γg (sk ) s0 = s
+into state embeddings φ(s) and goal embeddings ψ(g). We                                  t=0                        k=0
+then learn non-linear mappings from states s to state em-
+beddings φ(s), and from goals g to goal embeddings ψ(g),         where the actions are generated according to π, as well as
+using standard regression techniques (e.g. gradient descent      an action-value function
+on a neural network). In our experiments, this factorized                  Qg,π (s, a) := Es0 [Rg (s, a, s0 ) + γg (s0 ) · Vg,π (s0 )]
+approach learned UVFAs an order of magnitude faster than
+naive regression.                                                Any goal admits an optimal policy πg∗ (s)                  :=
+Finally, we return to reinforcement learning, and provide        arg maxa Qπ,g (s, a), and a corresponding optimal
+two algorithms for learning UVFAs directly from rewards.         value function2 Vg∗ := Vg,πg∗ . Similarly, Q∗g := Qg,πg∗ .
+The first algorithm maintains a finite Horde of general
+value functions Vg (s), and uses these values to seed the ta-    3. Universal Value Function Approximators
+ble and hence learn a UVFA V (s, g; θ) that generalizes to       Our main idea is to represent a large set of optimal value
+previously unseen goals. The second algorithm bootstraps         functions by a single, unified function approximator that
+directly from the value of the UVFA at successor states. On      generalises over both states and goals. Specifically, we
+the Atari game of Ms Pacman, we then demonstrate that            consider function approximators V (s, g; θ) ≈ Vg∗ (s) or
+UVFAs can scale to larger visual input spaces and different      Q(s, a, g; θ) ≈ Q∗g (s, a), parameterized by θ ∈ Rd , that
+types of goals, and show they generalize across policies for     approximate the optimal value function both over a poten-
+obtaining possible pellets.                                      tially large state space s ∈ S, and also a potentially large
+                                                                 goal space g ∈ G.
+2. Background                                                    Figure 1 schematically depicts possible function approxi-
+Consider a Markov Decision Process defined by a set of           mators: the most direct approach, F : S × G 7→ R simply
+states s ∈ S, a set of actions a ∈ A, and transition prob-       concatenates state and goal together as a joint input. The
+abilities T (s, a, s0 ) := P(st+1 = s0 | st = s, at = a).        mapping from concatenated input to regression target can
+For any goal g ∈ G, we define a pseudo-reward func-              then be dealt with a non-linear function approximator such
+tion Rg (s, a, s0 ) and a pseudo-discount function γg (s).       as a multi-layer perceptron (MLP).
+The pseudo-discount γg takes the double role of state-           A two-stream architecture, on the other hand, assumes that
+dependent discounting, and of soft termination, in the sense     the problem has a factorized structure and computes its out-
+that γ(s) = 0 if and only if s is a terminal state according     put from two components φ : S 7→ Rn and ψ : G 7→ Rn
+to goal g (e.g. the waypoint is reached). For any policy               2
+                                                                           Aka ideal value of an active forecast (Schaul & Ring, 2013).
+                                               Universal Value Function Approximators
+                                                                                 h                      2 i
+                                                                       (MSE) E Vg∗ (s) − V (s, g; θ) , to compute a descent
+                                                                       direction. Parameters θ are then updated in this direction
+                                                                       by a variant of stochastic gradient descent (SGD). This ap-
+                                                                       proach may be applied to any of the architectures in sec-
+                                                                       tion 3. For two-stream architectures, we further introduce a
+                                                                       two-stage training procedure based on matrix factorization,
+                                                                       which proceeds as follows:
+
+                                                                         • Stage 1: lay out all the values Vg∗ (s) in a data matrix
+Figure 2. Clustering structure of embedding vectors on a one-              with one row for each observed state s and one col-
+room LavaWorld, after processing them with t-SNE (Van der                  umn for each observed goal g, and factorize that ma-
+Maaten & Hinton, 2008) to map their similarities in 2D. Col-               trix4 , finding a low-rank approximation that defines
+ors correspond. Left: Room layout. Center: State embeddings.               n-dimensional embedding spaces for both states and
+Right: Goal embeddings. Note how both embeddings recover the               goals. We denote φ̂s the resulting target embedding
+cycle and dead-end structure of the original environment.                  vector for the row of s and ψ̂ g the target embedding
+                                                                           vector for the column of g.
+that both map into an n-dimensional vector space of em-
+beddings and output function h : Rn × Rn 7→ R that maps                  • Stage 2: learn the parameters of the two networks φ
+two such embedding vectors to a single scalar regression                   and ψ via separate multivariate regression toward the
+output. We will focus on the case where the mappings φ                     target embedding vectors φ̂s and ψ̂ g from phase 1,
+and ψ are general function approximators, such as MLPs,                    respectively (see Figure 1, right).
+whereas h is a simple function, such as the dot-product.
+The two-stream architecture is capable of exploiting the               The first stage leverages the well-understood technique of
+common structure between states and goals. First, goals are            matrix factorisation as a subprocedure. The factorisation
+often defined in terms of states, e.g. G ⊆ S. We exploit this          identifies idealised row and column embeddings φ̂ and ψ̂
+property by sharing features between φ and ψ. Specifically,            that can accurately reconstruct the observed values, ignor-
+when using MLPs for φ and ψ, the parameters of their first             ing the actual states s and goals g. The second stage then
+layers may be shared, so that common features are learned              tries to achieve these idealised embeddings, i.e. how to
+for both states and goals. Second, the UVFA may be known               convert an actual state s into its idealised embedding φ(s)
+to be symmetric (i.e. Vg∗ (s) = Vs∗ (g) ∀s, g), for example a          and an actual state g into its idealised embedding ψ(s). The
+UVFA that computes the distance between state s and goal               two stages are given in pseudo-code in lines 17 to 24 of Al-
+g in a reversible environment. This symmetry can be ex-                gorithm 1, below. An optional third stage fine-tunes the
+ploited by using the same network φ = ψ, and a symmetric               joint two-stream architecture with end-to-end training.
+output function h (e.g. dot product). We will refer to these           In general, the data matrix may be large, sparse and noisy,
+two cases as partially symmetric and symmetric architec-               but there is a rich literature on dealing with these cases;
+tures respectively. In particular, when choosing a symmet-             concretely, we used OptSpace (Keshavan et al., 2009) for
+ric architecture with a distance-based h, and G = S, then              matrix factorization when the data matrix is available in a
+UVFA will learn an embedding such that small distances                 batch form (and h is the dot-product), and SGD otherwise.
+according to h imply nearby states, which may be very use-             As Figure 3 shows, training can be sped up by an order of
+ful representation of state (as discussed in Appendix D).3             magnitude when using the two-stage approach, compared
+                                                                       to end-to-end training, on a 2-room 7x7 LavaWorld.
+3.1. Supervised Learning of UVFAs
+We consider two approaches to learning UVFAs, first using              4. Supervised Learning Experiments
+a direct end-to-end training procedure, and second using               We ran several experiments to investigate the generalisa-
+a two-stage training procedure that exploits the factorised            tion capabilities of UVFAs. In each case, the scenario is
+structure of a two-stream function approximator. We first              one of supervised learning, where the ground truth values
+consider the simpler, supervised learning setting, before re-          Vg∗ (s) or Q∗g (s, a) are only given for some training set of
+turning to the reinforcement learning setting in section 5.            pairs (s, g). We trained a UVFA on that data, and evaluated
+The direct approach to learning the parameters θ is by                 its generalisation capability in two ways. First, we mea-
+end-to-end training. This is achieved by backpropagating               sured the prediction error (MSE) on the value of a held-out
+a suitable loss function, such as the mean-squared error               set of unseen (s, g) pairs. Second, we measured the policy
+   3                                                                      4
+     Note that in the minimal case of a single goal, both archi-           This factorization can be done with SGD for most choices of
+tectures collapse to conventional function approximation, with ψ       h, while the linear case (dot-product) also admits more efficient
+being a constant multiplier and φ(s) a linear function of the value.   algorithms like singular value decomposition.
+                                                                         Universal Value Function Approximators
+                                                                                                                                          Policy Quality by Rank                                       MSE by Rank
+                  Policy Quality                                            MSE                                                (over 10 random bisections of subgoal space)              (over 10 random bisections of subgoal space)
+                                                       100                                                                                                                             100
+                                                                                         e2e dot                             1.0                                                                                          Max
+                                                                                         e2e concat                                                                                                                       Median
+ 0.8                                                                                                                                                                                  10−1
+                                                                                         2stage dot                                                                                                                       Min
+                                                      10−1                                                                   0.8
+
+
+
+
+                                                                                                            Policy Quality
+ 0.6                                                                                                                                                                                  10−2
+                                                                                                                             0.6
+                                                                                                                                                                                MSE
+                                                      10−2
+ 0.4                                                                                                                                                                                  10−3
+                                                                                                                             0.4
+
+                                                                                                                                                                  Max
+ 0.2                                                                                                                         0.2                                                      10−4
+                                                      10−3                                                                                                        Median
+                                   e2e dot
+                                                                                                                                                                  Min
+                                   e2e concat                                                                                0.0                                                      10−5
+ 0.0                               2stage dot                                                                                           5         10         15            20                0      5        10         15        20
+                                                      10   −4                                                                                     Rank                                                      Rank
+   102      103        104         105          106         102   103        104         105          106
+                  Training steps                                        Training steps
+                                                                                                             Figure 5. Generalization to unseen values as a function of rank.
+Figure 3. Comparative performance of a UVFA on LavaWorld                                                     Left: Policy quality. Right: Prediction error.
+(two rooms of 7x7) as a function of training steps for two differ-
+ent architectures: the two-steam architecture with a dot-product                                             quality of a value function approximator Q̂(s, a, g; θ) to be
+on top (‘dot’) and the concatenated architecture (‘concat’), and                                             the true expected discounted reward according to its goal g,
+for two training modes: end-to-end supervised regression (‘e2e’)                                             averaged over all start states, when following the soft-max
+and two-stage training (‘2stage’). Note that two-stage training                                              policy of these values with temperature τ , as compared to
+is impossible for the concatenated network. Dotted lines indi-                                               doing the same with the optimal value function. A non-
+cate minimum and maximum observed values among 10 random
+                                                                                                             zero temperature makes this evaluation criterion change
+seeds. The computational cost of the matrix factorization is orders
+                                                                                                             smoothly with respect to the parameters, which gives par-
+of magnitudes smaller than the regression and omitted in these
+plots.                                                                                                       tial credit to near-perfect policies5 as in Figure 8. We nor-
+                                                                                                             malise the policy quality such that optimal behaviour has a
+       True Subgoal 1         Reconstructed Subgoal 1                          Factor 1
+                                                                                                             score of 1, and the uniform random policy scores 0.
+                                                                                                             To help provide intuition, we use two small-scale example
+                                                                                                             domains. First, a classical grid-world with 4 rooms and an
+                                                                                                             action space with the 4 cardinal directions (see Figure 4),
+       True Subgoal 2         Reconstructed Subgoal 2                          Factor 2                      second LavaWorld (see Figure 2, left), which is a grid-
+                                                                                                             world with a couple of differences: it contains lava blocks
+                                                                                                             that are deadly when touched, it has multiple rooms, each
+                                                                                                             with a ‘door’ that teleports the agent to the next room, and
+                                                                                                             the observation features show only the current room.
+       True Subgoal 3         Reconstructed Subgoal 3                          Factor 3
+                                                                                                             In this paper we will side-step the thorny issue of where
+                                                                                                             goals come from, and how they are represented; instead, if
+                                                                                                             not mentioned otherwise, we will explore the simple case
+                                                                                                             where goals are states themselves, i.e. G ⊂ S and enter-
+       True Subgoal 4         Reconstructed Subgoal 4                                                        ing a goal is rewarded. The resulting pseudo-discount and
+                                                                                                             pseudo-reward functions can then be defined as:
+                                                                                                                                      (
+                                                                                                                             0          1, s0 = g and γext (s) 6= 0
+                                                                                                                  Rg (s, a, s ) =
+                                                                                                                                        0, otherwise
+       True Subgoal 5         Reconstructed Subgoal 5                                                                                 (
+                                                                                                                                        0,         s=g
+                                                                                                                         γg (s) =
+                                                                                                                                        γext (s), otherwise
+                                                                                                             where γext is the external discount function.
+       True Subgoal 6         Reconstructed Subgoal 6
+Figure 4. Illustrations. Left: Color-coded value function overlaid                                           4.1. Tabular Completion
+on the maze structure of the 4-rooms environment, for 5 different                                            Our initial experiments focus on the simplest case, using a
+goal locations. Middle: Reconstruction of these same values, af-                                             tabular representation of the UVFA. Both states and goals
+ter a rank-3 factorization of the UVFA. Right: Overlay for the                                               are represented unambiguously by 1-hot unit vectors6 , and
+three factors (embedding dimensions) from the low-rank factor-                                               the mappings φ and ψ are identity functions. We investigate
+ization of the UVFA: the first one appears to correspond to an                                               how accurately unseen (s, g) pairs can be reconstructed
+inside-vs-corners dimension, and the other two appear to jointly
+encode room identity.                                                                                                              5
+                                                                                                                   Compared to -greedy, a soft-max also prevents deadly ac-
+                                                                                                             tions (as in LavaWorld) from being selected too often.
+                                                                                                                 6
+                                                                                                                   A single dimension has value 1, all others are zero.
+                                                                                              Universal Value Function Approximators
+
+                               Policy Quality by Sparsity                                     MSE by Sparsity                                        Policy Quality (Training Set)                                       Policy Quality (Validation Set)
+                                                                                                                                            1.0                                                                0.30
+                                (Over 10 random seeds)                                     (Over 10 random seeds)
+                 1.0                                                           100
+                                                                                                                                            0.8                                                                0.25
+                                                       Max
+                 0.8                                   Median                                                                               0.6                                                                0.20
+                                                       Min
+
+
+
+                                                                                                                          Policy Quality                                                     Policy Quality
+                                                                              10−1
+
+
+Policy Quality
+                 0.6                                                                                                                        0.4                                                                0.15
+
+                                                                        MSE
+                                                                                                                                            0.2                                                                0.10
+                 0.4
+                                                                                                                                            0.0                                                                0.05
+                                                                              10−2
+                 0.2                                                                                           Max
+                                                                                                                                           −0.2                               Max                              0.00                                Max
+                                                                                                               Median
+                 0.0                                                                                                                                                          Median                                                               Median
+                                                                                                               Min                         −0.4                                                               −0.05
+                                                                              10   −3                                                                                         Min                                                                  Min
+                   0.0   0.1    0.2   0.3 0.4 0.5   0.6     0.7   0.8               0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8                    −0.6                                                               −0.10
+                                         Sparsity                                                 Sparsity                                     102         103          104            105                         102          103          104            105
+                                                                                                                                                            Training steps                                                       Training steps
+                                                                                                                                                         MSE (Training Set)                                                  MSE (Validation Set)
+Figure 6. Generalization to unseen values as a function of sparsity                                                                         101                                                                 101
+                                                                                                                                                                              Max                                                                  Max
+for rank n = 7. The sparsity is the proportion of (s, g) values that                                                                                                          Median                                                               Median
+                                                                                                                                            100
+are unobserved. Left: Policy quality. Right: Prediction error.                                                                                                                Min                                                                  Min
+                                                                                                                                                                                                                100
+                                                                                                                                           10−1
+with a low-rank approximation. Figure 4 provides an illus-                                                                  MSE                                                                       MSE
+                                                                                                                                           10−2
+tration. We found that the policy quality saturated at an op-                                                                                                                                                  10−1
+timal behavior level already at a low rank, while the value                                                                                10−3
+error kept improving (see Figure 5). This suggests that a
+low-rank approximation can capture much of the structure                                                                                   10−4
+                                                                                                                                              102          103          104            105
+                                                                                                                                                                                                               10−2
+                                                                                                                                                                                                                  102           103          104            105
+                                                                                                                                                            Training steps                                                       Training steps
+of a universal value function, at least insofar as its induced
+policies are concerned. Another illustration is given in Fig-                                                             Figure 7. Policy quality (top) and prediction error (bottom) on
+ure 2 showing how the low-rank embeddings can recover                                                                     the UVFA learned by the two-stream architecture (with two-stage
+the topological structure of policies in LavaWorld.                                                                       training), as a function of training samples (log-scale), on a 7x7
+                                                                                                                          LavaWorld with 1 room. Left: on training set of goals. Right: on
+Next, we evaluate how resilient the process is with respect
+                                                                                                                          test set of goals.
+to missing or unreliable data. We represent the data as a
+sparse matrix M of (s, g) pairs, and apply OptSpace to per-                                                               G ⊂ S. The data matrix M is constructed from all states,
+form sparse matrix completion (Keshavan et al., 2009) such                                                                but only the goals in the training set (half of all possible
+              >                                     >
+that M ≈ φ̂ ψ̂, reconstructing V (s, g; θ) := φ̂s ψ̂ g . Fig-                                                             states, randomly selected); a separate three-layer MLP is
+ure 6 shows that the matrix completion procedure provides                                                                 used for φ and ψ, and training follows our proposed two-
+successful generalisation, and furthermore that policy qual-                                                              stage approach (lines 17 to 24 in Algorithm 1 below; see
+ity degrades gracefully as less and less value information is                                                             also Section 3.1 and Appendix B), and a small rank of
+provided. See also Figure 13 in the appendix for an illus-                                                                n = 7 that provides sufficient training performance (i.e.,
+tration of this process.                                                                                                  90% policy quality, see Figure 5). Figure 7 summarizes the
+In summary, the UVFA is learned jointly over states and                                                                   results, showing that it is possible to interpolate the value
+goals, which lets it infer V (s, g) even if s and g have never                                                            function to a useful level of quality on the test set of goals
+before been encountered together; this form of generaliza-                                                                (the remaining half of G).
+tion would be inconceivable with a single value function.                                                                 Furthermore, transfer learning is straightforward, by post-
+                                                                                                                          training the UVFA on goals outside its training set: Fig-
+4.2. Interpolation                                                                                                        ure 12 shows that this leads to very quick learning, as com-
+One use case for UVFAs is the continual learning setting,                                                                 pared to training a UVFA with the same architecture from
+when the set of goals under consideration expands over                                                                    scratch.
+time (Ring, 1994). Ideally, a UVFA trained to estimate the
+values on a training set of goals GT should give reason-                                                                  4.3. Extrapolation
+able estimates on new, never-seen goals from a test set GV                                                                The interpolation between goals is feasible because similar
+if there is structure in the space of all goals that the map-                                                             goals are represented with similar features, and because the
+ping function ψ can capture. We investigate this form of                                                                  training set is broad enough to cover the different parts of
+generalization from a training set to a test set of goals in                                                              goal space, in our case because we took a random subset of
+the same supervised setup as before, but with non-tabular                                                                 G. More challengingly, we may still be able to generalize
+function approximators.                                                                                                   to unseen goals in completely new parts of space – in par-
+Concretely, we represent states in the LavaWorld by a grid                                                                ticular, if states are represented with the same features as
+of pixels for the currently observed room. Each pixel is                                                                  goals, and states in these new parts of space have already
+a binary vector indicating the presence of the agent, lava,                                                               been encountered, then a partially symmetric architecture
+empty space, or door respectively. We represent goals as a                                                                (see section 3) allows the knowledge transfer from φ to ψ.
+desired state grid, also represented in terms of pixels, i.e.                                                             We conduct a concrete experiment to show the feasibility
+                                              Universal Value Function Approximators
+
+                                                                     Algorithm 1 UVFA learning from Horde targets
+                                                                      1: Input: rank n, training goals GT , budgets b1 , b2 , b3
+                                                                      2: Initialise transition history H
+                                                                      3: for t = 1 to b1 do
+                                                                      4:    H ← H ∪ (st , at , γext , st+1 )
+                                                                      5: end for
+                                                                      6: for i = 1 to b2 do
+                                                                      7:    Pick a random transition t from H
+                                                                      8:    Pick a random goal g from GT
+Figure 8. A UVFA trained only on goals in the first 3 rooms of the    9:    Update Qg given a transition t
+maze generalizes such that it can achieve goals in the fourth room   10: end for
+as well. Above: This visualizes the learned UVFA for 3 test goals    11: Initialise data matrix M
+(marked as red dots) in the fourth room. The color encodes the       12: for (st , at , γext , st+1 ) in H do
+value function, and the arrows indicate the actions of the greedy    13:    for g in GT do
+policy. Below: Ground truth for the same 3 test goals.               14:       Mt,g ← Qg (st , at )
+                                                                     15:    end for
+                                                                     16: end for
+                                                                                                                  >
+of the idea, on the 4-room environment, where the training           17: Compute rank-n factorisation M ≈ φ̂ ψ̂
+set now includes only goals in three rooms, and the test set         18: Initialise embedding networks φ and ψ
+contains the goals in the fourth room. Figure 8 shows the            19: for i = 1 to b3 do
+resulting generalization of the UVFA, which does indeed              20:    Pick a random transition t from H
+extrapolate to induce a policy that is likely to reach those         21:    Do regression update of φ(st , at ) toward φ̂t
+test goals, with a policy quality of 24% ± 8%.                       22:    Pick a random goal g from GT
+                                                                     23:    Do regression update of ψ(g) toward ψ̂ g
+5. Reinforcement Learning Experiments                                24: end for
+Having established that UVFAs can generalize across goals            25: return Q(s, a, g) := h(φ(s, a), ψ(g))
+in a supervised learning setting, we now turn to a more real-
+istic reinforcement learning scenario, where only a stream
+of observations, actions and rewards is available, but there                                         Training Prediction Error
+                                                                                                                Learning Updates
+                                                                                                                                                                                  Test Prediction Error
+                                                                                                                                                                                           Learning Updates
+are no ground-truth target values. Also fully observable                                     1e+02      3e+02          1e+03       2e+03   5e+03                          1e+02    3e+02          1e+03       2e+03   5e+03
+states are no longer assumed, as observations could be                               3e+02                                                                        3e+02
+
+noisy or aliased. We consider two approaches: firstly rely-
+                                                                      Data Samples                                                                 Data Samples
+                                                                                     1e+03                                                                        1e+03
+
+ing on Horde to provide targets to the UVFA, and secondly                            3e+03                                                                        3e+03
+
+                                                                                     1e+04                                                                        1e+04
+bootstrapping from the UVFA itself. Given the results from                           3e+04                                                                        3e+04
+Section 4 we retain a two-stream architecture throughout,
+                                                                                                      Training Policy Quality                                                      Test Policy Quality
+with relatively small embedding dimensions n.                                        Learning Updates                        Learning Updates
+                                                                     Figure 9. A UVFA          with embedding dimension          n = 6, learned
+                                                                                             1e+02      3e+02          1e+03       2e+03   5e+03                          1e+02    3e+02          1e+03       2e+03   5e+03
+                                                                     with a horde of 12 demons, on the a 3-room LavaWorld of size
+5.1. Generalizing from Horde                                            3e+02                                   3e+02
+                                                                     7 ×1e+03
+                                                                           7, following Algorithm 1. Heatmaps           of prediction error with
+
+                                                                      Data Samples                                                                 Data Samples
+                                                                                                                1e+03
+One way to incorporate UVFAs into a reinforcement learn-             (log)  data  samples    one   vertical axis  and (log) learning updates on
+                                                                        3e+03                                   3e+03
+ing agent is to make use of the Horde architecture (Sutton           the1e+04
+                                                                         horizontal axis: warmer is better.1e+04   Left: Learned UVFA perfor-
+et al., 2011). Each demon in the Horde approximates the              mance
+                                                                        3e+04 on the 12 training goals       estimated by the demons. Right:
+                                                                                                                3e+04
+
+value function for a single, specific goal. These values are         UVFA generalization to a test set of 25 unseen goals. Given the
+learnt off-policy, in parallel, from a shared stream of inter-       difficulty of data imbalance, the prediction error is adequate on
+actions with the environment. The key new ingredient is to           the training set (MSE of 0.6) and generally better on the test set
+seed a data matrix with values from the Horde, and use the           (MSE of 0.4), even though we already see an overfitting trend
+                                                                     toward the larger number of updates.
+two-stream factorization to build a UVFA that generalises
+to other goals than those learned directly by the Horde.
+Algorithm 1 provides pseudocode for this approach. Each              from which we then produce target embeddings φ̂t for each
+demon learns a specific value function Qg (s, a) for its goal        time-step and ψ̂ g for each goal (as in section 3.1, line 11-
+g (lines 2-10), off-policy, using the Horde architecture. Af-        17), and in the following stage the two networks φ and ψ
+ter processing a certain number of transitions, we build a           are trained by regression to match these (lines 18-24).
+data matrix M from their estimates, where each column                The performance of this approach now depends on two fac-
+g corresponds to one goal/demon, and each row t corre-               tors: the amount of experience the Horde has accumulated,
+sponds to the time-index of one transition in the history,           which directly affects the quality of the targets used in the
+                                              Universal Value Function Approximators
+                                                                                                                             Policy Quality by Sparsity
+                                                                                                                              (Over 10 random seeds)
+                                                                                                       1.0
+
+                                                                                                       0.9
+
+                                                                                                       0.8
+
+                                                                                                       0.7
+
+
+
+                                                                                      Policy Quality
+                                                                                                       0.6
+
+                                                                                                       0.5
+
+                                                                                                       0.4
+                                                                                                                      Max
+                                                                                                       0.3            Median
+                                                                                                                      Min
+                                                                                                       0.2
+                                                                                                          0.0   0.1    0.2     0.3   0.4   0.5   0.6      0.7   0.8   0.9
+                                                                                                                                      Sparsity
+
+
+
+                                                                     Figure 11. Policy quality after learning with direct bootstrapping
+                                                                     from a stream of transitions using Equation 1 as a function of the
+                                                                     fraction of possible training pairs (s, g) that were held out, on a
+                                                                     2-room LavaWorld of size 10 × 10, after 104 updates.
+
+                                                                     set of 29 ‘training’ demons was used to seed the matrix and
+                                                                     train a UVFA. We then investigated generalization perfor-
+                                                                     mance on 5 unseen goal locations g, corresponding to 5
+Figure 10. UVFA results on Ms Pacman. Top left: Locations            of the 150 pellet locations, randomly selected after exclud-
+of 29 training set pellet goals highlighted in green. Top right:     ing the 29 training locations. Figure 10 visualises the value
+Locations of 120 test set pellet goals in pink. Center row: Color-   functions of the UVFA at these 5 pellet locations, compared
+coded value functions for 5 test set pellet goals, as learned by     to the value functions learned directly by a larger Horde.
+the Horde. Bottom row: Value functions predicted by a UVFA,          These results demonstrate that a UVFA learned from a
+trained only from the 29 training set demons, as predicted on the    small Horde can successfully approximate the knowledge
+same 5 test set goals. The wrapping of values between far left and   of a much larger Horde.
+far right is due to hidden passages in the game map.
+                                                                     Preliminary, non-quantitative experiments further indicate
+                                                                     that representing multiple value functions in a single UVFA
+matrix factorization; and the amount of computation used
+                                                                     reduces noise from the individual value functions, and that
+to build the UVFA from this data (i.e. training the embed-
+                                                                     the resulting policy quality is decent.
+dings φ(s) and ψ(g).
+This reinforcement learning approach is more challeng-               5.3. Direct Bootstrapping
+ing than the simple supervised learning setting that we ad-          Instead of a detour via an explicit Horde, it is also possi-
+dressed in the previous section. One complication is that            ble to train a UVFA end-to-end with direct bootstrapping
+the data itself depends on the way in which the behaviour            updates using a variant of Q-learning:
+policy explores the environment. In many cases, we do
+not see much data relevant to goals that we might like to
+                                                                                                                             
+                                                                                                                        0
+                                                                        Q(st , at , g) ← α rg + γg max      Q(s  t+1 , a  , g)
+learn about (in the Horde), or generalise to (in the UVFA).                                               0                                                a
+Nevertheless, we found that this approach is sufficiently ef-                                                         + (1 − α) Q(st , at , g)                              (1)
+fective. Figure 9 visualizes performance results according
+to both these dimensions, showing that there is a tipping            applied at a randomly selected transition (st , at , st+1 ) and
+point in the quantity of experience after which the UVFA             goal g; where rg = Rg (st , at , st+1 ).
+approximates the ground truth reasonably well; training it-          When bootstrapping with function approximation at the
+erations on the other hand lead to smooth improvement. As            same time as generalizing over goals, the learning pro-
+section 4.2 promised, the UVFA also generalizes to those             cess is prone to become unstable, which can sometimes
+goals for which no demon was trained.                                be addressed by much smaller learning rates (and slowed
+                                                                     convergence), or using a more well-behaved h function
+5.2. Ms Pacman                                                       (at the cost of generality). In particular, here we ex-
+Scaling up, we applied our approach to learn a UVFA for              ploit our prior knowledge that our pseudo-reward functions
+the Atari 2600 game Ms. Pacman. We used a hand-crafted               are bounded between 0 and 1, and use a distance-based
+goal space G: for each pellet on the screen, we defined eat-         h(a, b) = γ ka−bk2 , where k · k2 denotes Euclidean dis-
+ing it as an individual goal g ∈ R2 , which is represented           tance between embedding vectors. Figure 11 shows gener-
+by the pellet’s (x, y) coordinate on-screen. Following Al-           alization performance after learning when only a fraction
+gorithm 1, a Horde with 150 demons was trained. Each                 of state-goal pairs is present (as in Section 4.1). We do not
+demon processed the visual input directly from the screen            recover 100% policy quality with this setup, yet the UVFA
+(see Appendix C for further experimental details). A sub-            generalises well, as long as it is trained on about a quarter
+                                                                Universal Value Function Approximators
+
+ 1.0
+                     Policy Quality
+                                                  100
+                                                            Prediction error                be limited, and was augmented in their experiments by a
+                                                                                 transfer
+                                                                                 baseline
+                                                                                            tabular representation of states and goals. In contrast, we
+ 0.8
+                                                                                            consider general function approximators that can represent
+                                                 10−1
+ 0.6                                                                                        the joint structure in a much more flexible and powerful
+                                                                                            way, for example by exploiting the representational capa-
+ 0.4
+                                                 10−2
+                                                                                            bilities of deep neural networks.
+ 0.2
+                                      transfer
+ 0.0                                  baseline                                              7. Discussion
+        2        3               4               10−3 2
+   10       10                 10         105       10    103             104        105
+                     Training steps                             Training steps              This paper has developed a universal approximator for
+                                                                                            goal-directed knowledge. We have demonstrated that our
+Figure 12. Policy quality (left) and prediction error (right) as a
+                                                                                            UVFA model is learnable either from supervised targets, or
+function of additional training on the test of goals for the 3-room
+LavaWorld environment of size 7x7 and n = 15. ‘Baseline’ de-                                directly from real experience; and that it generalises effec-
+notes training on the test set from scratch (end-to-end), and ‘trans-                       tively to unseen goals. We conclude by discussing several
+fer’ is the same setup, but with the UVFA initialised by training on                        ways in which UVFAs may be used.
+the training set. We find that embeddings learned on the training                           First, UVFAs can be used for transfer learning to new
+set are helpful, and permit the system to attain good performance                           tasks with the same dynamics but different goals. Specifi-
+on the test set with just 1000 samples, rather than 100000 samples                          cally, the values V (s, g; θ) in a UVFA can be used to ini-
+when training from scratch.                                                                 tialise a new, single value function Vg (s) for a new task
+of the possible (s, g) pairs.                                                               with unseen goal g. Figure 12 demonstrates that an agent
+                                                                                            which starts from transferred values in this fashion can
+6. Related Work                                                                             learn to solve the new task g considerably faster than ran-
+                                                                                            dom value initialization.
+A number of previous methods have focused on general-
+                                                                                            Second, generalized value functions can be used as fea-
+ising across tasks rather than goals (Caruana, 1997). The
+                                                                                            tures to represent state (Schaul & Ring, 2013); this is a
+distinction is that a task may have different MDP dynamics,
+                                                                                            form of predictive representation (Singh et al., 2003). A
+whereas a goal only changes the reward function but not the
+                                                                                            UVFA compresses a large or infinite number of predictions
+transition structure of an MDP. These methods have almost
+                                                                                            into a short feature vector. Specifically, the state embed-
+exclusively been in explored in the context of policy search,
+                                                                                            ding φ(s) can be used as a feature vector that represents
+and fall into two classes: methods that combine local poli-
+                                                                                            state s. Furthermore, the goal embedding φ(g) can be used
+cies into a single situation-sensitive controller, for example
+                                                                                            as a separate feature vector that represents state g. Figure 2
+parameterized skills (Da Silva et al., 2012) or parameter-
+                                                                                            illustrated that these features can capture non-trivial struc-
+ized motor primitives (Kober et al., 2012); and methods that
+                                                                                            ture in the domain.
+directly parameterize a policy by the task as well as the
+state, e.g. using model-based RL (Deisenroth et al., 2014).                                 Third, a UVFA could be used to generate temporally ab-
+In contrast, our approach is model-free, value-based, and                                   stract options (Sutton et al., 1999). For any goal g a
+exploits the special shared structure inherent to states and                                corresponding option may be constructed that acts (soft-
+goals, which may not be present in arbitrary tasks. Further-                                )greedily with respect to V (s, g; θ) and terminates e.g.
+more, like the Horde (Sutton et al., 2011), but unlike policy                               upon reaching g. The UVFA then effectively provides a
+search methods, the UVFA does not need to see complete                                      universal option that represents (approximately) optimal
+separate episodes for each task or goal, as all goals can                                   behaviour towards any goal g ∈ G. This in turn allows a hi-
+in principle be learnt by off-policy bootstrapping from any                                 erarchical policy to choose any goal g ∈ G as a temporally
+behaviour policy (see section 5.3). A different line of work                                abstract action (Kaelbling, 1993).
+has explored generalizing across value functions in a rela-                                 Finally, a UVFA could also be used as a universal op-
+tional context (van Otterlo, 2009).                                                         tion model (Yao et al., 2014). Specifically, if pseudo-
+Perhaps the closest prior work to our own is the fragment-                                  rewards are defined by goal achievement (as in section 4),
+based approach of Foster and Dayan (Foster & Dayan,                                         then V (s, g; θ) approximates the (discounted) probability
+2002). This work also explored shared structure in value                                    of reaching g from s, under a policy that tries to reach it.
+functions across many different goals. Their mechanism
+used a specific mixture-of-Gaussians approach that can be                                   Acknowledgments
+viewed as a probabilistic UVFA where the mean is repre-                                     We thank Theophane Weber, Hado van Hasselt, Thomas
+sented by a mixture-of-constants. The mixture components                                    Degris, Arthur Guez and Adrià Puigdomènech for their
+were learned in an unsupervised fashion, and those mix-                                     many helpful comments, and the anonymous reviewers for
+tures were then recombined to give specific values. How-                                    their constructive feedback.
+ever, the mixture-of-constants representation was found to
+                                        Universal Value Function Approximators
+
+References                                                     ment learning. arXiv preprint arXiv:1312.5602, 2013.
+Bellemare, Marc G, Naddaf, Yavar, Veness, Joel, and          Modayil, Joseph, White, Adam, and Sutton, Richard S.
+  Bowling, Michael. The arcade learning environment: An       Multi-timescale nexting in a reinforcement learning
+  evaluation platform for general agents. arXiv preprint      robot. Adaptive Behavior, 22(2):146–160, 2014.
+  arXiv:1207.4708, 2012.                                     Precup, Doina, Sutton, Richard S, and Dasgupta, San-
+Caruana, Rich. Multitask learning. Machine learning, 28        joy. Off-policy temporal-difference learning with func-
+  (1):41–75, 1997.                                             tion approximation. In ICML, pp. 417–424. Citeseer,
+Collobert, Ronan, Kavukcuoglu, Koray, and Farabet,             2001.
+  Clément. Torch7: A matlab-like environment for ma-        Ring, Mark Bishop. Continual Learning in Reinforcement
+  chine learning. In BigLearn, NIPS Workshop, 2011a.           Environments. PhD thesis, University of Texas at Austin,
+Collobert, Ronan, Weston, Jason, Bottou, Léon, Karlen,        1994.
+  Michael, Kavukcuoglu, Koray, and Kuksa, Pavel. Nat-        Schaul, Tom and Ring, Mark. Better generalization with
+  ural language processing (almost) from scratch. The          forecasts. In Proceedings of the Twenty-Third inter-
+  Journal of Machine Learning Research, 12:2493–2537,          national joint conference on Artificial Intelligence, pp.
+  2011b.                                                       1656–1662. AAAI Press, 2013.
+Da Silva, Bruno, Konidaris, George, and Barto, An-           Singh, Satinder, Littman, Michael L, Jong, Nicholas K,
+  drew. Learning parameterized skills. arXiv preprint          Pardoe, David, and Stone, Peter. Learning predictive
+  arXiv:1206.6398, 2012.                                       state representations. In ICML, pp. 712–719, 2003.
+Deisenroth, Marc Peter, Englert, Peter, Peters, Jan, and     Sutton, Richard S and Barto, Andrew G. Introduction to
+  Fox, Dieter. Multi-task policy search for robotics. In       reinforcement learning. MIT Press, 1998.
+  Robotics and Automation (ICRA), 2014 IEEE Interna-         Sutton, Richard S and Tanner, Brian. Temporal-difference
+  tional Conference on, pp. 3876–3881. IEEE, 2014.             networks. In Saul, L.K., Weiss, Y., and Bottou, L. (eds.),
+Foster, David and Dayan, Peter. Structure in the space of      Advances in Neural Information Processing Systems 17,
+  value functions. Machine Learning, 49(2-3):325–346,          pp. 1377–1384. MIT Press, 2005.
+  2002.                                                      Sutton, Richard S, Precup, Doina, and Singh, Satinder. Be-
+Kaelbling, Leslie Pack. Hierarchical learning in stochas-      tween mdps and semi-mdps: A framework for temporal
+  tic domains: Preliminary results. In Proceedings of the      abstraction in reinforcement learning. Artificial intelli-
+  tenth international conference on machine learning, vol-     gence, 112(1):181–211, 1999.
+  ume 951, pp. 167–173, 1993.                                Sutton, Richard S, Modayil, Joseph, Delp, Michael, De-
+Keshavan, Raghunandan H., Oh, Sewoong, and Montanari,          gris, Thomas, Pilarski, Patrick M, White, Adam, and
+  Andrea. Matrix completion from a few entries. CoRR,          Precup, Doina. Horde: A scalable real-time architecture
+  abs/0901.3150, 2009.                                         for learning knowledge from unsupervised sensorimotor
+Kingma, Diederik P. and Ba, Jimmy. Adam: A method for          interaction. In The 10th International Conference on Au-
+  stochastic optimization. CoRR, abs/1412.6980, 2014.          tonomous Agents and Multiagent Systems-Volume 2, pp.
+Kober, Jens, Wilhelm, Andreas, Oztop, Erhan, and Peters,       761–768, 2011.
+  Jan. Reinforcement learning to adjust parametrized mo-     Van der Maaten, Laurens and Hinton, Geoffrey. Visualizing
+  tor primitives to new situations. Autonomous Robots, 33      data using t-sne. Journal of Machine Learning Research,
+  (4):361–379, 2012.                                           9(2579-2605):85, 2008.
+Konidaris, George, Scheidwasser, Ilya, and Barto, An-        van Otterlo, Martijn. The logic of adaptive behavior:
+  drew G. Transfer in reinforcement learning via shared        knowledge representation and algorithms for adaptive
+  features. The Journal of Machine Learning Research, 13       sequential decision making under uncertainty in first-
+  (1):1333–1371, 2012.                                         order and relational domains, volume 192. Ios Press,
+Mikolov, Tomas, Sutskever, Ilya, Chen, Kai, Corrado,           2009.
+ Greg S, and Dean, Jeff. Distributed representations of      Yao, Hengshuai, Szepesvari, Csaba, Sutton, Richard S,
+ words and phrases and their compositionality. In Ad-          Modayil, Joseph, and Bhatnagar, Shalabh. Universal op-
+ vances in Neural Information Processing Systems, pp.          tion models. In Advances in Neural Information Pro-
+ 3111–3119, 2013.                                              cessing Systems, pp. 990–998, 2014.
+Mnih, Volodymyr, Kavukcuoglu, Koray, Silver, David,
+ Graves, Alex, Antonoglou, Ioannis, Wierstra, Daan, and
+ Riedmiller, Martin. Playing atari with deep reinforce-
+

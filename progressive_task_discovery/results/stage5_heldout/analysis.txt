@@ -1,0 +1,25 @@
+Unattainable 90% thresholds: 0 / 576
+benign       count                          cost=   33781 solved=32/32 AUC=0.663 final=1.000
+benign       progressive                    cost=   33438 solved=32/32 AUC=0.669 final=1.000
+benign       learned_qrm                    cost=   10250 solved=32/32 AUC=0.903 final=1.000
+benign       count_replay                   cost=   11781 solved=32/32 AUC=0.887 final=1.000
+benign       goal_reuse                     cost=    6062 solved=32/32 AUC=0.944 final=1.000
+benign       progressive_goal               cost=    6094 solved=32/32 AUC=0.944 final=1.000
+benign       oracle_goal                    cost=    5188 solved=32/32 AUC=0.953 final=1.000
+benign       oracle_qrm                     cost=    5188 solved=32/32 AUC=0.953 final=1.000
+deadline     count                          cost=   37531 solved=32/32 AUC=0.627 final=1.000
+deadline     progressive                    cost=   36344 solved=32/32 AUC=0.638 final=1.000
+deadline     learned_qrm                    cost=   12656 solved=32/32 AUC=0.878 final=1.000
+deadline     count_replay                   cost=   14344 solved=32/32 AUC=0.862 final=1.000
+deadline     goal_reuse                     cost=    6938 solved=32/32 AUC=0.936 final=1.000
+deadline     progressive_goal               cost=    6906 solved=32/32 AUC=0.936 final=1.000
+deadline     oracle_goal                    cost=    5219 solved=32/32 AUC=0.953 final=1.000
+deadline     oracle_qrm                     cost=    5250 solved=32/32 AUC=0.953 final=1.000
+noisy        count                          cost=   50094 solved=32/32 AUC=0.531 final=0.982
+noisy        progressive                    cost=   59906 solved=28/32 AUC=0.497 final=0.950
+noisy        learned_qrm                    cost=   14062 solved=32/32 AUC=0.855 final=0.999
+noisy        count_replay                   cost=   17812 solved=32/32 AUC=0.806 final=0.982
+noisy        goal_reuse                     cost=    7406 solved=32/32 AUC=0.928 final=1.000
+noisy        progressive_goal               cost=    7844 solved=32/32 AUC=0.924 final=0.999
+noisy        oracle_goal                    cost=    5500 solved=32/32 AUC=0.948 final=1.000
+noisy        oracle_qrm                     cost=    5594 solved=32/32 AUC=0.929 final=0.987

@@ -1,0 +1,3538 @@
+{
+  "assumptions": [
+    "static deterministic physical state",
+    "one fixed cell per event",
+    "unordered events advance when first encountered",
+    "fixed suffix after all unordered events",
+    "only initial position varies",
+    "unique optimal order at each counted start"
+  ],
+  "examples": [
+    {
+      "n": 2,
+      "walkable": 28,
+      "goals": [
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "terminal": [
+        6,
+        12
+      ],
+      "required": 2,
+      "unique_orders": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "covered": 2,
+      "first_event_upper_bound": 2,
+      "all_starts": [
+        {
+          "start": [
+            0,
+            6
+          ],
+          "length": 26,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            6
+          ],
+          "length": 25,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            6
+          ],
+          "length": 24,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            6
+          ],
+          "length": 23,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            1
+          ],
+          "length": 15,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            6
+          ],
+          "length": 22,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            6
+          ],
+          "length": 21,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "length": 15,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            2
+          ],
+          "length": 16,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            3
+          ],
+          "length": 17,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            4
+          ],
+          "length": 18,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            5
+          ],
+          "length": 19,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            6
+          ],
+          "length": 20,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            7
+          ],
+          "length": 21,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            8
+          ],
+          "length": 22,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            9
+          ],
+          "length": 23,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            10
+          ],
+          "length": 24,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            11
+          ],
+          "length": 25,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            6
+          ],
+          "length": 21,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            1
+          ],
+          "length": 15,
+          "optimal_orders": [
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            6
+          ],
+          "length": 22,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            6
+          ],
+          "length": 23,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            6
+          ],
+          "length": 24,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            6
+          ],
+          "length": 25,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            6
+          ],
+          "length": 26,
+          "optimal_orders": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "walkable": 28,
+      "goals": [
+        [
+          5,
+          1
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "terminal": [
+        6,
+        12
+      ],
+      "required": 6,
+      "unique_orders": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          2
+        ]
+      ],
+      "covered": 2,
+      "first_event_upper_bound": 3,
+      "all_starts": [
+        {
+          "start": [
+            1,
+            6
+          ],
+          "length": 27,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            6
+          ],
+          "length": 28,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            6
+          ],
+          "length": 29,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            1
+          ],
+          "length": 27,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            6
+          ],
+          "length": 30,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            6
+          ],
+          "length": 31,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "length": 27,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            2
+          ],
+          "length": 28,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            3
+          ],
+          "length": 29,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            4
+          ],
+          "length": 30,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            5
+          ],
+          "length": 31,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            6
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            7
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            8
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            9
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            10
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            11
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            6
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            1
+          ],
+          "length": 27,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            6
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            6
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            6
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            6
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            6
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "walkable": 169,
+      "goals": [
+        [
+          1,
+          1
+        ],
+        [
+          10,
+          2
+        ],
+        [
+          4,
+          10
+        ]
+      ],
+      "terminal": [
+        11,
+        11
+      ],
+      "required": 6,
+      "unique_orders": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ]
+      ],
+      "covered": 3,
+      "first_event_upper_bound": 3,
+      "all_starts": [
+        {
+          "start": [
+            0,
+            0
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            1
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            2
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            3
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            4
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            5
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            6
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            7
+          ],
+          "length": 39,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            8
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            9
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            10
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            11
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            0,
+            12
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            0
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            2
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            3
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            4
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            5
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            6
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            7
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            8
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            9
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            10
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            11
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            1,
+            12
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            0
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            1
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            2
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            3
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            4
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            5
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            6
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            7
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            8
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            9
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            10
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            11
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            2,
+            12
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            0
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            2
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            3
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            4
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            6
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            7
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            8
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            9
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            10
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            11
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            3,
+            12
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            0
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            1
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            3
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            4
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            5
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            6
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            7
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            8
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            9
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            11
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            4,
+            12
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            0
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            2
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            3
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            4
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            5
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            6
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            7
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            8
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            9
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            10
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            11
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            5,
+            12
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            0
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            2
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            3
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            4
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            5
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            6
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            7
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            8
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            9
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            10
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            11
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            6,
+            12
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            0
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            1
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            2
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            3
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            4
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            5
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            6
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            7
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            8
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            9
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            10
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            11
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            7,
+            12
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            0
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            1
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            2
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            3
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            4
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            5
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            6
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            7
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            8
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            9
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            10
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            11
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            8,
+            12
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            0
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            1
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            2
+          ],
+          "length": 31,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            3
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            4
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            5
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            6
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            7
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            8
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            9
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            10
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            11
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            9,
+            12
+          ],
+          "length": 39,
+          "optimal_orders": [
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            0
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            1
+          ],
+          "length": 31,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            3
+          ],
+          "length": 31,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            4
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            5
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            6
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            7
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            8
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            9
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            10
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            11
+          ],
+          "length": 39,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            10,
+            12
+          ],
+          "length": 40,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            0
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            1
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            2
+          ],
+          "length": 31,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            3
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            4
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            5
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            6
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            7
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            8
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            9
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            10
+          ],
+          "length": 39,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            11,
+            12
+          ],
+          "length": 41,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            0
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            1
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            2
+          ],
+          "length": 32,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            3
+          ],
+          "length": 33,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            4
+          ],
+          "length": 34,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            5
+          ],
+          "length": 35,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            6
+          ],
+          "length": 36,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            7
+          ],
+          "length": 37,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            8
+          ],
+          "length": 38,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            9
+          ],
+          "length": 39,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            10
+          ],
+          "length": 40,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            11
+          ],
+          "length": 41,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "start": [
+            12,
+            12
+          ],
+          "length": 42,
+          "optimal_orders": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "n3_requirement_possible": false,
+  "n4_requirement_possible": false
+}

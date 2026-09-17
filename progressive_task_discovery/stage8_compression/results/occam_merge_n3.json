@@ -1,0 +1,838 @@
+[
+  {
+    "task": "c_n3d2m1_4L2a7",
+    "kmin": 8,
+    "nodes": 21,
+    "ktrue": 19,
+    "n_same": 6,
+    "n_diff": 204,
+    "rows": [
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "open",
+        "k2": "open"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d2m1_4L3a11",
+    "kmin": 12,
+    "nodes": 33,
+    "ktrue": 19,
+    "n_same": 22,
+    "n_diff": 506,
+    "rows": [
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d2m3_6L2a7",
+    "kmin": 8,
+    "nodes": 27,
+    "ktrue": 23,
+    "n_same": 8,
+    "n_diff": 343,
+    "rows": [
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d2m3_6L3a11",
+    "kmin": 12,
+    "nodes": 43,
+    "ktrue": 23,
+    "n_same": 30,
+    "n_diff": 873,
+    "rows": [
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d4m1_4L2a7",
+    "kmin": 8,
+    "nodes": 31,
+    "ktrue": 23,
+    "n_same": 16,
+    "n_diff": 449,
+    "rows": [
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "same",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d4m1_4L3a11",
+    "kmin": 10,
+    "nodes": 43,
+    "ktrue": 23,
+    "n_same": 30,
+    "n_diff": 873,
+    "rows": [
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": null
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d4m3_6L2a7",
+    "kmin": 8,
+    "nodes": 39,
+    "ktrue": 27,
+    "n_same": 22,
+    "n_diff": 719,
+    "rows": [
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "same",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "same",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "same",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      }
+    ]
+  },
+  {
+    "task": "c_n3d4m3_6L3a11",
+    "kmin": 10,
+    "nodes": 53,
+    "ktrue": 27,
+    "n_same": 38,
+    "n_diff": 1340,
+    "rows": [
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": null
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": null,
+        "k1": null,
+        "k2": null
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": null
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": null,
+        "k2": null
+      },
+      {
+        "truth": true,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "same",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      },
+      {
+        "truth": false,
+        "k0": "open",
+        "k1": "open",
+        "k2": "open"
+      },
+      {
+        "truth": false,
+        "k0": "diff",
+        "k1": "diff",
+        "k2": "diff"
+      }
+    ]
+  }
+]

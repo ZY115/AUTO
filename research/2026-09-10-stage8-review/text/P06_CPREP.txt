@@ -1,0 +1,1077 @@
+                                         Contextual Pre-planning on Reward Machine Abstractions for Enhanced Transfer
+                                                                in Deep Reinforcement Learning
+                                                            Guy Azran1 , Mohamad H. Danesh2 , Stefano V. Albrecht3 , Sarah Keren1
+                                                                   1
+                                                               Taub Faculty of Computer Science, Technion – Israel Institute of Technology
+                                                                            2
+                                                                              School of Computer Science, McGill University
+                                                                             3
+                                                                               School of Informatics, University of Edinburgh
+                                                 guy.azran@campus.technion.ac.il, mo.danesh@mail.mcgill.ca, s.albrecht@ed.ac.uk, sarahk@cs.technion.ac.il
+
+
+
+
+arXiv:2307.05209v4 [cs.AI] 21 Feb 2024
+                                                                       Abstract                              robot is expected to use its experience in making coffee in a
+                                                                                                             mug to learn to achieve the new task more quickly.
+                                           Recent studies show that deep reinforcement learning (DRL)
+                                           agents tend to overfit to the task on which they were trained        A contextual MDP (CMDP) (Langford 2017; Hallak,
+                                           and fail to adapt to minor environment changes. To expe-          Di Castro, and Mannor 2015) models settings like Exam-
+                                           dite learning when transferring to unseen tasks, we propose a     ple 1 as a collection of tasks in the same environment, where
+                                           novel approach to representing the current task using reward      each task is represented by the current context. CMDPs have
+                                           machines (RMs), state machine abstractions that induce sub-       been used in recent work that aims to improve zero-shot
+                                           tasks based on the current task’s rewards and dynamics. Our       transfer capabilities, i.e., solving new tasks after training on
+                                           method provides agents with symbolic representations of op-
+                                                                                                             a subset of them (Benjamins et al. 2022; Hallak, Di Castro,
+                                           timal transitions from their current abstract state and rewards
+                                           them for achieving these transitions. These representations       and Mannor 2015). In contrast, we aim to improve few-shot
+                                           are shared across tasks, allowing agents to exploit knowledge     transfer, in which the agent may continue training on previ-
+                                           of previously encountered symbols and transitions, thus en-       ously unseen tasks with the objective of minimizing the ad-
+                                           hancing transfer. Empirical results show that our represen-       ditional training required to achieve desirable performance.
+                                           tations improve sample efficiency and few-shot transfer in a         One of the key challenges when using a CMDP to model
+                                           variety of domains.                                               transfer learning settings is finding a concise way to repre-
+                                                                                                             sent the current context while maximizing transfer capabili-
+                                                                                                             ties. For this, we take advantage of reward machines (RMs)
+                                                              1    Introduction                              (Toro Icarte et al. 2018), state-machine-based abstractions
+                                         Reinforcement learning (RL) methods, especially deep RL             that represent the structure of the reward function and the
+                                         (DRL) methods, have shown impressive capabilities in a              dynamics of a task and its subtasks. Transitions between
+                                         wide variety of problems (Chen, Xu, and Agrawal 2021;               abstract states in the RM occur when certain facts, repre-
+                                         Schrittwieser et al. 2020). However, recent studies show that       sented as binary symbols, hold true. As the agent traverses
+                                         these algorithms have difficulty adapting to even the slight-       the environment, it keeps track of these facts and its current
+                                         est variations in the agent’s objective or environment dynam-       RM state. Camacho et al. (2021) used RMs by providing the
+                                         ics (Danesh and Fern 2022; Agarwal et al. 2020; Zhang et al.        agent with the current abstract state and showed that this can
+                                         2018; Leike et al. 2017). Adapting quickly to new tasks is          expedite learning on a single task. In contrast, we leverage
+                                         imperative in real-world scenarios, such as robotics (Dunion        RMs to improve transfer to new tasks.
+                                         et al. 2023a,b) and healthcare (Tseng et al. 2017), where              Our novel technique, called Contextual PRE-Planning
+                                         agents reside in a dynamic world with ever-changing ob-             (C-PREP), takes as input a CMDP and an RM genera-
+                                         jectives and constraints. Consequently, agents require many         tor function that represents contextual information through
+                                         interactions with the environment to learn to perform new           task-specific RM abstractions with shared symbolic repre-
+                                         tasks despite having mastered similar ones. The problem is          sentations. Given a task, C-PREP finds an optimal policy in
+                                         exacerbated for tasks with sparse reward signals (Gupta et al.      the corresponding RM abstraction and gives the agent the
+                                         2022) and long-term dependencies between actions (Lang-             next desired abstract transition according to that policy as
+                                         ford 2018).                                                         additional input. Furthermore, C-PREP uses the RM by re-
+                                         Example 1 A housekeeper robot learns to do multiple tasks,          shaping the reward function according to abstract state tran-
+                                         one of which is to make coffee in a mug. Next, the robot is         sitions within the RM, thus highlighting important transi-
+                                         tasked with making coffee in a glass, something it has never        tions throughout learning. When transferred to a new task,
+                                         attempted. The two tasks are similar in that they interact          the agent can exploit abstract transitions that it has encoun-
+                                         with many of the same objects (e.g. coffee, spoon, etc.) and        tered during training and needs only to adapt to symbols
+                                         perform identical subtasks (e.g. boil water, fill cup, etc.). The   with which it has not previously interacted.
+                                                                                                                We empirically evaluate C-PREP in various environments
+                                         Copyright © 2024, Association for the Advancement of Artificial     with sparse rewards and varying difficulties. In our experi-
+                                         Intelligence (www.aaai.org). All rights reserved.                   ments, a DQN agent (Mnih et al. 2015) is initially trained
+on a collection of source contexts. Subsequently, we transfer            Given a CMDP ⟨C, S, A, M⟩, transfer learning algo-
+the policy network to a different set of target contexts, where       rithms attempt to leverage knowledge from interactions with
+it undergoes further training and evaluation. We observe an           a set of source contexts Csrc ⊂ C to improve learning in a
+improvement in few-shot as well as zero-shot transfer per-            set of target contexts Ctgt ⊂ C such that Csrc ∩ Ctgt = ∅.
+formance when using C-PREP compared to other context                  In Example 1, Csrc is the set of contexts representing the
+representation methods. The performance gap grows as the              chores it learns to do, including making coffee in a mug.
+problem difficulty increases, with improvements of 22.84%             Making coffee in a glass is a context in Ctgt . Policies learned
+to 42.31% in time-to-threshold (few-shot transfer), and from          after training in Csrc and Ctgt from scratch are the source
+11.86% to 36.5% in jumpstart (zero-shot transfer) for the             policy and the target policy, respectively. The policy learned
+most complex tasks compared to the next best baseline.                on Ctgt after training in Csrc is the transferred policy. Given
+                                                                      a distribution Ψ over C, the objective is to optimize a cho-
+                      2    Background                                 sen transfer utility U in expectation over sampled source and
+Reinforcement learning (RL) is a method for agent learn-              target context sets. Transfer utilities of interest in this work,
+ing through experiencing the world, acting within it, and             suggested by Taylor and Stone (2009), are jumpstart (JS),
+receiving rewards (both positive and negative) for achiev-            time to threshold (TT), and transfer ratio (TR). JS measures
+ing certain states or state transitions. RL problems com-             (zero-shot transfer) performance on the target contexts with-
+monly model the world as a Markov decision process                    out additional training. TT measures the number of train-
+(MDP) (Bellman 1957) M = ⟨S, A, T, R, γ⟩ where S                      ing steps taken until convergence to a policy of acceptable
+is a set of possible states, A is a set of agent actions,             performance threshold (few-shot transfer). TR measures the
+T : S × A × S → [0, 1] is the state transition func-                  ratio of rewards accumulated over time by the agent using
+tion, R : S × A × S → R is the reward function, and γ                 knowledge transfer against the agent that is trained from
+is the temporal reward discount factor. The objective is to           scratch, that is, how much the agent benefits from transfer
+find a policy π ∗ such that:Pπ ∗ ∈ arg maxπ E[J(π)], where            (transfer relevance). Precise calculations are in Appendix F.
+                              ∞                                          Reward machines (RMs) (Toro Icarte et al. 2018) are
+J(π) = Est ,st+1 ∼T ;at ∼π [ t=0 γ t R(st , at , st+1 )] is the ex-
+pected return of policy π.                                            state machine abstractions of MDPs. Given a set of proposi-
+   In this work, we focus on transfer learning (TL), which            tional symbols P, an RM is a 3-tuple R = ⟨U, δu , δr ⟩ where
+is the improvement of learning a new task through the trans-          U is a set of abstract states, and δu : U × 2P → U and
+fer of knowledge from a related task that has already been            δr : U ×2P → R are the abstract transition and reward func-
+learned (Torrey and Shavlik 2009). We model a collection of           tions, respectively. Given the current abstract state u ∈ U
+MDPs using a contextual MDP (CMDP) (Hallak, Di Cas-                   and a subset of propositional symbols l ⊆ P that hold true,
+tro, and Mannor 2015), a 4-tuple ⟨C, S, A, M⟩ where C is              δu (u, l) is the next abstract state and δr (u, l) is the reward
+the context space, S and A are state and action spaces, and           received for this transition. When δu (u, l) = u′ , l is called
+M is a mapping from a context c ∈ C to an MDP Mc con-                 the abstract transition label from u to u′ . To connect be-
+sisting of S and A but with distinct transition and reward            tween the abstraction and the underlying MDP, P is coupled
+functions, that is, Mc = ⟨S, A, Tc , Rc , γ⟩. We sometimes            with a transition labeling function L : S × A × S → 2P
+refer to context-induced MDPs as “tasks”, and to the shared           that maps state-action-state transitions in the MDP to ab-
+S and A as the “environment”. In Example 1, C is the set of           stract transition labels in the RM.
+all house chores, S and A are the state of the house and the             Fig. 2a textually describes an RM for the task of making
+agent’s capabilities, and M maps a chore c to an MDP Mc               coffee in Example 1. It defines abstract states u0 to u3 that
+that corresponds to completing the chore.                             each represents a high-level stage within the task of making
+   Fig. 1a depicts the general flow of transfer learning over a       a cup of coffee. The RM dictates that the agent must first boil
+CMDP. The input is the observed MDP state and the current             some water, then put the coffee in the cup, and finally pour
+context. Optionally, the state representation is processed by         boiling water into the cup. These relationships are graphi-
+a feature extractor to be represented as a vector. The con-           cally visualized in Fig. 2b.
+text is represented via a context representation function that           The main benefits of RMs are that they represent transi-
+maps a context to a vector representation. The state repre-           tions between abstract states using binary symbols that per-
+sentation is merged with the context representation (usually          tain to the state of the underlying MDP (through L) and pro-
+by concatenation), and the new representation is fed into a           vide dense rewards via reward shaping. As a result, an RM
+policy network that will determine the next action.                   corresponding to some context divides its induced task into
+   Kirk et al. (2021) distinguish between two categories of           sub-tasks that each describe a stage in the process of solv-
+context representations. The first type, known as control-            ing the overall task, rewarding the agent upon completion
+lable context representations (CTL), includes the necessary           of each sub-task. To employ sensible reward shaping, we
+information to generate the MDP, which can be thought of as           use potential-based reward shaping (Ng, Harada, and Rus-
+a transparent implementation of the environment generation            sell 1999) which, given a potential function ϕ, defines a new
+process (implemented in M). The second type, procedural               abstract reward function δr′ (u, l) = δr (u, l)+γϕ(δu (u, l))−
+content generation context representation (PCG), conceals             ϕ(u). Toro Icarte et al. (2022) prove that potential-based re-
+the MDP variables and only reveals information about the              ward shaping guarantees that optimal policies in an MDP
+context identity, operating as a black box with no insight            for which rewards have been replaced with RM rewards are
+into the generation process.                                          optimal using the RM reshaped rewards. Moreover, it is em-
+                                                                                                         RM
+
+                                                                                               RM
+                                                                                                         1    2         3   VI
+                               Feature                                                       Generator
+Environment   observation     Extractor                                                      Function
+                              (optional)
+                                                                                                              4
+                                                             Agent   Action
+                               Context
+  Context                   Representation
+                              Function
+
+                                                    Concat
+
+
+                                             (a)                                                              (b)
+
+Figure 1: (a) The general flow of transfer learning with a CMDP. (b) A visualization of the C-PREP context representation
+function. Context c is used to generate a task-specific RM.
+
+
+Symbols:
+    B - There is boiling water in the kettle.
+    C - Coffee contents are in the cup.                                              Start
+    W - Boiling water poured into the cup.
+                                                                                                               (b)
+Make-Coffee:
+States - u0,u1,u2,u3
+Transitions -
+    (u0, not B) --> next=u0;r=0
+    (u0,      B) --> next=u1;r=0
+    (u1, not C) --> next=u1;r=0                                                      Start
+    (u1,      C) --> next=u2;r=0
+    (u2, not W) --> next=u2;r=0
+    (u2,      W) --> next=u3;r=1
+
+                                              (a)                                                                 (c)
+
+Figure 2: (a) A textual representation of the RM in Example 1 describing the Make-Coffee task. (b) A graph visualization
+of the textually defined RM. (c) An expansion of the RM that differentiates between mug and glass receptacles, described in
+Section 3.
+
+
+pirically shown that using RM reshaped rewards can signif-                    and provide the next desired abstract transition from the cur-
+icantly expedite policy convergence for RL agents.                            rent RM abstract state as contextual input at each timestep.
+                                                                              Essentially, we guide the agent through optimal paths in the
+  3         Contextual Pre-Planning (C-PREP) for                              RM with abstract transitions, represented using a set of sym-
+                     Transfer Learning                                        bols that is shared across all tasks. Upon transfer, the agent
+                                                                              can expedite transfer learning by exploiting abstract transi-
+We aim to improve transfer in multi-task domains modeled                      tions and leveraging prior knowledge of encountered sym-
+as CMDPs. Benjamins et al. (2022) proved that the policy                      bols in the new task. This may be beneficial for learning in
+must be conditioned on the context itself to guarantee opti-                  general but is key in transfer settings as it provides reusable
+mality. Therefore, it is crucial to represent the context such                representations between tasks.
+that the agent can generalize across contexts. For this, we use
+RMs to represent contexts and offer a novel way to enhance                    C-PREP Context Representation Function. Based on
+the agent’s ability to exploit its previous experiences in new                the above intuition, we propose Contextual PRE-Planning
+settings. Since our focus is on exploiting the structure of the               (C-PREP) for leveraging information in context-specific
+RMs for transfer and not on their generation, we assume                       RMs1 . For each task, C-PREP generates an RM ⟨U, δu , δr ⟩
+that the RM generator function is given as input, which can                   with abstract transitions represented using a shared symbol
+be based on domain knowledge, learned from demonstration                      set, i.e., all RM are defined using the symbol set P. Using
+(Camacho et al. 2021), or learned via discrete optimization                   value iteration (VI) (Bellman 1957), we find an optimal pol-
+(Toro Icarte et al. 2019).                                                    icy in the RM as if it were a deterministic MDP. We note
+   Camacho et al. (2021) exploited RMs to expedite learn-                     that VI is one of many possible choices, but we use it here to
+ing in single-task domains by providing the agent with the
+                                                                                 1
+current abstract state. We instead focus on transfer learning                        Code: https://github.com/CLAIR-LAB-TECHNION/C-PREP
+compare to previous methods. We then give the agent an op-            receive a higher reward for transitioning from state u0 to u1
+timal abstract transition label in the RM from the current ab-        rather than loop back to itself because this brings it closer to
+stract state u (as dictated by the RM policy), i.e., a transition     the abstract goal state.
+label l such that δu (u, l) is the next state on a (discounted)
+reward-maximizing path in the RM. Intuitively, we wish to             Transfer Learning with C-PREP The input to our set-
+guide the agent towards an optimal path within the RM.                ting includes a CMDP ⟨C, S, A, M⟩ and an RM generator
+   C-PREP relies on providing the next desired abstract tran-         function G that maps each context-induced task Mc to its
+sition in the RM to the agent. However, since there is no di-         corresponding RM G(Mc ) = ⟨U c , δuc , δrc ⟩ which is defined
+rect representation of actions in the RM, standard VI does            over shared symbol set P.
+not apply. We, therefore, use a variant of VI, as suggested              The C-PREP context representation function can be in-
+by Toro Icarte et al. (2022), with the following update rule          tegrated into any algorithm following the transfer learning
+over the abstract states of RM R.                                     flow depicted in Fig. 1a. Algorithm 1 (Appendix G) demon-
+                                                                      strates an implementation of a DQN (Mnih et al. 2015) for
+         VRk (u) = max δr (u, l) + γVRk−1 (δu (u, l))
+                                                       
+                                                              (1)     transfer learning settings using C-PREP as the context repre-
+                    l∈2P
+                                                                      sentation function and RM reward shaping. The key differ-
+where VRk is the value of abstract state u at iteration k (VR0 =      ences between this implementation and the standard DQN
+0), and δu (u, l) and δr (u, l) are the next abstract state and re-   are that the algorithm initially generates an RM for the sam-
+ward received for achieving transition label l at abstract state      pled context, calculates its state values, and reshapes the RM
+u, respectively. To show the relationship between this rule           rewards. States encountered in the episode are augmented
+and VI for MDPs, we define MR = U, 2P , T, R, γ where                 by the C-PREP context representation according to the RM
+T (u, l, δu (u, l)) = 1 and R(u, l, u′ ) = δr (u, l). We observe      transition. Rewards are replaced with the reshaped rewards
+that the VI update rule for MR , denoted V k , is equivalent to       from the RM according to the achieved abstract transition at
+VRk . Formally,                                                       that timestep.
+                    X                                                    We note that the ability of C-PREP to support transfer de-
+  V k (u) = max         T (u, l, u′ )(R(u, l, u′ ) + γV k−1 (u′ ))    pends on the resolution of the generated RMs, i.e., how well
+            l∈2P                                                      the generated RMs represent the context space. If the set of
+                   u′ ∈U
+                                                                      propositional symbols P is too abstract, the generated RMs
+         = max R(u, l, δu (u, l)) + γV k−1 (δu (u, l))                do not sufficiently distinguish between contexts. In contrast,
+            l∈2P
+                                                                      if it is too refined, computation time may increase due to
+         = max δr (u, l) + γV k−1 (δu (u, l))) = VRk (u)              running VI in huge tables for every context.
+            l∈2P
+                                                                         In Example 1, when training to make coffee in a mug, the
+Thus, to identify optimal abstract transitions, we can find           agent learns to pour water into the mug and should exploit
+an abstract optimal policy in RM R by using VI to find an             this capability upon transferring to the task of making cof-
+optimal policy π ∗ in MR .                                            fee in a glass. Fig. 2 shows two different RMs that can be
+  Given the current abstract state u, from which there may            used to describe this setting. The RM in Fig. 2b does not
+be multiple optimal abstract transitions, C-PREP samples an           differentiate between a mug and a glass, as they are both en-
+optimal abstract transition l from π ∗ (·|u). Since π ∗ is opti-      capsulated by the “cup” symbol C. In contrast, the RM in
+mal in deterministic MDP MR :                                         Fig. 2c distinguishes between the tasks of making coffee in
+   supp(π ∗ (·|u)) ⊂ arg max (δr (u, l) + γV ∗ (δu (u, l)))           a mug and in a glass, rewarding the agent only for the former
+                           l∈2P                                       (when transitioning from uM  2 to u3 ). Including both mug and
+                                                                      glass events demonstrates a case with two possible ways to
+where supp(π ∗ (·|u)) is the support set of probability distri-       perform a task, differentiated by the reward function.
+bution π ∗ (·|u). Thus, any transition we sample from π ∗ is
+one that maximizes discounted return in the RM.
+   Based on the above formulations, the C-PREP context                                 4    Empirical Evaluation
+representation function (depicted in Fig. 1b) operates in a           The objective of our empirical evaluation is to examine
+three-step process: (1) generate an RM R = G(Mc ) for the             whether agents using C-PREP exhibit improved perfor-
+current context c, (2) find an optimal policy π ∗ in MR , (3)         mance on transfer utilities of interest.
+at each timestep, sample an optimal transition l ∼ π ∗ (·, u)
+given the current RM abstract state u and return it.                  Experimental Setup
+   Throughout training, the C-PREP RM generation func-                Environments: We test our method in four environments
+tion updates its returned representation according to the cur-        with compound and long-horizon tasks and sparse reward
+rent abstract state. To notify the agent that a correct (or in-       signals2 :
+correct) abstract transition has been completed, we provide           Grid Navigation (GN): An agent must reach a specified
+additional rewards that emphasize the executed abstract tran-         destination on a grid. The state space consists of the agent’s
+sition’s quality. For this, we employ potential-based reward-         current location and the action space includes moving in
+shaping as defined in Section 2. As it is already calculated,         one of the four cardinal directions and a ”done” action to
+we use V ∗ as the potential function ϕ to generate the reward         be called upon arrival at the destination.
+signal that is provided to the agent instead of the original
+                                                                         2
+MDP reward. In the RM described in Fig. 2a, the agent will                   Our code base is described in Appendix I.
+Multi Points-of-Interest (MP): The agent navigates to mul-        Reported Metrics: During each training session, we eval-
+tiple destinations in any order. The state space consists of      uate the source, target, and transferred policies on the con-
+the agent’s location and an indicator of whether a certain        text set on which it is trained at 100 uniformly spaced evalu-
+destination has already been visited. The action space is as      ation points. At each evaluation point, we record the policy’s
+in GN but with an ”arrived” action replacing ”done”.              average return on 50 sampled contexts. Each training session
+Pick-Up and Drop-Off (PD): An agent picks up and drops            is repeated 5 times, using different random seeds. From the
+off passengers at their destinations. The state space is as in    computed average returns, we calculate the transfer utilities
+MP with indicators for passengers that have been dropped          defined in Section 2: JS, TT, and TR (see Appendix F for
+off at their destinations. In addition to navigation actions,     the formula used to compute these measures). We aggregate
+the action space contains ”pick-up” and ”drop-off” actions.       the results using interquartile mean (IQM) and calculate the
+Ordered Navigation (ON): The agent must navigate to               standard deviation and stratified bootstrap 95% confidence
+specified destinations in a specific order. The state and ac-     intervals (Agarwal et al. 2021). To report results for differ-
+tion spaces are as in MP.                                         ent performance thresholds, we plot the TT as a function
+   All maps are 6 × 6. At every timestep, the agent receives      of the threshold. We measure the IQM area under the curve
+a reward of 1 when achieving the environment objective and        (AUC) of this function, denoted T TAU C .
+0 otherwise, and the discount factor is γ = 0.99.
+                                                                  Results
+Defining the CMDP Spaces: The environments described
+                                                                  First, to examine the performance over the entire trans-
+above include pairs of state and action spaces. To define a
+                                                                  fer session, Table 1 shows the interquartile mean (IQM)
+CMDP we couple them with the following context spaces:
+                                                                  and standard deviation of the measured transfer utilities
+Entity Location (EL): The context indicates the locations
+                                                                  (TTAU C , JS, TR) for all tested configurations using a CTL
+of core entities in the environment, e.g., passenger locations
+                                                                  context representation. The best results for each CMDP
+and drop-off destinations.
+                                                                  (row) are marked in bold. Negative TR values that indicate
+Changing Map (CM): The context indicates the number
+                                                                  non-beneficial transfer are italicized.
+and location of walls in the grid.
+                                                                     Our method performed best in terms of T TAU C and JS in
+Point-of-Interest Order (PO): The context indicates the or-
+                                                                  all but two CMDPs: (1) in GN (shortest horizon) with both
+der of the locations to visit.
+                                                                  context spaces (EL and CM), CTL+LTL+RS performs best
+Each GN, MP, and PD environment is used with both the
+                                                                  in terms of T TAU C ; (2) in GN with EL context space, us-
+EL and CM context spaces. The ON environment is paired
+                                                                  ing CTL alone performs best in terms of JS (note that GN
+with the PO context space. Contexts are represented using
+                                                                  with the EL context space has a small context space provid-
+CTL representations (see Section 2). For full details on CTL
+                                                                  ing less data for transfer; see Appendix E). Notably, in PD,
+context representations, see Appendix C.
+                                                                  which is the longest horizon task, our method outperforms
+Transfer Session: Each training session begins by ran-            all other configurations. Compared to the highest perform-
+domly sampling two disjoint context sets from the CMDPs           ing baseline, we see T TAU C improvements of 22.84% in the
+described above; the source set Csrc and the target set Ctgt .    context space CM and 42.31% in the context space EL, and
+We adopt “training protocol B” of Kirk et al. (2021) such         JS improvements of 11.86% in CM and 36.5% in EL. TR
+that the size of Csrc is much smaller than the size of the con-   results show low and negative TR values for most configura-
+text space. The agent initially trains on tasks induced by Csrc   tions. Our method is the only one with positive TR through-
+for Nsrc steps and then continues its training in Ctgt for ad-    out all tasks. In the PO environment (longest horizon), we
+ditional Ntgt steps. We record performance progress during        see a performance improvement of over 300% when using
+and after training. For full details see Appendix E.              C-PREP compared to the next best configuration.
+                                                                     Next, we examine the achieved threshold performance
+Context Representations: We vary the RM information               throughout training. Fig. 3 visualizes the IQM TT results,
+exposed to the agent, using the following representations:        measured in training progress (percentage) as a function of
+• CTL: controllable context representation without RMs            the threshold, i.e., the curve from which we derive T TAU C .
+  (same baseline in (Toro Icarte et al. 2018)).                   The shaded areas are stratified bootstrap 95% confidence in-
+                                                                  tervals. Each row corresponds to a context space. Each col-
+• CTL+RS (Toro Icarte et al. 2018): adds dense reshaped           umn corresponds to an environment. Agents using RS in en-
+  RM rewards to the current context’s reward functions.           vironments tested with the CM and EL context show simi-
+• CTL+LTL+RS (Camacho et al. 2021): adds the Last Tran-           lar performance in GN, but a performance gap (in favor of
+  sition Label (LTL) as an additional context representation      our method) widens as the task horizon grows. In the PO
+  that is the current assignment of symbols in P.                 environment, our method is the only one that can be seen
+• CTL+C-PREP (ours): adds the C-PREP context represen-            converging to a high-performing policy.
+  tation: Desired Transition Label (DTL), with RS.                   Appendix A shows results of experiments using uninfor-
+                                                                  mative PCG representations in place of CTL. TT and JS
+• C-PREP (ours): C-PREP context representation without a
+                                                                  results are similar to those presented with CTL representa-
+  CTL context representation
+                                                                  tions. TR results show that for all configurations, it is non-
+  In Appendix A we show additional experiments using              beneficial to use PCG representations for transfer due to se-
+PCG context representations in lieu of CTL.                       vere overfitting. Appendix B presents ablation results that
+  Utility     Context Space   Environment        CTL           CTL+RS       CTL+LTL+RS      CTL+C-PREP (ours)     C-PREP (ours)
+                                  GN         25.41 ± 7.27     6.37 ± 0.71     6.21 ± 0.42       6.42 ± 0.44        42.15 ± 3.95
+                   EL             MP         94.77 ± 6.02   44.78 ± 12.06    19.88 ± 9.36      18.32 ± 9.27        86.43 ± 1.89
+                                  PD         97.39 ± 1.57   95.18 ± 3.98    37.58 ± 23.38      21.68 ± 6.55        88.35 ± 1.59
+    T TAU C                       GN         42.18 ± 1.58   16.30 ± 2.35      7.14 ± 1.41       7.64 ± 1.72        32.98 ± 0.68
+                  CM              MP        71.90 ± 10.62   26.48 ± 15.51    14.24 ± 8.85      13.64 ± 8.60       47.74 ± 11.46
+                                  PD        86.30 ± 18.81   54.19 ± 21.64   37.52 ± 25.46     28.95 ± 24.15       51.02 ± 15.46
+                   PO             ON         98.04 ± 0.00   95.15 ± 7.66     97.50 ± 5.59     32.93 ± 10.21        22.54 ± 1.57
+                                  GN         0.28 ± 0.11      0.06 ± 0.06     0.07 ± 0.09       0.05 ± 0.05         0.01 ± 0.05
+                   EL             MP         0.03 ± 0.06      0.26 ± 0.15     0.48 ± 0.26       0.49 ± 0.17         0.01 ± 0.02
+                                  PD         0.02 ± 0.02      0.03 ± 0.01     0.34 ± 0.20       0.38 ± 0.12         0.00 ± 0.01
+    JS                            GN         0.42 ± 0.03      0.55 ± 0.06     0.73 ± 0.05       0.75 ± 0.08         0.49 ± 0.06
+                  CM              MP         0.23 ± 0.09      0.49 ± 0.14     0.66 ± 0.11       0.68 ± 0.10         0.42 ± 0.10
+                                  PD         0.08 ± 0.19      0.28 ± 0.19     0.38 ± 0.27       0.52 ± 0.25         0.31 ± 0.19
+                   PO             ON         0.00 ± 0.00      0.00 ± 0.00     0.00 ± 0.00       0.14 ± 0.26         0.75 ± 0.02
+                                  GN         -0.11 ± 0.10     0.13 ± 0.04     0.08 ± 0.03       0.07 ± 0.03         0.04 ± 0.02
+                   EL             MP         -0.99 ± 0.01     0.24 ± 0.08     0.24 ± 0.18       0.16 ± 0.12         0.06 ± 0.11
+                                  PD         -1.00 ± 0.00    -0.99 ± 0.21    -0.14 ± 0.38       0.14 ± 0.09        -0.05 ± 0.12
+    TR                            GN         -0.11 ± 0.04     0.08 ± 0.04     0.11 ± 0.01       0.11 ± 0.01         0.08 ± 0.04
+                  CM              MP         -0.85 ± 0.32     0.29 ± 0.13     0.26 ± 0.06       0.21 ± 0.06         0.07 ± 0.05
+                                  PD         -0.94 ± 0.25    -0.06 ± 0.29    -0.05 ± 0.20       0.06 ± 0.19         0.07 ± 0.07
+                   PO             ON         0.00 ± 0.00     2.04 ± 6.943    -0.87 ± 0.90       0.69 ± 0.20         0.31 ± 0.03
+
+Table 1: IQM and standard deviation transfer utilities of configurations with CTL. Bold cells indicate best performance in each
+row. Italic cells indicate negative TR
+
+
+show that all components of C-PREP are required to achieve           Appendix D) cover approximately 25% of the tasks in GN
+the best results. Appendix H shows results for additional ex-        and approximately 6% of the MP and PD tasks. We conclude
+periments on sample efficiency (in terms of number of con-           that C-PREP with partial resolution RMs cannot compensate
+texts) and generalization capabilities of C-PREP using PCG.          for missing contextual information. However, Fig. 3b shows
+                                                                     that in the ON environment, where the RMs are of full res-
+Discussion                                                           olution, it is preferable to use C-PREP without additional
+Results demonstrate that C-PREP improves transfer per-               context. We hypothesize that this is due to the large overlap
+formance in more complex tasks without hindering perfor-             in contextual data between the C-PREP context represen-
+mance on simpler tasks. As visualized in Fig. 3a, all methods        tation and CTL, making the information in CTL irrelevant.
+perform similarly in the GN environment (short horizon),             This use of local context illustrates the advantage of solving
+but C-PREP opens a performance gap in TT that increases              the context as a series of smaller, simpler contexts.
+with the difficulty of the environment. The TR results show             We show additional results in experiments using PCG in
+that only our method is beneficial for transfer in all tasks,        place of CTL in Appendix A to examine the case of unin-
+as is evidenced by the negative TR values reported for all           formative global context representations. Here, we notice
+other configurations. In the PO environment, only agents us-         that in 60% of the runs, it was more beneficial to train
+ing C-PREP achieve a threshold greater than 0.2. Further-            from scratch in Ctgt than to transfer from Csrc . Fig. 4 in
+more, since the RM in this case differentiates all tasks, it         the appendix visualizes TT performance of PCG configu-
+is preferable to use C-PREP without CTL. We observe that             rations and shows hindered performance compared to those
+the JS performance is approximately 93% of the maximum               in Fig. 3a that use CTL representations.
+achieved performance threshold, which is reached in less                Ablation results (found in Appendix B) show the impor-
+than 20% of the training progress.                                   tance of every component of C-PREP. We notice that both
+   We examine the performance of C-PREP using partial res-           T TAU C and JS can be improved by up to 12% in five out
+olution RMs, i.e., some tasks may be represented with the            of seven tasks by adding the LTL modification to CTL+C-
+same RM. For this, we use C-PREP alone. In the GN, MP,               PREP in the most complex task. We hypothesize that this
+and PD environments, the agent will achieve a threshold per-         will yield an even greater benefit in scenarios where it is
+formance of no more than 50% of C-PREP’s performance                 harder to infer the current abstraction label.
+with CTL. Fig. 3a shows that C-PREP without CTL achieves                Additional results in Appendix H reveal two interesting
+medium to low performance depending on the environment               capabilities of C-PREP. First, C-PREP is more sample effi-
+and context space. We attribute this to the low coverage of          cient in terms of the number of source contexts it is trained
+tasks with the partial RM resolution. These RMs (detailed in         on, that is, C-PREP needs to train on fewer source contexts
+                                                                     CTL          CTL+RS          CTL+LTL+RS          CTL+C-PREP (ours)         C-PREP (ours)
+                                                                GN                                                   MP                                               PD
+                                     100
+
+
+
+
+      IQM TT (training progress %)
+                                      80
+
+                                      60                                                                                                                                                                                                 ON Environment with PO Context Space
+ EL                                                                                                                                                                                                                         100                      CTL
+                                      40
+                                                                                                                                                                                                                                                     CTL+RS
+                                                                                                                                                                                                                                                     CTL+LTL+RS
+                                      20
+                                                                                                                                                                                                                             80                      CTL+C-PREP (ours)
+
+
+
+
+                                                                                                                                                                                             IQM TT (training progress %)
+                                                                                                                                                                                                                                                     C-PREP (ours)
+                                       0
+
+                                     100                                                                                                                                                                                     60
+
+
+
+
+      IQM TT (training progress %)
+                                      80
+                                                                                                                                                                                                                             40
+                                      60
+CM
+                                      40                                                                                                                                                                                     20
+                                      20
+                                                                                                                                                                                                                              0
+                                       0
+                                           0.0    0.2     0.4        0.6    0.8       1.0   0.0       0.2      0.4        0.6   0.8       1.0   0.0      0.2    0.4        0.6   0.8   1.0
+                                                                                                                                                                                                                                   0.0     0.2       0.4      0.6        0.8    1.0
+                                                          Threshold                                            Threshold                                        Threshold                                                                             Threshold
+
+                                                 (a) GN, MP, and PD environments with EL and CM context spaces                                                                                                                    (b) ON task with PO context space
+
+                                                        Figure 3: The IQM TT of configurations using CTL as a function of the threshold (lower is better).
+
+
+to achieve similar or better transfer performance than other                                                                                                    Hallak, Di Castro, and Mannor 2015).
+tested configurations. Second, adding RM information when                                                                                                          To improve few-shot transfer, our method represents con-
+using PCG significantly improves generalization capabilities                                                                                                    texts as RMs (Toro Icarte et al. 2018). Previous work shows
+at the beginning of training. We see a spike in performance                                                                                                     that RMs can be used to expedite learning of a single fully
+in the first 1M training steps, hinting at the potential of using                                                                                               observable or partially observable context (Camacho et al.
+RMs for learning generalized state representations.                                                                                                             2021; Vaezipoor et al. 2021). The latter work uses linear
+                                                                                                                                                                temporal logic, which uses structures similar to reward ma-
+                                                                5          Related Work                                                                         chines with time-related constraints. Note that this is abbre-
+                                                                                                                                                                viated LTL, not to be confused with the last transition label
+DRL agents are susceptible to overfitting to the context in
+                                                                                                                                                                in this paper. We utilize RMs to represent contextual infor-
+which they were trained. Leike et al. (2017) show that small
+                                                                                                                                                                mation, resulting in better sample efficiency and few-shot
+changes to a single detail or obstacle could result in extreme
+                                                                                                                                                                transfer learning capabilities in multi-context settings.
+performance degradation. Danesh et al. (2021) demonstrate
+that simple RL agents overfit to the training settings such
+that they completely ignore observations. One solution is to                                                                                                                                                                6      Conclusion
+train the agent on a distribution of contexts, rather than a
+single one (Zhang et al. 2018). However, once the context                                                                                                       We presented Contextual PRE-Planning (C-PREP) as a
+distribution departs from the training distribution, the perfor-                                                                                                novel context representation function and showed how it
+mance drops despite the knowledge obtained during training                                                                                                      enhances zero-shot and few-shot transfer for DRL agents.
+(Agarwal et al. 2020). We focus on transferring knowledge                                                                                                       C-PREP exploits RMs by planning on them and providing
+to expedite training in novel tasks.                                                                                                                            the agent with a representation of the next desired transition.
+   There are several approaches to improve transfer learning                                                                                                    Our empirical evaluation demonstrates C-PREP’s ability to
+in DRL. Meta-learning methods (Finn, Abbeel, and Levine                                                                                                         improve sample efficiency and different transfer utilities, es-
+2017; Wang et al. 2017; Duan et al. 2016) “learn to learn”,                                                                                                     pecially for tasks of increasing difficulty.
+thereby expediting the agent’s adaptation to new surround-                                                                                                         To focus on improving transfer using RM representations,
+ings. Model-based methods (Shrestha et al. 2020; Tamar                                                                                                          we assumed the RM generation function is given as input.
+et al. 2016) learn an approximate model of the world, where                                                                                                     Future work will include a theoretical analysis of the condi-
+agents can plan for different contexts using the same model.                                                                                                    tions under which a context representation is guaranteed to
+Bayes-adaptive exploration (Dorfman, Shenfeld, and Tamar                                                                                                        enhance transfer and the development of methods for learn-
+2021; Zintgraf et al. 2019) learn how to best explore new en-                                                                                                   ing to generate appropriate RMs. As a second extension, we
+vironments. Other methods include disentangling latent rep-                                                                                                     intend to examine alternative symbolic representations be-
+resentations in various ways to improve adaptation (Dunion                                                                                                      yond RMs for enhancing learning and transfer, as well as
+et al. 2023a,b). All of the above rely on additional explo-                                                                                                     consider our context representation function’s effect in set-
+ration to determine the context before learning to solve it.                                                                                                    ting in which options (Sutton, Precup, and Singh 1999; Il-
+In contrast, we use contextual information to understand the                                                                                                    lanes et al. 2020) are used to distinguish between sub-tasks.
+task a priori to reduce exploration. Using CMDPs, we view                                                                                                       Finally, we plan to examine our representation in real-world
+the context as additional input to the agent (Langford 2017;                                                                                                    settings in which transfer may be beneficial.
+                       References                               Gupta, A.; Pacchiano, A.; Zhai, Y.; Kakade, S. M.; and
+Agarwal, R.; Machado, M. C.; Castro, P. S.; and Bellemare,      Levine, S. 2022. Unpacking Reward Shaping: Understand-
+M. G. 2020. Contrastive Behavioral Similarity Embeddings        ing the Benefits of Reward Engineering on Sample Com-
+for Generalization in Reinforcement Learning. In Interna-       plexity. ArXiv:2210.09579 [cs].
+tional Conference on Learning Representations.                  Hallak, A.; Di Castro, D.; and Mannor, S. 2015. Contextual
+Agarwal, R.; Schwarzer, M.; Castro, P. S.; Courville, A. C.;    Markov Decision Processes. arXiv:1502.02259 [cs, stat].
+and Bellemare, M. 2021. Deep Reinforcement Learning at          ArXiv: 1502.02259.
+the Edge of the Statistical Precipice. In Advances in Neural    Illanes, L.; Yan, X.; Icarte, R. T.; and McIlraith, S. A. 2020.
+Information Processing Systems, volume 34, 29304–29320.         Symbolic Plans as High-Level Instructions for Reinforce-
+Curran Associates, Inc.                                         ment Learning. Proceedings of the International Conference
+Bellman, R. 1957. A Markovian Decision Process. Indiana         on Automated Planning and Scheduling, 30: 540–550.
+University Mathematics Journal, 6(4): 679–684.                  Kingma, D. P.; and Ba, J. 2015. Adam: A Method for
+Benjamins, C.; Eimer, T.; Schubert, F.; Mohan, A.;              Stochastic Optimization. In Bengio, Y.; and LeCun, Y., eds.,
+Biedenkapp, A.; Rosenhahn, B.; Hutter, F.; and Lindauer,        3rd International Conference on Learning Representations,
+M. 2022. Contextualize Me – The Case for Context in Re-         ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Confer-
+inforcement Learning. ArXiv:2202.04500 [cs].                    ence Track Proceedings.
+Brockman, G.; Cheung, V.; Pettersson, L.; Schneider, J.;        Kirk, R.; Zhang, A.; Grefenstette, E.; and Rocktäschel, T.
+Schulman, J.; Tang, J.; and Zaremba, W. 2016. OpenAI            2021. A Survey of Generalisation in Deep Reinforcement
+Gym. ArXiv:1606.01540 [cs].                                     Learning. arXiv:2111.09794 [cs]. ArXiv: 2111.09794.
+Camacho, A.; Varley, J.; Zeng, A.; Jain, D.; Iscen, A.; and     Langford, J. 2017. Contextual reinforcement learning. In
+Kalashnikov, D. 2021. Reward Machines for Vision-Based          2017 IEEE International Conference on Big Data (Big
+Robotic Manipulation. In 2021 IEEE International Con-           Data), 3–3.
+ference on Robotics and Automation (ICRA), 14284–14290.
+                                                                Langford, J. 2018. Real World Reinforcement Learning.
+Xi’an, China: IEEE. ISBN 978-1-72819-077-8.
+Chen, T.; Xu, J.; and Agrawal, P. 2021. A System for Gen-       Leike, J.; Martic, M.; Krakovna, V.; Ortega, P. A.; Everitt,
+eral In-Hand Object Re-Orientation. In Proceedings of the       T.; Lefrancq, A.; Orseau, L.; and Legg, S. 2017. AI Safety
+5th Annual Conference on Robot Learning.                        Gridworlds. ArXiv:1711.09883 [cs].
+Danesh, M. H.; and Fern, A. 2022. Out-of-Distribution Dy-       Mnih, V.; Kavukcuoglu, K.; Silver, D.; Rusu, A. A.; Veness,
+namics Detection: RL-Relevant Benchmarks and Results. In        J.; Bellemare, M. G.; Graves, A.; Riedmiller, M.; Fidjeland,
+Workshop on Uncertainty and Robustness in Deep Learning         A. K.; Ostrovski, G.; Petersen, S.; Beattie, C.; Sadik, A.;
+@ ICML2021. ArXiv:2107.04982 [cs].                              Antonoglou, I.; King, H.; Kumaran, D.; Wierstra, D.; Legg,
+                                                                S.; and Hassabis, D. 2015. Human-level control through
+Danesh, M. H.; Koul, A.; Fern, A.; and Khorram, S. 2021.
+                                                                deep reinforcement learning. Nature, 518(7540): 529–533.
+Re-understanding Finite-State Representations of Recur-
+                                                                Number: 7540 Publisher: Nature Publishing Group.
+rent Policy Networks. In Proceedings of the 38th In-
+ternational Conference on Machine Learning, 2388–2397.          Ng, A. Y.; Harada, D.; and Russell, S. 1999. Policy invari-
+PMLR. ISSN: 2640-3498.                                          ance under reward transformations: Theory and application
+Dorfman, R.; Shenfeld, I.; and Tamar, A. 2021. Offline Meta     to reward shaping. In In Proceedings of the Sixteenth Inter-
+Reinforcement Learning – Identifiability Challenges and Ef-     national Conference on Machine Learning, 278–287. Mor-
+fective Data Collection Strategies. In Advances in Neural In-   gan Kaufmann.
+formation Processing Systems, volume 34, 4607–4618. Cur-        Schrittwieser, J.; Antonoglou, I.; Hubert, T.; Simonyan, K.;
+ran Associates, Inc.                                            Sifre, L.; Schmitt, S.; Guez, A.; Lockhart, E.; Hassabis, D.;
+Duan, Y.; Schulman, J.; Chen, X.; Bartlett, P. L.; Sutskever,   Graepel, T.; Lillicrap, T.; and Silver, D. 2020. Mastering
+I.; and Abbeel, P. 2016. RL$ˆ2$: Fast Reinforcement Learn-      Atari, Go, chess and shogi by planning with a learned model.
+ing via Slow Reinforcement Learning. arXiv:1611.02779           Nature, 588(7839): 604–609. Number: 7839 Publisher: Na-
+[cs, stat]. ArXiv: 1611.02779.                                  ture Publishing Group.
+Dunion, M.; McInroe, T.; Luck, K. S.; Hanna, J.; and Al-        Shrestha, A. K.; Lee, S.; Tadepalli, P.; and Fern, A. 2020.
+brecht, S. V. 2023a. Conditional Mutual Information for Dis-    DeepAveragers: Offline Reinforcement Learning By Solv-
+entangled Representations in Reinforcement Learning. In         ing Derived Non-Parametric MDPs. In International Con-
+Conference on Neural Information Processing Systems.            ference on Learning Representations.
+Dunion, M.; McInroe, T.; Luck, K. S.; Hanna, J.; and Al-        Sutton, R. S.; Precup, D.; and Singh, S. 1999. Between
+brecht, S. V. 2023b. Temporal Disentanglement of Rep-           MDPs and semi-MDPs: A framework for temporal abstrac-
+resentations for Improved Generalisation in Reinforcement       tion in reinforcement learning. Artificial intelligence, 112(1-
+Learning. In International Conference on Learning Repre-        2): 181–211. Publisher: Elsevier.
+sentations (ICLR).                                              Tamar, A.; WU, Y.; Thomas, G.; Levine, S.; and Abbeel,
+Finn, C.; Abbeel, P.; and Levine, S. 2017. Model-Agnostic       P. 2016. Value Iteration Networks. In Advances in Neural
+Meta-Learning for Fast Adaptation of Deep Networks.             Information Processing Systems, volume 29. Curran Asso-
+arXiv:1703.03400 [cs]. ArXiv: 1703.03400.                       ciates, Inc.
+Taylor, M. E.; and Stone, P. 2009. Transfer Learning for Re-
+inforcement Learning Domains: A Survey. Journal of Ma-
+chine Learning Research, 10(56): 1633–1685.
+Terry, J. K.; Black, B.; Grammel, N.; Jayakumar, M.; Hari,
+A.; Sullivan, R.; Santos, L.; Perez, R.; Horsch, C.; Dief-
+fendahl, C.; Williams, N. L.; Lokesh, Y.; and Ravi, P. 2021.
+PettingZoo: Gym for Multi-Agent Reinforcement Learning.
+ArXiv:2009.14471 [cs, stat].
+Toro Icarte, R.; Klassen, T.; Valenzano, R.; and McIlraith, S.
+2018. Using Reward Machines for High-Level Task Speci-
+fication and Decomposition in Reinforcement Learning. In
+Proceedings of the 35th International Conference on Ma-
+chine Learning, 2107–2116. PMLR. ISSN: 2640-3498.
+Toro Icarte, R.; Klassen, T. Q.; Valenzano, R.; and McIlraith,
+S. A. 2022. Reward Machines: Exploiting Reward Function
+Structure in Reinforcement Learning. Journal of Artificial
+Intelligence Research, 73: 173–208.
+Toro Icarte, R.; Waldie, E.; Klassen, T.; Valenzano, R.; Cas-
+tro, M.; and McIlraith, S. 2019. Learning Reward Ma-
+chines for Partially Observable Reinforcement Learning. In
+Advances in Neural Information Processing Systems, vol-
+ume 32. Curran Associates, Inc.
+Torrey, L. A.; and Shavlik, J. 2009. Chapter 11 Transfer
+Learning. In Handbook of Research on Machine Learning
+Applications and Trends: Algorithms, Methods, and Tech-
+niques, 242–264. IGI Global.
+Tseng, H.-H.; Luo, Y.; Cui, S.; Chien, J.-T.; Ten Haken,
+R. K.; and Naqa, I. E. 2017. Deep reinforcement learning
+for automated radiation adaptation in lung cancer. Medical
+Physics, 44(12): 6690–6705.
+Vaezipoor, P.; Li, A. C.; Icarte, R. A. T.; and Mcilraith,
+S. A. 2021. LTL2Action: Generalizing LTL Instructions for
+Multi-Task RL. In Proceedings of the 38th International
+Conference on Machine Learning, 10497–10508. PMLR.
+ISSN: 2640-3498.
+Wang, J. X.; Kurth-Nelson, Z.; Tirumala, D.; Soyer, H.;
+Leibo, J. Z.; Munos, R.; Blundell, C.; Kumaran, D.; and
+Botvinick, M. 2017. Learning to reinforcement learn.
+arXiv:1611.05763 [cs, stat]. ArXiv: 1611.05763.
+Zhang, C.; Vinyals, O.; Munos, R.; and Bengio, S. 2018.
+A Study on Overfitting in Deep Reinforcement Learning.
+ArXiv:1804.06893 [cs, stat].
+Zintgraf, L.; Shiarlis, K.; Igl, M.; Schulze, S.; Gal, Y.; Hof-
+mann, K.; and Whiteson, S. 2019. VariBAD: A Very Good
+Method for Bayes-Adaptive Deep RL via Meta-Learning. In
+International Conference on Learning Representations.
+                A       PCG Experiments                          with variables i1,..., i2 that defines the passenger
+Table 2 shows that among configurations that use PCG-            pickup order is as follows:
+based context representation, our CTL+C-PREP performed           Symbols:
+best in all CMDPs of the GN, MP, and PD environments                 P1 - Passenger 1 has been picked up
+in the T TAU C utility. The near-zero JS values and small            ...
+(< 0.1) to negative TR values indicate overfitting and non-          P5 - Passenger 5 has been picked up
+beneficial transfer in all CMDPs for all configurations using
+PCG. C-PREP without PCG shows positive (or negative but          Order-i1,i2,i3,i4,i5:
+close to zero) TR in all configurations. Fig. 4 presents the     States - u0, ..., u5
+IQM TT as a function of the threshold for comparison with        Transitions -
+the results using CTL representations shown in Fig. 3.               (u0, not Pi1) --> next=u0;r=0
+                                                                     (u0,     Pi1) --> next=u1;r=0
+                    B    Ablation Tests                              ...
+Table 3 shows the results of our ablation tests based on the         (u4, not Pi5) --> next=u4;r=0
+C-PREP components. In the GN, MP, and PD environments,               (u2,     Pi5) --> next=u5;r=1
+we used CTL as the base context representation. The results         For the EL context space, the entities may be anywhere
+show that all components are necessary to achieve the high-      on the map. This means that an RM generator function that
+est transfer performance. As can be seen in Fig. 5a, configu-    differentiates between all contexts needs to use at least one
+rations that do not use RS achieve low performance thresh-       symbol for every possible position. Because the agent can
+olds in most tasks. We further observe that adding LTL to our    potentially visit any of these positions during an episode,
+representation (CTL+LTL+C-PREP) outperforms CTL+C-               we must have an abstract state for each position on the map
+PREP in the T TAU C utility in five out of six of the CMDPs      and passenger status (waiting, picked up, delivered). Such an
+in these environments. In the ON environment, due to the         RM is about the same size as the entire MDP, and so it would
+success of C-PREP without CTL, we additionally tested ab-        be more beneficial to run VI on the MDP itself and guarantee
+lations in this environment without CTL. From the ablation       a near-optimal policy rather than the RM. Similarly, the CM
+analysis in Fig. 5b we see that without all C-PREP com-          contexts determine the locations of obstacles, and so the RM
+ponents, the agent cannot complete the tasks after transfer,     must account for every possible transition in the map (which
+which shows the significance of each component. In this          is also about the size of the MDP).
+setting (ON) LTL+C-PREP performs on par with C-PREP,                To overcome this issue, we use an RM generator function
+showing that our representation is sufficient.                   that groups adjacent cells into sectors and symbols to indi-
+                                                                 cate the agent’s presence in a specific sector. A transition
+            C    Context Representations                         between sectors is possible if a transition between cells of
+In our experiments, we use both CTL and PCG context rep-         those sectors is possible. Fig. 7b illustrates this in the PD
+resentations. CTL representations contain all the informa-       environment. This significantly reduces the size of the gen-
+tion required to generate the MDP induced by the context.        erated RMs, but the RM can only account for transitions be-
+In practice, this is part of the observation that is constant    tween sectors (partial resolution).
+throughout the task. PCG representations are random indices
+assigned to each context as an identifier. These indices are                E    Training Technical Details
+provided to the agent as one-hot-encoding vectors. Fig. 6
+illustrates the implementation of the corresponding context      We trained each DQN agent on a single CPU core for four
+representation functions.                                        million steps on Csrc and Ctgt . For the EL context space, we
+                                                                 train on 100 source contexts and transfer to 200 target con-
+    The EL contexts are represented by the location of the en-
+                                                                 texts. For the CM context space, we train 250 source con-
+tities (passengers and their destinations) in the environment.
+                                                                 texts and transfer to 500 contexts. The GN environment con-
+This is a pair of row-column coordinates for each entity. The
+                                                                 tains only 36 possible entity positions and so with the EL
+CM contexts are represented as a binary vector where each
+                                                                 context space, there are only 36 contexts. Thus, we train on
+value indicates the existence of a wall at a certain position
+                                                                 8 source contexts and transfer to 16 target contexts in this en-
+in the environment map. The PO contexts are represented by
+                                                                 vironment, leaving room for the sampled contexts to change
+a single index for each passenger that is the position of the
+                                                                 between runs.
+passenger in the pickup order. Fig. 7a shows two different
+contexts in the PD environment coupled with the EL context          DQN hyperparameters were selected via grid search of
+space.                                                           potential candidates, followed by a manual search in areas
+                                                                 of interest. To demonstrate C-PREP’s resilience to hyperpa-
+                                                                 rameters, hyperparameters were chosen to optimize the CTL
+        D    Experiment Reward Machines                          configuration and used globally across all other configura-
+In the PO context space, there is an RM generator function       tions. The Q-value estimator network is comprised of two
+of full resolution that generates simple RMs where the num-      hidden linear layers with Rectified Linear Unit (ReLU) acti-
+ber of propositional symbols abstract states is equal to the     vations, ending with a linear output layer of width equal to
+number of passengers. The RM generator function template         the number of agent actions. The parameters are optimized
+  Utility        Context Space       Environment            PCG            PCG+RS         PCG+LTL+RS            PCG+C-PREP (ours)       C-PREP (ours)
+                                           GN            84.95 +- 3.23     7.12 +- 0.66     5.89 +- 0.22              5.82 +- 0.28       42.15 +- 3.95
+                        EL                 MP            98.04 +- 0.00    96.11 +- 1.14   95.02 +- 2.03             61.96 +- 9.37        86.43 +- 1.89
+                                           PD            98.04 +- 0.00    98.04 +- 0.00   96.75 +- 0.90             58.97 +- 6.69        88.35 +- 1.59
+       T TAU C                             GN           85.61 +- 12.21    20.01 +- 3.63   16.45 +- 2.37             14.58 +- 2.19        32.98 +- 0.68
+                       CM                  MP            98.04 +- 0.00   51.29 +- 12.97   42.41 +- 12.14            32.73 +- 13.21      47.74 +- 11.46
+                                           PD            98.04 +- 0.00   55.94 +- 19.14   43.39 +- 16.48            39.95 +- 18.23      51.02 +- 15.46
+                        PO                 ON            98.04 +- 0.00   92.56 +- 13.58   93.01 +- 3.80             37.65 +- 22.90      22.54 +- 1.57
+                                           GN             0.01 +- 0.03     0.00 +- 0.01     0.00 +- 0.01              0.00 +- 0.01        0.01 +- 0.05
+                        EL                 MP             0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00              0.00 +- 0.00        0.01 +- 0.02
+                                           PD             0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00              0.00 +- 0.00        0.00 +- 0.01
+       JS                                  GN             0.00 +- 0.05     0.00 +- 0.02     0.18 +- 0.14              0.10 +- 0.18        0.49 +- 0.06
+                       CM                  MP             0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.02              0.00 +- 0.00        0.42 +- 0.10
+                                           PD             0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00              0.00 +- 0.13        0.31 +- 0.19
+                        PO                 ON             0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00              0.00 +- 0.00        0.75 +- 0.02
+                                           GN            -0.86 +- 0.05     0.05 +- 0.01     0.05 +- 0.02              0.04 +- 0.02        0.04 +- 0.02
+                        EL                 MP            -1.00 +- 0.00    -0.85 +- 0.03    -0.93 +- 0.13             -0.31 +- 0.21        0.06 +- 0.11
+                                           PD            -1.00 +- 0.00    -0.84 +- 0.09    -0.94 +- 0.07             -0.33 +- 0.16       -0.05 +- 0.12
+       TR                                  GN            -0.77 +- 0.37    -0.02 +- 0.06    -0.02 +- 0.04              0.00 +- 0.02        0.08 +- 0.04
+                       CM                  MP            -1.00 +- 0.00     0.11 +- 0.18    -0.03 +- 0.08             -0.02 +- 0.03        0.07 +- 0.05
+                                           PD            -0.60 +- 0.49     0.21 +- 0.21     0.06 +- 0.19              0.06 +- 0.06        0.07 +- 0.07
+                        PO                 ON             0.00 +- 0.00         inf4        -0.71 +- 1.79              0.31 +- 0.55        0.31 +- 0.03
+
+Table 2: IQM and standard deviation transfer utilities in tested CMDPS using PCG as the base context representation. The best
+results for each CMDP (row) are marked in bold. Negative TR values that indicate non-beneficial transfer are italicized.
+
+
+with Adam (Kingma and Ba 2015). Table 4 lists all hyperpa-                                                          AU C(hπCsrc ,Ctgt ) − AU C(hπCtgt )
+rameters. Random seeds were chosen to be the first 5 multi-                         UT R (πCsrc ,Ctgt , πCtgt ) =
+                                                                                                                        AU C(hπCtgt )
+ples of 42 for all experiments.                                                                                                 (Transfer Ratio)
+                                                                                   where AUC is the area under the curve, estimated by the av-
+                             F     Evaluation                                      erage of all recorded values on the curve. To provide a single
+                                                                                   TT value that considers all thresholds, we also calculate util-
+Agent policies are evaluated as deterministic policies every                       ity UT TAU C (π) = AU C (UT T (π, τ )).
+1% of training completed. An additional evaluation occurs                                                   τ
+before training to account for zero-shot transfer. Each eval-
+uation records the return acquired from running 50 episodes                                          G     C-PREP with DQN
+in randomly sampled contexts from the context set on which                         Algorithm 1 shows the DQN algorithm with C-PREP inte-
+we are training. The source policy is also evaluated in Ctgt                       gration. A textual description of the algorithm is available in
+to allow analysis of generalization throughout training. The                       Section 3.
+returns are averaged to estimate the expected discounted re-
+turn, with which we calculate the transfer utilities.                                            H       Additional Experiments
+   Let hπ be the training history of policy π, that is, a                          We perform two additional experiments. The first aims to
+mapping from the number of timesteps trained to the es-                            show C-PREP’s sample efficiency in terms of the number
+timated expected discounted return of the policy at that                           of source contexts on which it is trained. For this, we dou-
+time. For some training configuration (environment, context                        bled the size of the source context set and rerun the exper-
+space, hyperparameters, etc.), denote the target and trans-                        iments. IQM transfer utilities for this experiment are avail-
+ferred policies by πCtgt and πCsrc ,Ctgt , respectively. Denote                    able in Table 5. Fig. 8 shows the TT performance over the
+some predetermined threshold by τ . We calculate our trans-                        achieved threshold for these settings in the GN, MP, and PD
+fer utilities as follows:                                                          environments. As we can see, the performance gap between
+                                                                                   our method and LTL decreased when we doubled the size of
+   UT T (π, τ ) = min {t|hπ (t) ≥ τ }                 (Time to Threshold)
+                                                                                   Csrc . We conclude from this that C-PREP maintains its trans-
+                                                                                   fer performance even when the size of the source context set
+            UJS (πCsrc ,Ctgt , πCtgt ) = hπCsrc ,Ctgt (0)      (Jumpstart)         shrinks.
+                                                                                      The second experiment tested the generalization capabil-
+   3
+       Target policy scored close to 0 on all seeds.                               ities of C-PREP using PCG representations. As we saw in
+   4
+       Target policy scored 0 on all seeds.                                        Section 4 and analyzed in Section 4, we witness severe over-
+ Utility     Context Space   Environment      CTL+LTL         CTL+DTL           CTL+RS        CTL+LTL+DTL       CTL+LTL+RS       CTL+C-PREP (ours)   CTL+LTL+C-PREP (ours)     PCG+LTL         PCG+DTL           PCG+RS        PCG+LTL+DTL       PCG+LTL+RS       PCG+C-PREP (ours)   PCG+LTL+C-PREP (ours)
+                                 GN         35.25 +- 6.97   48.41 +- 10.33     7.12 +- 0.66    53.00 +- 10.25     6.21 +- 0.42       6.42 +- 0.44          5.69 +- 0.24      80.30 +- 8.29   72.21 +- 15.60     7.12 +- 0.66      5.56 +- 0.15     5.89 +- 0.22       5.82 +- 0.28        84.37 +- 9.77
+                  EL             MP        62.09 +- 15.17    84.31 +- 8.59    96.11 +- 1.14    94.12 +- 12.98    19.88 +- 9.36      18.32 +- 9.27         24.93 +- 6.72      98.04 +- 0.00    98.04 +- 0.00    96.11 +- 1.14    54.92 +- 9.86     95.02 +- 2.03      61.96 +- 9.37        98.04 +- 0.00
+                                 PD         85.62 +- 6.37    95.42 +- 2.08    98.04 +- 0.00    96.08 +- 1.75    37.58 +- 23.38      21.68 +- 6.55        17.07 +- 15.58      98.04 +- 0.00    98.04 +- 0.00    98.04 +- 0.00    43.21 +- 12.76    96.75 +- 0.90      58.97 +- 6.69        98.04 +- 0.00
+   T TAU C                       GN         30.94 +- 4.47    31.11 +- 2.80    20.01 +- 3.63    29.73 +- 3.06      7.14 +- 1.41       7.64 +- 1.72          6.46 +- 1.33      80.90 +- 5.40    91.53 +- 3.80    20.01 +- 3.63    13.75 +- 2.15     16.45 +- 2.37      14.58 +- 2.19        85.39 +- 7.17
+                 CM              MP        59.05 +- 13.28   53.03 +- 19.86   51.29 +- 12.97    52.37 +- 20.12    14.24 +- 8.85      13.64 +- 8.60        11.58 +- 11.46      93.42 +- 4.32    98.04 +- 0.00   51.29 +- 12.97    33.52 +- 12.62   42.41 +- 12.14     32.73 +- 13.21        97.11 +- 3.67
+                                 PD        82.42 +- 21.06   86.27 +- 15.43   55.94 +- 19.14    64.64 +- 24.99   37.52 +- 25.46     28.95 +- 24.15        25.22 +- 20.73      98.04 +- 2.83    98.04 +- 0.00   55.94 +- 19.14    40.65 +- 18.64   43.39 +- 16.48     39.95 +- 18.23        98.01 +- 2.92
+                  PO             ON         98.04 +- 0.00    98.04 +- 0.00   92.56 +- 13.58    98.04 +- 0.00     97.50 +- 5.59     32.93 +- 10.21        52.05 +- 33.84      98.04 +- 0.00    98.04 +- 0.00   92.56 +- 13.58    34.35 +- 6.34     93.01 +- 3.80     37.65 +- 22.90        98.04 +- 0.00
+                                 GN          0.05 +- 0.03     0.06 +- 0.02     0.00 +- 0.01      0.04 +- 0.03     0.07 +- 0.09       0.05 +- 0.05          0.10 +- 0.06       0.01 +- 0.01     0.01 +- 0.02     0.00 +- 0.01      0.03 +- 0.03     0.00 +- 0.01       0.00 +- 0.01         0.02 +- 0.02
+                  EL             MP          0.38 +- 0.15     0.15 +- 0.08     0.00 +- 0.00      0.04 +- 0.13     0.48 +- 0.26      0.49 +- 0.17           0.31 +- 0.19       0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00      0.00 +- 0.01     0.00 +- 0.00       0.00 +- 0.00         0.00 +- 0.00
+                                 PD          0.13 +- 0.07     0.04 +- 0.02     0.00 +- 0.00      0.04 +- 0.02     0.34 +- 0.20       0.38 +- 0.12          0.53 +- 0.19       0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00      0.00 +- 0.00     0.00 +- 0.00       0.00 +- 0.00         0.00 +- 0.00
+   JS                            GN          0.59 +- 0.05     0.62 +- 0.05     0.00 +- 0.02      0.61 +- 0.04     0.73 +- 0.05       0.75 +- 0.08          0.76 +- 0.09       0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.02      0.25 +- 0.14     0.18 +- 0.14       0.10 +- 0.18         0.00 +- 0.06
+                 CM              MP          0.39 +- 0.13     0.41 +- 0.20     0.00 +- 0.00      0.46 +- 0.20     0.66 +- 0.11       0.68 +- 0.10          0.74 +- 0.17       0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00      0.00 +- 0.06     0.00 +- 0.02       0.00 +- 0.00         0.00 +- 0.00
+                                 PD          0.13 +- 0.19     0.13 +- 0.14     0.00 +- 0.00      0.32 +- 0.23     0.38 +- 0.27       0.52 +- 0.25          0.55 +- 0.25       0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00      0.00 +- 0.12     0.00 +- 0.00       0.00 +- 0.13         0.00 +- 0.00
+                  PO             ON          0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00      0.00 +- 0.00     0.00 +- 0.00      0.14 +- 0.26           0.01 +- 0.20       0.00 +- 0.00     0.00 +- 0.00     0.00 +- 0.00      0.00 +- 0.00     0.00 +- 0.00       0.00 +- 0.00         0.00 +- 0.00
+                                 GN         -0.24 +- 0.09    -0.44 +- 0.14     0.05 +- 0.01     -0.48 +- 0.13     0.08 +- 0.03       0.07 +- 0.03          0.06 +- 0.02      -0.80 +- 0.11    -0.69 +- 0.20     0.05 +- 0.01      0.05 +- 0.03     0.05 +- 0.02       0.04 +- 0.02        -0.86 +- 0.12
+   tr             EL             MP         -0.96 +- 0.06    -0.95 +- 0.04    -0.85 +- 0.03     -1.00 +- 0.01     0.24 +- 0.18       0.16 +- 0.12          0.14 +- 0.07      -1.00 +- 0.00    -1.00 +- 0.00    -0.85 +- 0.03     -0.32 +- 0.20    -0.93 +- 0.13      -0.31 +- 0.21        -1.00 +- 0.00
+                                 PD         -0.98 +- 0.01    -0.99 +- 0.03    -0.84 +- 0.09     -1.00 +- 0.00    -0.14 +- 0.38       0.14 +- 0.09          0.20 +- 0.25      -1.00 +- 0.00    -1.00 +- 0.00    -0.84 +- 0.09     -0.10 +- 0.35    -0.94 +- 0.07      -0.33 +- 0.16        -1.00 +- 0.00
+   TR                            GN         -0.07 +- 0.07    -0.09 +- 0.05    -0.02 +- 0.06     -0.07 +- 0.05     0.11 +- 0.01       0.11 +- 0.01          0.10 +- 0.02      -0.58 +- 0.13    -0.82 +- 0.09    -0.02 +- 0.06     -0.03 +- 0.04    -0.02 +- 0.04       0.00 +- 0.02        -0.69 +- 0.14
+                 CM              MP         -0.68 +- 0.28    -0.71 +- 0.38     0.11 +- 0.18     -0.55 +- 0.34     0.26 +- 0.06       0.21 +- 0.06          0.15 +- 0.05      -0.78 +- 0.30    -1.00 +- 0.00     0.11 +- 0.18     -0.11 +- 0.04    -0.03 +- 0.08      -0.02 +- 0.03        -0.92 +- 0.23
+                                 PD         -0.77 +- 0.33    -0.99 +- 0.19     0.21 +- 0.21     -0.46 +- 0.42    -0.05 +- 0.20       0.06 +- 0.19          0.03 +- 0.22      -1.00 +- 0.39    -0.99 +- 0.40     0.21 +- 0.21     -0.10 +- 0.07     0.06 +- 0.19       0.06 +- 0.06        -0.94 +- 0.48
+                  PO             ON          0.00 +- 0.00     0.00 +- 0.00          inf          0.00 +- 0.00    -0.87 +- 0.90      0.69 +- 0.20          -0.08 +- 0.73       0.00 +- 0.00     0.00 +- 0.00          inf          0.69 +- 1.19    -0.71 +- 1.79       0.31 +- 0.55         0.00 +- 0.00
+
+
+
+Table 3: IQM and standard deviation transfer utilities for tested ablation configurations (environment-context space pairs) using both base context representation
+(CTL and PCG), aggregated over all seeds. The best results for each CMDP (row) and base context representation (left-right split) are marked in bold. Negative TR
+values that indicate non-beneficial transfer are italicized.
+                                                                        PCG    PCG+RS     PCG+LTL+RS          PCG+C-PREP (ours)       C-PREP (ours)
+                                                             GN                                              MP                                                   PD
+                                     100
+
+
+                                      80
+
+
+
+
+      IQM TT (training progress %)
+                                      60
+ EL
+                                      40
+
+
+                                      20
+
+
+                                       0
+
+                                     100
+
+
+                                      80
+
+
+
+
+      IQM TT (training progress %)
+                                      60
+CM
+                                      40
+
+
+                                      20
+
+
+                                       0
+                                           0.0   0.2   0.4        0.6   0.8   1.0   0.0    0.2         0.4        0.6       0.8       1.0     0.0     0.2   0.4        0.6   0.8   1.0
+                                                         Threshold                                       Threshold                                            Threshold
+
+                                       Figure 4: The IQM TT as a function of the threshold for configurations with PCG base context representations.
+
+
+Table 4: DQN hyperparameters for all baseline configura-                                                     incidental since otherwise, other configurations should also
+tions.                                                                                                       display this phenomenon. This begs the question “What is
+                                                                                                             learned before overfitting occurs and how can we preserve
+ Parameter                                                              Value                                this knowledge”? Furthermore, we still do not have a clear
+ Target Q-network update interval                                       10,000 steps                         explanation as to why specifically RM information causes
+ Exploration time                                                       50% training duration                this spike. We believe this has implications for representa-
+ replay buffer size                                                     1M                                   tion learning, where agents learn latent representations of
+ Discount factor                                                        0.99                                 the state space in a disentangled manner from the policy.
+ training frequency                                                     every 4 steps
+ gradient steps per training                                            4
+ sample batch size                                                      32
+ Number of hidden layers                                                2                                                         I   Multi-Taxi Environment
+ Hidden layer width                                                     64
+ Hidden activations                                                     ReLU
+ learning rate                                                          0.0001                               Multi-Taxi is a highly configurable multi-agent environ-
+ Adam β1                                                                0.9                                  ment, based on the OpenAI gym taxi environment (Brock-
+ Adam β2                                                                0.999                                man et al. 2016), which adheres to the PettingZoo API
+                                                                                                             (Terry et al. 2021). Fig. 10 shows a visualization of the
+                                                                                                             environment. The environment’s configurable features al-
+                                                                                                             low the user to set the number of passengers and taxis, the
+fitting when using PCG. However, we find that using RM                                                       taxi’s capacity and fuel requirements, the actions’ stochas-
+information is not completely futile. Figure Fig. 9 shows                                                    ticity, the sensor function, and more. We note that while
+the performance of the source policy during training in Csrc ,                                               multi-taxi is natively a multi-agent environment, we explore
+evaluated in Ctgt in the PD environment with the CM con-                                                     it in the single-agent setting. By leveraging the domain’s
+text space. We observe that in the first 30% of training, there                                              customizability we define seven different environment set-
+is a spike in performance for LTL +RS or C-PREP. These                                                       tings of varying complexity levels based on three context
+are the only configurations that use additional context repre-                                               spaces changing different aspects of the environment be-
+sentations from RM information to augment the contextual                                                     tween tasks. The code can be found at https://github.com/
+PCG input. The performance spike is far too high to be co-                                                   CLAIR-LAB-TECHNION/multi taxi.
+                                           CTL+LTL         CTL+DTL           CTL+RS         CTL+LTL+DTL         CTL+LTL+RS         CTL+C-PREP (ours)         CTL+LTL+C-PREP (ours)
+                                                                  GN                                            MP                                                  PD
+                                     100                                                                                                                                                                                              ON Environment with PO Context Space
+
+
+
+
+      IQM TT (training progress %)
+                                                                                                                                                                                                                          100                     LTL
+
+
+
+
+                                                                                                                                                                                           IQM TT (training progress %)
+                                      80
+                                                                                                                                                                                                                                                  DTL
+                                                                                                                                                                                                                                                  RS
+                                      60                                                                                                                                                                                   80                     LTL+DTL
+ EL                                                                                                                                                                                                                                               LTL+RS
+                                      40                                                                                                                                                                                                          C-PREP (ours)
+                                                                                                                                                                                                                           60                     LTL+C-PREP (ours)
+                                      20
+
+                                       0
+                                                                                                                                                                                                                           40
+                                     100
+
+
+
+
+      IQM TT (training progress %)
+                                      80                                                                                                                                                                                   20
+
+                                      60
+CM                                                                                                                                                                                                                          0
+                                      40                                                                                                                                                                                        0.0     0.2       0.4      0.6        0.8    1.0
+                                      20
+                                                                                                                                                                                                                                                 Threshold
+                                       0                                                                                                                                                        (b) Ablation configurations using CTL as the
+                                           0.0       0.2    0.4        0.6    0.8     1.0    0.0    0.2   0.4        0.6     0.8      1.0   0.0        0.2    0.4        0.6   0.8   1.0
+                                                           Threshold                                      Threshold                                           Threshold                         base context representation
+                                            (a) Ablation configurations using CTL as the base context representation
+
+                                                                       Figure 5: The IQM TT as a function of the threshold for ablation test configurations.
+
+
+                                                                       J       Acronyms
+Table 6 is a glossary for frequently used terms in this work.
+The table is divided into three sections using thick horizon-
+tal lines. The top section contains general terms. The middle
+section contains names of context representations used in
+our experiments. The bottom section contains the environ-
+ments and context spaces used in our experiments.
+                                                                                                              Source Contexts
+
+
+
+
+                                                                                                  0    ...    0     1      0    ...   0    0     ...    0
+
+
+
+
+                                                                                                                                           Target Contexts
+                                     Controllable
+                       Env            Context
+                                        Info
+                                                                                                              Context            Context
+                                                                                                                                               OHE
+                                                                                                             Numbering            Index
+
+
+
+
+                                                                                                              Max Supported Contexts
+
+                                       (a)                                                                              (b)
+
+Figure 6: Baseline context representation functions. (a) Controllable (CTL) environment context representation function. Each
+context is represented using the original informative context representation offered by the environment. (b) Procedural content
+generation (PCG) context representation function. Contexts have unique indices that are converted into binary indicator vectors
+(one-hot-encoding) for the source and target contexts together. One-hot encoding context representations are limited to a maxi-
+mum number of supported contexts, determined ahead of time.
+
+
+
+
+                                                                                       Start
+
+
+
+
+(a) Two different EL contexts in the PD environ-        (b) An example abstraction of a task in the PD environment on a 4 × 4 grid. The envi-
+ment. The taxi icon is the acting agent, the person     ronment is split into four sectors of 2 × 2 cells. We say that the agent is in sector i if it
+icon is the passenger to be picked up, and the flag     is currently located in one of the cells within the sector. Symbol Si indicates the agent
+icon is the passenger’s destination. The agent can      is in sector i. Symbols P and D indicate the passenger has been picked up or dropped
+navigate to any adjacent cell, but cannot cross thick   off, respectively. The colors match abstract states to their corresponding sectors.
+walls.
+
+                                                                     Figure 7
+Algorithm 1: Training DQN with C-PREP
+  Input: π = Qθ - initial DQN policy
+  Input: C - contexts set
+  Input: N - number of episodes to train
+  Input: G - RM generator function
+  Input: L - transition labeling function
+  D ← empty experience replay buffer
+  for i ∈ [N ] do
+    c ← sampleU nif orm(C)
+    ⟨U, δu , δr ⟩ ← generated RM for c
+    V ← value iteration on RM
+    δr (u, l) ← δr (u, l) + γV (δu (u, l)) − V (u) {reward shaping}
+    u ← u0
+    for each step in episode of Mc do
+        l∗ ← arg maxδr (u, l) + γV (δu (u, l))
+                l∈2P
+       ŝ ← ⟨s, l∗ ⟩ {using augmented state space}
+       q ← Qθ (ŝ)
+       a ← ϵ-greedy(q)
+       s′ ← Mc .step(a)
+       u′ ← δu (u, L(s, a, s′ ))
+       r ← δr (u, L(s, a, s′ )) {using RM reward}
+       l∗ ′ ← arg maxδr (u′ , l) + γV (δu (u′ , l))
+                    l∈2P
+       ŝ′ ← s′ , l∗ ′
+       D.store(ŝ, a, r, ŝ′ )
+       ŝ, a, r,Pŝ′ ← D.sampleBatch()
+       l←           (r + maxa′ {Qθ (ŝ′ )[a′ ]} − Qθ (ŝ)[a])2
+            batch
+       θ ← ∇θ l
+       s, u ← s′ , u′
+    end for
+  end for
+  Return Qθ
+  Utility     Context Space   Environment        CTL          CTL+RS        CTL+LTL+RS      CTL+C-PREP (ours)     C-PREP (ours)
+                                  GN         19.07 ± 3.10    6.26 ± 0.51      5.92 ± 0.27       6.13 ± 0.70        43.95 ± 4.74
+                   EL             MP         86.27 ± 7.70   18.63 ± 6.06     10.03 ± 0.69      10.24 ± 0.92        87.03 ± 1.74
+                                  PD        94.12 ± 15.42   68.17 ± 24.76    12.96 ± 3.58      11.70 ± 0.58        87.92 ± 1.39
+    T TAU C                       GN         37.99 ± 1.16   10.22 ± 2.15      5.40 ± 0.88       5.52 ± 1.09        34.74 ± 4.14
+                  CM              MP        67.83 ± 13.45   20.97 ± 16.25    10.96 ± 6.24      10.85 ± 4.82        49.75 ± 9.38
+                                  PD        78.22 ± 22.00   44.16 ± 23.82   27.30 ± 27.32     22.16 ± 19.23       48.33 ± 15.64
+                   PO             ON         98.04 ± 0.00   97.10 ± 16.40    96.31 ± 6.65     23.29 ± 12.84        22.69 ± 1.48
+                                  GN          0.42 ± 0.15    0.21 ± 0.06      0.08 ± 0.15       0.26 ± 0.12         0.00 ± 0.02
+                   EL             MP          0.13 ± 0.08    0.69 ± 0.04      0.87 ± 0.02       0.86 ± 0.04         0.03 ± 0.02
+                                  PD          0.06 ± 0.16    0.19 ± 0.23      0.78 ± 0.09       0.80 ± 0.03         0.00 ± 0.02
+    JS                            GN          0.52 ± 0.06    0.76 ± 0.05      0.93 ± 0.01       0.91 ± 0.04         0.53 ± 0.06
+                  CM              MP          0.31 ± 0.13    0.66 ± 0.19      0.83 ± 0.11       0.84 ± 0.09         0.29 ± 0.14
+                                  PD          0.12 ± 0.23    0.43 ± 0.23      0.67 ± 0.29       0.66 ± 0.28         0.36 ± 0.17
+                   PO             ON          0.00 ± 0.00    0.00 ± 0.00      0.00 ± 0.00       0.74 ± 0.31         0.78 ± 0.01
+                                  GN         -0.02 ± 0.07    0.14 ± 0.04      0.08 ± 0.03       0.08 ± 0.03         0.08 ± 0.04
+                   EL             MP         -0.98 ± 0.12    0.56 ± 0.36      0.33 ± 0.07       0.27 ± 0.07         0.11 ± 0.15
+                                  PD         -0.98 ± 0.03    0.61 ± 0.64      0.43 ± 0.48       0.32 ± 0.05        -0.00 ± 0.14
+    TR                            GN         -0.05 ± 0.07    0.23 ± 0.02      0.13 ± 0.01       0.14 ± 0.01         0.09 ± 0.04
+                   EL             MP         -0.75 ± 0.30    0.36 ± 0.07      0.30 ± 0.09       0.28 ± 0.05         0.10 ± 0.04
+                                  PD         -0.29 ± 0.37    0.36 ± 0.31      0.11 ± 0.24       0.26 ± 0.06         0.08 ± 0.04
+                   PO             ON          0.00 ± 0.00    0.45 ± 0.88     -0.80 ± 7.12       0.83 ± 0.34         0.33 ± 0.08
+
+Table 5: IQM and standard deviation transfer utilities for all tested configurations (environment-context space pairs) using CTL
+as the base context representation trained on doubly sized source context set before transfer, aggregated over all seeds. The best
+results for each CMDP (row) are marked in bold. Negative TR values that indicate non-beneficial transfer are italicized.
+                                                                  CTL         CTL+RS          CTL+LTL+RS          CTL+C-PREP (ours)         C-PREP (ours)
+                                                             GN                                                  MP                                               PD
+                                     100
+
+
+
+
+      IQM TT (training progress %)
+                                      80
+
+                                      60
+ EL
+                                      40
+
+                                      20
+
+                                       0
+
+                                     100
+
+
+
+
+      IQM TT (training progress %)
+                                      80
+
+                                      60
+CM
+                                      40
+
+                                      20
+
+                                       0
+                                           0.0   0.2   0.4        0.6   0.8       1.0   0.0       0.2      0.4        0.6   0.8       1.0   0.0      0.2    0.4        0.6   0.8   1.0
+                                                       Threshold                                           Threshold                                        Threshold
+Figure 8: The IQM TT, measured in percentage of completed training, as a function of the threshold in environments GN, MP,
+PD, with doubley sized Csrc . Each color represents a different configuration, specified in the legend. The shaded areas indicate
+stratified bootstrap 95% confidence intervals. Each row corresponds to a different context space, indicated to the left of the row.
+Each column corresponds to a different environment, indicated above the column.
+                                               PD Environment with CM Context Space
+                                 1.0
+                                                                                     PCG
+                                                                                     PCG+RS
+                                                                                     PCG+LTL+RS
+                                 0.8                                                 PCG+C-PREP (ours)
+
+                                 0.6
+
+                   IQM Returns   0.4
+
+                                 0.2
+
+                                 0.0
+                                       0.0   0.5   1.0    1.5      2.0      2.5      3.0     3.5      4.0
+                                                                Timesteps                              1e6
+Figure 9: The IQM performance of the source policy, evaluated on the target context set. in environment PD and context space
+CM with PCG configurations. Each color represents a different configuration, specified in the legend. The shaded areas indicate
+stratified bootstrap 95% confidence intervals. Each row corresponds to a different context space, indicated to the left of the row.
+Each column corresponds to a different environment, indicated above the column.
+
+
+
+
+Figure 10: A visualization of the Multi-Taxi environment. Colored rectangles are taxi agents, and P and D symbols indicate
+the location of a passenger and its corresponding destination (respectively). ’X’ and ’—’ values indicate different kinds of
+obstacles. ’F’ and ’G’ are two different kinds of fuel stations.
+Abbv     Full Term                                 Description
+RL       reinforcement learning                    A method for agent learning through experiencing the world, acting within it,
+                                                   and receiving rewards for achieving certain states or state transitions.
+DRL      deep reinforcement learning               RL using deep learning methods.
+TL       transfer learning                         The improvement of learning a new task through the transfer of knowledge from
+                                                   a related task that has already been learned.
+MDP      Markov decision process                   A world model used commonly in RL, defined as a 5-tuple ⟨S, A, T, R, γ⟩ .
+CMDP     contextual Markov decision process        A collection of MDPs identified by contexts, defined as a 4-tuple ⟨C, S, A, M⟩.
+VI       value iteration                           A dynamic programming algorithm for estimating the optimal state-value func-
+                                                   tion in an MDP.
+RM       reward machine                            A state machine abstractions of an MDP, defined as a 3-tuple ⟨U, δu , δr ⟩.
+CTL      controllable context representation       A context representation that includes the necessary information to generate the
+                                                   MDP.
+PCG      procedural content generation context     A context representation that conceals the MDP variables and only reveals infor-
+         representation                            mation about the context identity.
+LTL      last transition label                     A configuration of the learning algorithm using the RM transition label mapped
+                                                   from the previous MDP transition.
+DTL      desired transition label                  A configuration of the learning algorithm using the transition label that leads to
+                                                   an optimal transition within the RM.
+RS       reward shaping                            A configuration of the learning algorithm using potential-based reward shaping
+                                                   based on an RM.
+C-PREP   contextual pre-planning                   The method presented in this work, whose configuration is DTL+RS.
+GN       Grid Navigation                           An environment where the agent must navigate to a specific location and declare
+                                                   “done”.
+MP       multi points-of-interest                  An environment where the agent must navigate to multiple locations in no par-
+                                                   ticular order, declaring arrival at each location.
+PD       pick-up and drop-off                      An environment where the agent must pick up and drop off passengers at their
+                                                   desired destinations.
+ON       ordered navigation                        An environment where the agent must navigate to multiple locations in a specific
+                                                   order, declaring arrival at each location.
+EL       entity location                           A context space where contexts affect the location of entities on the map (eg.,
+                                                   points-of-interest and passenger destinations)
+CM       changing map                              A context space where contexts affect the location of obstacles on the map.
+PO       points-of-interest order                  A context space for the ON environment where contexts affect the order by which
+                                                   the points-of-interest must be visited.
+
+                              Table 6: A glossary of acronyms used frequently in this work.
+

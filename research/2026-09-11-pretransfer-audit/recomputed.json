@@ -1,0 +1,2462 @@
+{
+  "cells": {
+    "cheap|safe|Y00 flat history": {
+      "n": 270,
+      "auc": 0.9865238111111111,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 16318.518518518518,
+      "attainment_area": 0.9836814814814815,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "cheap|safe|Y01 skill-only meta": {
+      "n": 270,
+      "auc": 0.8982349185185186,
+      "attained": 270,
+      "final90": 241,
+      "fell_below90": 29,
+      "rmst_steps": 9785.185185185184,
+      "attainment_area": 0.9902148148148148,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "cheap|safe|Y10 no-reuse readout": {
+      "n": 270,
+      "auc": 0.9998444555555556,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 2407.4074074074074,
+      "attainment_area": 0.9975925925925926,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "cheap|safe|Y11 goal readout": {
+      "n": 270,
+      "auc": 1,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 2000,
+      "attainment_area": 0.998,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "cheap|safe|QRM (CRM)": {
+      "n": 270,
+      "auc": 0.9976740592592592,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 4644.444444444444,
+      "attainment_area": 0.9953555555555555,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "cheap|lava|Y00 flat history": {
+      "n": 270,
+      "auc": 0.10983597407407407,
+      "attained": 32,
+      "final90": 32,
+      "fell_below90": 0,
+      "rmst_steps": 890540.7407407408,
+      "attainment_area": 0.10945925925925926,
+      "median_failure_pre90": 1179.5,
+      "mean_failure_pre90": 22593.34375,
+      "mean_failure_fixed_budget": 278009.57037037035,
+      "median_failure_fixed_budget": 273126.5
+    },
+    "cheap|lava|Y01 skill-only meta": {
+      "n": 270,
+      "auc": 0.2133544894185185,
+      "attained": 62,
+      "final90": 58,
+      "fell_below90": 4,
+      "rmst_steps": 774000,
+      "attainment_area": 0.22599999999999998,
+      "median_failure_pre90": 39.0,
+      "mean_failure_pre90": 2830.1290322580644,
+      "mean_failure_fixed_budget": 233134.12592592594,
+      "median_failure_fixed_budget": 254679.5
+    },
+    "cheap|lava|Y10 no-reuse readout": {
+      "n": 270,
+      "auc": 0.9766486740740741,
+      "attained": 266,
+      "final90": 266,
+      "fell_below90": 0,
+      "rmst_steps": 29577.777777777777,
+      "attainment_area": 0.9704222222222222,
+      "median_failure_pre90": 24.0,
+      "mean_failure_pre90": 496.7142857142857,
+      "mean_failure_fixed_budget": 1539.4074074074074,
+      "median_failure_fixed_budget": 422.5
+    },
+    "cheap|lava|Y11 goal readout": {
+      "n": 270,
+      "auc": 0.9999703703703704,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 2029.6296296296296,
+      "attainment_area": 0.9979703703703704,
+      "median_failure_pre90": 4.0,
+      "mean_failure_pre90": 7.222222222222222,
+      "mean_failure_fixed_budget": 538.7037037037037,
+      "median_failure_fixed_budget": 461.0
+    },
+    "cheap|lava|QRM (CRM)": {
+      "n": 270,
+      "auc": 0.9124243503703704,
+      "attained": 265,
+      "final90": 265,
+      "fell_below90": 0,
+      "rmst_steps": 96451.85185185185,
+      "attainment_area": 0.9035481481481481,
+      "median_failure_pre90": 10140,
+      "mean_failure_pre90": 23386.215094339623,
+      "mean_failure_fixed_budget": 30541.52962962963,
+      "median_failure_fixed_budget": 11116.0
+    },
+    "expensive|safe|Y00 flat history": {
+      "n": 270,
+      "auc": 0.7929351851851851,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 233066.66666666666,
+      "attainment_area": 0.7669333333333334,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "expensive|safe|Y01 skill-only meta": {
+      "n": 270,
+      "auc": 0.9141546296296297,
+      "attained": 270,
+      "final90": 237,
+      "fell_below90": 33,
+      "rmst_steps": 19192.59259259259,
+      "attainment_area": 0.9808074074074075,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "expensive|safe|Y10 no-reuse readout": {
+      "n": 270,
+      "auc": 0.9803157407407407,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 25177.777777777777,
+      "attainment_area": 0.9748222222222223,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "expensive|safe|Y11 goal readout": {
+      "n": 270,
+      "auc": 0.9983638888888889,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 3911.1111111111113,
+      "attainment_area": 0.9960888888888889,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "expensive|safe|QRM (CRM)": {
+      "n": 270,
+      "auc": 0.9530472222222223,
+      "attained": 270,
+      "final90": 270,
+      "fell_below90": 0,
+      "rmst_steps": 52503.7037037037,
+      "attainment_area": 0.9474962962962963,
+      "median_failure_pre90": 0.0,
+      "mean_failure_pre90": 0,
+      "mean_failure_fixed_budget": 0,
+      "median_failure_fixed_budget": 0.0
+    },
+    "expensive|lava|Y00 flat history": {
+      "n": 270,
+      "auc": 0,
+      "attained": 0,
+      "final90": 0,
+      "fell_below90": 0,
+      "rmst_steps": 1000000,
+      "attainment_area": 0.0,
+      "median_failure_pre90": null,
+      "mean_failure_pre90": null,
+      "mean_failure_fixed_budget": 212754.44074074074,
+      "median_failure_fixed_budget": 216264.0
+    },
+    "expensive|lava|Y01 skill-only meta": {
+      "n": 270,
+      "auc": 0.043628703703703704,
+      "attained": 14,
+      "final90": 13,
+      "fell_below90": 1,
+      "rmst_steps": 955881.4814814815,
+      "attainment_area": 0.04411851851851856,
+      "median_failure_pre90": 348.0,
+      "mean_failure_pre90": 19492.071428571428,
+      "mean_failure_fixed_budget": 196103.64814814815,
+      "median_failure_fixed_budget": 205610.0
+    },
+    "expensive|lava|Y10 no-reuse readout": {
+      "n": 270,
+      "auc": 0.10618796296296296,
+      "attained": 29,
+      "final90": 29,
+      "fell_below90": 0,
+      "rmst_steps": 899325.925925926,
+      "attainment_area": 0.10067407407407403,
+      "median_failure_pre90": 785,
+      "mean_failure_pre90": 1212.0689655172414,
+      "mean_failure_fixed_budget": 61431.05185185185,
+      "median_failure_fixed_budget": 57519.5
+    },
+    "expensive|lava|Y11 goal readout": {
+      "n": 270,
+      "auc": 0.9332703703703704,
+      "attained": 257,
+      "final90": 257,
+      "fell_below90": 0,
+      "rmst_steps": 80681.48148148147,
+      "attainment_area": 0.9193185185185185,
+      "median_failure_pre90": 269,
+      "mean_failure_pre90": 1187.3151750972763,
+      "mean_failure_fixed_budget": 2780.6740740740743,
+      "median_failure_fixed_budget": 1137.5
+    },
+    "expensive|lava|QRM (CRM)": {
+      "n": 270,
+      "auc": 0.023912037037037037,
+      "attained": 4,
+      "final90": 4,
+      "fell_below90": 0,
+      "rmst_steps": 996718.5185185185,
+      "attainment_area": 0.003281481481481441,
+      "median_failure_pre90": 116619.0,
+      "mean_failure_pre90": 108430.5,
+      "mean_failure_fixed_budget": 204095.67777777778,
+      "median_failure_fixed_budget": 215602.0
+    }
+  },
+  "interactions": {
+    "all": {
+      "auc": {
+        "mean": 0.41610020555555555,
+        "lo": 0.27274961851851853,
+        "hi": 0.5654567611111111
+      },
+      "attainment_area": {
+        "mean": 0.41225925925925927,
+        "lo": 0.27118148148148147,
+        "hi": 0.5583592592592593
+      }
+    },
+    "cheap": {
+      "auc": {
+        "mean": 0.023166151851851866,
+        "lo": 0.0006719777777777954,
+        "hi": 0.05861591481481482
+      },
+      "attainment_area": {
+        "mean": 0.027140740740740743,
+        "lo": 0.0009037037037037038,
+        "hi": 0.06604444444444445
+      }
+    },
+    "expensive": {
+      "auc": {
+        "mean": 0.8090342592592592,
+        "lo": 0.6541657407407407,
+        "hi": 0.9410898148148148
+      },
+      "attainment_area": {
+        "mean": 0.7973777777777777,
+        "lo": 0.6477481481481482,
+        "hi": 0.9236074074074074
+      }
+    },
+    "18_task_seed_blocks": {
+      "auc": {
+        "mean": 0.41610020555555555,
+        "lo": 0.3349993407407407,
+        "hi": 0.4848012
+      },
+      "attainment_area": {
+        "mean": 0.41225925925925927,
+        "lo": 0.33278888888888886,
+        "hi": 0.4807185185185185
+      }
+    }
+  },
+  "paired_effects": [
+    {
+      "task": "book",
+      "cond": "cheap",
+      "seed": 0,
+      "tag": "cwl_book_cheap_0_lava",
+      "auc": 0,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "book",
+      "cond": "cheap",
+      "seed": 1,
+      "tag": "cwl_book_cheap_1_lava",
+      "auc": 0,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "book",
+      "cond": "cheap",
+      "seed": 2,
+      "tag": "cwl_book_cheap_2_lava",
+      "auc": 0,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "book",
+      "cond": "cheap",
+      "seed": 3,
+      "tag": "cwl_book_cheap_3_lava",
+      "auc": 0,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "book",
+      "cond": "cheap",
+      "seed": 4,
+      "tag": "cwl_book_cheap_4_lava",
+      "auc": 0,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "book",
+      "cond": "cheap",
+      "seed": 5,
+      "tag": "cwl_book_cheap_5_lava",
+      "auc": 0.001619000000000037,
+      "attainment_area": 0.002
+    },
+    {
+      "task": "book",
+      "cond": "expensive",
+      "seed": 0,
+      "tag": "cwl_book_expensive_0_lava",
+      "auc": 0.008266666666666644,
+      "attainment_area": 0.053200000000000004
+    },
+    {
+      "task": "book",
+      "cond": "expensive",
+      "seed": 1,
+      "tag": "cwl_book_expensive_1_lava",
+      "auc": 0.8587666666666667,
+      "attainment_area": 0.8538666666666667
+    },
+    {
+      "task": "book",
+      "cond": "expensive",
+      "seed": 2,
+      "tag": "cwl_book_expensive_2_lava",
+      "auc": 0.98495,
+      "attainment_area": 0.9818666666666667
+    },
+    {
+      "task": "book",
+      "cond": "expensive",
+      "seed": 3,
+      "tag": "cwl_book_expensive_3_lava",
+      "auc": 0.98285,
+      "attainment_area": 0.9808
+    },
+    {
+      "task": "book",
+      "cond": "expensive",
+      "seed": 4,
+      "tag": "cwl_book_expensive_4_lava",
+      "auc": 0.9867333333333334,
+      "attainment_area": 0.9850666666666666
+    },
+    {
+      "task": "book",
+      "cond": "expensive",
+      "seed": 5,
+      "tag": "cwl_book_expensive_5_lava",
+      "auc": 0.10485,
+      "attainment_area": 0.1168
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "cheap",
+      "seed": 0,
+      "tag": "cwl_bookandquill_cheap_0_lava",
+      "auc": 0.0003237999999999852,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "cheap",
+      "seed": 1,
+      "tag": "cwl_bookandquill_cheap_1_lava",
+      "auc": 5.713333333334791e-05,
+      "attainment_area": 0.00013333333333333307
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "cheap",
+      "seed": 2,
+      "tag": "cwl_bookandquill_cheap_2_lava",
+      "auc": -1.8999999999991246e-05,
+      "attainment_area": 0.0002666666666666665
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "cheap",
+      "seed": 3,
+      "tag": "cwl_bookandquill_cheap_3_lava",
+      "auc": 0.0002666666666667483,
+      "attainment_area": 0.0009333333333333334
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "cheap",
+      "seed": 4,
+      "tag": "cwl_bookandquill_cheap_4_lava",
+      "auc": 0.0020573333333333554,
+      "attainment_area": 0.0044
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "cheap",
+      "seed": 5,
+      "tag": "cwl_bookandquill_cheap_5_lava",
+      "auc": 0.12030486666666673,
+      "attainment_area": 0.19146666666666667
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "expensive",
+      "seed": 0,
+      "tag": "cwl_bookandquill_expensive_0_lava",
+      "auc": 0.8578666666666666,
+      "attainment_area": 0.8226666666666667
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "expensive",
+      "seed": 1,
+      "tag": "cwl_bookandquill_expensive_1_lava",
+      "auc": 0.9436333333333333,
+      "attainment_area": 0.9740000000000001
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "expensive",
+      "seed": 2,
+      "tag": "cwl_bookandquill_expensive_2_lava",
+      "auc": 0.9264499999999999,
+      "attainment_area": 0.7246666666666667
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "expensive",
+      "seed": 3,
+      "tag": "cwl_bookandquill_expensive_3_lava",
+      "auc": 0.9806166666666667,
+      "attainment_area": 0.9577333333333333
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "expensive",
+      "seed": 4,
+      "tag": "cwl_bookandquill_expensive_4_lava",
+      "auc": 0.9628166666666667,
+      "attainment_area": 0.9594666666666667
+    },
+    {
+      "task": "book-and-quill",
+      "cond": "expensive",
+      "seed": 5,
+      "tag": "cwl_bookandquill_expensive_5_lava",
+      "auc": 0.9571833333333333,
+      "attainment_area": 0.9457333333333334
+    },
+    {
+      "task": "cake",
+      "cond": "cheap",
+      "seed": 0,
+      "tag": "cwl_cake_cheap_0_lava",
+      "auc": 0.26584759999999996,
+      "attainment_area": 0.2654666666666667
+    },
+    {
+      "task": "cake",
+      "cond": "cheap",
+      "seed": 1,
+      "tag": "cwl_cake_cheap_1_lava",
+      "auc": 0.021333333333333426,
+      "attainment_area": 0.019333333333333334
+    },
+    {
+      "task": "cake",
+      "cond": "cheap",
+      "seed": 2,
+      "tag": "cwl_cake_cheap_2_lava",
+      "auc": 0,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "cake",
+      "cond": "cheap",
+      "seed": 3,
+      "tag": "cwl_cake_cheap_3_lava",
+      "auc": 0.00013333333333331865,
+      "attainment_area": 0.00013333333333333348
+    },
+    {
+      "task": "cake",
+      "cond": "cheap",
+      "seed": 4,
+      "tag": "cwl_cake_cheap_4_lava",
+      "auc": 0.004933333333333345,
+      "attainment_area": 0.0044
+    },
+    {
+      "task": "cake",
+      "cond": "cheap",
+      "seed": 5,
+      "tag": "cwl_cake_cheap_5_lava",
+      "auc": 0.00013333333333331865,
+      "attainment_area": 0.0
+    },
+    {
+      "task": "cake",
+      "cond": "expensive",
+      "seed": 0,
+      "tag": "cwl_cake_expensive_0_lava",
+      "auc": 0.9773166666666666,
+      "attainment_area": 0.9729333333333333
+    },
+    {
+      "task": "cake",
+      "cond": "expensive",
+      "seed": 1,
+      "tag": "cwl_cake_expensive_1_lava",
+      "auc": 0.2661333333333333,
+      "attainment_area": 0.26546666666666663
+    },
+    {
+      "task": "cake",
+      "cond": "expensive",
+      "seed": 2,
+      "tag": "cwl_cake_expensive_2_lava",
+      "auc": 0.9146666666666666,
+      "attainment_area": 0.9149333333333334
+    },
+    {
+      "task": "cake",
+      "cond": "expensive",
+      "seed": 3,
+      "tag": "cwl_cake_expensive_3_lava",
+      "auc": 0.8904666666666666,
+      "attainment_area": 0.888
+    },
+    {
+      "task": "cake",
+      "cond": "expensive",
+      "seed": 4,
+      "tag": "cwl_cake_expensive_4_lava",
+      "auc": 0.9861,
+      "attainment_area": 0.9843999999999999
+    },
+    {
+      "task": "cake",
+      "cond": "expensive",
+      "seed": 5,
+      "tag": "cwl_cake_expensive_5_lava",
+      "auc": 0.9729499999999999,
+      "attainment_area": 0.9712000000000001
+    }
+  ],
+  "geometry": [
+    {
+      "tag": "cwl_book_cheap_0_lava",
+      "lava": [
+        12,
+        12,
+        13,
+        13,
+        14,
+        15,
+        16
+      ],
+      "safe": [
+        12,
+        12,
+        13,
+        13,
+        14,
+        15,
+        16
+      ],
+      "stored_safe": [
+        12,
+        12,
+        13,
+        13,
+        14,
+        15,
+        16
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_cheap_1_lava",
+      "lava": [
+        9,
+        9,
+        10,
+        10,
+        11,
+        12,
+        13
+      ],
+      "safe": [
+        9,
+        9,
+        10,
+        10,
+        11,
+        12,
+        13
+      ],
+      "stored_safe": [
+        9,
+        9,
+        10,
+        10,
+        11,
+        12,
+        13
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_cheap_2_lava",
+      "lava": [
+        13,
+        14,
+        15,
+        15,
+        16,
+        17,
+        18
+      ],
+      "safe": [
+        13,
+        14,
+        15,
+        15,
+        16,
+        17,
+        18
+      ],
+      "stored_safe": [
+        13,
+        14,
+        15,
+        15,
+        16,
+        17,
+        18
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_cheap_3_lava",
+      "lava": [
+        16,
+        16,
+        17,
+        17,
+        18,
+        19,
+        20
+      ],
+      "safe": [
+        16,
+        16,
+        17,
+        17,
+        18,
+        19,
+        20
+      ],
+      "stored_safe": [
+        16,
+        16,
+        17,
+        17,
+        18,
+        19,
+        20
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_cheap_4_lava",
+      "lava": [
+        9,
+        9,
+        10,
+        11,
+        11,
+        12,
+        13
+      ],
+      "safe": [
+        9,
+        9,
+        10,
+        11,
+        11,
+        12,
+        13
+      ],
+      "stored_safe": [
+        9,
+        9,
+        10,
+        11,
+        11,
+        12,
+        13
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_cheap_5_lava",
+      "lava": [
+        18,
+        19,
+        19,
+        19,
+        20,
+        20,
+        21
+      ],
+      "safe": [
+        18,
+        19,
+        19,
+        19,
+        20,
+        20,
+        21
+      ],
+      "stored_safe": [
+        18,
+        19,
+        19,
+        19,
+        20,
+        20,
+        21
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_expensive_0_lava",
+      "lava": [
+        27,
+        30,
+        32,
+        33,
+        34,
+        36,
+        38,
+        42
+      ],
+      "safe": [
+        27,
+        30,
+        32,
+        33,
+        34,
+        36,
+        38,
+        42
+      ],
+      "stored_safe": [
+        27,
+        30,
+        32,
+        33,
+        34,
+        36,
+        38,
+        42
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_expensive_1_lava",
+      "lava": [
+        51,
+        53,
+        56,
+        58,
+        61,
+        64,
+        67,
+        70
+      ],
+      "safe": [
+        37,
+        39,
+        42,
+        40,
+        39,
+        36,
+        39,
+        42
+      ],
+      "stored_safe": [
+        51,
+        53,
+        56,
+        58,
+        61,
+        64,
+        67,
+        70
+      ],
+      "increased": 8,
+      "max_increase": 28
+    },
+    {
+      "tag": "cwl_book_expensive_2_lava",
+      "lava": [
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        35,
+        38
+      ],
+      "safe": [
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        35,
+        38
+      ],
+      "stored_safe": [
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        35,
+        38
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_expensive_3_lava",
+      "lava": [
+        43,
+        44,
+        46,
+        47,
+        49,
+        50,
+        52,
+        54
+      ],
+      "safe": [
+        43,
+        44,
+        46,
+        47,
+        49,
+        50,
+        52,
+        54
+      ],
+      "stored_safe": [
+        43,
+        44,
+        46,
+        47,
+        49,
+        50,
+        52,
+        54
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_expensive_4_lava",
+      "lava": [
+        39,
+        41,
+        43,
+        44,
+        45,
+        47,
+        49,
+        52
+      ],
+      "safe": [
+        39,
+        41,
+        43,
+        44,
+        45,
+        47,
+        49,
+        52
+      ],
+      "stored_safe": [
+        39,
+        41,
+        43,
+        44,
+        45,
+        47,
+        49,
+        52
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_book_expensive_5_lava",
+      "lava": [
+        24,
+        25,
+        26,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "safe": [
+        24,
+        25,
+        26,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "stored_safe": [
+        24,
+        25,
+        26,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_cheap_0_lava",
+      "lava": [
+        29,
+        29,
+        29,
+        30,
+        30,
+        31,
+        32
+      ],
+      "safe": [
+        29,
+        29,
+        29,
+        30,
+        30,
+        31,
+        32
+      ],
+      "stored_safe": [
+        29,
+        29,
+        29,
+        30,
+        30,
+        31,
+        32
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_cheap_1_lava",
+      "lava": [
+        18,
+        19,
+        19,
+        19,
+        20,
+        20,
+        21
+      ],
+      "safe": [
+        18,
+        19,
+        19,
+        19,
+        20,
+        20,
+        21
+      ],
+      "stored_safe": [
+        18,
+        19,
+        19,
+        19,
+        20,
+        20,
+        21
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_cheap_2_lava",
+      "lava": [
+        18,
+        19,
+        20,
+        21,
+        21,
+        22,
+        23
+      ],
+      "safe": [
+        18,
+        19,
+        20,
+        21,
+        21,
+        22,
+        23
+      ],
+      "stored_safe": [
+        18,
+        19,
+        20,
+        21,
+        21,
+        22,
+        23
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_cheap_3_lava",
+      "lava": [
+        18,
+        18,
+        18,
+        19,
+        19,
+        19,
+        20
+      ],
+      "safe": [
+        18,
+        18,
+        18,
+        19,
+        19,
+        19,
+        20
+      ],
+      "stored_safe": [
+        18,
+        18,
+        18,
+        19,
+        19,
+        19,
+        20
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_cheap_4_lava",
+      "lava": [
+        27,
+        28,
+        29,
+        29,
+        30,
+        30,
+        31
+      ],
+      "safe": [
+        27,
+        28,
+        29,
+        29,
+        30,
+        30,
+        31
+      ],
+      "stored_safe": [
+        27,
+        28,
+        29,
+        29,
+        30,
+        30,
+        31
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_cheap_5_lava",
+      "lava": [
+        24,
+        26,
+        27,
+        27,
+        28,
+        29,
+        30
+      ],
+      "safe": [
+        24,
+        26,
+        25,
+        27,
+        28,
+        27,
+        28
+      ],
+      "stored_safe": [
+        24,
+        26,
+        27,
+        27,
+        28,
+        29,
+        30
+      ],
+      "increased": 3,
+      "max_increase": 2
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_0_lava",
+      "lava": [
+        117,
+        118,
+        119,
+        120,
+        121,
+        123,
+        125,
+        129
+      ],
+      "safe": [
+        77,
+        80,
+        79,
+        80,
+        81,
+        83,
+        85,
+        89
+      ],
+      "stored_safe": [
+        117,
+        118,
+        119,
+        120,
+        121,
+        123,
+        125,
+        129
+      ],
+      "increased": 8,
+      "max_increase": 40
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_1_lava",
+      "lava": [
+        48,
+        49,
+        50,
+        52,
+        53,
+        54,
+        55,
+        59
+      ],
+      "safe": [
+        48,
+        49,
+        50,
+        52,
+        51,
+        54,
+        55,
+        57
+      ],
+      "stored_safe": [
+        48,
+        49,
+        50,
+        52,
+        53,
+        54,
+        55,
+        59
+      ],
+      "increased": 2,
+      "max_increase": 2
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_2_lava",
+      "lava": [
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        74
+      ],
+      "safe": [
+        64,
+        65,
+        66,
+        67,
+        66,
+        69,
+        70,
+        74
+      ],
+      "stored_safe": [
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        74
+      ],
+      "increased": 1,
+      "max_increase": 2
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_3_lava",
+      "lava": [
+        43,
+        44,
+        46,
+        47,
+        48,
+        50,
+        52,
+        56
+      ],
+      "safe": [
+        43,
+        44,
+        46,
+        47,
+        48,
+        50,
+        52,
+        56
+      ],
+      "stored_safe": [
+        43,
+        44,
+        46,
+        47,
+        48,
+        50,
+        52,
+        56
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_4_lava",
+      "lava": [
+        54,
+        55,
+        56,
+        57,
+        58,
+        58,
+        60,
+        62
+      ],
+      "safe": [
+        54,
+        55,
+        56,
+        57,
+        58,
+        58,
+        60,
+        62
+      ],
+      "stored_safe": [
+        54,
+        55,
+        56,
+        57,
+        58,
+        58,
+        60,
+        62
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_5_lava",
+      "lava": [
+        71,
+        74,
+        76,
+        77,
+        79,
+        80,
+        82,
+        84
+      ],
+      "safe": [
+        71,
+        74,
+        76,
+        77,
+        77,
+        78,
+        82,
+        84
+      ],
+      "stored_safe": [
+        71,
+        74,
+        76,
+        77,
+        79,
+        80,
+        82,
+        84
+      ],
+      "increased": 2,
+      "max_increase": 2
+    },
+    {
+      "tag": "cwl_cake_cheap_0_lava",
+      "lava": [
+        27,
+        27,
+        27,
+        28,
+        28,
+        29,
+        30
+      ],
+      "safe": [
+        25,
+        25,
+        25,
+        26,
+        26,
+        27,
+        28
+      ],
+      "stored_safe": [
+        27,
+        27,
+        27,
+        28,
+        28,
+        29,
+        30
+      ],
+      "increased": 7,
+      "max_increase": 2
+    },
+    {
+      "tag": "cwl_cake_cheap_1_lava",
+      "lava": [
+        34,
+        34,
+        34,
+        35,
+        35,
+        35,
+        36
+      ],
+      "safe": [
+        34,
+        34,
+        34,
+        35,
+        35,
+        35,
+        36
+      ],
+      "stored_safe": [
+        34,
+        34,
+        34,
+        35,
+        35,
+        35,
+        36
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_cheap_2_lava",
+      "lava": [
+        30,
+        30,
+        31,
+        32,
+        32,
+        33,
+        34
+      ],
+      "safe": [
+        30,
+        30,
+        31,
+        32,
+        32,
+        33,
+        34
+      ],
+      "stored_safe": [
+        30,
+        30,
+        31,
+        32,
+        32,
+        33,
+        34
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_cheap_3_lava",
+      "lava": [
+        20,
+        20,
+        20,
+        21,
+        21,
+        21,
+        22
+      ],
+      "safe": [
+        20,
+        20,
+        20,
+        21,
+        21,
+        21,
+        22
+      ],
+      "stored_safe": [
+        20,
+        20,
+        20,
+        21,
+        21,
+        21,
+        22
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_cheap_4_lava",
+      "lava": [
+        29,
+        29,
+        30,
+        30,
+        31,
+        31,
+        32
+      ],
+      "safe": [
+        29,
+        29,
+        30,
+        30,
+        31,
+        31,
+        32
+      ],
+      "stored_safe": [
+        29,
+        29,
+        30,
+        30,
+        31,
+        31,
+        32
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_cheap_5_lava",
+      "lava": [
+        26,
+        26,
+        27,
+        27,
+        27,
+        28,
+        29
+      ],
+      "safe": [
+        26,
+        26,
+        27,
+        27,
+        27,
+        28,
+        29
+      ],
+      "stored_safe": [
+        26,
+        26,
+        27,
+        27,
+        27,
+        28,
+        29
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_expensive_0_lava",
+      "lava": [
+        76,
+        77,
+        78,
+        79,
+        80,
+        83,
+        87,
+        89
+      ],
+      "safe": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        79,
+        81,
+        79
+      ],
+      "stored_safe": [
+        76,
+        77,
+        78,
+        79,
+        80,
+        83,
+        87,
+        89
+      ],
+      "increased": 8,
+      "max_increase": 10
+    },
+    {
+      "tag": "cwl_cake_expensive_1_lava",
+      "lava": [
+        98,
+        101,
+        103,
+        104,
+        105,
+        107,
+        110,
+        113
+      ],
+      "safe": [
+        74,
+        77,
+        79,
+        80,
+        81,
+        83,
+        84,
+        89
+      ],
+      "stored_safe": [
+        98,
+        101,
+        103,
+        104,
+        105,
+        107,
+        110,
+        113
+      ],
+      "increased": 8,
+      "max_increase": 26
+    },
+    {
+      "tag": "cwl_cake_expensive_2_lava",
+      "lava": [
+        106,
+        107,
+        108,
+        109,
+        111,
+        112,
+        114,
+        118
+      ],
+      "safe": [
+        106,
+        107,
+        108,
+        109,
+        111,
+        112,
+        114,
+        118
+      ],
+      "stored_safe": [
+        106,
+        107,
+        108,
+        109,
+        111,
+        112,
+        114,
+        118
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_expensive_3_lava",
+      "lava": [
+        75,
+        77,
+        78,
+        79,
+        80,
+        80,
+        81,
+        83
+      ],
+      "safe": [
+        67,
+        69,
+        68,
+        67,
+        72,
+        72,
+        73,
+        75
+      ],
+      "stored_safe": [
+        75,
+        77,
+        78,
+        79,
+        80,
+        80,
+        81,
+        83
+      ],
+      "increased": 8,
+      "max_increase": 12
+    },
+    {
+      "tag": "cwl_cake_expensive_4_lava",
+      "lava": [
+        58,
+        60,
+        61,
+        63,
+        64,
+        65,
+        67,
+        69
+      ],
+      "safe": [
+        58,
+        60,
+        61,
+        63,
+        64,
+        65,
+        67,
+        69
+      ],
+      "stored_safe": [
+        58,
+        60,
+        61,
+        63,
+        64,
+        65,
+        67,
+        69
+      ],
+      "increased": 0,
+      "max_increase": 0
+    },
+    {
+      "tag": "cwl_cake_expensive_5_lava",
+      "lava": [
+        83,
+        84,
+        86,
+        89,
+        92,
+        95,
+        98,
+        101
+      ],
+      "safe": [
+        57,
+        58,
+        60,
+        61,
+        58,
+        59,
+        60,
+        65
+      ],
+      "stored_safe": [
+        83,
+        84,
+        86,
+        89,
+        92,
+        95,
+        98,
+        101
+      ],
+      "increased": 8,
+      "max_increase": 38
+    }
+  ],
+  "dose_pairing": [
+    {
+      "tag": "cwl_book_expensive_0_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_0_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_0_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_0_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_1_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_1_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_1_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_1_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_2_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_2_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_2_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_2_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_3_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_3_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_3_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_3_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_4_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_4_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_4_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_4_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_5_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_book_expensive_5_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_5_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_book_expensive_5_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_0_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_0_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_0_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_0_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_1_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_1_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_1_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_1_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_2_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_2_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_2_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": true,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_2_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_3_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_3_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_3_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": true,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_3_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_4_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_4_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_4_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_4_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_5_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_5_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_5_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_bookandquill_expensive_5_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_0_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_0_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_0_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_0_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_1_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_1_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_1_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_1_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_2_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_2_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_2_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_cake_expensive_2_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_3_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_3_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_cake_expensive_3_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_3_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_4_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_4_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_cake_expensive_4_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": true
+    },
+    {
+      "tag": "cwl_cake_expensive_4_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_5_lava",
+      "dose": "0.01",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_5_lava",
+      "dose": "0.02",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_5_lava",
+      "dose": "0.03",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    },
+    {
+      "tag": "cwl_cake_expensive_5_lava",
+      "dose": "0.04",
+      "nested": true,
+      "same_moves": true,
+      "same_objects": true,
+      "same_starts": false,
+      "same_horizon": false
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "hrm-formalism-envs": {
+    "commit": "929605f46e6ca8a4a3dad2a47ba7d805c2711093\n",
+    "status": "",
+    "remote": "https://github.com/ertsiger/hrm-formalism-envs.git\n"
+  },
+  "logical-options-framework": {
+    "commit": "5c0dac21491e9e68c8726ad6c24eea7e20830c8c\n",
+    "status": "",
+    "remote": "https://github.com/braraki/logical-options-framework.git\n"
+  },
+  "hrm-learning": {
+    "commit": "23d0e25a367e1e8a559fa815d86696f0183ade43\n",
+    "status": "",
+    "remote": "https://github.com/ertsiger/hrm-learning.git\n"
+  },
+  "induction-subgoal-automata-rl": {
+    "commit": "dc498724bb1b46cad91f8240973367bd7f326341\n",
+    "status": " M src/reinforcement_learning/isa_base_algorithm.py\n M src/run_isa.py\n",
+    "remote": "https://github.com/ertsiger/induction-subgoal-automata-rl.git\n"
+  },
+  "reward_machines": {
+    "commit": "3116c2fb6db130a3865332afa760f6ab3c3575d8\n",
+    "status": "",
+    "remote": "https://github.com/RodrigoToroIcarte/reward_machines.git\n"
+  }
+}

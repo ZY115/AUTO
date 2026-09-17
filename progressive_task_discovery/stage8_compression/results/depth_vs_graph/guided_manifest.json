@@ -1,0 +1,14 @@
+{
+  "runs": 1920,
+  "tasks": 12,
+  "seeds": "1600-1631",
+  "arms": [
+    "none",
+    "frontier",
+    "guided",
+    "learnedproduct",
+    "product"
+  ],
+  "budget": 200000,
+  "source_sha256": "d8a7352458fb1c28a474f6c186094263e05a44dbac7054918095308496506b2d"
+}

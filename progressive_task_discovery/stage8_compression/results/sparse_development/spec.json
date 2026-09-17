@@ -1,0 +1,113 @@
+{
+  "name": "sparse_development",
+  "defaults": {
+    "budget": 200000,
+    "every": 1000,
+    "bridge": 1,
+    "hfactor": 24,
+    "epsilon": 0.02
+  },
+  "conditions": [
+    {
+      "name": "g0.98_r0.5",
+      "args": {
+        "gamma": 0.98,
+        "reward_ratio": 0.5
+      }
+    },
+    {
+      "name": "g0.98_r2",
+      "args": {
+        "gamma": 0.98,
+        "reward_ratio": 2
+      }
+    },
+    {
+      "name": "g0.98_r8",
+      "args": {
+        "gamma": 0.98,
+        "reward_ratio": 8
+      }
+    },
+    {
+      "name": "g0.99_r0.5",
+      "args": {
+        "gamma": 0.99,
+        "reward_ratio": 0.5
+      }
+    },
+    {
+      "name": "g0.99_r2",
+      "args": {
+        "gamma": 0.99,
+        "reward_ratio": 2
+      }
+    },
+    {
+      "name": "g0.99_r8",
+      "args": {
+        "gamma": 0.99,
+        "reward_ratio": 8
+      }
+    },
+    {
+      "name": "g0.995_r0.5",
+      "args": {
+        "gamma": 0.995,
+        "reward_ratio": 0.5
+      }
+    },
+    {
+      "name": "g0.995_r2",
+      "args": {
+        "gamma": 0.995,
+        "reward_ratio": 2
+      }
+    },
+    {
+      "name": "g0.995_r8",
+      "args": {
+        "gamma": 0.995,
+        "reward_ratio": 8
+      }
+    }
+  ],
+  "variants": [
+    {
+      "name": "history_replay",
+      "args": {
+        "method": "history_replay"
+      }
+    },
+    {
+      "name": "hand_replay",
+      "args": {
+        "method": "hand_replay"
+      }
+    },
+    {
+      "name": "immediate_skill",
+      "args": {
+        "method": "immediate_skill"
+      }
+    }
+  ],
+  "lengths": [
+    4,
+    12
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

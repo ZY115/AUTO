@@ -1,0 +1,24 @@
+{
+  "aalpy_version": "1.6.2",
+  "purpose": "Independent library API and deterministic feedback-encoding smoke test, NOT Stage 8 performance benchmark",
+  "results": [
+    {
+      "algorithm": "classic",
+      "states": 63,
+      "training_words": 62,
+      "checked_words": 254,
+      "mismatches": 192,
+      "undefined_words": 192,
+      "input_complete": false
+    },
+    {
+      "algorithm": "gsm",
+      "states": 4,
+      "training_words": 62,
+      "checked_words": 254,
+      "mismatches": 0,
+      "undefined_words": 0,
+      "input_complete": true
+    }
+  ]
+}

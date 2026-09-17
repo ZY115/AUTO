@@ -1,0 +1,121 @@
+[
+  {
+    "stage": "stage1_initial",
+    "method": "count",
+    "seed": 0,
+    "condition": "benign",
+    "passed": true
+  },
+  {
+    "stage": "stage1_initial",
+    "method": "progressive",
+    "seed": 0,
+    "condition": "benign",
+    "passed": true
+  },
+  {
+    "stage": "stage1_initial",
+    "method": "learned_qrm",
+    "seed": 0,
+    "condition": "benign",
+    "passed": true
+  },
+  {
+    "stage": "stage3_skill_reuse",
+    "method": "count",
+    "seed": 0,
+    "condition": "noisy_tight",
+    "passed": true
+  },
+  {
+    "stage": "stage3_skill_reuse",
+    "method": "progressive",
+    "seed": 0,
+    "condition": "noisy_tight",
+    "passed": true
+  },
+  {
+    "stage": "stage3_skill_reuse",
+    "method": "learned_qrm",
+    "seed": 0,
+    "condition": "noisy_tight",
+    "passed": true
+  },
+  {
+    "stage": "stage3_skill_reuse",
+    "method": "count_replay",
+    "seed": 0,
+    "condition": "noisy_tight",
+    "passed": true
+  },
+  {
+    "stage": "stage3_skill_reuse",
+    "method": "goal_reuse",
+    "seed": 0,
+    "condition": "noisy_tight",
+    "passed": true
+  },
+  {
+    "stage": "stage5_heldout",
+    "method": "count",
+    "seed": 100,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage5_heldout",
+    "method": "progressive",
+    "seed": 100,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage5_heldout",
+    "method": "learned_qrm",
+    "seed": 100,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage5_heldout",
+    "method": "count_replay",
+    "seed": 100,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage5_heldout",
+    "method": "goal_reuse",
+    "seed": 100,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage6_early_use",
+    "method": "count_replay",
+    "seed": 200,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage6_early_use",
+    "method": "goal_reuse",
+    "seed": 200,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage6_early_use",
+    "method": "delayed_goal",
+    "seed": 200,
+    "condition": "noisy",
+    "passed": true
+  },
+  {
+    "stage": "stage6_early_use",
+    "method": "known_goal",
+    "seed": 200,
+    "condition": "noisy",
+    "passed": true
+  }
+]

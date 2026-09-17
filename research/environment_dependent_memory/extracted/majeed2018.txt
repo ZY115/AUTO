@@ -1,0 +1,636 @@
+                      Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+
+
+
+                On Q-learning Convergence for Non-Markov Decision Processes
+
+                                       Sultan Javed Majeed1 , Marcus Hutter2
+                1,2
+                      Research School of Computer Science, Australian National University, Australia
+                                   1
+                                     http://www.sultan.pk, 2 http://www.hutter1.net
+
+
+
+                              Abstract                                       real-world problems are inherently non-Markovian: the full
+                                                                             true state of the environment is not revealed by the last obser-
+        Temporal-difference (TD) learning is an attractive,                  vation, and the set of true states can be infinite, e.g. as effec-
+        computationally efficient framework for model-                       tively in non-stationary domains. Therefore, it is important
+        free reinforcement learning. Q-learning is one of                    to know if the agent performs well in such non-Markovian
+        the most widely used TD learning technique that                      domains to work with a broad range of real-world problems.
+        enables an agent to learn the optimal action-value                      In this work, we investigate convergence of one of the most
+        function, i.e. Q-value function. Contrary to its                     widely used TD learning algorithms, Q-learning [Watkins
+        widespread use, Q-learning has only been proven                      and Dayan, 1992]. Q-learning has been shown to converge
+        to converge on Markov Decision Processes (MDPs)                      in MDP domains [Tsitsiklis, 1994; Bertsekas and Tsitsik-
+        and Q-uniform abstractions of finite-state MDPs.                     lis, 1995], whereas there are empirical observations that Q-
+        On the other hand, most real-world problems are                      learning sometimes also work in some non-MDP domains
+        inherently non-Markovian: the full true state of                     [Sutton and Barto, 1984]. First non-MDP convergence of
+        the environment is not revealed by recent obser-                     Q-learning has been reported by Li et al. [2006] for the
+        vations. In this paper, we investigate the behav-                    environments that are Q-uniform abstractions of finite-state
+        ior of Q-learning when applied to non-MDP and                        MDPs. The recent results in Extreme State Aggregation
+        non-ergodic domains which may have infinitely                        (ESA) [Hutter, 2016] indicate that under some conditions
+        many underlying states. We prove that the con-                       there exists a deterministic, near-optimal policy for non-MDP
+        vergence guarantee of Q-learning can be extended                     environments which are not required to be abstractions of any
+        to a class of such non-MDP problems, in particu-                     finite-state MDP. These positive results motivated this work
+        lar, to some non-stationary domains. We show that                    to extend the non-MDP convergence proof of Q-learning to a
+        state-uniformity of the optimal Q-value function is                  larger class of infinite internal state non-MDPs.
+        a necessary and sufficient condition for Q-learning
+        to converge even in the case of infinitely many in-                     The most popular extension of MDP is a finite-state par-
+        ternal states.                                                       tially observable Markov decision process (POMDP). In a
+                                                                             POMDP the environment has a hidden true state, and the ob-
+                                                                             servations from the environment, generally, do not reveal the
+1       Introduction                                                         true state. Therefore, the agent either has to keep a full in-
+                                                                             teraction history, estimate the true state or maintain a belief
+Temporal-difference learning [Sutton, 1988] is a well-
+                                                                             over the possible true states. In our formulation, we use an
+celebrated model-free learning framework in machine learn-
+                                                                             even more general class of processes, history-based decision
+ing. In TD, an agent learns the optimal action-value function
+                                                                             process (HDP): the history-based process is equivalent to an
+(also known as the Q-value function) of the underlying prob-
+                                                                             infinite-state POMDP [Leike, 2016]. We provide a simple
+lem without explicitly building or learning a model of the en-
+                                                                             proof of Q-learning convergence to a class of domains that
+vironment. The agent can learn the optimal behavior from the
+                                                                             encompasses significantly more domains than MDP and in-
+learned Q-value function: the optimal action maximizes the
+                                                                             tersects with POMDP and HDP classes. We name this class
+Q-value function. It is generally assumed that the environ-
+                                                                             Q-value uniform Decision Process (QDP) and show that Q-
+ment is Markovian and ergodic for a TD agent to converge
+[Tsitsiklis, 1994; Bertsekas and Tsitsiklis, 1995].                          learning converges in QDPs. Moreover, we show that QDP
+                                                                             is the largest class where Q-learning can converge, i.e. QDP
+   The TD agents, apart from a few restrictive cases1 , are not
+                                                                             provides the necessary and sufficient conditions for Q-leaning
+proven to learn2 non-Markovian environments, whereas most
+                                                                             convergence.
+    1
+     See Section 5 for exceptions.                                              Apart from a few toy problems, it is always a leap of faith
+    2
+     In this work we use the term “learn a domain” in the context of         to treat real-world problems as MDPs. An MDP model of the
+learning to act optimally and not to learn a model/dynamics of the           underlying true environment is implicitly assumed even for
+domain.                                                                      model-free algorithms. Our result helps to relax this assump-
+
+
+
+
+                                                                      2546
+                   Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+tion: rather assuming the domain being a finite-state MDP,                riences the agent-environment interaction as an action-state-
+we can suppose it to be a QDP, which is a much weaker im-                 reward sequence (at , st , rt )t∈N . We call it a state-process 3
+plicit assumption. The positive result of this paper can be               induced by the map φ.
+interpreted in a couple of ways; a) as discussed above, it
+                                                                          Definition 2 (State-process) For a history h that is mapped
+provides theoretical grounds for Q-learning to be applicable
+                                                                          to a state s, a state-process ph is a stochastic mapping from a
+in a much broader class of environments or b) if the agent
+                                                                          state-action pair with the fixed state s to state-reward pairs.
+has access to a QDP aggregation map as a potential model
+                                                                          Formally, ph : {s} × A        S × R.
+of the true environment or the agent has a companion map
+learning/estimation algorithm to build such a model, then this              The relationship between the underlying HDP and the in-
+combination of the aggregation map with Q-learning con-                   duced state-process for an s = φ(h) is formally defined as:
+verges. It is an interesting topic to learn such maps, but is                                           X
+beyond the scope this work.                                                         ph (s0 r0 |sa) :=             P (o0 r0 |ha).    (2)
+   The rest of the paper is structured as follows. In Section                                         o0 :φ(hao0 r 0 )=s0
+2 we set up the framework. Section 3 drafts the QDP class.
+Section 4 gives a preview of our main convergence result.                    We denote the action-value function of the state-process by
+Section 5 provides a context of our work in the literature.               q, and the optimal Q-value function is given by q ∗ :
+Section 6 contains the proof of the main results. In Section                                  X                                           
+                                                                             q ∗ (s, a; h) :=   ph (s0 r0 |sa) r0 + γ max q ∗ (s0 , ã; h)
+7 we numerically evaluate Q-learning on a few non-MDP toy                                                                   ã
+                                                                                             s0 r 0
+domains. Section 8 concludes the paper.                                                                                                     (3)
+                                                                             It is clear that ph (s0 r0 |sa) may not be same as pḣ (s0 r0 |sa)
+2   Setup                                                                 for any two histories h and ḣ mapped to a same state s. If the
+We use the general history-based agent-environment rein-                  state-process is an MDP, then ph is independent of history
+forcement learning framework [Hutter, 2005; Hutter, 2016].                and so is q ∗ , and convergence of Q-learning follows from this
+The agent and the environment interact in cycles. At the be-              MDP condition [Bertsekas and Tsitsiklis, 1995]. However,
+ginning of a cycle t ∈ N the agent takes an action at from                we do not assume such a condition and go beyond MDP map-
+a finite action-space A. The environment dispenses a real-                pings. We later show — by constructing examples — that q ∗
+valued reward rt+1 from a set R ⊂ R and an observation                    can be made independent of history while the state-process is
+ot+1 from a finite set of observations O. However, in our                 still history dependent, i.e. non-MDP.
+setup, we assume that the agent does not directly use this ob-               Now we formally define Q-learning: At each time-step t
+servation, e.g. because O maybe too huge to learn from. The               the agent maintains an action-value function estimate qt . The
+agent has access to a map/model φ of the environment that                 agent in a state s := st takes an action a := at and receives
+takes in the observation, reward and previous interaction his-            a reward r0 := rt+1 and the next state s0 := st+1 . Then the
+tory and provides the same reward rt+1 and a mapped state                 agent performs an action-value update to the (s, a)-estimate
+st+1 from a finite set of states S; and the cycle repeats. For-           with the following Q-learning update rule:
+mally, this agent-environment interaction generates a grow-
+ing history ht+1 := ht at ot+1 rt+1 from a set of histories                                         qt+1 (s, a) :=
+Ht := (A ×SO × R)t . The set of all finite histories is denoted               qt (s, a) + αt (s, a) (r0 + γ maxã qt (s0 , ã) − qt (s, a)) (4)
+by H∗ := t Ht . The map φ is assumed to be a surjective
+mapping from H∗ to S. We use ht :=  to denote the empty                  where (αt )t∈N is a learning rate sequence.
+history and := to express an equality by definition. In general
+(non-MDPs), at any time-instant t the transition probability              3    Q-Value Uniform Decision Process (QDP)
+to the next observation o0 := ot+1 and reward r0 := rt+1 is a             In this section we formulate a class of environments called
+function of the history-action (h, a) := (ht , at )-pair and not          Q-value uniform decision processes, i.e. QDP class. This
+of the state-action (s, a) := (st , at )-pair. The true environ-          class is substantially larger than MDP and has a non-empty
+ment as is a history-based (decision) process.                            intersection with POMDP and HDP (Figure 1). In a state-
+Definition 1 (History-based Decision Process (HDP)) A                     aggregation context, a model is a QDP if it satisfies the fol-
+history-based decision process P is a stochastic mapping                  lowing state-uniformity condition.
+from a history-action pair to observation-reward pairs.
+Formally, P : H∗ × A         O × R, where       denotes a                 Definition 3 (State-uniformity condition) For any action
+stochastic mapping.                                                       a, if any two histories h and ḣ map to the same state s, then
+                                                                          the optimal Q-values of the underlying HDP of these histo-
+  We use Q to denote an action-value function of a HDP, and               ries are the same, i.e. state-uniform; Q∗ (h, a) = Q∗ (ḣ, a).
+Q∗ denotes the optimal Q-value function.                                  It is easy to see that in this case q ∗ (s, a) = Q∗ (h, a) [Hutter,
+              X                                                         2016].
+ Q∗ (h, a) :=     P (o0 r0 |ha) r0 + γ max Q∗ (hao0 r0 , ã)
+                                            ã                                3
+               o0 r 0                                                           It is technically a state and reward process, but since rewards
+                                                           (1)            are not affected by the mapping φ, we suppress the reward part to
+where γ ∈ [0, 1) is a discount factor. In our setup, the agent            put more emphasis on the contrast between history and state depen-
+does not maintain a complete history and effectively expe-                dence.
+
+
+
+
+                                                                   2547
+                        Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+                                     HDP                                       to a fixed point but never stops learning to avoid local maxima
+                                                                               [Bertsekas and Tsitsiklis, 1995]. It is critical to note that we
+                                     QDP                                       assume ergodicity of the state-process but not of the underly-
+                                                                               ing HDP: a state can be reached multiple times from different
+                                                                               histories but any history is only reached once. We assume
+                                   POMDP                                       that the state-process is a QDP.
+                                                                               Assumption 5 (QDP) The state-process is a QDP.
+                                     MDP                                          It is important to consider that we only assume the opti-
+                                                                               mal action-value to be a function of states. We do not sup-
+Figure 1: QDP in the perspective of other decision problem classes.            pose any structure on the intermediate action-value estimates
+                                                                               cf. qt (s, a) 6= Qt (h, a). We also assume that rewards are
+                                                                               bounded. This is a standard condition for Q-learning conver-
+   The state-uniformity condition is weaker than the MDP                       gence.
+condition: the latter implies the former but not the                           Assumption 6 (Bounded rewards) The                rewards   are
+other way around [Hutter, 2016]. Therefore, trivially                          bounded, i.e. r ∈ [rmin , rmax ].
+MDP ⊆ POMDPQDP ⊆ HDP. The example in Figure 2 shows that
+QDP ∩ POMDP\MDP 6= ∅. The example in Figure 5 proves                             We have all the components in place to extend Q-learning
+that QDP \POMDP 6= ∅. Moreover, it is easy to find exam-                       convergence in QDP.
+ples in POMDP\QDP and HDP\QDP.                                                 Theorem 7 (Q-learning Convergence in QDP) Under As-
+   It is easy to see that QDP is a much larger class than                      sumptions 4, 5 and 6, and with a learning rate sequence
+MDP since the former allows non-stationary domains: it is                      (αt )t∈N satisfying (5), the sequence (qt )t∈N generated by the
+possible to have pht (·|sa) 6= phτ (·|sa) for some histories                   iteration (4) converges to q ∗ = Q∗ .
+φ(ht ) = φ(hτ ) = s at two different time-steps but still
+                                                                                  Hence, the agent learns the optimal action-value function
+maintaining Q∗ (ht , a) = Q∗ (hτ , a) (Figure 5). Moreover,
+                                                                               of a QDP state-process.
+the definition of QDP enables us to approximate most if not
+all problems as a QDP model: any number of similar Q∗ -
+value histories can be merged into a single QDP state [Hut-                    5   Related Work
+ter, 2016]. In particular, a QDP model of the environment                      A similar result was first reported by Li et al. [2006] in a fi-
+can provide more compression in terms of state space size as                   nite state MDP setting. We confirm and extend the findings by
+compared to an MDP model: multiple MDP states with the                         considering a more general class of environments, i.e. HDP.
+same/similar Q-value can be merged into a single QDP state                     Also, we do not assume a weighting function to define the
+but not necessarily the other way around. Thus, QDP allows                     state-process cf. [Li et al., 2006, Definition 1], and our proof
+for more compact models for an environment than its MDP                        is based on time-dependent contraction mappings (see Sec-
+counterparts.                                                                  tion 6 for the details).
+   In general, we can say that a POMDP has both the dynam-                        A finite-state POMDP is the most commonly used exten-
+ics and Q-values as functions of history. Whereas, the defi-                   sion of an MDP. It is well-known that the class of finite-
+nition of QDP provides models where only the dynamics can                      state POMDPs is a subset of HDP class [Leike, 2016]. One
+be history-dependent. Therefore, QDP captures a subset of                      prevalent approach to handle the non-Markovian nature of a
+POMDP models that have history-independent Q-values.                           POMDP is to estimate a Markovian model with a state esti-
+                                                                               mation method [Whitehead and Lin, 1995; Lin and Mitchell,
+4       Main Result                                                            1992; Cassandra et al., 1994; Cassandra, 1994] or use a finite
+                                                                               subset of the recent history as a state [McCallum, 1995] to
+We assume that the state-process is ergodic — i.e. all states
+                                                                               form a k-order MDP (k-MDP). Then Q-learning is applied to
+are reachable under any policy from the current state after
+                                                                               learn this resultant state-based MDP. This is a different ap-
+sufficiently many steps.
+                                                                               proach to ours. We do not try to estimate an MDP or k-MDP
+Assumption 4 (Ergodicity) The state-process is ergodic.                        representation of the underlying HDP.
+                                                                                  Singh et. al. [Singh et al., 1994] investigate a direct
+   Because of the ergodicity assumption we can suppose
+                                                                               application of model-free algorithms to POMDPs without a
+the following standard stochastic approximation conditions
+                                                                               state estimation step akin to our setup but limited to finite
+on each state-action (s, a)-pair’s learning rate sequence
+                                                                               state POMDPs only. They show that an optimal policy in
+(αt )t∈N 4 .
+                                                                               a POMDP may be non-stationary and stochastic. But the
+              ∞
+              X                            ∞
+                                           X                                   learned policy in direct model-free algorithms, such as Q-
+                    αt (s, a) = ∞,                αt2 (s, a) < ∞.    (5)       learning, is generally stationary and deterministic by design.
+              t=0                           t=0                                Moreover, they also show that the optimal policy of POMDP
+  The above conditions on the learning rate ensure that the                    can be arbitrarily better than the optimal stationary, determin-
+agent asymptotically decreases the learning rate to converge                   istic policy of the corresponding MDP. These negative re-
+                                                                               sults of [Singh et al., 1994] are based on counter-examples
+    4
+        Note that αt (s, a) := 0, ∀(s, a) 6= (st , at ).                       that violate the state-uniformity assumption of the optimal
+
+
+
+
+                                                                        2548
+                    Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+Q-value function. Similar negative findings are reported by
+Littman [1994]. Our positive convergence result holds for a
+                                                                                                                                                  2      
+                                                                            Epht wh2 t (s, a)|Ft                             r0 + γ max qt (s0 , ã) |Ft
+                                                                                                
+subset of POMDPs that respects the state-uniformity condi-                                                   =    E p ht
+                                                                                                                                      ã
+tion.                                                                                                                      h                             i2
+   Pendrith and McGarity [1998] show that a direct appli-                                                         −Epht r0 + γ max qt (s0 , ã)|Ft
+                                                                                                                                       ã
+cation of standard reinforcement learning methods, such as
+                                                                                                            (a)   1                                   
+Q-learning, to non-Markovian domains can have a station-                                                     ≤        max       r0 + γ max qt (s0 , ã)
+ary optimal policy, if undiscounted return is used as a perfor-                                                   4 sr  0  0               ã
+mance measure. Perkins and Pendrith [2002] prove existence                                                                                          2
+of a fixed point in POMDPs for continuous behavior policies.                                                      − min
+                                                                                                                      0  0
+                                                                                                                              r + γ max qt (s0 , ã)
+                                                                                                                               0
+                                                                                                                     sr                 ã
+However, this fixed point could be significantly worse than                                                 (b)
+                                                                                                                    
+                                                                                                                  1 rmax − rmin
+                                                                                                                                                     2
+the average reward achieved by an oscillating discontinuous                                                  ≤                           + γ||qt ||∞
+behavior policy. It signifies the effect of behavior policy on                                                    4          1−γ
+the learning outcome. On the other hand, our convergence                                                    (c)
+result is valid as long as all the state-action pairs are visited                                            ≤    A + B||qt ||2∞                          (10)
+infinitely often. The nature of the behavior policy does not                (a) follows from Popoviciu’s inequality, Var(X) ≤
+                                                                            1
+directly affect our convergence result. A comprehensive sur-                 /4 (max X − min X)2 , (b) is due to the bounded rewards
+vey of solution methods for POMDPs is provided by Mur-                      assumption; and (c) results from some algebra with con-
+                                                                                                                      2
+phy [2000] and more recently by Thrun et al. [2005].                        stants A := ∆/4 2γ/1−γ + ∆ and B := γ /4 , where ∆ :=
+                                                                            (rmax − rmin ) /(1 − γ). We denote a sup-norm by || · ||∞ .
+6     Convergence Proof                                                     Fh is a contraction. For a fixed history h, we show that an
+                                                                            operator Fh is a contraction mapping.
+We provide a proof of Theorem 7 in this section. Superfi-
+cially, the proof looks similar to a standard MDP proof [Bert-                             ||Fh q − Fh q 0 ||∞
+sekas and Tsitsiklis, 1995], however, a subtlety is involved in
+                                                                                                       h                       i
+                                                                                     =     max Epht r0 + γ max q(s0 , ã)|Ft
+the definition of the contraction map: the contraction map is                               s,a                   ã
+a function of history. This history-dependence lets the proof
+                                                                                                   h                         i
+                                                                                           − Epht r + γ max q 0 (s0 , ã)|Ft
+                                                                                                     0
+scale to non-MDP domains, especially to non-stationary do-                                                     ã
+mains.                                                                              (a)
+                                                                                                       h                       i
+                                                                                     =     max Epht r + γ max q(s0 , ã)|sa
+                                                                                                           0
+                                                                                            s,a                   ã
+Proof of Theorem 7. At a time-instant t with a history ht we                                       h                         i
+rewrite (4) in terms of an operator and a noise term.                                      − Epht r + γ max q 0 (s0 , ã)|sa
+                                                                                                     0
+                                                                                                                       ã
+
+                              qt+1 (s, a) =                                          ≤     max max
+                                                                                                0
+                                                                                                   γ max q(s0 , ã) − max q 0 (s0 , ã)
+                                                                                            s,a        s          ã                   ã
+    (1 − αt (s, a)) qt (s, a) + αt (s, a) (Fht qt (s, a) + wht (s, a))(6)
+                                                                                     ≤     γ max |q(s, a) − q (s, a)| = γ||q − q 0 ||∞
+                                                                                                                        0
+                                                                                                                                                      (11)
+                                                                                                 s,a
+where, the noise term is defined as follows,
+                                                                            (a) for a fixed history, the expectation only depends on the
+        wht (s, a) := r0 + γ max qt (s0 , ã) − Fht qt (s, a).   (7)        (s, a)-pair rather than the complete history Ft .
+                                ã
+                                                                            Same fixed point. We show that for any history h, the con-
+   Since the agent samples from the underlying HDP, the op-                 traction operator Fh has a fixed point q ∗ . Let h be mapped to
+erator Fht is a history-based operator.                                     state s:
+                                                                                           (a)
+                                                                              q ∗ (s, a)           Q∗ (h, a)
+                             h                           i
+        Fht qt (s, a) := Epht r0 + γ max qt (s0 , ã)|Ft   (8)                             =
+                                           ã                                                      X                                        
+                                                                                           ≡           P (o0 r0 |ha) r0 + γ max Q∗ (h0 , ã)
+where Ft is a complete history of the algorithm up to time-                                                                             ã
+                                                                                                   o0 r 0
+step t that signifies all information including ht , (αk )k≤t and                          (b)     X                                                 
+the state sequence (sk )k≤t . We use Epht as an expectation                                =                ph (s0 r0 |sa) r0 + γ max q ∗ (s0 , ã)
+                                                                                                                                        ã
+operator with respect to pht .                                                                     s0 r 0
+                                                                                                            ∗
+                                                                                           ≡       Fh q (s, a)                                        (12)
+Noise is bounded. Now we show that the noise term is not a
+                                                                            (a) is the QDP assumption; and (b) follows from (2) and
+significant factor that affects the convergence of Q-learning.
+                                                                            again using the QDP assumption. We also show that for any
+By construction it has a zero mean value:
+                                                                            history h the operator Fh has a same contraction factor γ.
+                   Epht [wht (s, a)|Ft ] =                                                        (a)                            (b)
+                                                                              ||Fh q − q ∗ ||∞ = ||Fh q − Fh q ∗ ||∞ ≤ γ||q − q ∗ ||∞ (13)
+      Epht [r + γ maxã qt (s0 , ã) − Fht qt (s, a)|Ft ] = 0. (9)
+              0
+                                                                            (a) follows from (12); and (b) is due to (11). Therefore, for
+  Due to the bounded reward assumption the variance of the                  any history h the operator Fh has the same fixed point q ∗ with
+noise term is also bounded.                                                 the same contraction factor γ.
+
+
+
+
+                                                                    2549
+                    Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+   We have all the conditions to invoke a convergence result                               s=0                             s=1
+from Bertsekas and Tsitsiklis [1995]. We adopt5 and state
+Proposition 4.5 from Bertsekas and Tsitsiklis [1995] without                                                1/2
+                                                                                            00                               01
+reproducing the complete proof.
+                                                                                          1/2                                 1/2
+Proposition 8 (Prop. 4.5 [Bertsekas and Tsitsiklis, 1995])
+Let (qt )t∈N be the sequence generated by the iteration (4).                                               1   1
+We assume the following.                                                                    10                               11
+
+(a) The learning rates αt (s, a) are nonnegative and satisfy,
+             ∞
+             X                          ∞
+                                        X                                  Figure 2: An example MRP aggregated to a non-MDP (non-MRP).
+                   αt (s, a) = ∞,             αt2 (s, a) < ∞.              The square nodes represent the states of the underlying MRP. The
+             t=0                        t=0
+                                                                           circles are the aggregated states. The solid arrows represent the only
+                                                                           available action x and the transition probabilities are shown at the
+(b) The noise term wt (s, a) satisfies,                                    transition edges.
+
+           Ept [wt (s, a)|Ft ] = 0,
+          Ept wt2 (s, a)|Ft ≤ A + B||qt ||2∞ ,
+                           
+                                                         ∀s, a, t
+       where, A and B are constants.
+ (c) There exists a vector q ∗ , and a scalar γ ∈ [0, 1), such
+     that,
+               ||Ft qt − q ∗ ||∞ ≤ γ||qt − q ∗ ||∞ ,   ∀t.
+
+Then, qt converges to q ∗ with probability 1.
+
+Proof Sketch. We have a sequence of maps (Ft )t∈N . At
+any time-step t, the map Ft is a contraction and every map
+moves the iterates toward the same fixed point q ∗ . Since,
+the contraction factor is the same, the rate of convergence is
+not affected by the order of the maps. Every map contracts
+the iterates by a factor γ with respect to the fixed point that
+                                                                           Figure 3: The learning curves of Q-learning are averaged over 40
+asymptotically converges to q ∗ .
+                                                                           independent runs with the parameters, γ = 0.9, q0 (s = 0, x) = 8
+                                                                           and q0 (s = 1, x) = 3.
+  Proposition 8 uses a sequence of maps (Ft )t∈N with
+a same fixed point. In our case, we have this sequence
+based on histories, i.e.(Fht )t∈N . Similarly, for wt and pt               7    Empirical Evaluation
+we have corresponding history-based instances. Therefore,                  In this section, we empirically evaluate two example non-
+Proposition 8 with pt = pht , Ft = Fht and wt = wht                        MDP domains to show the validity of our result.
+provides the main result. This can be done, since αt , qt , wt
+and Ft are allowed to be random variables.                                 Non-Markovian Reward Process. Let us consider our first
+                                                                           example from [Hutter, 2016] to demonstrate Q-learning con-
+   Obviously, state-uniformity is a necessary condition, since             vergence to a non-Markovian reward processes (non-MRP).
+otherwise Q∗ (h, a) can not even be represented as q ∗ (s, a).             We consider that the underlying HDP is an MDP over the ob-
+Typically, the state-process is assumed to be an MDP. This                 servation space O (in fact an action-independent MDP, i.e.
+makes the state-process ph independent of history, and leads               an MRP) with a transition matrix T and a deterministic re-
+to a history-independent operator F := Fh for any history                  ward function R. The state diagram of the process is shown
+h, which (trivially) all have the same fixed point. We relax               in Figure 2.
+this MDP assumption, and only demand state-uniformity of                                                               γ/2 
+                                                                                     0   1/2 1/2       0
+                                                                                                        
+the optimal value-function. The proof shows that this condi-                                                             1+γ
+tion is sufficient to provide a unique fix point for the history-                 1/2    0      0    1/2             1+γ/2 
+                                                                             T =                          ,     R =   1+γ  . (14)
+                                                                                                                             
+dependent operators. Therefore, the state-uniformity is not                          0    1      0     0                 0
+only a necessary but also a sufficient condition for Q-learning                      1    0      0     0                  1
+convergence.
+                                                                              Due to this structure, the HDP is expressible as,
+   5
+     The original proposition is slightly more general than we need        P (o0 r0 |ha) = Too0 · Jr0 = R(o)K, such that h has a last obser-
+for our proof. It has an extra diminishing noise term which we do          vation o, where J·K denotes an Iverson bracket. The observa-
+not have/require in our formulation.                                       tion space is O = {00, 01, 10, 11}. Let us consider the state
+
+
+
+
+                                                                    2550
+                  Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+                                                                         with a certain history-dependent probability pv (h) by provid-
+                                                                         ing an observation from O = {v, i}, where v and i indicate
+                                                                         acceptance or rejection of an input, respectively.
+                                                                                           pv (h) := max{pmin , %(v, h)}                 (15)
+                                                                         where, %(v, h) is the percentage of accepted keys in h and
+                                                                         pmin is a minimum acceptance probability. Without loss of
+                                                                         generality, we use the key sequence k0 := x, k1 := x, k2 :=
+                                                                         y. The history to state mapping is defined as:
+
+                                                                                                     
+                                                                                                        
+                                                                                       0     if, h =
+                                                                                     
+                                                                                     
+                                                                                                        ...v
+                                                                                     
+                                                                                     
+                                                                                     
+                                                                                     
+                                                                                                     
+                                                                                     
+                                                                                     
+                                                                                                      xi
+                                                                                                      
+                                                                            φ(h) =                    
+                                                                                                        yi
+                                                                                       1 if, h =
+                                                                                      
+                                                                                      
+                                                                                                     
+                                                                                                       . . . vxi
+                                                                                                     
+                                                                                                        . . . vyi
+                                                                                      
+Figure 4: The learning curves of Q-learning are averaged over 50
+                                                                                      
+                                                                                      
+                                                                                      
+independent runs with the parameters, γ = 0.9, pmin = 0.01 and                          2 if, h = . . . ḣ such that |ḣ| ≥ 2 and v ∈   / ḣ
+                                                                                      
+q0 (s, a) = 0 for all s and a.                                                                                                            (16)
+                                                                            It is apparent from the mapping function that state-0 is the
+                                                                         start state, and it is also the case when a key is accepted in
+space S = {0, 1}, and the agent experiences the state-process
+                                                                         the last time-step, state-1 is defined when a key input is re-
+under the following aggregation map:
+                                                                         jected once, and state-2 is reached when the key input has
+                                                                         been recently rejected at least twice in a row.
+                        
+                          0,     if ot = 00 or 10,
+        st := φ(ht ) :=                                                     The transition probabilities are formally given as follows
+                          1,     if ot = 01 or 11.
+                                                                         (see Figure 5 for a graphical representation):
+ It is easy to see that the resultant state-process is not an
+                                                                                                             if, s0 = 0, s = 0|1|2, a = ks
+                                                                                          
+MDP (MRP):                                                                                
+                                                                                           pv (h)
+                                                                                                                  0
+                                                                                                                 s = 1, s = 0, a = ks
+                                                                                          
+  p00 (s0 = 0|s = 0) =
+                                                                                          
+                             T00,00 + T00,10 = 0 + 1/2 = 1/2
+                                                                                          
+                                                                                          
+                                                                                              −                     s0 = 2, s = 1, a = ks
+                                                                                          
+                                                                                           1    p v (h)     if,
+  p10 (s0 = 0|s = 0) =
+                                                                                          
+                             T10,00 + T10,10 = 0 + 0 = 0                                  
+                                                                                                                 0
+                                                                                                                    s = 2, s = 2, a = ks
+                                                                                          
+which implies p00 6= p10 , but this state-process satisfies the           ph (s0 |s, a) =                         0
+                                                                                          
+                                                                                                                s = 1, s = 0, a 6= ks
+optimal Q-value function state-uniformity condition (see be-                              
+                                                                                          
+                                                                                           1                if,    s0 = 2, s = 1, a 6= ks
+low). Hence, the state-process is a QDP ∈ POMDP\MDP:
+                                                                                          
+                                                                                          
+                                                                                                                    s0 = 2, s = 2, a 6= ks
+                                                                                          
+                                                                                                                
+the underlying HDP has a finite set of hidden states, i.e.                                
+                                                                                          
+                                                                                          
+the states of the underlying MDP. Since it is an action-                                    0                otherwise.
+independent process, the action-value function is the same for                                                                            (17)
+any action a ∈ A. We denote the only available action with                  The reward is also a function of the complete history.
+x:
+                                                                                         3 − γ − 2γpv (h) if, φ(h) = 0, a = k0 ,
+                                                                                       
+                                                       γ                               
+   q ∗ (s = 0, x) := Q∗ (00, x) = Q∗ (10, x) =
+                                                                                       
+                                                                                         1 − 3γpv (h)             if, φ(h) = 1, a = k1 ,
+                                                                                       
+                                                    1 − γ2                 r0 (ha) =                                                      (18)
+                                                       1                                −3γpv (h)                if, φ(h) = 2, a = k2 ,
+   q ∗ (s = 1, x) := Q∗ (01, x) = Q∗ (11, x) =
+                                                                                       
+                                                           .                           
+                                                                                         −3                       if, φ(h) = s, a 6= ks
+                                                    1 − γ2
+   We apply Q-learning to the induced state-process and the                It is easy to see that Q-values are only a function of state-
+learning curves plot is shown in Figure 3. The plot shows                action pairs as follows for φ(h) = s:
+that Q-learning is able to converge to the optimal action-value                                       
+function of the process, despite the fact that the state-process                                      
+                                                                                                       3     if, s = 0, a = x,
+                                                                                                        −2 if, s = 0, a = y,
+                                                                                                      
+is a non-MDP (non-MRP).                                                                               
+                                                                                                      
+                                                                                                      
+                                                                                                      
+                                                                                                        1     if, s = 1, a = x,
+                                                                                                      
+Non-Markovian Decision Process. The previous example                           ∗           ∗
+                                                                             q (s, a) = Q (h, a) =                                 (19)
+demonstrated that Q-learning is able to learn a non-MRP ∈                                             
+                                                                                                       −3    if, s = 1, a = y,
+                                                                                                      
+QDP. Now we provide an example QDP which is a two-action                                              
+                                                                                                      
+                                                                                                       −3 if, s = 2, a = x,
+non-MDP ∈ HDP\POMDP: the state space of the underly-
+                                                                                                      
+                                                                                                        0     if, s = 2, a = y.
+                                                                                                      
+ing HDP is infinite. The agent is facing a non-stationary
+state-process with state space S = {0, 1, 2} and action space               Despite the history-based dynamics, Figure 4 shows that
+A = {x, y}. The agent has to input a right key-action ks at              Q-learning is able to learn the Q-values of the non-stationary
+a state s = φ(h) but the environment accepts the key action              state-process due to the fact that it is a QDP.
+
+
+
+
+                                                                  2551
+                   Proceedings of the Twenty-Seventh International Joint Conference on Artificial Intelligence (IJCAI-18)
+
+                                                                   s=1
+                                         s=0                                                        s=2
+                                                 1 − pv (h)                      1 − pv (h)
+                                                                 
+                                                                  xi
+                                                                
+                                                    1             yi                1
+                                                                 
+                      pv (h)        h=                        h=                                 h = . . . ḣ          1 − pv (h)
+                                          ...v                   . . . vxi                   s.t. |ḣ|≥2 and v ∈
+                                                                                                                / ḣ
+                                                                 
+                                                                 
+                                                                  . . . vyi
+                                                   pv (h)
+
+
+
+                                                                   pv (h)                               1
+
+
+Figure 5: A complete history-dependent process is aggregated to a 3-state non-MDP. The circles are states. Inside the states are the corre-
+sponding history patterns mapped to the state. For clarity, the rewards are not shown in the history patterns. The action x is denoted by the
+solid arrows while the action y is denoted by the dashed arrows. The transition probabilities are indicated at the transition edges.
+
+
+8    Conclusion                                                             [Leike, 2016] Jan Leike. Nonparametric General Reinforcement
+In this paper, we proved that Q-learning convergence can be                    Learning. PhD thesis, Australian National University, 2016.
+extended to a much larger class of decision problems than                   [Li et al., 2006] Lihong Li, Thomas J Walsh, and Michael L
+finte-state MDP. We call this class of environments QDP. In                    Littman. Towards a unified theory of state abstraction for mdps.
+QDP, the optimal action-value function of the state-process is                 In ISAIM, 2006.
+still only a function of states, but the dynamics can be a func-            [Lin and Mitchell, 1992] L.J. Lin and T.M. Mitchell. Memory ap-
+tion of the complete history (in effect, a function of time).                  proaches to reinforcement learning in non-Markovian domains.
+That enables QDP to allow non-stationary domains in con-                       Artificial Intelligence, 8(7597):28, 1992.
+trast to finite-state MDPs that can only model stationary do-               [Littman, 1994] Michael L Littman. Memoryless policies: Theoret-
+mains. We also showed that this state-uniformity condition                     ical limitations and practical results. In From Animals to Animats
+is not only a necessary but also a sufficient condition for Q-                 3: Proceedings of the third international conference on simula-
+learning convergence. An empirical evaluation of a few non-                    tion of adaptive behavior, volume 3, page 238. MIT Press, 1994.
+MDP domains is also provided. In the state-aggregation con-                 [McCallum, 1995] R. Andrew McCallum. Instance-based utile dis-
+text, we only extended the convergence for an exact aggrega-                   tinctions for reinforcement learning with hidden state. ICML,
+tion case. A natural next step is to investigate if this proof can             pages 387–395, 1995.
+be extended to the approximate aggregation case. Approxi-                   [Murphy, 2000] Kevin P Murphy. A survey of pomdp solution tech-
+mate aggregation is a special case of function approximation,                  niques. environment, 2:X3, 2000.
+but there are known counter-examples of Q-learning diverg-                  [Pendrith and McGarity, 1998] Mark D Pendrith and Michael J Mc-
+ing with function approximation [Baird, 1995]. Therefore,                      Garity. An analysis of direct reinforcement learning in non-
+it is intriguing to know if there exist some non-trivial con-                  Markovian domains. ICML, pages 421–429, 1998.
+ditions that provide convergence guarantee for Q-learning in                [Perkins and Pendrith, 2002] Theodore J Perkins and Mark D Pen-
+the approximate aggregation case and yet avoid these counter-                  drith. On the existence of fixed points for Q-learning and Sarsa
+examples.                                                                      in partially observable domains. ICML, pages 490–497, 2002.
+                                                                            [Singh et al., 1994] S Singh, T Jaakkola, and M Jordan. Learning
+References                                                                     Without State-Estimation in Partially Observable Markov Deci-
+[Baird, 1995] Leemon Baird. Residual algorithms: Reinforcement                 sion Processes. ICML, 31(0):37, 1994.
+  learning with function approximation. In Machine Learning Pro-            [Sutton and Barto, 1984] R S Sutton and A G Barto. Temporal
+  ceedings 1995, pages 30–37. Elsevier, 1995.                                  credit assignment in reinforcement learning. Computer Science,
+[Bertsekas and Tsitsiklis, 1995] Dimitri P Bertsekas and John N                page 210, 1984.
+  Tsitsiklis. Neuro-dynamic programming: an overview, volume 1.             [Sutton, 1988] Richard S Sutton. Learning to Predict by the Method
+  Belmont: Athena Scientific, 1995.                                            of Temporal Differences. Machine Learning, 3(1):9–44, 1988.
+[Cassandra et al., 1994] Anthony R Cassandra, Leslie Pack Kael-             [Thrun et al., 2005] Sebastian Thrun, Wolfram Burgard, and Dieter
+  bling, and Michael L Littman. Acting optimaly in partially ob-               Fox. Partially Observable Markov Decision Processes. Proba-
+  servable stochastic domains. AAAI, pages 1023–1023, 1994.                    bilistic Robotics, page 2005, 2005.
+[Cassandra, 1994] Anthony R Cassandra. Optimal Policies for Par-            [Tsitsiklis, 1994] John N. Tsitsiklis. Asynchronous Stochastic Ap-
+  tially Observable Markov Decision Processes. Technical Report                proximation and Q-Learning. Machine Learning, 16(3):185–202,
+  August, Report CS-94-14, Brown Univ, 1994.                                   1994.
+[Hutter, 2005] Marcus Hutter. Universal Artificial Intelligence: Se-        [Watkins and Dayan, 1992] Christopher J. C. H. Watkins and Peter
+  quential Decisions based on Algorithmic Probability. Springer,               Dayan. Q-learning. Machine Learning, 8(3-4):279–292, 1992.
+  Berlin, 2005.
+                                                                            [Whitehead and Lin, 1995] Steven D. Whitehead and Long Ji Lin.
+[Hutter, 2016] Marcus Hutter. Extreme state aggregation beyond
+                                                                               Reinforcement learning of non-Markov decision processes. Arti-
+  Markov decision processes. Theoretical Computer Science,                     ficial Intelligence, 73(1-2):271–306, 1995.
+  650:73–91, 2016.
+
+
+
+
+                                                                    2552
+

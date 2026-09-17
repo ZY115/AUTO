@@ -1,0 +1,15 @@
+{
+  "runs": 960,
+  "tasks": 12,
+  "seeds": "1700-1715",
+  "arms": [
+    "rawhistory",
+    "history",
+    "automaton",
+    "rawhistory+shape",
+    "history+shape"
+  ],
+  "budget": 200000,
+  "feature_cap": 4096,
+  "source_sha256": "c4e7d0a24c5dcf041ebcb068d048e6106406cf14c9172ae6b7da4123b9edbace"
+}
