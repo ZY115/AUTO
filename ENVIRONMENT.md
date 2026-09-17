@@ -3,7 +3,33 @@
 安装日期 **2026-09-10**。机器 Apple M1 Pro / 10 核 / 32 GB / macOS arm64 (Darwin 24.3.0)。
 
 本文件记录**为本项目安装的每一项**，包括系统层改动、可逆性，以及如何完整回退。
-逐包版本清单另存于 `docs/environment/venv-rl-freeze.txt` 与 `venv-rm-freeze.txt`。
+
+---
+
+> ## ⚠️ 三个虚拟环境已于 2026-09-17 删除
+>
+> 项目封存，本机不再跑这些实验，`.venv-hrm` / `.venv-rl` / `.venv-rm` 共 **2.8 GB** 已删除。
+> **下文对它们的描述保留原样，作为重建依据。**
+>
+> 逐包版本清单在 `env-patches/environment/`：
+>
+> | 文件 | 对应 | 包数 |
+> |---|---|---:|
+> | `venv-rl-freeze.txt` | `.venv-rl` | 32 |
+> | `venv-rm-freeze.txt` | `.venv-rm` | 32 |
+> | `venv-hrm-freeze.txt` | `.venv-hrm` | 38（删除前补生成） |
+>
+> `.venv-hrm` 里有两个可编辑安装，freeze 文件中记着精确 commit，且
+> `external/` 里另有一份副本：
+>
+> ```
+> hrm-formalism-envs.git@929605f46e6ca8a4a3dad2a47ba7d805c2711093
+> hrm-minigrid.git@d0e676374b011a8a4aeaa2e7141855c32a872ba3
+> ```
+>
+> 同目录还有两个必需的补丁：`waterworld_numpy2.patch`、`isa_compat.patch`。
+>
+> **miniconda base 没有动过**——第 1 节说明了为什么它必须保持原样。
 
 ---
 
