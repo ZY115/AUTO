@@ -3,7 +3,7 @@ import path from 'node:path';
 import {Presentation,PresentationFile} from '@oai/artifact-tool';
 import {applyPresentationChartFont,finalizePresentation} from '/Users/yuhang/.codex/plugins/cache/openai-primary-runtime/presentations/26.905.11957/skills/presentations/container_tools/artifact_tool_utils.mjs';
 const ROOT='/Users/yuhang/Downloads/why TL';
-const WORK=ROOT+'/research/2026-09-15-project-slides';
+const WORK=ROOT+'/AUTO/research/2026-09-15-project-slides';
 const SKILL='/Users/yuhang/.codex/plugins/cache/openai-primary-runtime/presentations/26.905.11957/skills/presentations';
 const FONT='Arial Unicode MS';
 const C={ink:'#202B33',muted:'#687780',line:'#D9E0E4',blue:'#2176AD',light:'#EAF3F9',orange:'#C47A35',gray:'#94A1AA',red:'#AE514B',green:'#39806D',white:'#FFFFFF'};
